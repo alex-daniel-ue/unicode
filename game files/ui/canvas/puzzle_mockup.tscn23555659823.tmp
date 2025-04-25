@@ -32,7 +32,6 @@ color = Color(0.865457, 1.15514e-05, 0.578459, 1)
 metadata/_edit_lock_ = true
 
 [node name="PuzzleCanvas" type="ColorRect" parent="."]
-clip_contents = true
 layout_mode = 0
 offset_left = 576.0
 offset_right = 1920.0
@@ -42,15 +41,29 @@ script = ExtResource("1_10hc0")
 metadata/_edit_lock_ = true
 
 [node name="NestedBlock" parent="PuzzleCanvas" instance=ExtResource("1_agp6q")]
-offset_left = 36.0
-offset_top = 79.0
-offset_right = 136.0
-offset_bottom = 179.0
-is_infinite = true
+offset_left = 225.0
+offset_top = 156.0
+offset_right = 325.0
+offset_bottom = 256.0
+is_infinite = null
+
+[node name="NestedBlock2" parent="PuzzleCanvas" instance=ExtResource("1_agp6q")]
+offset_left = 417.0
+offset_top = 161.0
+offset_right = 517.0
+offset_bottom = 261.0
+is_infinite = null
+
+[node name="NestedBlock3" parent="PuzzleCanvas" instance=ExtResource("1_agp6q")]
+offset_left = 586.0
+offset_top = 158.0
+offset_right = 686.0
+offset_bottom = 258.0
+is_infinite = null
 
 [node name="Statement" parent="PuzzleCanvas" instance=ExtResource("1_f2jnt")]
-offset_left = 37.0
-offset_top = 34.0
-offset_right = 137.0
-offset_bottom = 64.0
+offset_left = 71.0
+offset_top = 193.0
+offset_right = 171.0
+offset_bottom = 223.0
 is_infinite = true

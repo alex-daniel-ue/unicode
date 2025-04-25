@@ -7,4 +7,5 @@
 			use that instead of calculating it in _drop_data
 - Highlight hovered Blocks
 	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited
-- 
+- Formatting text in labels inside upper lips
+- Dropping blocks inside sockets in upper lips

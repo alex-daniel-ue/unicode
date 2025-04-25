@@ -8,7 +8,7 @@ var initial_min_size: Vector2
 @onready var _texture := $NinePatchRect
 @onready var _upper_lip := $UpperLip
 @onready var _lower_lip := $LowerLip
-@onready var _statement_container: VBoxContainer = $StatementContainer
+@onready var _mouth: VBoxContainer = $Mouth
 
 
 func _ready() -> void:
@@ -17,10 +17,11 @@ func _ready() -> void:
 	_lower_lip.custom_minimum_size.y = _texture.patch_margin_bottom
 	
 	_update_height()
-	_statement_container.minimum_size_changed.connect(_update_height)
+	_mouth.size = Vector2.ZERO
+	_mouth.minimum_size_changed.connect(_update_height)
 
 func _update_height() -> void:
-	custom_minimum_size.y = _statement_container.size.y + _texture.custom_minimum_size.y
+	custom_minimum_size.y = _mouth.size.y + _texture.custom_minimum_size.y
 	custom_minimum_size.y = max(custom_minimum_size.y, initial_min_size.y)
 	
 	size.y = custom_minimum_size.y
@@ -39,6 +40,7 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	var hovered_block := hovered.owner
 	
 	# Calculate the center y-coordinate and if data was dropped above it
+	prints(hovered, hovered_block)
 	var block_center: float = hovered_block.global_position.y + hovered_block.size.y * 0.5
 	at_position += global_position
 	var is_above_block := at_position.y < block_center
@@ -51,7 +53,7 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		if parent_block is NestedBlock:
 			var hovered_center := hovered.global_position.y + hovered.size.y * 0.5
 			var is_above_hovered := at_position.y < hovered_center
-
+			
 			var hover_idx := parent_container.get_children().find(self)
 			
 			# Put data in parent NestedBlock instead
@@ -62,10 +64,10 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 				parent_container.insert_child(hover_idx + 1, data)
 				return
 		
-		_statement_container.insert_child(0 if is_above_block else -1, data)
+		_mouth.insert_child(0 if is_above_block else -1, data)
 	
 	elif hovered_block is Statement:
-		var hover_idx := _statement_container.get_children().find(hovered_block)
+		var hover_idx := _mouth.get_children().find(hovered_block)
 		if not is_above_block:
 			hover_idx += 1
-		_statement_container.insert_child(hover_idx, data)
+		_mouth.insert_child(hover_idx, data)
