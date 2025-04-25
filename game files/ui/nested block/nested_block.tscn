@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://siv2nx55laya"]
+
+[ext_resource type="Script" uid="uid://bgpdi7ca4xasg" path="res://game files/ui/nested block/nested_block.gd" id="1_sjyww"]
+[ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/statement/statement.tscn" id="2_3te05"]
+[ext_resource type="Texture2D" uid="uid://cepk1cud8lk6j" path="res://game files/ui/nested block/nested_block.png" id="2_qbf20"]
+[ext_resource type="Script" uid="uid://uiundroog480" path="res://game files/ui/nested block/nine_patch_rect.gd" id="3_rrmqx"]
+
+[node name="NestedBlock" type="Control"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_sjyww")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_qbf20")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 10
+patch_margin_bottom = 30
+script = ExtResource("3_rrmqx")
+
+[node name="LabelContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 30.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="LabelContainer"]
+visible = false
+layout_mode = 2
+color = Color(1, 0.03, 0.03, 0.709804)
+
+[node name="StatementContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 30.0
+offset_bottom = 30.0
+theme_override_constants/separation = 0
+
+[node name="Statement" parent="StatementContainer" instance=ExtResource("2_3te05")]
+layout_mode = 2
+
+[node name="Statement2" parent="StatementContainer" instance=ExtResource("2_3te05")]
+layout_mode = 2
+
+[node name="Statement3" parent="StatementContainer" instance=ExtResource("2_3te05")]
+layout_mode = 2
+
+[node name="Statement4" parent="StatementContainer" instance=ExtResource("2_3te05")]
+layout_mode = 2

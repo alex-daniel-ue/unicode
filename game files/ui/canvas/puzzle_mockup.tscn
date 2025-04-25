@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://bv8qxx612uax1"]
+
+[ext_resource type="Script" uid="uid://bl2rclocuwoxa" path="res://game files/ui/canvas/puzzle_canvas.gd" id="1_10hc0"]
+[ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/nested block/nested_block.tscn" id="1_agp6q"]
+[ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/statement/statement.tscn" id="1_f2jnt"]
+
+[node name="PuzzleMockup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="PuzzleDescription" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 576.0
+offset_bottom = 1080.0
+color = Color(0.102526, 0.452105, 1, 1)
+metadata/_edit_lock_ = true
+
+[node name="PuzzleDisplay" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 576.0
+offset_top = 648.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.865457, 1.15514e-05, 0.578459, 1)
+metadata/_edit_lock_ = true
+
+[node name="PuzzleCanvas" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 576.0
+offset_right = 1920.0
+offset_bottom = 648.0
+color = Color(1.22733e-06, 0.592123, 0.286092, 1)
+script = ExtResource("1_10hc0")
+metadata/_edit_lock_ = true
+
+[node name="NestedBlock" parent="PuzzleCanvas" instance=ExtResource("1_agp6q")]
+offset_left = 219.0
+offset_top = 232.0
+offset_right = 319.0
+offset_bottom = 332.0
+
+[node name="NestedBlock2" parent="PuzzleCanvas" instance=ExtResource("1_agp6q")]
+offset_left = 582.333
+offset_top = 230.0
+offset_right = 682.333
+offset_bottom = 330.0
+
+[node name="Statement" parent="PuzzleCanvas" instance=ExtResource("1_f2jnt")]
+modulate = Color(0.847439, 0.406378, 0, 1)
+offset_left = 407.0
+offset_top = 285.0
+offset_right = 507.0
+offset_bottom = 315.0

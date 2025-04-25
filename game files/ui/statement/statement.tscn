@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1bgmja6wak26"]
+
+[ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/statement/statement.gd" id="1_dw8ho"]
+[ext_resource type="Texture2D" uid="uid://cvrt7bcknbwir" path="res://game files/ui/statement/statement.png" id="1_or1os"]
+
+[node name="Statement" type="Control"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 30.0
+mouse_filter = 2
+script = ExtResource("1_dw8ho")
+metadata/_edit_group_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_or1os")
+patch_margin_left = 15
+patch_margin_top = 15
+patch_margin_right = 15
+patch_margin_bottom = 15
+
+[node name="LabelContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 13
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 13
+theme_override_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="LabelContainer"]
+visible = false
+layout_mode = 2
+color = Color(1, 0.03, 0.03, 0.709804)
