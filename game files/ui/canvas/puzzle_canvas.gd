@@ -19,5 +19,5 @@ func _notification(what: int) -> void:
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	return data is Block
 func _drop_data(at_position: Vector2, data: Variant) -> void:
-	data.position = at_position + data._get_center_drag_position()
+	data.position = at_position + data._get_center_drag_pos()
 	add_child(data)
