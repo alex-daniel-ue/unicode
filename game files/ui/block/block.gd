@@ -43,7 +43,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		copy.is_infinite = false
 		
 		#copy.modulate = Color(0.99,0.99,0.99)
-		#copy.block_color = Color.from_hsv(randf(), randf_range(0.2, 0.6), randf_range(0.9, 1.0))
+		copy.block_color = Color.from_hsv(randf(), randf_range(0.2, 0.6), randf_range(0.9, 1.0))
 	
 	var dummy := copy.duplicate(0)
 	drag_preview_container.add_child(dummy)
