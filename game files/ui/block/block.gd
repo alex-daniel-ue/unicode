@@ -5,13 +5,21 @@ extends Control
 @export var is_infinite := false
 @export var block_color := Color.WHITE:
 	set(value):
-		var children := get_children()
-		const NINEPATCHRECT_IDX := 0
-		children[0].self_modulate = value
+		find_child("NinePatchRect", true, false).self_modulate = value
 		block_color = value
 
+## Is used in [Statement], [NestedBlock], and PuzzleCanvas.
+@warning_ignore("unused_private_class_variable")
+var _is_preview := false
 var _original_parent: Node
 var _original_idx: int
+
+
+func clone() -> Block:
+	var copy := duplicate(DUPLICATE_GROUPS | DUPLICATE_SCRIPTS | DUPLICATE_SIGNALS)
+	for child in Util.get_all_children(copy).slice(1):
+		child.owner = copy
+	return copy
 
 
 #region === DRAG & DROP =======================================================
@@ -29,23 +37,17 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	
 	if is_infinite:
 		var copy := duplicate()
-		
-		# FIXME: Bad ad hoc code; find a way to initialize _texture without
-		# the NestedBlock entering the SceneTree.
-		var children := copy.get_children()
-		const NINEPATCHRECT_IDX := 0
-		if copy is NestedBlock:
-			copy._texture = children[NINEPATCHRECT_IDX]
+		copy.is_infinite = false
 		
 		copy.modulate = Color(0.99,0.99,0.99)
 		copy.block_color = Color.from_hsv(randf(), randf_range(0.2, 0.6), randf_range(0.9, 1.0))
-		copy.is_infinite = false
 		
 		return copy
 	
 	# Store original parent in case of drag & drop failure
 	_original_parent = get_parent()
 	_original_idx = _original_parent.get_children().find(self)
+	
 	_original_parent.remove_child(self)
 	return self
 #endregion ====================================================================

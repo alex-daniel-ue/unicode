@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvrt7bcknbwir"
-path="res://.godot/imported/statement.png-3b8bc393905e6f8494ddd9ddddcf4954.ctex"
+uid="uid://cepk1cud8lk6j"
+path="res://.godot/imported/nested_block.png-d2ec02c147ac286165b4bd7a783a22f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game files/ui/statement/statement.png"
-dest_files=["res://.godot/imported/statement.png-3b8bc393905e6f8494ddd9ddddcf4954.ctex"]
+source_file="res://game files/ui/block/nested_block/nested_block.png"
+dest_files=["res://.godot/imported/nested_block.png-d2ec02c147ac286165b4bd7a783a22f4.ctex"]
 
 [params]
 

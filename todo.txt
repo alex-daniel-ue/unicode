@@ -1,11 +1,14 @@
-- Preview functionality in NestedBlocks
-	- Use gui_get_hovered_control and gui_is_dragging
-	- Unfortunately have to poll every frame, as long as gui_is_dragging
-		- Maybe only one Node has to poll, probably PuzzleCanvas
-	- Must dynamically change child position as drag position changes
-		- Maybe since preview would already calculate accurate position, maybe
-			use that instead of calculating it in _drop_data
+- Preview functionality
+	- Maybe since preview would already calculate accurate position, maybe
+		use that instead of calculating it in _drop_data
 - Highlight hovered Blocks
 	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited
 - Formatting text in labels inside upper lips
 - Dropping blocks inside sockets in upper lips
+- Selection functionality
+- Separate Preview and Selection into different Nodes in PuzzleCanvas
+
+## BUGS
+- When inbetween two blocks close together, _this_idx changes rapidly
+	- Because of preview, I have to calculate the initial sizes/heights/ranges whatever
+	without the preview when calculating preview idx.........

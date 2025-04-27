@@ -2,7 +2,6 @@ class_name NestedBlock
 extends Block
 
 
-var preview_node: Block
 var initial_min_size: Vector2
 
 @onready var _texture := $NinePatchRect
@@ -20,6 +19,7 @@ func _ready() -> void:
 	_mouth.size = Vector2.ZERO
 	_mouth.minimum_size_changed.connect(_update_height)
 
+
 func _update_height() -> void:
 	custom_minimum_size.y = _mouth.size.y + _texture.custom_minimum_size.y
 	custom_minimum_size.y = max(custom_minimum_size.y, initial_min_size.y)
@@ -27,20 +27,25 @@ func _update_height() -> void:
 	size.y = custom_minimum_size.y
 
 
-
 ## Overrides [method Block._get_center_drag_pos].
 func _get_center_drag_pos() -> Vector2:
-	return -0.5 * Vector2(size.x, _texture.patch_margin_top)
+	return -0.5 * Vector2(size.x, find_child("NinePatchRect").patch_margin_top)
+
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return data is Block
+	return data is Block and not is_infinite
+
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
+	if _is_preview:
+		var parent_container := get_parent()
+		parent_container.insert_child(parent_container.get_children().find(self), data)
+		return
+	
 	var hovered := get_viewport().gui_get_hovered_control()
 	var hovered_block := hovered.owner
 	
 	# Calculate the center y-coordinate and if data was dropped above it
-	prints(hovered, hovered_block)
 	var block_center: float = hovered_block.global_position.y + hovered_block.size.y * 0.5
 	at_position += global_position
 	var is_above_block := at_position.y < block_center
