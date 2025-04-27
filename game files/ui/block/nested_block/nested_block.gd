@@ -60,12 +60,14 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 			if hovered == (_upper_lip if above_hovered else _lower_lip):
 				if not above_hovered:
 					idx += 1
-				return container.insert_child(idx, data)
+				container.insert_child(idx, data)
+				return
 		
-		return _mouth.insert_child(0 if above_block else -1, data)
+		_mouth.insert_child(0 if above_block else -1, data)
+		return
 	
 	elif block is Statement:
 		var idx := _mouth.get_children().find(block)
 		if not above_block:
 			idx += 1
-		return _mouth.insert_child(idx, data)
+		_mouth.insert_child(idx, data)
