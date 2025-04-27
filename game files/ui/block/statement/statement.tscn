@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b1bgmja6wak26"]
 
 [ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/block/statement/statement.gd" id="1_dw8ho"]
-[ext_resource type="Texture2D" uid="uid://cvrt7bcknbwir" path="res://game files/ui/block/statement/statement.png" id="1_or1os"]
+[ext_resource type="Texture2D" uid="uid://tqur4w44w5vq" path="res://game files/ui/block/statement/Block-idle.png" id="2_2m8co"]
 
 [node name="Statement" type="Control"]
 custom_minimum_size = Vector2(100, 30)
@@ -21,12 +21,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-texture = ExtResource("1_or1os")
+texture = ExtResource("2_2m8co")
 region_rect = Rect2(0, 0, 100, 100)
-patch_margin_left = 15
-patch_margin_top = 15
-patch_margin_right = 15
-patch_margin_bottom = 15
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
 
 [node name="LabelContainer" type="MarginContainer" parent="."]
 layout_mode = 1
