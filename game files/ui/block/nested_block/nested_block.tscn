@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://siv2nx55laya"]
 
 [ext_resource type="Script" uid="uid://bgpdi7ca4xasg" path="res://game files/ui/block/nested_block/nested_block.gd" id="1_sjyww"]
-[ext_resource type="Texture2D" uid="uid://cepk1cud8lk6j" path="res://game files/ui/block/nested_block/nested_block.png" id="2_qbf20"]
+[ext_resource type="Texture2D" uid="uid://b1kl1anwvd8mg" path="res://game files/ui/block/nested_block/StatementBlock-hover.png" id="2_t3bv2"]
 [ext_resource type="Script" uid="uid://uiundroog480" path="res://game files/ui/block/nested_block/nine_patch_rect.gd" id="3_rrmqx"]
 [ext_resource type="Script" uid="uid://cijvae4j3nbg7" path="res://game files/ui/block/nested_block/mouth.gd" id="4_6cnl0"]
 
@@ -29,11 +29,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-texture = ExtResource("2_qbf20")
-patch_margin_left = 30
-patch_margin_top = 30
-patch_margin_right = 10
-patch_margin_bottom = 30
+texture = ExtResource("2_t3bv2")
+patch_margin_left = 28
+patch_margin_top = 36
+patch_margin_right = 8
+patch_margin_bottom = 24
 script = ExtResource("3_rrmqx")
 
 [node name="UpperLip" type="MarginContainer" parent="."]
@@ -55,10 +55,10 @@ color = Color(1, 0.03, 0.03, 0.709804)
 
 [node name="Mouth" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 30.0
-offset_bottom = 30.0
+offset_left = 28.0
+offset_top = 36.0
+offset_right = 28.0
+offset_bottom = 36.0
 theme_override_constants/separation = 0
 script = ExtResource("4_6cnl0")
 
