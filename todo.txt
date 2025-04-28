@@ -1,6 +1,9 @@
 - Highlight hovered Blocks
 	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited
-- Formatting text in labels inside upper lips
-- Dropping blocks inside sockets in upper lips
+- Easy formatting text in labels in upper lips
+- Sockets in upper lips
 - Selection functionality
 - Separate Preview and Selection into different Nodes in PuzzleCanvas
+
+- Text, labels, and fonts
+- Interpreter

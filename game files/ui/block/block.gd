@@ -36,20 +36,24 @@ func _get_center_drag_pos() -> Vector2:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	var drag_preview_container := Control.new()
 	drag_preview_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	set_drag_preview(drag_preview_container)
 	
 	
 	var copy: Block = clone()
 	if is_infinite:
 		copy.is_infinite = false
-		
-		#copy.modulate = Color(0.99,0.99,0.99)
 		copy.block_color = Color.from_hsv(randf(), randf_range(0.2, 0.6), randf_range(0.9, 1.0))
 	
 	var dummy := copy.duplicate(0)
 	drag_preview_container.add_child(dummy)
-	dummy.position = _get_center_drag_pos()
-	set_drag_preview(drag_preview_container)
 	
+	dummy.position = -get_local_mouse_position()
+	
+	var tween := dummy.create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_ELASTIC)
+	tween.tween_property(dummy, "position", _get_center_drag_pos(), 0.4)
+	tween.play()
 	if is_infinite:
 		return copy
 	

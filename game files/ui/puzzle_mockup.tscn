@@ -9,7 +9,7 @@
 shader = ExtResource("1_dyr0f")
 shader_parameter/cell_size = 32.905
 shader_parameter/dot_size = 0.05
-shader_parameter/background_color = Color(0.152941, 0.141176, 0.290196, 1)
+shader_parameter/background_color = Color(0.129412, 0.0823529, 0.121569, 1)
 shader_parameter/dot_color = Color(0.55, 0.55, 0.55, 1)
 shader_parameter/resolution = Vector2(1152, 648)
 shader_parameter/offset = Vector2(0, 0)
@@ -47,37 +47,36 @@ split_offset = -173
 [node name="PuzzleDescription" type="ColorRect" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-color = Color(0.427451, 0.392157, 0.8, 1)
+color = Color(0.2204, 0.1968, 0.48, 1)
 
-[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer"]
+[node name="NestedBlock" parent="HSplitContainer/PuzzleDescription" instance=ExtResource("2_dyr0f")]
+offset_left = 235.0
+offset_top = 323.0
+offset_right = 335.0
+offset_bottom = 423.0
+is_infinite = true
+
+[node name="Statement" parent="HSplitContainer/PuzzleDescription" instance=ExtResource("3_c8erp")]
+offset_left = 235.0
+offset_top = 275.0
+offset_right = 335.0
+offset_bottom = 305.0
+is_infinite = true
+
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 theme_override_constants/autohide = 0
-split_offset = 65
 
-[node name="PuzzleCanvas" type="ColorRect" parent="HSplitContainer/VSplitContainer"]
+[node name="PuzzleCanvas" type="ColorRect" parent="HSplitContainer/HSplitContainer"]
 material = SubResource("ShaderMaterial_c8erp")
 clip_contents = true
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 script = ExtResource("1_pj4tj")
 
-[node name="NestedBlock" parent="HSplitContainer/VSplitContainer/PuzzleCanvas" instance=ExtResource("2_dyr0f")]
-offset_left = 36.0
-offset_top = 79.0
-offset_right = 136.0
-offset_bottom = 179.0
-is_infinite = true
-
-[node name="Statement" parent="HSplitContainer/VSplitContainer/PuzzleCanvas" instance=ExtResource("3_c8erp")]
-offset_left = 37.0
-offset_top = 31.0
-offset_right = 137.0
-offset_bottom = 61.0
-is_infinite = true
-
-[node name="PuzzleDisplay" type="ColorRect" parent="HSplitContainer/VSplitContainer"]
+[node name="PuzzleDisplay" type="ColorRect" parent="HSplitContainer/HSplitContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-color = Color(0.129412, 0.0823529, 0.121569, 1)
+size_flags_horizontal = 3
+color = Color(0.152941, 0.141176, 0.290196, 1)

@@ -27,9 +27,9 @@ func _update_height() -> void:
 	size.y = custom_minimum_size.y
 
 
-## Overrides [method Block._get_center_drag_pos].
-func _get_center_drag_pos() -> Vector2:
-	return -0.5 * Vector2(size.x, find_child("NinePatchRect").patch_margin_top)
+### Overrides [method Block._get_center_drag_pos].
+#func _get_center_drag_pos() -> Vector2:
+	#return -0.5 * Vector2(size.x, find_child("NinePatchRect").patch_margin_top)
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
