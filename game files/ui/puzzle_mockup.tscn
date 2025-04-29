@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bv8qxx612uax1"]
+[gd_scene load_steps=9 format=3 uid="uid://bv8qxx612uax1"]
 
 [ext_resource type="Shader" uid="uid://drtmua7o66ak5" path="res://game files/ui/canvas/canvas_bg.gdshader" id="1_dyr0f"]
 [ext_resource type="Script" uid="uid://bl2rclocuwoxa" path="res://game files/ui/canvas/canvas.gd" id="1_pj4tj"]
+[ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="2_al4x6"]
 [ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/block/nested_block/nested_block.tscn" id="2_dyr0f"]
 [ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/block/statement/statement.tscn" id="3_c8erp"]
+[ext_resource type="Texture2D" uid="uid://b2qchoy10il3l" path="res://game files/sample.png" id="6_fden2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fden2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8erp"]
 shader = ExtResource("1_dyr0f")
@@ -47,20 +51,53 @@ split_offset = -173
 [node name="PuzzleDescription" type="ColorRect" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-color = Color(0.2204, 0.1968, 0.48, 1)
+color = Color(0.27451, 0.231373, 0.572549, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/PuzzleDescription"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MarginDebug" type="ColorRect" parent="HSplitContainer/PuzzleDescription/MarginContainer"]
+visible = false
+layout_mode = 2
+color = Color(1, 0, 0, 0.541176)
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/PuzzleDescription/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fden2")
+
+[node name="Label" type="Label" parent="HSplitContainer/PuzzleDescription/MarginContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("2_al4x6")
+theme_override_font_sizes/font_size = 25
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+Curabitur vitae pretium enim. Curabitur nec luctus mauris. Suspendisse iaculis fermentum mattis. Nulla semper leo a suscipit tristique. Sed porta mi orci, nec luctus diam pulvinar in.
+
+Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In ornare, sapien eget suscipit pulvinar, felis nunc interdum libero, eu consectetur justo ipsum vitae nisi. Aliquam eu nibh fermentum, rutrum nibh eu, pulvinar ligula."
+autowrap_mode = 2
 
 [node name="NestedBlock" parent="HSplitContainer/PuzzleDescription" instance=ExtResource("2_dyr0f")]
-offset_left = 235.0
-offset_top = 323.0
-offset_right = 335.0
-offset_bottom = 423.0
+offset_left = 214.0
+offset_top = 462.0
+offset_right = 314.0
+offset_bottom = 562.0
 is_infinite = true
 
 [node name="Statement" parent="HSplitContainer/PuzzleDescription" instance=ExtResource("3_c8erp")]
-offset_left = 235.0
-offset_top = 275.0
-offset_right = 335.0
-offset_bottom = 305.0
+offset_left = 214.0
+offset_top = 414.0
+offset_right = 314.0
+offset_bottom = 444.0
 is_infinite = true
 
 [node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
@@ -80,3 +117,19 @@ script = ExtResource("1_pj4tj")
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.152941, 0.141176, 0.290196, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/PuzzleDisplay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="TextureRect" type="TextureRect" parent="HSplitContainer/HSplitContainer/PuzzleDisplay/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("6_fden2")
+expand_mode = 4
+stretch_mode = 5

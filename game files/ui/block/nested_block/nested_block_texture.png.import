@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1kl1anwvd8mg"
-path="res://.godot/imported/StatementBlock-hover.png-d08caa0141f245fe4d663dde1a099b22.ctex"
+path="res://.godot/imported/nested_block_texture.png-44251b0c477533402c9394aa1330e51c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game files/ui/block/nested_block/StatementBlock-hover.png"
-dest_files=["res://.godot/imported/StatementBlock-hover.png-d08caa0141f245fe4d663dde1a099b22.ctex"]
+source_file="res://game files/ui/block/nested_block/nested_block_texture.png"
+dest_files=["res://.godot/imported/nested_block_texture.png-44251b0c477533402c9394aa1330e51c.ctex"]
 
 [params]
 

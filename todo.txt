@@ -1,9 +1,17 @@
+- Sockets in upper lips
+- Interpreter
+- Selection functionality
 - Highlight hovered Blocks
 	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited
 - Easy formatting text in labels in upper lips
-- Sockets in upper lips
-- Selection functionality
-- Separate Preview and Selection into different Nodes in PuzzleCanvas
 
-- Text, labels, and fonts
-- Interpreter
+## BUGS:
+- Drop preview essentially always hovers on the preview, but only updates once it goes below half.
+	Refactor to this: provide dead space in the center, and if it goes above or below, -1 and +1.
+- Make UpperLip have a NinePatchRect itself, so LowerLip doesn't expand too, or make LowerLip a
+	static TextureRect.
+- Long blocks mysteriously disappearing, maybe not being added or removed?
+
+## REFACTORING:
+- Separate Preview and Selection into different Nodes in PuzzleCanvas
+- Refactor NestedBlock._drop_data()

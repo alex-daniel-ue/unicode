@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://wl71vjr8t3qy"]
+
+[ext_resource type="FontFile" uid="uid://cl0wra22di3b8" path="res://resources/fonts/Eight-Bit Madness.ttf" id="1_ols5k"]
+
+[resource]
+Label/fonts/font = ExtResource("1_ols5k")

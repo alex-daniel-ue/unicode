@@ -1,14 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1bgmja6wak26"]
+[gd_scene load_steps=4 format=3 uid="uid://b1bgmja6wak26"]
 
 [ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/block/statement/statement.gd" id="1_dw8ho"]
-[ext_resource type="Texture2D" uid="uid://cn20jjrocxosa" path="res://game files/ui/block/statement/Block-hover.png" id="2_2m8co"]
+[ext_resource type="Texture2D" uid="uid://cn20jjrocxosa" path="res://game files/ui/block/statement/statement_texture.png" id="2_2m8co"]
+[ext_resource type="LabelSettings" uid="uid://1vnp5kqvbw0s" path="res://game files/ui/block/upperlip_labelsettings.tres" id="3_nqpt0"]
 
 [node name="Statement" type="Control"]
+texture_filter = 3
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 30.0
+scale = Vector2(1.4, 1.4)
 mouse_filter = 2
 script = ExtResource("1_dw8ho")
 metadata/_edit_group_ = true
@@ -28,19 +31,26 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="LabelContainer" type="MarginContainer" parent="."]
+[node name="UpperLip" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 13
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 13
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="ColorRect" type="ColorRect" parent="LabelContainer"]
+[node name="Label" type="Label" parent="UpperLip"]
+layout_mode = 2
+text = "FUNCTION()"
+label_settings = ExtResource("3_nqpt0")
+
+[node name="MarginDebug" type="ColorRect" parent="UpperLip"]
 visible = false
 layout_mode = 2
-color = Color(1, 0.03, 0.03, 0.709804)
+color = Color(1, 0, 0, 0.541176)
+
+[connection signal="minimum_size_changed" from="UpperLip" to="." method="_on_label_size_changed"]

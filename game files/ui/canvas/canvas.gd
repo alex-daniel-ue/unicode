@@ -1,46 +1,52 @@
 extends ColorRect
 
 
+const _DROP_PREVIEW_ALPHA := 0.4
+
 var _current_drag_data: Variant
 
-const PREVIEW_ALPHA := 0.4
-var _preview_block: Control
-var _stored_preview_container: Control
-var _stored_preview_idx: int
+var _drop_preview_block: Control
+var _drop_preview_container: Control
+var _drop_preview_idx: int
+
+# Drop preview variables that update every frame
 var _this_container: Control
 var _this_idx: int
 
 
 func _process(_delta: float) -> void:
+	update_drop_preview()
+
+func update_drop_preview() -> void:
 	if get_viewport().gui_is_dragging():
 		_this_container = _get_preview_container()
 		
-		# If there's a valid preview spot
+		# If there's a valid place-preview spot
 		if _this_container != null:
 			_this_idx = _get_preview_idx(_this_container)
 			
 			# If the preview container has changed
-			if _this_container != _stored_preview_container:
-				# If there was a previous preview container 
-				if _stored_preview_container != null:
-					_stored_preview_container.remove_child(_preview_block)
+			if _this_container != _drop_preview_container:
+				# If there was a previous container 
+				if _drop_preview_container != null:
+					_drop_preview_container.remove_child(_drop_preview_block)
 				
-				_this_container.insert_child(_this_idx, _preview_block)
+				_this_container.insert_child(_this_idx, _drop_preview_block)
 				
 				# Update stored container and index
-				_stored_preview_container = _this_container
-				_stored_preview_idx = _this_idx
+				_drop_preview_container = _this_container
+				_drop_preview_idx = _this_idx
 			
 			# If only the index has changed
-			elif _this_idx != _stored_preview_idx:
+			elif _this_idx != _drop_preview_idx:
 				# Move to and store the new index 
-				_stored_preview_container.move_child(_preview_block, _this_idx)
-				_stored_preview_idx = _this_idx
+				_drop_preview_container.move_child(_drop_preview_block, _this_idx)
+				_drop_preview_idx = _this_idx
 		
 		# If previewing nothing, but recently previewed
-		elif _stored_preview_container != null:
-			_stored_preview_container.remove_child(_preview_block)
-			_stored_preview_container = null
+		elif _drop_preview_container != null:
+			_drop_preview_container.remove_child(_drop_preview_block)
+			_drop_preview_container = null
 
 ## Hopefully always returns a [VBoxContainer].
 func _get_preview_container() -> Control:
@@ -60,6 +66,7 @@ func _get_preview_container() -> Control:
 	if parent_block is NestedBlock:
 		if block is Statement:
 			return container
+		
 		if parent_block is NestedBlock:
 			var center_y := control.global_position.y + control.size.y * 0.5
 			var is_above := get_global_mouse_position().y < center_y
@@ -68,8 +75,8 @@ func _get_preview_container() -> Control:
 				return parent_block._mouth
 	
 	if block is NestedBlock and block._can_drop_data(Vector2.ZERO, Block.new()):
-		if block._is_preview:
-			return _stored_preview_container
+		if block._is_drop_preview:
+			return _drop_preview_container
 		return block._mouth
 	
 	return null
@@ -79,7 +86,7 @@ func _get_preview_idx(container: Control) -> int:
 	var top := container.global_position.y
 	var height := container.size.y
 	
-	# If mouse is is hovering in Mouth
+	# If mouse is hovering in Mouth
 	if mouse_y >= top and mouse_y <= top + height:
 		var child_bottom := top
 		var child: Control
@@ -87,10 +94,12 @@ func _get_preview_idx(container: Control) -> int:
 			child = container.get_child(idx)
 			child_bottom += child.size.y
 			
+			# Equivalent to checking if its within the child's bounds
 			if mouse_y < child_bottom:
 				var child_center_y: float = child_bottom - child.size.y * 0.5
-				return idx + (1 if mouse_y > child_center_y else 0)
+				return idx + (1 if mouse_y >= child_center_y else 0)
 	
+	# If it's top half outside of Mouth
 	if mouse_y < (top + height * 0.5):
 		return 0
 	return -1
@@ -100,13 +109,13 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			_current_drag_data = get_viewport().gui_get_drag_data()
 			
-			_preview_block = _current_drag_data.clone()
-			_preview_block._is_preview = true
-			_preview_block.modulate.a = PREVIEW_ALPHA
+			_drop_preview_block = _current_drag_data.clone()
+			_drop_preview_block._is_drop_preview = true
+			_drop_preview_block.modulate.a = _DROP_PREVIEW_ALPHA
 		NOTIFICATION_DRAG_END:
-			_preview_block.queue_free()
-			_preview_block = null
-			_stored_preview_container = null
+			_drop_preview_block.queue_free()
+			_drop_preview_block = null
+			_drop_preview_container = null
 			
 			# On drag & drop failure
 			if not get_viewport().gui_is_drag_successful() and _current_drag_data is Block:

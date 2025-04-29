@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://1vnp5kqvbw0s"]
+
+[ext_resource type="FontFile" uid="uid://cl0wra22di3b8" path="res://resources/fonts/Eight-Bit Madness.ttf" id="1_0l308"]
+
+[resource]
+font = ExtResource("1_0l308")
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)

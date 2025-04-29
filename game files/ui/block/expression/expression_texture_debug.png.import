@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0hhvnxnwcj5h"
-path="res://.godot/imported/Block-idle.png-442b4b83aa30ca559b8df3794938f762.ctex"
+uid="uid://dkb5pvyi8ogvu"
+path="res://.godot/imported/expression_texture_debug.png-d18d9ab512d07672311b6504e75ac98b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Block-idle.png"
-dest_files=["res://.godot/imported/Block-idle.png-442b4b83aa30ca559b8df3794938f762.ctex"]
+source_file="res://game files/ui/block/expression/expression_texture_debug.png"
+dest_files=["res://.godot/imported/expression_texture_debug.png-d18d9ab512d07672311b6504e75ac98b.ctex"]
 
 [params]
 

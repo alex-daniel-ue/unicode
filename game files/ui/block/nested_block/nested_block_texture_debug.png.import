@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvyun3paaceqa"
-path="res://.godot/imported/Block-drag.png-fabcf2e06da5fbb117f4157095cad960.ctex"
+uid="uid://cepk1cud8lk6j"
+path="res://.godot/imported/nested_block_texture_debug.png-48129ddd3f91c6e235fa21c73541a4db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game files/ui/block/statement/Block-drag.png"
-dest_files=["res://.godot/imported/Block-drag.png-fabcf2e06da5fbb117f4157095cad960.ctex"]
+source_file="res://game files/ui/block/nested_block/nested_block_texture_debug.png"
+dest_files=["res://.godot/imported/nested_block_texture_debug.png-48129ddd3f91c6e235fa21c73541a4db.ctex"]
 
 [params]
 

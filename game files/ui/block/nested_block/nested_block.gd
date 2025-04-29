@@ -4,7 +4,6 @@ extends Block
 
 var initial_min_size: Vector2
 
-@onready var _upper_lip := $UpperLip
 @onready var _lower_lip := $LowerLip
 @onready var _mouth: VBoxContainer = $Mouth
 
@@ -16,28 +15,27 @@ func _ready() -> void:
 	_mouth.position = Vector2(_texture.patch_margin_left, _texture.patch_margin_top)
 	
 	_update_height()
+	# VBoxContainer works really weirdly, sometimes its size doesn't reset to
+	# zero when it has no children
 	_mouth.size = Vector2.ZERO
+	
+	# minimum_size_changed must be connected AFTER setting size to Vector2.ZERO
 	_mouth.minimum_size_changed.connect(_update_height)
 
 
 func _update_height() -> void:
 	custom_minimum_size.y = _mouth.size.y + _texture.custom_minimum_size.y
 	custom_minimum_size.y = max(custom_minimum_size.y, initial_min_size.y)
-	
-	size.y = custom_minimum_size.y
-
-
-### Overrides [method Block._get_center_drag_pos].
-#func _get_center_drag_pos() -> Vector2:
-	#return -0.5 * Vector2(size.x, find_child("NinePatchRect").patch_margin_top)
+	#size.y = custom_minimum_size.y
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	return data is Block and not is_infinite
 
 
+## This function is called when it is [b]dropped onto[/b], not being dropped.
 func _drop_data(at_position: Vector2, data: Variant) -> void:
-	if _is_preview:
+	if _is_drop_preview:
 		var parent_container := get_parent()
 		parent_container.insert_child(get_index(), data)
 		return
