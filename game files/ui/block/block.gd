@@ -26,6 +26,9 @@ var origin_idx: int
 		return texture
 
 
+func _ready() -> void:
+	upper_lip.custom_minimum_size.y = texture.patch_margin_top
+
 func get_center() -> Vector2:
 	return -0.5 * size
 

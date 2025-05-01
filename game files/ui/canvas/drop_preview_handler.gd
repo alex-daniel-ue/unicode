@@ -2,7 +2,7 @@ extends Control
 
 
 ## Radius around center
-const DP_DEADBAND_PERCENT := 0.8
+const DP_DEADBAND_PERCENT := 0.5
 const DP_ALPHA := 0.4
 
 var current_data: Block
@@ -31,7 +31,6 @@ func update_drop_preview() -> void:
 			
 			# If the preview container has changed
 			if this_container != dp_container:
-				Util.log([this_container, dp_container])
 				# If there was a previous container
 				if dp_container:
 					dp_container.remove_child(drop_preview)
@@ -67,6 +66,7 @@ func get_preview_container() -> VBoxContainer:
 	
 	if parent_block is NestedBlock:
 		if block is Statement:
+			Util.log("container: sibling of statement")
 			return container
 		
 		if parent_block is NestedBlock:
@@ -74,12 +74,16 @@ func get_preview_container() -> VBoxContainer:
 			var is_above := get_global_mouse_position().y < center_y
 			
 			if control.name == ("UpperLip" if is_above else "LowerLip"):
+				Util.log("container: %s of nested nestedblock" % ("above" if is_above else "below"))
 				return parent_block.mouth
 	
 	if block is NestedBlock:
 		if block._can_drop_data(Vector2.ZERO, Block.new()):
 			if block.is_drop_preview:
+				Util.log("container: inherited nestedblock preview")
 				return dp_container
+			
+			Util.log("container: inside nestedblock")
 			return block.mouth
 	
 	return null
@@ -87,11 +91,13 @@ func get_preview_container() -> VBoxContainer:
 func get_preview_idx(mouth: VBoxContainer) -> int:
 	var mouse := get_global_mouse_position()
 	var top_left := mouth.global_position
+	in_deadband = false
 	
 	# When vertically outside mouth
 	if not Util.point_within(mouse, top_left, top_left + mouth.size, true):
 		in_deadband = false
 		var center := top_left + mouth.size * 0.5
+		Util.log("index: mouse %s mouth" % ("above" if mouse.y < center.y else "below"))
 		return 0 if mouse.y < center.y else -1
 	
 	for child: Block in mouth.get_children():
@@ -104,8 +110,9 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 			continue
 		
 		# Immediately take over when hovering over non-preview blocks
-		if not child.is_drop_preview:
+		if not (child.is_drop_preview or child is NestedBlock):
 			in_deadband = false
+			Util.log("index: took over block")
 			return idx
 		
 		var center := top + height * 0.5
@@ -114,13 +121,19 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 			in_deadband = abs(dy) <= dp_deadband
 		
 		if in_deadband:
+			# If above deadband
 			if dy < -dp_deadband:
 				in_deadband = false
+				Util.log("index: %s above deadband" % child)
 				return max(0, idx-1)
+			# If below deadband
 			if dy > dp_deadband:
 				in_deadband = false
+				Util.log("index: %s below deadband" % child)
 				return idx+1
-		return idx
+		
+		Util.log("index: %s %s" % [child, "inside deadband"])
+		return dp_idx
 	
 	push_error("Fallback reached.")
 	return -1
@@ -139,9 +152,8 @@ func _notification(what: int) -> void:
 			dp_deadband = drop_preview.size.y * DP_DEADBAND_PERCENT / 2.0
 		NOTIFICATION_DRAG_END:
 			if dp_container:
-				dp_container.insert_child(dp_idx, current_data)
 				# Node.replace_by does NOT delete/remove the original Node
-				#drop_preview.replace_by(current_data)
+				dp_container.insert_child(dp_idx, current_data)
 			
 			# Delete the node and remove references
 			drop_preview.queue_free()

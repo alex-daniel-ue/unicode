@@ -1,21 +1,23 @@
 - Sockets in upper lips
+	- Don't bother implementing previews, just highlight when hovered over
+- Expression and value blocks
+	- Diamond and circular block textures
+- Cap/start block
+	- Use NestedBlock with cap/start texture
+	- UpperLip will cover whole texture
 - Interpreter
-- Selection functionality
+- Multi-selection functionality
 	- Write in own Node
-- Highlight hovered Blocks
-	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited
-- Easy formatting text in labels in UpperLips
+	- Should be pretty easy? Just wrap all selected Blocks in a Control, then when
+	dropped, dump all nodes on target?
+- Slightly highlight hovered Blocks
+	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited/gui_input
+- Easy formatting text in labels in UpperLips, use @tool
+- Interlocking textures illusion
 
 ## BUGS:
-- Make UpperLip have a NinePatchRect itself, so LowerLip doesn't expand too, or make LowerLip a
-	static TextureRect.
+- Make UpperLip have a NinePatchRect itself, so LowerLip doesn't expand too, or
+	make LowerLip a static TextureRect.
+	- Automatically cut textures?
 - All Blocks inside a NestedBlock resize to longest Block
-	- Dynamically change size flags to ShrinkBegin
-- Container selection for LowerLips
-	- To replicate, there is a spot in LowerLip where if you hover a Statement,
-	it will flicker back-and-forth between above the NestedBlock and inside it
-	- Why would there be a spot on LowerLip where it would ever return the parent
-	container and probably the NestedBlock's index?
-- Index selection in general
-	- Flickers for 3-5 times for Statements
-	- Flickers infinitely for Statements and NestedBlocks
+	- Solution: dynamically change size flags to ShrinkBegin, but it doesn't work

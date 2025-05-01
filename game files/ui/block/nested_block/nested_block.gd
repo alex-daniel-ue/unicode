@@ -17,7 +17,6 @@ func _init() -> void:
 
 func _ready() -> void:
 	initial_min_size = custom_minimum_size
-	upper_lip.custom_minimum_size.y = texture.patch_margin_top
 	lower_lip.custom_minimum_size.y = texture.patch_margin_bottom
 	mouth.position = Vector2(texture.patch_margin_left, texture.patch_margin_top)
 	

@@ -13,7 +13,7 @@ static func log(message: Variant) -> void:
 		message = ' '.join(message)
 	message = str(message)
 	
-	print("%.03f: %s" % [Time.get_ticks_msec() / 1000.0, message])
+	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000.0, message])
 
 static func within(n: float, x: float, y: float, inclusive := false) -> bool:
 	if inclusive:
