@@ -3,4 +3,5 @@
 [ext_resource type="FontFile" uid="uid://cl0wra22di3b8" path="res://resources/fonts/Eight-Bit Madness.ttf" id="1_ols5k"]
 
 [resource]
+Label/constants/outline_size = 5
 Label/fonts/font = ExtResource("1_ols5k")

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/block/statement/statement.gd" id="1_dw8ho"]
 [ext_resource type="Texture2D" uid="uid://cn20jjrocxosa" path="res://game files/ui/block/statement/statement_texture.png" id="2_2m8co"]
-[ext_resource type="LabelSettings" uid="uid://1vnp5kqvbw0s" path="res://game files/ui/block/upperlip_labelsettings.tres" id="3_nqpt0"]
+[ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="3_nqpt0"]
 
 [node name="Statement" type="Control"]
 texture_filter = 3
@@ -44,8 +44,8 @@ theme_override_constants/margin_bottom = 8
 
 [node name="Label" type="Label" parent="UpperLip"]
 layout_mode = 2
+theme = ExtResource("3_nqpt0")
 text = "FUNCTION()"
-label_settings = ExtResource("3_nqpt0")
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip"]
 visible = false

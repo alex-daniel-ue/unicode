@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dteljjqo20av1"]
+
+[ext_resource type="Shader" uid="uid://drtmua7o66ak5" path="res://game files/ui/canvas/canvas_bg.gdshader" id="1_k0m5l"]
+[ext_resource type="Script" uid="uid://bl2rclocuwoxa" path="res://game files/ui/canvas/canvas.gd" id="2_hwt6r"]
+[ext_resource type="Script" uid="uid://bvs8o0f7epkka" path="res://game files/ui/canvas/drop_preview_handler.gd" id="3_ulhu7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c8erp"]
+shader = ExtResource("1_k0m5l")
+shader_parameter/cell_size = 32.905
+shader_parameter/dot_size = 0.05
+shader_parameter/background_color = Color(0.129412, 0.0823529, 0.121569, 1)
+shader_parameter/dot_color = Color(0.55, 0.55, 0.55, 1)
+shader_parameter/resolution = Vector2(1152, 648)
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/anti_aliasing_factor = 0.01
+shader_parameter/stochastic_samples = 16
+
+[node name="PuzzleCanvas" type="ColorRect"]
+material = SubResource("ShaderMaterial_c8erp")
+clip_contents = true
+offset_right = 100.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+script = ExtResource("2_hwt6r")
+
+[node name="DropPreviewHandler" type="Control" parent="."]
+anchors_preset = 0
+script = ExtResource("3_ulhu7")

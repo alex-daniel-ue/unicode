@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=3 uid="uid://bv8qxx612uax1"]
+
+[ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="1_uwf0d"]
+[ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/block/nested_block/nested_block.tscn" id="2_spgc8"]
+[ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/block/statement/statement.tscn" id="3_iyf72"]
+[ext_resource type="PackedScene" uid="uid://dteljjqo20av1" path="res://game files/ui/canvas/canvas.tscn" id="4_ihrb2"]
+[ext_resource type="Texture2D" uid="uid://b2qchoy10il3l" path="res://game files/sample.png" id="5_j3wab"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fden2"]
+
+[node name="PuzzleMockup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+theme_override_constants/autohide = 0
+split_offset = -173
+
+[node name="Description" type="ColorRect" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.27451, 0.231373, 0.572549, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/Description"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MarginDebug" type="ColorRect" parent="HSplitContainer/Description/MarginContainer"]
+visible = false
+layout_mode = 2
+color = Color(1, 0, 0, 0.541176)
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/Description/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fden2")
+
+[node name="Label" type="Label" parent="HSplitContainer/Description/MarginContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_uwf0d")
+theme_override_font_sizes/font_size = 25
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+Curabitur vitae pretium enim. Curabitur nec luctus mauris. Suspendisse iaculis fermentum mattis. Nulla semper leo a suscipit tristique. Sed porta mi orci, nec luctus diam pulvinar in.
+
+Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In ornare, sapien eget suscipit pulvinar, felis nunc interdum libero, eu consectetur justo ipsum vitae nisi. Aliquam eu nibh fermentum, rutrum nibh eu, pulvinar ligula."
+autowrap_mode = 2
+
+[node name="NestedBlock" parent="HSplitContainer/Description" instance=ExtResource("2_spgc8")]
+offset_left = 214.0
+offset_top = 462.0
+offset_right = 314.0
+offset_bottom = 562.0
+is_infinite = true
+
+[node name="Statement" parent="HSplitContainer/Description" instance=ExtResource("3_iyf72")]
+offset_left = 214.0
+offset_top = 414.0
+offset_right = 314.0
+offset_bottom = 444.0
+is_infinite = true
+
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+theme_override_constants/autohide = 0
+
+[node name="Canvas" parent="HSplitContainer/HSplitContainer" instance=ExtResource("4_ihrb2")]
+layout_mode = 2
+
+[node name="Display" type="ColorRect" parent="HSplitContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.152941, 0.141176, 0.290196, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/Display"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="TextureRect" type="TextureRect" parent="HSplitContainer/HSplitContainer/Display/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("5_j3wab")
+expand_mode = 4
+stretch_mode = 5
