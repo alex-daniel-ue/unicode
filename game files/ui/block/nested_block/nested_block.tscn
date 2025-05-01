@@ -13,6 +13,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
+size_flags_horizontal = 0
 script = ExtResource("1_sjyww")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]

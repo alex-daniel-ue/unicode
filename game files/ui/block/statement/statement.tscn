@@ -11,6 +11,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 30.0
+size_flags_horizontal = 0
 mouse_filter = 2
 script = ExtResource("1_dw8ho")
 metadata/_edit_group_ = true

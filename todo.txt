@@ -13,11 +13,9 @@
 - Slightly highlight hovered Blocks
 	- Modify self-modulate or apply outline shader on mouse_entered/mouse_exited/gui_input
 - Easy formatting text in labels in UpperLips, use @tool
-- Interlocking textures illusion
+- Interlocking Blocks illusion
 
 ## BUGS:
 - Make UpperLip have a NinePatchRect itself, so LowerLip doesn't expand too, or
 	make LowerLip a static TextureRect.
 	- Automatically cut textures?
-- All Blocks inside a NestedBlock resize to longest Block
-	- Solution: dynamically change size flags to ShrinkBegin, but it doesn't work
