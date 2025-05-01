@@ -67,11 +67,10 @@ layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("1_uwf0d")
 theme_override_font_sizes/font_size = 25
-text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-Curabitur vitae pretium enim. Curabitur nec luctus mauris. Suspendisse iaculis fermentum mattis. Nulla semper leo a suscipit tristique. Sed porta mi orci, nec luctus diam pulvinar in.
-
-Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In ornare, sapien eget suscipit pulvinar, felis nunc interdum libero, eu consectetur justo ipsum vitae nisi. Aliquam eu nibh fermentum, rutrum nibh eu, pulvinar ligula."
+text = "Keybinds:
+- ESC: Quit game
+- Space: Pause game
+- F1: Toggle lag (low FPS)"
 autowrap_mode = 2
 
 [node name="NestedBlock" parent="HSplitContainer/Description" instance=ExtResource("2_spgc8")]
