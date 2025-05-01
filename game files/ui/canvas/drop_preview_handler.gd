@@ -66,7 +66,6 @@ func get_preview_container() -> VBoxContainer:
 	
 	if parent_block is NestedBlock:
 		if block is Statement:
-			Util.log("container: sibling of statement")
 			return container
 		
 		if parent_block is NestedBlock:
@@ -74,16 +73,12 @@ func get_preview_container() -> VBoxContainer:
 			var is_above := get_global_mouse_position().y < center_y
 			
 			if control.name == ("UpperLip" if is_above else "LowerLip"):
-				Util.log("container: %s of nested nestedblock" % ("above" if is_above else "below"))
 				return parent_block.mouth
 	
 	if block is NestedBlock:
 		if block._can_drop_data(Vector2.ZERO, Block.new()):
 			if block.is_drop_preview:
-				Util.log("container: inherited nestedblock preview")
 				return dp_container
-			
-			Util.log("container: inside nestedblock")
 			return block.mouth
 	
 	return null
@@ -97,7 +92,6 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 	if not Util.point_within(mouse, top_left, top_left + mouth.size, true):
 		in_deadband = false
 		var center := top_left + mouth.size * 0.5
-		Util.log("index: mouse %s mouth" % ("above" if mouse.y < center.y else "below"))
 		return 0 if mouse.y < center.y else -1
 	
 	for child: Block in mouth.get_children():
@@ -112,7 +106,6 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 		# Immediately take over when hovering over non-preview blocks
 		if not (child.is_drop_preview or child is NestedBlock):
 			in_deadband = false
-			Util.log("index: took over block")
 			return idx
 		
 		var center := top + height * 0.5
@@ -124,15 +117,12 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 			# If above deadband
 			if dy < -dp_deadband:
 				in_deadband = false
-				Util.log("index: %s above deadband" % child)
 				return max(0, idx-1)
 			# If below deadband
 			if dy > dp_deadband:
 				in_deadband = false
-				Util.log("index: %s below deadband" % child)
 				return idx+1
 		
-		Util.log("index: %s %s" % [child, "inside deadband"])
 		return dp_idx
 	
 	push_error("Fallback reached.")
@@ -164,4 +154,5 @@ func _notification(what: int) -> void:
 				if not current_data.origin_parent:
 					current_data.queue_free()
 				else:
-					current_data.origin_parent.insert_child(current_data.origin_idx, current_data)
+					current_data.origin_parent.add_child(current_data)
+					current_data.origin_parent.move_child(current_data, current_data.origin_idx)
