@@ -15,3 +15,4 @@
 ## REFACTORING:
 - Separate Preview and Selection into different Nodes in PuzzleCanvas
 - Refactor NestedBlock._drop_data()
+- Refactor drop preview and drop functionality to use replace_by and leverage preview predictions

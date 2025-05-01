@@ -110,8 +110,15 @@ func _notification(what: int) -> void:
 			_current_drag_data = get_viewport().gui_get_drag_data()
 			
 			_drop_preview_block = _current_drag_data.clone()
-			_drop_preview_block._is_drop_preview = true
 			_drop_preview_block.modulate.a = _DROP_PREVIEW_ALPHA
+			
+			_drop_preview_block._is_drop_preview = true
+			if _drop_preview_block is NestedBlock:
+				await get_tree().process_frame
+				for child in Util.get_all_children(_drop_preview_block._mouth):
+					if child is NestedBlock:
+						child._is_drop_preview = true
+						
 		NOTIFICATION_DRAG_END:
 			_drop_preview_block.queue_free()
 			_drop_preview_block = null

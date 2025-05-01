@@ -8,6 +8,10 @@ var initial_min_size: Vector2
 @onready var _mouth: VBoxContainer = $Mouth
 
 
+func _init() -> void:
+	_mouth = find_child("Mouth", true, false)
+	pass
+
 func _ready() -> void:
 	initial_min_size = custom_minimum_size
 	_upper_lip.custom_minimum_size.y = _texture.patch_margin_top
@@ -26,7 +30,12 @@ func _ready() -> void:
 func _update_height() -> void:
 	custom_minimum_size.y = _mouth.size.y + _texture.custom_minimum_size.y
 	custom_minimum_size.y = max(custom_minimum_size.y, initial_min_size.y)
-	#size.y = custom_minimum_size.y
+	size.y = custom_minimum_size.y
+
+
+func _on_child_entered_mouth(child: Node) -> void:
+	prints(name, child)
+	child.size_flags_horizontal = SIZE_SHRINK_BEGIN
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
@@ -35,9 +44,15 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 ## This function is called when it is [b]dropped onto[/b], not being dropped.
 func _drop_data(at_position: Vector2, data: Variant) -> void:
+	#printt(Time.get_ticks_msec()/1000.0, name)
 	if _is_drop_preview:
-		var parent_container := get_parent()
-		parent_container.insert_child(get_index(), data)
+		var idx := get_index()
+		var parent_block := get_parent().owner
+		while parent_block._is_drop_preview:
+			idx = parent_block.get_index()
+			parent_block = parent_block.get_parent().owner
+		
+		parent_block._mouth.insert_child(idx, data)
 		return
 	
 	var hovered := get_viewport().gui_get_hovered_control()
