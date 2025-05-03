@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b1bgmja6wak26"]
+[gd_scene load_steps=5 format=3 uid="uid://b1bgmja6wak26"]
 
 [ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/block/statement/statement.gd" id="1_dw8ho"]
 [ext_resource type="Texture2D" uid="uid://cn20jjrocxosa" path="res://game files/ui/block/statement/statement_texture.png" id="2_2m8co"]
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="3_nqpt0"]
+[ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="4_4rx5p"]
 
 [node name="Statement" type="Control"]
 texture_filter = 3
@@ -33,20 +34,21 @@ patch_margin_bottom = 8
 
 [node name="UpperLip" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+offset_right = 91.0
+offset_bottom = 30.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 30
 
 [node name="Label" type="Label" parent="UpperLip"]
 layout_mode = 2
 theme = ExtResource("3_nqpt0")
-text = "FUNCTION()"
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("4_4rx5p")
+theme_override_font_sizes/font_size = 32
+text = "Function"
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip"]
 visible = false

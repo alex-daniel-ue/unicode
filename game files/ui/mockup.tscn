@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bv8qxx612uax1"]
+[gd_scene load_steps=8 format=3 uid="uid://bv8qxx612uax1"]
 
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="1_uwf0d"]
+[ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="2_iyf72"]
 [ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/block/nested_block/nested_block.tscn" id="2_spgc8"]
 [ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/block/statement/statement.tscn" id="3_iyf72"]
 [ext_resource type="PackedScene" uid="uid://dteljjqo20av1" path="res://game files/ui/canvas/canvas.tscn" id="4_ihrb2"]
@@ -66,7 +67,10 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_fden2")
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("1_uwf0d")
-theme_override_font_sizes/font_size = 25
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("2_iyf72")
+theme_override_font_sizes/font_size = 48
 text = "Keybinds:
 - ESC: Quit game
 - Space: Pause game
