@@ -73,4 +73,3 @@ grow_vertical = 0
 mouse_filter = 1
 
 [connection signal="minimum_size_changed" from="UpperLip" to="." method="_on_label_size_changed"]
-[connection signal="child_entered_tree" from="Mouth" to="." method="_on_child_entered_mouth"]

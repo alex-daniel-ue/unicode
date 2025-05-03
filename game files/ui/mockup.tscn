@@ -87,6 +87,14 @@ offset_right = 314.0
 offset_bottom = 444.0
 is_infinite = true
 
+[node name="Statement2" parent="HSplitContainer/Description" instance=ExtResource("3_iyf72")]
+custom_minimum_size = Vector2(100, 60)
+offset_left = 214.0
+offset_top = 339.0
+offset_right = 314.0
+offset_bottom = 399.0
+is_infinite = true
+
 [node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3

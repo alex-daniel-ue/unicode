@@ -2,7 +2,7 @@ class_name NestedBlock
 extends Block
 
 
-var initial_min_size: Vector2
+
 
 @onready var lower_lip := $LowerLip
 @onready var mouth: VBoxContainer = $Mouth:
@@ -16,7 +16,7 @@ func _init() -> void:
 	mouth = find_child("Mouth", true, false)
 
 func _ready() -> void:
-	initial_min_size = custom_minimum_size
+	super()
 	lower_lip.custom_minimum_size.y = texture.patch_margin_bottom
 	mouth.position = Vector2(texture.patch_margin_left, texture.patch_margin_top)
 	
@@ -30,9 +30,11 @@ func update_height() -> void:
 	custom_minimum_size.y = max(mouth.size.y + texture.custom_minimum_size.y, initial_min_size.y)
 	size.y = custom_minimum_size.y
 
-func _on_child_entered_mouth(child: Node) -> void:
-	Util.log("%s entered %s" % [child, self])
-	child.size_flags_horizontal = SIZE_SHRINK_BEGIN
+func get_mouth_size() -> Vector2:
+	return Vector2(
+		size.x - texture.patch_margin_left,
+		size.y - texture.patch_margin_top - texture.patch_margin_bottom
+	)
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	return data is Block and not is_infinite

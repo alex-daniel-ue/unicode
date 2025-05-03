@@ -3,6 +3,8 @@ extends Control
 
 
 @export var is_infinite := false
+@export var is_stackable := true
+@export var is_insertable := false
 @export var block_color := Color.WHITE:
 	set(value):
 		texture.self_modulate = value
@@ -14,6 +16,7 @@ const DRAG_PREVIEW_TRANS := Tween.TRANS_ELASTIC
 const DRAG_PREVIEW_SCALE_MULT := Vector2(1.1, 1.1)
 const DRAG_PREVIEW_SCALE_DUR := 0.2
 
+var initial_min_size: Vector2
 var is_drop_preview := false  # Do NOT remove this. This is needed immensely.
 var origin_parent: Node
 var origin_idx: int
@@ -27,8 +30,10 @@ var origin_idx: int
 
 
 func _ready() -> void:
+	initial_min_size = custom_minimum_size
 	upper_lip.custom_minimum_size.y = texture.patch_margin_top
 
+## Returns the local center position. Meant to be overridden by subclasses.
 func get_center() -> Vector2:
 	return -0.5 * size
 

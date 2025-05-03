@@ -9,6 +9,7 @@ var current_data: Block
 var drop_preview: Control
 var drop_preview_container: Control
 var drop_preview_idx: int
+var drop_preview_center: Vector2
 var upper_threshold: float
 var lower_threshold: float
 
@@ -35,18 +36,20 @@ func update_drop_preview() -> void:
 					drop_preview_container.remove_child(drop_preview)
 				
 				this_container.insert_child(this_idx, drop_preview)
+				drop_preview_center = drop_preview.global_position
 				
 				# Update stored container, index, and thresholds
 				drop_preview_container = this_container
 				drop_preview_idx = this_idx
 				
 				update_thresholds()
+			
 			# If only the index has changed
 			elif this_idx != drop_preview_idx:
 				# Move to and store the new index
 				drop_preview_container.move_child(drop_preview, this_idx)
+				drop_preview_center = drop_preview.global_position
 				drop_preview_idx = this_idx
-				
 				update_thresholds()
 		
 		# If previewing nothing, but recently previewed
@@ -87,40 +90,47 @@ func get_preview_container() -> VBoxContainer:
 
 func get_preview_idx(mouth: VBoxContainer) -> int:
 	assert(mouth.owner is NestedBlock, "Passed VBoxContainer isn't part of NestedBlock.")
-
-	var mouse_y := get_global_mouse_position().y
+	
+	var mouse := get_global_mouse_position()
 	var mouth_pos := mouth.global_position
 	var mouth_size: Vector2 = mouth.owner.get_mouth_size()
 	
-	if not Util.within(mouse_y, mouth_pos.y, mouth_pos.y + mouth_size.y, true):
-		var center_y := mouth_pos.y + mouth_size.y * 0.5
-		return 0 if mouse_y < center_y else -1
+	if not Util.within(mouse.y, mouth_pos.y, (mouth_pos + mouth_size).y, true):
+		var center := mouth_pos + mouth_size * 0.5
+		return 0 if mouse.y < center.y else -1
 	
-	if mouth.get_child_count() == 0:
-		return 0
+	for child: Block in mouth.get_children():
+		var idx := child.get_index()
+		var top := child.global_position.y
+		var height := child.size.y
+		
+		if mouse.y < top or mouse.y > top + height:
+			continue
+		
+		if child.is_drop_preview:
+			#Util.log("staying")
+			return drop_preview_idx
+		
+		
+		if drop_preview_container != mouth \
+				or mouse.y < upper_threshold \
+				or mouse.y > lower_threshold:
+			Util.log([drop_preview_container != mouth, mouse.y < upper_threshold, mouse.y > lower_threshold])
+			return idx
 	
-	if drop_preview_container != mouth or mouse_y < upper_threshold or mouse_y > lower_threshold:
-		for child: Block in mouth.get_children():
-			var top := child.global_position.y
-			var height := child.size.y
-			if mouse_y <= top or mouse_y > top + height:
-				continue
-			return child.get_index()
-	
+	push_error("fallback")
 	return drop_preview_idx
 
 func update_thresholds() -> void:
-	await get_tree().process_frame
-	
+	var children: Array[Node] = drop_preview_container.get_children()
 	upper_threshold = -INF
-	if drop_preview.get_index() != 0:
-		var upper_block: Block = drop_preview_container.get_child(drop_preview.get_index()-1)
-		upper_threshold = upper_block.global_position.y + drop_preview.size.y
+	if drop_preview_idx > 0:
+		var above_pos: Vector2 = children[drop_preview_idx-1].global_position
+		upper_threshold = above_pos.y + drop_preview.size.y
 	
 	lower_threshold = INF
-	if not drop_preview_container.get_child(-1).is_drop_preview:
-		var lower_block: Block = drop_preview_container.get_child(drop_preview_idx+1)
-		lower_threshold = (lower_block.global_position.y + lower_block.size.y) - drop_preview.size.y
+	if drop_preview != children.back():
+		lower_threshold = drop_preview.global_position.y + drop_preview.size.y - children[drop_preview_idx+1].size.y
 
 func _notification(what: int) -> void:
 	match what:
