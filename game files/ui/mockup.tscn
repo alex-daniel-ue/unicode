@@ -9,7 +9,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fden2"]
 
-[node name="PuzzleMockup" type="Control"]
+[node name="Mockup" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,23 +26,29 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
+[node name="HSplitContainer2" type="HSplitContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 0
 theme_override_constants/autohide = 0
-split_offset = -173
+split_offset = 800
 
-[node name="Description" type="ColorRect" parent="HSplitContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 0
+theme_override_constants/autohide = 0
+
+[node name="Description" type="ColorRect" parent="HSplitContainer2/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.27451, 0.231373, 0.572549, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/Description"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer2/HSplitContainer/Description"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,16 +60,16 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="MarginDebug" type="ColorRect" parent="HSplitContainer/Description/MarginContainer"]
+[node name="MarginDebug" type="ColorRect" parent="HSplitContainer2/HSplitContainer/Description/MarginContainer"]
 visible = false
 layout_mode = 2
 color = Color(1, 0, 0, 0.541176)
 
-[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/Description/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer2/HSplitContainer/Description/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_fden2")
 
-[node name="Label" type="Label" parent="HSplitContainer/Description/MarginContainer/PanelContainer"]
+[node name="Label" type="Label" parent="HSplitContainer2/HSplitContainer/Description/MarginContainer/PanelContainer"]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("1_uwf0d")
@@ -77,43 +83,31 @@ text = "Keybinds:
 - F1: Toggle lag (low FPS)"
 autowrap_mode = 2
 
-[node name="NestedBlock" parent="HSplitContainer/Description" instance=ExtResource("2_spgc8")]
-offset_left = 214.0
-offset_top = 462.0
-offset_right = 314.0
-offset_bottom = 562.0
-is_infinite = true
+[node name="Statement" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("3_iyf72")]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 401.0
+offset_right = 360.0
+offset_bottom = 475.0
+block_type = 1
 
-[node name="Statement" parent="HSplitContainer/Description" instance=ExtResource("3_iyf72")]
-offset_left = 214.0
-offset_top = 414.0
-offset_right = 314.0
-offset_bottom = 444.0
-is_infinite = true
+[node name="NestedBlock" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("2_spgc8")]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 495.0
+offset_right = 379.0
+offset_bottom = 614.0
+block_type = 1
 
-[node name="Statement2" parent="HSplitContainer/Description" instance=ExtResource("3_iyf72")]
-custom_minimum_size = Vector2(100, 60)
-offset_left = 214.0
-offset_top = 339.0
-offset_right = 314.0
-offset_bottom = 399.0
-is_infinite = true
-
-[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-theme_override_constants/autohide = 0
-
-[node name="Canvas" parent="HSplitContainer/HSplitContainer" instance=ExtResource("4_ihrb2")]
+[node name="Canvas" parent="HSplitContainer2/HSplitContainer" instance=ExtResource("4_ihrb2")]
 layout_mode = 2
 
-[node name="Display" type="ColorRect" parent="HSplitContainer/HSplitContainer"]
+[node name="Display" type="ColorRect" parent="HSplitContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.152941, 0.141176, 0.290196, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/HSplitContainer/Display"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer2/Display"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -123,7 +117,7 @@ grow_vertical = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="TextureRect" type="TextureRect" parent="HSplitContainer/HSplitContainer/Display/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="HSplitContainer2/Display/MarginContainer"]
 layout_mode = 2
 texture = ExtResource("5_j3wab")
 expand_mode = 4

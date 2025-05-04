@@ -13,6 +13,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _input(event: InputEvent) -> void:
+	if _is_lmb_click(event):
+		Util.log("clicked on %s" % get_viewport().gui_get_hovered_control())
+	
 	if event.is_action_pressed("exit"):
 		get_tree().quit()
 	if event.is_action_pressed("lag_button"):
@@ -29,3 +32,6 @@ func _input(event: InputEvent) -> void:
 
 func _wrap_color(color: String, message: String) -> String:
 	return "[color=%s]%s[/color]" % [color, message]
+
+func _is_lmb_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.button_index == 1 and event.pressed

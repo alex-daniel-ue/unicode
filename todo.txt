@@ -24,3 +24,4 @@
 - DropPreviewHandler's intended functionality for bigger previews (threshold closer
 	to center when neighbors are smaller than drop_preview) doesn't work at the
 	moment, as you need to hover on Blocks to overtake them. 
+- beeg upper lip

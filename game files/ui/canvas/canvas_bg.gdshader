@@ -17,34 +17,34 @@ float random(vec2 st){
 void fragment() {
     vec2 uv = FRAGCOORD.xy / resolution;
     vec4 finalColor = vec4(0.0);
-    
+
     for (int i = 0; i < stochastic_samples; ++i) {
         // Generate random offset within the pixel
         vec2 randomOffset = vec2(
             random(vec2(float(i), 0.0)),
             random(vec2(0.0, float(i)))
         ) / resolution;
-        
+
         // Apply offset and scale by cell_size
         vec2 scaled_pos = ((uv + randomOffset) * resolution + offset) / cell_size;
-        
+
         // Find the nearest grid intersection in normalized space
         vec2 nearest_grid = round(scaled_pos) * cell_size;
-        
+
         // Calculate the distance to the nearest grid intersection
         float dist = length(((uv + randomOffset) * resolution + offset) - nearest_grid);
-        
+
         // Convert dot_size to an actual radius based on grid_size
         float radius = dot_size * cell_size * 0.5;
-        
+
         // Anti-aliasing: Smooth transition near the edge of the dot
         float edge_smoothness = anti_aliasing_factor;
         float alpha = smoothstep(radius - edge_smoothness, radius + edge_smoothness, dist);
-        
+
         // Mix dot_color and background_color based on alpha
         finalColor += mix(dot_color, background_color, alpha);
     }
-    
+
     // Average the colors from all samples
     COLOR = finalColor / float(stochastic_samples);
 }

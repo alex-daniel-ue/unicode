@@ -1,73 +1,110 @@
-[gd_scene load_steps=7 format=3 uid="uid://siv2nx55laya"]
+[gd_scene load_steps=9 format=3 uid="uid://siv2nx55laya"]
 
 [ext_resource type="Script" uid="uid://bgpdi7ca4xasg" path="res://game files/ui/block/nested_block/nested_block.gd" id="1_sjyww"]
 [ext_resource type="Texture2D" uid="uid://di8w3402lcw77" path="res://game files/ui/block/nested_block/nested_block_texture_02.png" id="2_78b3k"]
-[ext_resource type="Script" uid="uid://uiundroog480" path="res://game files/ui/block/nested_block/nine_patch_rect.gd" id="3_rrmqx"]
+[ext_resource type="Script" uid="uid://domc8h7o580d7" path="res://game files/ui/block/upper_lip.gd" id="2_ik7g5"]
 [ext_resource type="Script" uid="uid://cijvae4j3nbg7" path="res://game files/ui/block/nested_block/mouth.gd" id="4_6cnl0"]
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="4_78b3k"]
+[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/socket.tscn" id="5_ik7g5"]
 [ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="5_wj74b"]
+[ext_resource type="Script" uid="uid://by8bt8hxvf1vv" path="res://game files/ui/block/nested_block/body.gd" id="7_egdk3"]
 
-[node name="NestedBlock" type="Control"]
+[node name="NestedBlock" type="VBoxContainer"]
 texture_filter = 3
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 100.0
-offset_bottom = 100.0
+offset_right = 222.0
+offset_bottom = 97.0
 size_flags_horizontal = 0
+theme_override_constants/separation = 0
 script = ExtResource("1_sjyww")
 
-[node name="NinePatchRect" type="NinePatchRect" parent="."]
+[node name="UpperLip" type="Control" parent="."]
+custom_minimum_size = Vector2(222, 45)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("2_ik7g5")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UpperLip"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
+size_flags_vertical = 3
 texture = ExtResource("2_78b3k")
-draw_center = false
-patch_margin_left = 28
-patch_margin_top = 36
+region_rect = Rect2(0, 0, 100, 28)
+patch_margin_left = 8
+patch_margin_top = 8
 patch_margin_right = 8
-patch_margin_bottom = 24
-script = ExtResource("3_rrmqx")
 
-[node name="UpperLip" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
 layout_mode = 1
-offset_right = 124.0
-offset_bottom = 36.0
+offset_right = 222.0
+offset_bottom = 45.0
+mouse_filter = 2
 theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 2
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 17
+theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UpperLip"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_78b3k")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
 theme_override_fonts/font = ExtResource("5_wj74b")
 theme_override_font_sizes/font_size = 32
-text = "REPEAT N TIMES"
+text = "REPEAT"
 
-[node name="MarginDebug" type="ColorRect" parent="UpperLip"]
+[node name="Socket" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_ik7g5")]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_78b3k")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("5_wj74b")
+theme_override_font_sizes/font_size = 32
+text = "TIMES"
+
+[node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
 visible = false
 layout_mode = 2
 color = Color(1, 0, 0, 0.541176)
 
-[node name="Mouth" type="VBoxContainer" parent="."]
-layout_mode = 0
+[node name="Body" type="NinePatchRect" parent="."]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_filter = 1
+texture = ExtResource("2_78b3k")
+draw_center = false
+region_rect = Rect2(0, 28, 100, 72)
+patch_margin_left = 28
+patch_margin_top = 8
+patch_margin_right = 71
+patch_margin_bottom = 24
+script = ExtResource("7_egdk3")
+minimum_height = 20.0
+
+[node name="Mouth" type="VBoxContainer" parent="Body"]
+layout_mode = 1
 offset_left = 28.0
-offset_top = 36.0
+offset_top = 8.0
 offset_right = 28.0
-offset_bottom = 36.0
+offset_bottom = 8.0
 mouse_filter = 2
 theme_override_constants/separation = 0
 script = ExtResource("4_6cnl0")
 
-[node name="LowerLip" type="Control" parent="."]
-custom_minimum_size = Vector2(0, 30)
+[node name="LowerLip" type="Control" parent="Body"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -75,6 +112,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
+size_flags_horizontal = 0
 mouse_filter = 1
 
-[connection signal="minimum_size_changed" from="UpperLip" to="." method="_on_label_size_changed"]
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_margin_container_resized"]
+[connection signal="resized" from="Body/Mouth" to="Body" method="_on_mouth_resized"]

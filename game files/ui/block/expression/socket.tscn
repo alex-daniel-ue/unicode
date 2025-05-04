@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=3 uid="uid://dsd5iplq82mey"]
+
+[ext_resource type="Script" uid="uid://bk85m4g4ubh4m" path="res://game files/ui/block/expression/socket.gd" id="1_6s4he"]
+[ext_resource type="Script" uid="uid://domc8h7o580d7" path="res://game files/ui/block/upper_lip.gd" id="1_26ia2"]
+[ext_resource type="Texture2D" uid="uid://dkb5pvyi8ogvu" path="res://game files/ui/block/expression/expression_texture_debug.png" id="1_dk2pw"]
+[ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="2_26ia2"]
+[ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="3_6s4he"]
+
+[node name="Socket" type="CenterContainer"]
+offset_right = 64.0
+offset_bottom = 26.0
+size_flags_vertical = 4
+script = ExtResource("1_6s4he")
+block_type = 1
+is_stackable = false
+
+[node name="UpperLip" type="Control" parent="."]
+custom_minimum_size = Vector2(90, 28)
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("1_26ia2")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UpperLip"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_dk2pw")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_top = 1
+patch_margin_bottom = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+layout_mode = 1
+offset_right = 64.0
+offset_bottom = 26.0
+mouse_filter = 2
+theme_override_constants/margin_left = 13
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 13
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_26ia2")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("3_6s4he")
+theme_override_font_sizes/font_size = 32
+text = "asd"
+
+[node name="Label2" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_26ia2")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("3_6s4he")
+theme_override_font_sizes/font_size = 32
+text = "asd"
+
+[node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
+visible = false
+layout_mode = 2
+color = Color(1, 0, 0, 0.541176)
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_margin_container_resized"]

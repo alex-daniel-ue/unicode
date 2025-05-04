@@ -60,7 +60,8 @@ func get_preview_container() -> VBoxContainer:
 		return null
 	
 	var block := control.owner
-	if not block is Block:  # If hovering over non-Block
+	# If hovering over non-Block or non-stackable Block
+	if not (block is Block and block.is_stackable):  
 		return null
 	
 	var container := block.get_parent()
@@ -75,13 +76,13 @@ func get_preview_container() -> VBoxContainer:
 			var is_above := get_global_mouse_position().y < center_y
 			
 			if control.name == ("UpperLip" if is_above else "LowerLip"):
-				return parent_block.mouth
+				return parent_block.body.mouth
 	
 	if block is NestedBlock:
 		if block._can_drop_data(Vector2.ZERO, Block.new()):
 			if block.is_drop_preview:
 				return drop_preview_container
-			return block.mouth
+			return block.body.mouth
 	
 	return null
 
@@ -90,7 +91,7 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 
 	var mouse_y := get_global_mouse_position().y
 	var mouth_pos := mouth.global_position
-	var mouth_size: Vector2 = mouth.owner.get_mouth_size()
+	var mouth_size: Vector2 = mouth.get_parent().get_mouth_size()
 	
 	if not Util.within(mouse_y, mouth_pos.y, mouth_pos.y + mouth_size.y, true):
 		var center_y := mouth_pos.y + mouth_size.y * 0.5
@@ -145,8 +146,8 @@ func _notification(what: int) -> void:
 			drop_preview_container = null
 			
 			if not get_viewport().gui_is_drag_successful():
-				if not current_data.origin_parent:
-					current_data.queue_free()
-				else:
+				if current_data.origin_parent:
 					current_data.origin_parent.add_child(current_data)
 					current_data.origin_parent.move_child(current_data, current_data.origin_idx)
+				else:
+					current_data.queue_free()
