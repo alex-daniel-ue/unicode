@@ -1,5 +1,5 @@
 - Sockets in upper lips
-	- Don't bother implementing previews, just highlight when hovered over
+	- Don't bother implementing previews, just change modulate when hovered over
 - Expression and value blocks
 	- Diamond and circular block textures
 - Cap/start block
@@ -16,12 +16,9 @@
 - Interlocking Blocks illusion
 
 ## BUGS:
-- Make UpperLip have a NinePatchRect itself, so LowerLip doesn't expand too, or
-	make LowerLip a static TextureRect.
-	- Automatically cut textures?
-- Flickering and crash when a preview (from inside a NestedBlock) is hovered to
-	its LowerLip.
 - DropPreviewHandler's intended functionality for bigger previews (threshold closer
 	to center when neighbors are smaller than drop_preview) doesn't work at the
 	moment, as you need to hover on Blocks to overtake them. 
-- beeg upper lip
+- Weird "Node not found" bug, replicate through:
+	- NestedBlock ( NestedBlock, NestedBlock ) or
+	- NestedBlock ( Statement, NestedBlock ( Statement ), Statement)

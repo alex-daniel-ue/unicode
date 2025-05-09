@@ -15,7 +15,7 @@ block_type = 1
 is_stackable = false
 
 [node name="UpperLip" type="Control" parent="."]
-custom_minimum_size = Vector2(90, 28)
+custom_minimum_size = Vector2(70, 28)
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("1_26ia2")
@@ -53,16 +53,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
 theme_override_fonts/font = ExtResource("3_6s4he")
 theme_override_font_sizes/font_size = 32
-text = "asd"
-
-[node name="Label2" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
-layout_mode = 2
-theme = ExtResource("2_26ia2")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
-theme_override_fonts/font = ExtResource("3_6s4he")
-theme_override_font_sizes/font_size = 32
-text = "asd"
+text = "value"
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
 visible = false

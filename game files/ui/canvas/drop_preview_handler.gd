@@ -106,6 +106,12 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 			var height := child.size.y
 			if mouse_y <= top or mouse_y > top + height:
 				continue
+			
+			var center_y := top + height * 0.5
+			if child is NestedBlock:
+				if mouse_y > center_y:
+					return child.get_index()+1
+			
 			return child.get_index()
 	
 	return drop_preview_idx

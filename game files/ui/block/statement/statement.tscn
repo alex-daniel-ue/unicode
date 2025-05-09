@@ -9,14 +9,14 @@
 
 [node name="Statement" type="CenterContainer"]
 texture_filter = 3
-offset_right = 182.0
+offset_right = 162.0
 offset_bottom = 52.0
 size_flags_horizontal = 0
 script = ExtResource("1_dw8ho")
 metadata/_edit_group_ = true
 
 [node name="UpperLip" type="Control" parent="."]
-custom_minimum_size = Vector2(182, 52)
+custom_minimum_size = Vector2(166, 52)
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("2_dilr4")
@@ -37,7 +37,7 @@ patch_margin_bottom = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
 layout_mode = 1
-offset_right = 182.0
+offset_right = 162.0
 offset_bottom = 52.0
 mouse_filter = 2
 theme_override_constants/margin_left = 12
@@ -47,6 +47,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
@@ -56,19 +57,10 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
 theme_override_fonts/font = ExtResource("4_4rx5p")
 theme_override_font_sizes/font_size = 32
-text = "asd"
+text = "function"
 
 [node name="Socket" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_g1muy")]
 layout_mode = 2
-
-[node name="Label2" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_nqpt0")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
-theme_override_fonts/font = ExtResource("4_4rx5p")
-theme_override_font_sizes/font_size = 32
-text = "asd"
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
 visible = false

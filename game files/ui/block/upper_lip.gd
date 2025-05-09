@@ -9,5 +9,6 @@ extends Control
 		return margin_container
 
 
+# Resize UpperLip according to Label size
 func _on_margin_container_resized() -> void:
 	custom_minimum_size = margin_container.size

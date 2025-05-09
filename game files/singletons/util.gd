@@ -18,11 +18,13 @@ static func log(message: Variant = "") -> void:
 static func within(n: float, x: float, y: float, inclusive := false) -> bool:
 	var lower := minf(x, y)
 	var upper := maxf(x, y)
-	if inclusive:
-		lower -= 1
-		upper += 1
 	
+	if inclusive:
+		return n >= lower and n <= upper
 	return n > lower and n < upper
 
-static func point_within(point: Vector2, vec1: Vector2, vec2: Vector2, inclusive := false) -> bool:
-	return within(point.x, vec1.x, vec2.x, inclusive) and within(point.y, vec1.y, vec2.y, inclusive)
+static func point_within(point: Vector2, corner_a: Vector2, corner_b: Vector2, inclusive: bool) -> bool:
+	var x_in_range := within(point.x, corner_a.x, corner_b.x, inclusive)
+	var y_in_range := within(point.y, corner_a.y, corner_b.y, inclusive)
+	
+	return x_in_range and y_in_range

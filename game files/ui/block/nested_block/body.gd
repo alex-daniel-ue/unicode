@@ -2,6 +2,9 @@
 extends NinePatchRect
 
 
+# This is a really bad fix, but it works
+signal mouth_resized
+
 @export_custom(PROPERTY_HINT_NONE, "suffix:px") var minimum_height := 0.0
 
 @onready var padding := patch_margin_top + patch_margin_bottom
@@ -23,3 +26,4 @@ func get_mouth_size() -> Vector2:
 
 func _on_mouth_resized() -> void:
 	custom_minimum_size.y = maxf(minimum_height, mouth.size.y) + padding
+	mouth_resized.emit()
