@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://domc8h7o580d7" path="res://game files/ui/block/upper_lip.gd" id="2_dilr4"]
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="3_nqpt0"]
 [ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="4_4rx5p"]
-[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/socket.tscn" id="5_g1muy"]
+[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/expression.tscn" id="5_g1muy"]
 
 [node name="Statement" type="CenterContainer"]
 texture_filter = 3
@@ -13,6 +13,7 @@ offset_right = 162.0
 offset_bottom = 52.0
 size_flags_horizontal = 0
 script = ExtResource("1_dw8ho")
+label = "function <value>"
 metadata/_edit_group_ = true
 
 [node name="UpperLip" type="Control" parent="."]
@@ -59,8 +60,9 @@ theme_override_fonts/font = ExtResource("4_4rx5p")
 theme_override_font_sizes/font_size = 32
 text = "function"
 
-[node name="Socket" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_g1muy")]
+[node name="Expression" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_g1muy")]
 layout_mode = 2
+draggable = false
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
 visible = false

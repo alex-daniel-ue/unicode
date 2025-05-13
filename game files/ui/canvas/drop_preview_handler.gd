@@ -1,7 +1,6 @@
 extends Control
 
 
-## Radius around center
 const DROP_PREVIEW_ALPHA := 0.4
 
 var current_data: Block
@@ -21,6 +20,9 @@ func _process(_delta: float) -> void:
 	update_drop_preview()
 
 func update_drop_preview() -> void:
+	if drop_preview == null:
+		return
+	
 	if get_viewport().gui_is_dragging():
 		this_container = get_preview_container()
 		
@@ -61,7 +63,7 @@ func get_preview_container() -> VBoxContainer:
 	
 	var block := control.owner
 	# If hovering over non-Block or non-stackable Block
-	if not (block is Block and block.is_stackable):  
+	if not (block is Block and block.placeable):  
 		return null
 	
 	var container := block.get_parent()
@@ -117,6 +119,7 @@ func get_preview_idx(mouth: VBoxContainer) -> int:
 	return drop_preview_idx
 
 func update_thresholds() -> void:
+	# Wait for positions to update
 	await get_tree().process_frame
 	
 	upper_threshold = -INF
@@ -133,6 +136,8 @@ func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
 			current_data = get_viewport().gui_get_drag_data()
+			if not current_data.placeable:
+				return
 			
 			# clone(), not duplicate(0), because children don't have owners
 			drop_preview = current_data.clone()
@@ -142,6 +147,9 @@ func _notification(what: int) -> void:
 			
 			drop_preview_idx = -1
 		NOTIFICATION_DRAG_END:
+			if not current_data.placeable:
+				return
+			
 			if drop_preview_container:
 				# Node.replace_by does NOT delete/remove the original Node
 				drop_preview_container.insert_child(drop_preview_idx, current_data)

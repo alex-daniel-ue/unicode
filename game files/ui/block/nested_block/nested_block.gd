@@ -10,7 +10,11 @@ extends Block
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return data is Block and block_type == BlockType.REGULAR
+	return [
+		not self.infinite,
+		data is Block,
+		data.placeable,
+	].all(func(b): return b)
 
 func _on_body_mouth_resized() -> void:
 	size = Vector2.ZERO

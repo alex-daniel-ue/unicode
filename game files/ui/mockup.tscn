@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/block/nested_block/nested_block.tscn" id="2_spgc8"]
 [ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/block/statement/statement.tscn" id="3_iyf72"]
 [ext_resource type="PackedScene" uid="uid://dteljjqo20av1" path="res://game files/ui/canvas/canvas.tscn" id="4_ihrb2"]
-[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/socket.tscn" id="5_iyf72"]
+[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/expression.tscn" id="5_iyf72"]
 [ext_resource type="Texture2D" uid="uid://b2qchoy10il3l" path="res://game files/sample.png" id="5_j3wab"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fden2"]
@@ -84,20 +84,22 @@ text = "Keybinds:
 - F1: Toggle lag (low FPS)"
 autowrap_mode = 2
 
-[node name="Socket" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("5_iyf72")]
-layout_mode = 2
-offset_left = 214.0
-offset_top = 399.0
-offset_right = 304.0
-offset_bottom = 427.0
+[node name="Expression" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("5_iyf72")]
+modulate = Color(0.2581, 0.721493, 0.89, 1)
+layout_mode = 0
+offset_left = 286.0
+offset_top = 398.0
+offset_right = 356.0
+offset_bottom = 426.0
+infinite = true
 
 [node name="Statement" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("3_iyf72")]
 layout_mode = 0
-offset_left = 174.0
-offset_top = 440.0
-offset_right = 356.0
-offset_bottom = 492.0
-block_type = 1
+offset_left = 195.0
+offset_top = 443.0
+offset_right = 361.0
+offset_bottom = 495.0
+infinite = true
 
 [node name="NestedBlock" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("2_spgc8")]
 layout_mode = 0
@@ -105,7 +107,7 @@ offset_left = 154.0
 offset_top = 504.0
 offset_right = 376.0
 offset_bottom = 601.0
-block_type = 1
+infinite = true
 
 [node name="Canvas" parent="HSplitContainer2/HSplitContainer" instance=ExtResource("4_ihrb2")]
 layout_mode = 2

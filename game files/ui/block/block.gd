@@ -2,21 +2,16 @@ class_name Block
 extends Control
 
 
-enum BlockType {
-	REGULAR,
-	INFINITE,
-	SOCKET,
-}
-
 const DRAG_PREVIEW_DUR := 0.5
 const DRAG_PREVIEW_EASE := Tween.EASE_OUT
 const DRAG_PREVIEW_TRANS := Tween.TRANS_ELASTIC
 const DRAG_PREVIEW_SCALE_MULT := Vector2(1.1, 1.1)
 const DRAG_PREVIEW_SCALE_DUR := 0.2
 
-@export var block_type := BlockType.REGULAR
-@export var is_stackable := true
-@export var is_insertable := false
+@export var label: String
+@export var infinite := false
+@export var draggable := true
+@export var placeable := true
 
 var is_drop_preview := false  # Do NOT remove this. This is needed immensely.
 var origin_parent: Node
@@ -26,13 +21,16 @@ var origin_idx: int
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
+	if not draggable:
+		return null
+	
 	var drag_preview_container := Control.new()
 	drag_preview_container.name = "DragPreviewContainer"
 	set_drag_preview(drag_preview_container)
 	
 	var copy: Block = clone()
-	if block_type == BlockType.INFINITE:
-		copy.block_type = BlockType.REGULAR
+	if infinite:
+		copy.infinite = false
 		#copy.block_color = Color.from_hsv(randf(), 0.8, 1.0)
 	
 	# flag = 0 stops instantiation, duplicating exact appearance
@@ -62,7 +60,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	)
 	#endregion
 	
-	if block_type == BlockType.INFINITE:
+	if infinite:
 		return copy
 	else:
 		origin_parent = get_parent()
@@ -70,6 +68,12 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		
 		origin_parent.remove_child(self)
 		return self
+
+
+## Returns the local center position. Meant to be overridden by subclasses.
+func get_center() -> Vector2:
+	return -0.5 * size
+
 
 # Using DUPLICATE_USE_INSTANTIATION with Node.duplicate() makes programmatically
 # added nodes disappear, while omitting it causes all children to lose their
@@ -83,6 +87,7 @@ func clone(flags: int = DUPLICATE_SCRIPTS | DUPLICATE_SIGNALS) -> Block:
 		child.owner = copy
 	return copy
 
-## Returns the local center position. Meant to be overridden by subclasses.
-func get_center() -> Vector2:
-	return -0.5 * size
+
+func parse_label() -> void:
+	# TODO:
+	pass
