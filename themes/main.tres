@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://88cahjm0kd3k"]
+
+[ext_resource type="FontFile" uid="uid://dm4f8d7nhiqpn" path="res://themes/fonts/TinyUnicode.ttf" id="1_0avsd"]
+
+[resource]
+BlockLabel/base_type = &"Label"
+BlockLabel/constants/line_spacing = -29
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/font_sizes/font_size = 32
+Label/fonts/font = ExtResource("1_0avsd")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://buw8bbb2oqrni"]
+
+[ext_resource type="Script" uid="uid://c7hnacb62jbl2" path="res://ui/canvas/canvas.gd" id="1_75aqd"]
+[ext_resource type="Script" uid="uid://hfalmbcw7k7l" path="res://ui/canvas/drop_manager.gd" id="2_p4jra"]
+
+[node name="Canvas" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0923971, 0.0923971, 0.0923971, 1)
+script = ExtResource("1_75aqd")
+
+[node name="DropManager" type="Control" parent="."]
+anchors_preset = 0
+script = ExtResource("2_p4jra")

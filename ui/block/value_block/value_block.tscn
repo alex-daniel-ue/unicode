@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://da50ywh5cb07s"]
+
+[ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_g73sa"]
+[ext_resource type="Script" uid="uid://ds7e5xil4w1he" path="res://ui/block/expression_block/expression_block.gd" id="2_cf5k1"]
+[ext_resource type="Texture2D" uid="uid://ch4kyvq1p1lr7" path="res://ui/block/value_block/debug_texture.png" id="3_82xla"]
+[ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://ui/block/upper_lip.gd" id="4_eg6ck"]
+
+[node name="ValueBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
+texture_filter = 3
+offset_right = 50.0
+offset_bottom = 50.0
+size_flags_horizontal = 0
+theme = ExtResource("1_g73sa")
+script = ExtResource("2_cf5k1")
+draggable = false
+stackable = false
+text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("3_82xla")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 25
+patch_margin_top = 25
+patch_margin_right = 25
+patch_margin_bottom = 25
+script = ExtResource("4_eg6ck")
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 50.0
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
