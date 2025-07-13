@@ -7,11 +7,12 @@ const DRAG_PREVIEW_EASE := Tween.EASE_OUT
 const DRAG_PREVIEW_TRANS := Tween.TRANS_ELASTIC
 const DRAG_PREVIEW_SCALE_MULT := Vector2(1.1, 1.1)
 const DRAG_PREVIEW_SCALE_DUR := 0.2
+const BLOCK_LABEL_THEME_TYPE_VARIATION := &"BlockLabel"
 
-@export var label: String
+@export var block_text: String
 @export var infinite := false
 @export var draggable := true
-@export var placeable := true
+@export var stackable := true
 
 var is_drop_preview := false  # Do NOT remove this. This is needed immensely.
 var origin_parent: Node
@@ -81,13 +82,23 @@ func get_center() -> Vector2:
 # sets the owner for all children.
 func clone(flags: int = DUPLICATE_SCRIPTS | DUPLICATE_SIGNALS) -> Block:
 	var copy := duplicate(flags)
-	
-	# .slice(1) to avoid setting root node's owner to itself
-	for child in Util.get_all_children(copy).slice(1):
-		child.owner = copy
+	set_children_owner(copy)
 	return copy
 
+func set_children_owner(node: Node):
+	# .slice(1) to avoid setting root node's owner to itself
+	for child in Util.get_all_children(node).slice(1):
+		if child is Block:
+			child.owner = node
+			set_children_owner(child)
+		elif not child.owner is Block:
+			child.owner = node
 
-func parse_label() -> void:
+func parse_block_text() -> void:
 	# TODO:
 	pass
+
+func normalize_label(label: Label) -> void:
+	label.theme_type_variation = BLOCK_LABEL_THEME_TYPE_VARIATION
+	if not label.text.begins_with('\n'):
+		label.text = '\n' + label.text

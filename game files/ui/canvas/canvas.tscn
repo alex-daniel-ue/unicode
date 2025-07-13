@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dteljjqo20av1"]
+[gd_scene load_steps=6 format=3 uid="uid://dteljjqo20av1"]
 
 [ext_resource type="Shader" uid="uid://drtmua7o66ak5" path="res://game files/ui/canvas/canvas_bg.gdshader" id="1_k0m5l"]
 [ext_resource type="Script" uid="uid://bl2rclocuwoxa" path="res://game files/ui/canvas/canvas.gd" id="2_hwt6r"]
 [ext_resource type="Script" uid="uid://bvs8o0f7epkka" path="res://game files/ui/canvas/drop_preview_handler.gd" id="3_ulhu7"]
+[ext_resource type="Script" uid="uid://msgry1oexrxu" path="res://game files/ui/canvas/expression_preview_handler.gd" id="4_hwt6r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8erp"]
 shader = ExtResource("1_k0m5l")
@@ -26,3 +27,9 @@ script = ExtResource("2_hwt6r")
 [node name="DropPreviewHandler" type="Control" parent="."]
 anchors_preset = 0
 script = ExtResource("3_ulhu7")
+
+[node name="ExpressionPreviewHandler" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_hwt6r")

@@ -1,10 +1,11 @@
+class_name Canvas
 extends ColorRect
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	var requirements: Array[bool] = [
 		data is Block,
-		data.placeable,
+		data.stackable,
 	]
 	
 	var check = func(b: bool) -> bool: return b

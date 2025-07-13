@@ -10,11 +10,11 @@ extends Block
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return [
-		not self.infinite,
-		data is Block,
-		data.placeable,
-	].all(func(b): return b)
+	return bool(
+		not self.infinite and
+		data is Block and
+		data.stackable
+	)
 
 func _on_body_mouth_resized() -> void:
 	size = Vector2.ZERO

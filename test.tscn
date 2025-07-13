@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://cyc5e16i1b5bx"]
+
+[ext_resource type="PackedScene" uid="uid://dteljjqo20av1" path="res://game files/ui/canvas/canvas.tscn" id="1_37kl0"]
+[ext_resource type="PackedScene" uid="uid://b1bgmja6wak26" path="res://game files/ui/block/statement/statement.tscn" id="2_ppyta"]
+[ext_resource type="PackedScene" uid="uid://siv2nx55laya" path="res://game files/ui/block/nested_block/nested_block.tscn" id="3_ykrsh"]
+[ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/expression.tscn" id="4_g14j6"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Canvas" parent="." instance=ExtResource("1_37kl0")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Statement" parent="Canvas" instance=ExtResource("2_ppyta")]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 33.0
+offset_right = 197.0
+offset_bottom = 85.0
+
+[node name="NestedBlock" parent="Canvas" instance=ExtResource("3_ykrsh")]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 114.0
+offset_right = 242.0
+offset_bottom = 211.0
+
+[node name="Expression" parent="Canvas" instance=ExtResource("4_g14j6")]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 0
+offset_left = 34.0
+offset_top = 236.0
+offset_right = 104.0
+offset_bottom = 264.0
+socketed = false

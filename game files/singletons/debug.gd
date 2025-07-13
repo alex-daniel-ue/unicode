@@ -1,7 +1,7 @@
 extends Node
 
 
-const MAX_FPS := 144
+const MAX_FPS := 30
 const LAG_FPS := 2
 const DEBUG_RED := "tomato"
 const DEBUG_GREEN := "palegreen"
@@ -10,6 +10,7 @@ var is_lagging := false
 
 
 func _ready() -> void:
+	Engine.max_fps = MAX_FPS
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _input(event: InputEvent) -> void:

@@ -19,13 +19,48 @@ var this_idx: int
 func _process(_delta: float) -> void:
 	update_drop_preview()
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_DRAG_BEGIN:
+			current_data = get_viewport().gui_get_drag_data()
+			# No applicable drop for non-stackables
+			if not current_data.stackable:
+				return
+			
+			# Not duplicate(0), because children don't have owners
+			drop_preview = current_data.clone()
+			drop_preview.name = "%sDropPreview" % drop_preview.name
+			drop_preview.is_drop_preview = true
+			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
+			
+			drop_preview_idx = -1
+		
+		NOTIFICATION_DRAG_END:
+			if not current_data.stackable:
+				return
+			
+			if drop_preview_container:
+				# Node.replace_by does NOT delete/remove the original Node
+				drop_preview_container.insert_child(drop_preview_idx, current_data)
+			
+			# Delete the node and remove references
+			drop_preview.queue_free()
+			drop_preview = null
+			drop_preview_container = null
+			
+			if not get_viewport().gui_is_drag_successful():
+				if current_data.origin_parent:
+					current_data.origin_parent.add_child(current_data)
+					current_data.origin_parent.move_child(current_data, current_data.origin_idx)
+				else:
+					current_data.queue_free()
+
 func update_drop_preview() -> void:
 	if drop_preview == null:
 		return
 	
 	if get_viewport().gui_is_dragging():
 		this_container = get_preview_container()
-		
 		# If there's a valid drop preview spot
 		if this_container:
 			this_idx = get_preview_idx(this_container)
@@ -62,12 +97,26 @@ func get_preview_container() -> VBoxContainer:
 		return null
 	
 	var block := control.owner
-	# If hovering over non-Block or non-stackable Block
-	if not (block is Block and block.placeable):  
+	# If hovering over non-Block
+	if not block is Block:
 		return null
 	
+	if block.is_drop_preview:
+		return drop_preview_container
+	
 	var container := block.get_parent()
-	var parent_block := container.owner
+	var parent_block: Node
+	
+	if block.stackable:
+		parent_block = container.owner
+	else:
+		var temp := block
+		while not temp.stackable:
+			temp = get_parent().owner
+			#Util.log(["while", temp, temp is Block])
+			if not temp is Block:
+				return null
+		parent_block = temp
 	
 	if parent_block is NestedBlock:
 		if block is Statement:
@@ -81,16 +130,14 @@ func get_preview_container() -> VBoxContainer:
 				return parent_block.body.mouth
 	
 	if block is NestedBlock:
-		if block._can_drop_data(Vector2.ZERO, Block.new()):
-			if block.is_drop_preview:
-				return drop_preview_container
+		if block._can_drop_data(Vector2.ZERO, drop_preview):
 			return block.body.mouth
 	
 	return null
 
 func get_preview_idx(mouth: VBoxContainer) -> int:
 	assert(mouth.owner is NestedBlock, "Passed VBoxContainer isn't part of NestedBlock.")
-
+	
 	var mouse_y := get_global_mouse_position().y
 	var mouth_pos := mouth.global_position
 	var mouth_size: Vector2 = mouth.get_parent().get_mouth_size()
@@ -131,37 +178,3 @@ func update_thresholds() -> void:
 	if not drop_preview_container.get_child(-1).is_drop_preview:
 		var lower_block: Block = drop_preview_container.get_child(drop_preview_idx+1)
 		lower_threshold = (lower_block.global_position.y + lower_block.size.y) - drop_preview.size.y
-
-func _notification(what: int) -> void:
-	match what:
-		NOTIFICATION_DRAG_BEGIN:
-			current_data = get_viewport().gui_get_drag_data()
-			if not current_data.placeable:
-				return
-			
-			# clone(), not duplicate(0), because children don't have owners
-			drop_preview = current_data.clone()
-			drop_preview.name = "DropPreview"
-			drop_preview.is_drop_preview = true
-			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
-			
-			drop_preview_idx = -1
-		NOTIFICATION_DRAG_END:
-			if not current_data.placeable:
-				return
-			
-			if drop_preview_container:
-				# Node.replace_by does NOT delete/remove the original Node
-				drop_preview_container.insert_child(drop_preview_idx, current_data)
-			
-			# Delete the node and remove references
-			drop_preview.queue_free()
-			drop_preview = null
-			drop_preview_container = null
-			
-			if not get_viewport().gui_is_drag_successful():
-				if current_data.origin_parent:
-					current_data.origin_parent.add_child(current_data)
-					current_data.origin_parent.move_child(current_data, current_data.origin_idx)
-				else:
-					current_data.queue_free()

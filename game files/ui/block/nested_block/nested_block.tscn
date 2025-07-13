@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://siv2nx55laya"]
+[gd_scene load_steps=8 format=3 uid="uid://siv2nx55laya"]
 
 [ext_resource type="Script" uid="uid://bgpdi7ca4xasg" path="res://game files/ui/block/nested_block/nested_block.gd" id="1_sjyww"]
 [ext_resource type="Texture2D" uid="uid://di8w3402lcw77" path="res://game files/ui/block/nested_block/nested_block_texture_02.png" id="2_78b3k"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://cijvae4j3nbg7" path="res://game files/ui/block/nested_block/mouth.gd" id="4_6cnl0"]
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="4_78b3k"]
 [ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/expression.tscn" id="5_ik7g5"]
-[ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="5_wj74b"]
 [ext_resource type="Script" uid="uid://by8bt8hxvf1vv" path="res://game files/ui/block/nested_block/body.gd" id="7_egdk3"]
 
 [node name="NestedBlock" type="VBoxContainer"]
@@ -16,7 +15,6 @@ offset_bottom = 97.0
 size_flags_horizontal = 0
 theme_override_constants/separation = 0
 script = ExtResource("1_sjyww")
-label = "repeat <value> times"
 
 [node name="UpperLip" type="Control" parent="."]
 custom_minimum_size = Vector2(210, 45)
@@ -45,23 +43,22 @@ offset_right = 202.0
 offset_bottom = 45.0
 mouse_filter = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 12
+theme_override_constants/margin_top = 13
 theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_bottom = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_78b3k")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
-theme_override_fonts/font = ExtResource("5_wj74b")
-theme_override_font_sizes/font_size = 32
-text = "repeat"
+theme_type_variation = &"BlockLabel"
+text = "
+repeat"
 
 [node name="Expression" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_ik7g5")]
 layout_mode = 2
@@ -70,11 +67,9 @@ draggable = false
 [node name="Label2" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_78b3k")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
-theme_override_fonts/font = ExtResource("5_wj74b")
-theme_override_font_sizes/font_size = 32
-text = "times"
+theme_type_variation = &"BlockLabel"
+text = "
+times"
 
 [node name="MarginDebug" type="ColorRect" parent="UpperLip/MarginContainer"]
 visible = false

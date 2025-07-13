@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1bgmja6wak26"]
+[gd_scene load_steps=6 format=3 uid="uid://b1bgmja6wak26"]
 
 [ext_resource type="Script" uid="uid://bffw3hv40767p" path="res://game files/ui/block/statement/statement.gd" id="1_dw8ho"]
 [ext_resource type="Texture2D" uid="uid://cn20jjrocxosa" path="res://game files/ui/block/statement/statement_texture.png" id="2_2m8co"]
 [ext_resource type="Script" uid="uid://domc8h7o580d7" path="res://game files/ui/block/upper_lip.gd" id="2_dilr4"]
 [ext_resource type="Theme" uid="uid://wl71vjr8t3qy" path="res://resources/main_theme.tres" id="3_nqpt0"]
-[ext_resource type="FontFile" uid="uid://dl45e6mtxpcb4" path="res://resources/fonts/TinyUnicode.ttf" id="4_4rx5p"]
 [ext_resource type="PackedScene" uid="uid://dsd5iplq82mey" path="res://game files/ui/block/expression/expression.tscn" id="5_g1muy"]
 
 [node name="Statement" type="CenterContainer"]
@@ -13,7 +12,6 @@ offset_right = 162.0
 offset_bottom = 52.0
 size_flags_horizontal = 0
 script = ExtResource("1_dw8ho")
-label = "function <value>"
 metadata/_edit_group_ = true
 
 [node name="UpperLip" type="Control" parent="."]
@@ -54,11 +52,9 @@ mouse_filter = 2
 [node name="Label" type="Label" parent="UpperLip/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_nqpt0")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
-theme_override_fonts/font = ExtResource("4_4rx5p")
-theme_override_font_sizes/font_size = 32
-text = "function"
+theme_type_variation = &"BlockLabel"
+text = "
+function"
 
 [node name="Expression" parent="UpperLip/MarginContainer/HBoxContainer" instance=ExtResource("5_g1muy")]
 layout_mode = 2

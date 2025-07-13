@@ -85,30 +85,31 @@ text = "Keybinds:
 autowrap_mode = 2
 
 [node name="Expression" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("5_iyf72")]
-modulate = Color(0.288, 0.6756, 0.9, 1)
+modulate = Color(0.2581, 0.721493, 0.89, 1)
 layout_mode = 0
-offset_left = 243.0
-offset_top = 402.0
-offset_right = 313.0
-offset_bottom = 430.0
-socketed = false
-infinite = true
-
-[node name="NestedBlock" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("2_spgc8")]
-layout_mode = 0
-offset_left = 163.0
-offset_top = 507.0
-offset_right = 373.0
-offset_bottom = 604.0
+offset_left = 286.0
+offset_top = 398.0
+offset_right = 356.0
+offset_bottom = 426.0
 infinite = true
 
 [node name="Statement" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("3_iyf72")]
 layout_mode = 0
 offset_left = 195.0
-offset_top = 445.0
+offset_top = 443.0
 offset_right = 361.0
-offset_bottom = 497.0
+offset_bottom = 495.0
 infinite = true
+
+[node name="NestedBlock" parent="HSplitContainer2/HSplitContainer/Description" instance=ExtResource("2_spgc8")]
+layout_mode = 0
+offset_left = 154.0
+offset_top = 504.0
+offset_right = 376.0
+offset_bottom = 601.0
+infinite = true
+draggable = null
+placeable = null
 
 [node name="Canvas" parent="HSplitContainer2/HSplitContainer" instance=ExtResource("4_ihrb2")]
 layout_mode = 2
