@@ -1,1 +1,33 @@
 - Blocks some levels deep shouldn't get rendered (or be invisible) when previewing?
+
+- Block text handling
+function (name) (arg/s)/[enum]
+move [directions]
+print/say (string)
+
+declare variable (name)
+set variable [name from var_list] to (value)
+(value) [operation] (value)
+
+if <condition>
+
+while <>
+
+for {value} in (list)
+repeat ()
+
+exercises
+- function demonstration
+	expose function and basic say
+- variable declaration & initialization
+	declare (name)
+	set variable [name] to (value)
+- array demonstration
+	
+- for loop
+	expose array
+	declare (counter)
+	declare (item)
+	while <>
+- repeat ()
+	use for block and range block

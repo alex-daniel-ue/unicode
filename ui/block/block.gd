@@ -5,8 +5,10 @@ extends Control
 
 @export_group("Block")
 @export var draggable := true
-@export var stackable := true
+@export var placeable := true
 @export var toolbox := false
+@export var top_notch := true
+@export var bottom_notch := true
 
 @export_group("Text")
 @export var text_container: Control
@@ -33,8 +35,10 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	
 	# Set drag preview Control
 	var drag_preview_container := Control.new()
+	Utils.current_drag_preview_container = drag_preview_container
 	set_drag_preview(drag_preview_container)
 	drag_preview_container.name = "DragPreviewContainer"
+	drag_preview_container.scale = scale
 	
 	drag_preview = duplicate(0)  # No signals/groups/instantiation
 	drag_preview_container.add_child(drag_preview)
@@ -73,8 +77,11 @@ func is_point_inside(point: Vector2) -> bool:
 func get_parent_block() -> Block:
 	return Utils.get_block(get_parent())
 
+# NOTE: Unsure about this implementation...
+func _get_block_name() -> String:
+	return "Block"
 func get_block_name() -> String:
-	return "%s#%s" % [get_class(), get_instance_id()]
+	return "%s#%s" % [_get_block_name(), get_instance_id()]
 
 #region Duplicate fuckery
 func clone() -> Block:

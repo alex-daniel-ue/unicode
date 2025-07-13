@@ -2,24 +2,18 @@ class_name Utils
 extends Object
 
 
+static var current_drag_preview_container: Control
+
+
+## Returns itself & its children, grandchildren, and so on.
 static func get_children(node: Node, result: Array[Node] = []) -> Array[Node]:
 	result.push_back(node)
 	for child: Node in node.get_children():
 		result = get_children(child, result)
 	return result
 
-
-static func log(message: Variant = "") -> void:
-	if message is Array[Variant]:
-		message = ' '.join(message)
-	message = str(message) 
-	
-	print_rich("%.03f:\t%s" % [Time.get_ticks_msec() / 1000.0, message])
-
-
 static func get_block(of_node: Node) -> Block:
-	if of_node == null:
-		return null
+	if of_node == null: return null
 	
 	if not of_node.is_inside_tree():
 		push_error('Node "%s" isn\'t in SceneTree.' % of_node)
@@ -31,9 +25,8 @@ static func get_block(of_node: Node) -> Block:
 			return of_node
 		of_node = of_node.get_parent()
 	
-	# No Block parent anywhere
+	# No Block parent anywhere in lineage
 	return null
-
 
 static func random_name() -> String:
 	const alphabet := "abcdefghijklmnopqrstuvwxyz"

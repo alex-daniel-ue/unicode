@@ -38,3 +38,5 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	var container := get_parent()
 	container.add_child(data)
 	container.move_child(data, get_index())
+
+func _get_block_name() -> String: return "ExpressionBlock"

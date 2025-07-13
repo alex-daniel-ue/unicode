@@ -4,7 +4,7 @@ extends Control
 ## 
 ## Basic process
 ## 1. On drag start (NOTIFICATION_DRAG_BEGIN):
-##    a. Retrieve drag data and verify it's a stackable Block
+##    a. Retrieve drag data and verify it's a valid Block
 ##    b. Create translucent drop preview clone
 ## 2. During drag (_process loop):
 ##    a. Continuously find potential drop containers under cursor
@@ -54,7 +54,7 @@ func _notification(what: int) -> void:
 			current_data = get_viewport().gui_get_drag_data()
 			
 			# Disregard irrelevant drag-and-drops
-			if not (current_data is Block and current_data.stackable):
+			if not (current_data is Block and current_data.top_notch):
 				current_data = null
 				return
 			
@@ -142,8 +142,8 @@ func get_preview_container() -> Container:
 	if not (block != null and block is Block):
 		return null
 	
-	# Toolbox & non-stackable Blocks can't be dropped onto
-	if block.toolbox or not block.stackable:
+	# Toolbox & Blocks without bottom notches can't be dropped onto
+	if block.toolbox or not block.bottom_notch:
 		return null
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
@@ -206,9 +206,14 @@ func get_preview_idx(container: Container) -> int:
 	# Guaranteed NestedBlock via initial assert() above
 	var container_block: NestedBlock = Utils.get_block(container)
 	if not container_block.within_mouth(mouse_pos):
-		return 0 if is_above else end
+		if is_above or not container_block.lower_lip:
+			return 0
+		return end
 	
 	var children := container.get_children()
+	if children.is_empty():
+		return 0
+	
 	# Emulate a while loop, but mutable index/counter
 	var idx := -1
 	for child in children:

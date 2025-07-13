@@ -12,8 +12,9 @@ offset_bottom = 50.0
 size_flags_horizontal = 0
 theme = ExtResource("1_gkogg")
 script = ExtResource("2_kykdt")
-draggable = false
-stackable = false
+placeable = false
+top_notch = false
+bottom_notch = false
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]

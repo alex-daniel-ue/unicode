@@ -12,7 +12,11 @@ offset_bottom = 50.0
 size_flags_horizontal = 0
 theme = ExtResource("1_4nm74")
 script = ExtResource("1_67ekf")
+placeable = null
+top_notch = null
+bottom_notch = null
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
+text = null
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
 custom_minimum_size = Vector2(50, 50)
