@@ -32,8 +32,11 @@ extends Control
 ## - Handles edge cases (lips, empty containers, previews)
 
 
+signal block_dropped
+
 const DROP_PREVIEW_ALPHA := 0.4
 
+var is_block_dragging := false
 var current_data: Block
 
 var drop_preview: Control
@@ -57,6 +60,7 @@ func _notification(what: int) -> void:
 			if not (current_data is Block and current_data.top_notch):
 				current_data = null
 				return
+			is_block_dragging = true
 			
 			# Clone, not duplicate, because get_parent_block is also used on
 			# the drop preview (and get_parent_block utilizes owners)
@@ -70,11 +74,11 @@ func _notification(what: int) -> void:
 			
 			drop_preview.name = "DropPreview_%s" % drop_preview.get_block_name()
 			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
-		
 		NOTIFICATION_DRAG_END:
 			# Disregard invalid data
 			if current_data == null:
 				return
+			is_block_dragging = false
 			
 			# Drag-and-drop ended on valid container
 			if drop_preview_container != null:

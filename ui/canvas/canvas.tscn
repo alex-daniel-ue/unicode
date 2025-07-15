@@ -27,3 +27,5 @@ script = ExtResource("1_75aqd")
 [node name="DropManager" type="Control" parent="."]
 anchors_preset = 0
 script = ExtResource("2_p4jra")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
