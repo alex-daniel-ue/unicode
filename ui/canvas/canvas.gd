@@ -41,4 +41,4 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	data.position = at_position - data.get_center()
 
 func _on_block_dropped() -> void:
-	audio_stream_player.play()
+	audio_stream_player.play(0.05)

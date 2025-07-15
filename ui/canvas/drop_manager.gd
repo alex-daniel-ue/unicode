@@ -85,6 +85,7 @@ func _notification(what: int) -> void:
 				# Insert Block data
 				drop_preview_container.add_child(current_data)
 				drop_preview_container.move_child(current_data, drop_preview_idx)
+				block_dropped.emit()
 			
 			# When the drop isn't successful (when _can_drop_data is false)
 			if not get_viewport().gui_is_drag_successful():

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://buw8bbb2oqrni"]
+[gd_scene load_steps=6 format=3 uid="uid://buw8bbb2oqrni"]
 
 [ext_resource type="Script" uid="uid://c7hnacb62jbl2" path="res://ui/canvas/canvas.gd" id="1_75aqd"]
 [ext_resource type="Shader" uid="uid://bso1h7okeonrg" path="res://ui/canvas/canvas_bg.gdshader" id="1_uur5t"]
 [ext_resource type="Script" uid="uid://hfalmbcw7k7l" path="res://ui/canvas/drop_manager.gd" id="2_p4jra"]
+[ext_resource type="AudioStream" uid="uid://didnewleaum75" path="res://ui/block/drop_1.mp3" id="4_u8ea8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u8ea8"]
 shader = ExtResource("1_uur5t")
@@ -29,3 +30,6 @@ anchors_preset = 0
 script = ExtResource("2_p4jra")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_u8ea8")
+
+[connection signal="block_dropped" from="DropManager" to="." method="_on_block_dropped"]

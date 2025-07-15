@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="unicode"
-run/main_scene="uid://r42xvmupx8so"
+run/main_scene="uid://dtt1aynykie4d"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
