@@ -1,10 +1,22 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://88cahjm0kd3k"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://88cahjm0kd3k"]
 
 [ext_resource type="FontFile" uid="uid://dm4f8d7nhiqpn" path="res://themes/fonts/TinyUnicode.ttf" id="1_0avsd"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0avsd"]
+bg_color = Color(0.0629984, 0.0838419, 0.101211, 1)
+shadow_color = Color(0, 0, 0, 0.254902)
+shadow_size = 8
+
 [resource]
 BlockLabel/base_type = &"Label"
+BlockLabel/colors/font_color = Color(0, 0, 0, 1)
 BlockLabel/constants/line_spacing = -29
-Label/colors/font_color = Color(0, 0, 0, 1)
-Label/font_sizes/font_size = 32
+BlockLabel/font_sizes/font_size = 32
+HeaderLarge/colors/font_color = Color(0, 0, 0, 1)
+HeaderLarge/colors/font_outline_color = Color(1, 1, 1, 1)
+HeaderLarge/constants/outline_size = 8
+HeaderLarge/font_sizes/font_size = 60
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/font_sizes/font_size = 48
 Label/fonts/font = ExtResource("1_0avsd")
+Panel/styles/panel = SubResource("StyleBoxFlat_0avsd")

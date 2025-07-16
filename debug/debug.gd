@@ -21,4 +21,4 @@ func log(message: Variant = "", separator := ' ') -> void:
 		message = separator.join(message)
 	elif message is float:
 		message = "%.03f" % message
-	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000.0, str(message)])
+	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000., str(message)])

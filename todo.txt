@@ -1,4 +1,7 @@
 - Blocks some levels deep shouldn't get rendered (or be invisible) when previewing?
+- Side menu
+	- child PanelContainers will have dynamic buttons with icons assigned/preloaded/set as FilePath
+
 
 - Block text handling
 function (name) (arg/s)/[enum]

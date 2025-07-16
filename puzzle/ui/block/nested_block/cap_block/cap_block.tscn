@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1m1bc6snfm4l"]
+
+[ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_pyflx"]
+[ext_resource type="Script" uid="uid://cd5wechpwb1gl" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.gd" id="2_pyflx"]
+[ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_qp2q5"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]
+load_path = "res://.godot/imported/debug_texture.png-662692569c30c1c577ccb5ee2eccfc4a.ctex"
+
+[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "text_container")]
+texture_filter = 3
+offset_right = 50.0
+offset_bottom = 66.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("1_pyflx")
+theme_override_constants/separation = 0
+script = ExtResource("2_pyflx")
+mouth = NodePath("Mouth")
+top_notch = false
+text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
+
+[node name="CapHead" type="NinePatchRect" parent="."]
+custom_minimum_size = Vector2(50, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = SubResource("CompressedTexture2D_helxk")
+region_rect = Rect2(0, 0, 75, 16)
+patch_margin_left = 50
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+mouse_filter = 1
+texture = SubResource("CompressedTexture2D_helxk")
+region_rect = Rect2(0, 16, 75, 50)
+patch_margin_left = 48
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+script = ExtResource("4_qp2q5")
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 50.0
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="Mouth" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="resized" from="Mouth" to="." method="_on_mouth_resized"]
