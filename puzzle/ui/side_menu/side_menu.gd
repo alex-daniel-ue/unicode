@@ -1,106 +1,124 @@
 @tool
-extends HBoxContainer
+extends Panel
 
 
+@warning_ignore("unused_private_class_variable")
+@export_tool_button("Re‑generate buttons") var _regen_btn := regenerate_buttons
+@warning_ignore("unused_private_class_variable")
+@export_tool_button("Update layout now") var _resize_btn := update_layout
+
+@export var reverse := false
+@export var icons: Array[Texture2D]
+
+@export var button_container: VBoxContainer
 const BUTTON_SIZE := Vector2(50, 50)
+var side_button_scene := preload("res://puzzle/ui/side_menu/side_menu_button.tscn")
 
-@export_tool_button("Cycle through panels") var __1 := func() -> void:
-	current_panel_idx += 1
-	current_panel_idx %= count_panels()
-	set_panel(current_panel_idx)
-@export var current_panel_idx := 0
-@export var panel_icons: Array[Texture2D]
-@export var panel_ratio := 1. / 4
+var viewport_ratio := 1. / 3
+const MOVE_DURATION := [0.2, 0.4]  # [show, hide] durations
+var shown := true
 
-var main_theme := preload("res://themes/main.tres")
-var current_panel: Panel
-var is_panel_hidden := false
+var contents: Array[Control] = []
+var current: Control
 
-@onready var button_container := $MarginContainer/ButtonContainer
-@onready var hide_button := $MarginContainer/ButtonContainer/HideButton
 
+func _enter_tree() -> void:
+	get_viewport().size_changed.connect(update_layout)
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
+	_on_child_order_changed()
 	
-	hide_button.custom_minimum_size = BUTTON_SIZE
-
-func _process(_delta: float) -> void:
-	if not current_panel:
-		return
+	current = contents[0]
+	current.visible = true
+	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
 	
-	size.x = 0
-	current_panel.size.x = 0
-	current_panel.custom_minimum_size.x = get_viewport_rect().size.x * panel_ratio
-
-func _get_configuration_warnings() -> PackedStringArray:
-	if count_panels() == 0:
-		return ["SideMenu requires at least one Panel to display."]
-	return []
-
-func set_panel(idx: int) -> void:
-	# Do nothing when panel is hidden
-	if is_panel_hidden:
-		return
-	
-	var child_idx := 0
-	for child in get_children():
-		# Skip over non-Panels
-		if child is Panel:
-			child.visible = child_idx == idx
-			if child.visible:
-				current_panel = child
-			child_idx += 1
-
-func count_panels() -> int:
-	var count := 0
-	for child in get_children():
-		if child is Panel:
-			count += 1
-	return count
-
-func hide_menu(do_anim := true) -> void:
-	var duration := 0.2 if is_panel_hidden else 0.4
-	
-	var offset := position
-	offset.x += current_panel.size.x
-	if not is_panel_hidden:
-		offset.x *= -1
-	
-	if do_anim:
-		var tween := create_tween()
-		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(self, "position", offset, duration)
-		tween.play()
-	else:
-		position = offset
-	
-	is_panel_hidden = not is_panel_hidden
-
-func update_buttons() -> void:
-	for child in button_container.get_children():
-		if child != hide_button:
-			if child.get_parent() == self:
-				remove_child(child)
-			child.queue_free()
-	
-	var idx := 0
-	for icon in panel_icons:
-		var button := Button.new()
-		button_container.add_child(button)
-		
-		button.custom_minimum_size = BUTTON_SIZE
-		button.icon = icon
-		button.expand_icon = true
-		button.theme = main_theme
-		button.theme_type_variation = &"SideMenuIcon"
-		button.pressed.connect(set_panel.bind(idx))
-		
-		idx += 1
+	show_menu(false, false)
+	regenerate_buttons()
+	update_layout()
 
 func _on_child_order_changed() -> void:
-	set_panel(current_panel_idx)
-	update_buttons.call_deferred()
-	move_child.call_deferred($MarginContainer, get_child_count())
+	contents.clear()
+	for child in get_children():
+		if child is Control and child != button_container:
+			contents.append(child)
+			child.visible = false
+
+func regenerate_buttons() -> void:
+	for btn in button_container.get_children():
+		btn.queue_free()
+	
+	for idx in range(len(icons)):
+		var icon = icons[idx]
+		if not icon:
+			continue
+		
+		var btn = side_button_scene.instantiate() as Button
+		btn.custom_minimum_size = BUTTON_SIZE
+		btn.icon = icon
+		btn.pressed.connect(_on_button_pressed.bind(idx))
+		button_container.add_child(btn)
+
+func _on_button_pressed(idx: int) -> void:
+	if not (0 <= idx and idx < len(contents)):
+		return
+	
+	if not shown:  # Show menu when it's hidden
+		show_menu(true)
+	elif current == contents[idx]:  # Hide menu when clicking an icon again
+		show_menu(false)
+		return
+	
+	current.visible = false
+	
+	current = contents[idx]
+	current.visible = true
+	
+	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
+	current.set_anchors_and_offsets_preset(
+		PRESET_TOP_RIGHT if reverse else PRESET_TOP_LEFT,
+		Control.PRESET_MODE_KEEP_SIZE
+	)
+
+func show_menu(do_show: bool, animated := true) -> void:
+	if contents.is_empty() or shown == do_show:
+		return
+	
+	var _offset := current.size.x
+	if reverse != shown:  # equivalent to reverse ^ shown (XOR operation)
+		_offset *= -1
+	var target := position + Vector2(_offset, 0)
+	
+	if animated:
+		var tw = create_tween().set_trans(Tween.TRANS_CUBIC)
+		tw.tween_property(self, "position", target, MOVE_DURATION[int(shown)])
+	else:
+		position = target
+	
+	shown = do_show
+
+func update_layout() -> void:
+	var vp_w = get_viewport_rect().size.x
+	size.x = vp_w * viewport_ratio
+	
+	if current:
+		current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
+	
+	var control_presets: Dictionary[Control, Control.LayoutPreset] = {
+		self : PRESET_LEFT_WIDE,
+		button_container : PRESET_TOP_RIGHT,
+		current : PRESET_TOP_LEFT
+	}
+	
+	if reverse:
+		control_presets[self] = PRESET_RIGHT_WIDE
+		control_presets[button_container] = PRESET_TOP_LEFT
+		control_presets[current] = PRESET_TOP_RIGHT
+	
+	for control in control_presets:
+		control.set_anchors_and_offsets_preset(
+			control_presets[control],
+			Control.PRESET_MODE_KEEP_SIZE
+		)
+	
+	if not shown:
+		position.x += current.size.x if reverse else -current.size.x

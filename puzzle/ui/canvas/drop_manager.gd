@@ -133,6 +133,8 @@ func update_drop_preview() -> void:
 				# Move to and store the new index
 				drop_preview_container.move_child(drop_preview, this_idx)
 				drop_preview_idx = this_idx
+				if drop_preview_container != drop_preview.get_parent():
+					Debug.log([drop_preview_container, drop_preview.get_parent()])
 		
 		# If previewing nothing, but recently previewed
 		elif drop_preview_container != null:

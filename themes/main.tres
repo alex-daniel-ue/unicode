@@ -20,3 +20,4 @@ Label/colors/font_color = Color(1, 1, 1, 1)
 Label/font_sizes/font_size = 48
 Label/fonts/font = ExtResource("1_0avsd")
 Panel/styles/panel = SubResource("StyleBoxFlat_0avsd")
+SideMenuIcon/base_type = &"Button"

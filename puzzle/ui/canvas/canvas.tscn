@@ -10,7 +10,7 @@ shader = ExtResource("1_uur5t")
 shader_parameter/cell_size = 25.0
 shader_parameter/dot_size = 0.05
 shader_parameter/background_color = Color(0.12, 0.08, 0.12, 1)
-shader_parameter/dot_color = Color(0.255007, 0.307273, 0.350882, 1)
+shader_parameter/dot_color = Color(0.375998, 0.274638, 0.375883, 1)
 shader_parameter/resolution = Vector2(1152, 648)
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
@@ -31,5 +31,6 @@ script = ExtResource("2_p4jra")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_u8ea8")
+volume_db = 13.705
 
 [connection signal="block_dropped" from="DropManager" to="." method="_on_block_dropped"]

@@ -1,17 +1,13 @@
 extends ColorRect
 
 
+signal clicked
+
 var is_panning = false
 var drag_start_position: Vector2
 var node_start_position: Vector2
 
 var drop_sound := preload("res://puzzle/ui/block/drop_1.mp3")
-#var drop_sounds: Array[Dictionary] = [
-	#{
-		#file = preload("res://puzzle/ui/block/drop_1.mp3"),
-		#from_position = 0.05
-	#},
-#]
 
 @onready var drop_manager := $DropManager
 @onready var audio_stream_player := $AudioStreamPlayer
@@ -27,6 +23,8 @@ func _gui_input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			clicked.emit()
+			
 			is_panning = true
 			drag_start_position = get_global_mouse_position()
 			node_start_position = position
