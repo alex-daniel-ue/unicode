@@ -2,7 +2,7 @@ class_name Utils
 extends Object
 
 
-static var current_drag_preview_container: Control
+static var drag_preview_container: Control
 
 
 ## Returns itself & its children, grandchildren, and so on.

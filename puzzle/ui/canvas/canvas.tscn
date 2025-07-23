@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c7hnacb62jbl2" path="res://puzzle/ui/canvas/canvas.gd" id="1_75aqd"]
 [ext_resource type="Shader" uid="uid://bso1h7okeonrg" path="res://puzzle/ui/canvas/canvas_bg.gdshader" id="1_uur5t"]
 [ext_resource type="Script" uid="uid://hfalmbcw7k7l" path="res://puzzle/ui/canvas/drop_manager.gd" id="2_p4jra"]
-[ext_resource type="AudioStream" uid="uid://didnewleaum75" path="res://puzzle/ui/block/drop_1.mp3" id="4_u8ea8"]
+[ext_resource type="AudioStream" uid="uid://didnewleaum75" path="res://puzzle/ui/block/sounds/drop_1.mp3" id="4_u8ea8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u8ea8"]
 shader = ExtResource("1_uur5t")

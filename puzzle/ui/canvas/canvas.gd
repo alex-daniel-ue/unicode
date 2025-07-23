@@ -7,13 +7,38 @@ var is_panning = false
 var drag_start_position: Vector2
 var node_start_position: Vector2
 
-var drop_sound := preload("res://puzzle/ui/block/drop_1.mp3")
+var zoom_speed := 0.05
+var min_zoom := 0.5
+var max_zoom := 2.0
 
-@onready var drop_manager := $DropManager
-@onready var audio_stream_player := $AudioStreamPlayer
+var drop_sound := preload("res://puzzle/ui/block/sounds/drop_1.mp3")
 
+@onready var drop_manager := $DropManager as Control
+@onready var audio_stream_player := $AudioStreamPlayer as AudioStreamPlayer
+
+
+func _ready() -> void:
+	var viewport_size = get_viewport_rect().size
+	pivot_offset = -position + viewport_size / 2
 
 func _gui_input(event: InputEvent) -> void:
+	handle_panning(event)
+	handle_zooming(event)
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	Utils.drag_preview_container.scale = scale
+	
+	return (
+		data is Block and
+		data.placeable
+	)
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	# data is Block && data.placeable
+	add_child(data)
+	data.position = at_position - data.get_center()
+
+func handle_panning(event: InputEvent) -> void:
 	if drop_manager.is_block_dragging:
 		return
 	
@@ -24,27 +49,32 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			clicked.emit()
-			
 			is_panning = true
 			drag_start_position = get_global_mouse_position()
 			node_start_position = position
 		else:
 			is_panning = false
 	elif event is InputEventMouseMotion and is_panning:
-		var current_global_mouse = get_global_mouse_position()
-		var offset = current_global_mouse - drag_start_position
-		position = node_start_position + offset
+		var current_global_mouse := get_global_mouse_position()
+		var offset := current_global_mouse - drag_start_position
+		position = node_start_position + offset / scale
+		pivot_offset = -position + get_viewport_rect().size / 2
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return (
-		data is Block and
-		data.placeable
-	)
-
-func _drop_data(at_position: Vector2, data: Variant) -> void:
-	# data is Block && data.placeable
-	add_child(data)
-	data.position = at_position - data.get_center()
+func handle_zooming(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton and event.pressed):
+		return
+	
+	var zoom_direction := 0
+	match event.button_index:
+		MOUSE_BUTTON_WHEEL_UP:
+			zoom_direction = -1
+		MOUSE_BUTTON_WHEEL_DOWN:
+			zoom_direction = 1
+		_:
+			return
+	
+	scale *= 1 + zoom_direction * zoom_speed
+	scale = scale.clampf(min_zoom, max_zoom)
 
 func _on_block_dropped() -> void:
 	#var sound := drop_sounds[randi() % len(drop_sounds)]

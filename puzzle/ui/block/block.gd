@@ -17,7 +17,7 @@ extends Control
 		text = value
 		parse_block_text()
 
- ## To detect whether the cursor is hovering over a preview.
+## To detect whether the cursor is hovering over a preview.
 var is_drop_preview := false
 var drag_preview: Control
 var origin_parent: Node
@@ -35,10 +35,9 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	
 	# Set drag preview Control
 	var drag_preview_container := Control.new()
-	Utils.current_drag_preview_container = drag_preview_container
 	set_drag_preview(drag_preview_container)
+	Utils.drag_preview_container = drag_preview_container
 	drag_preview_container.name = "DragPreviewContainer"
-	drag_preview_container.scale = scale
 	
 	drag_preview = duplicate(0)  # No signals/groups/instantiation
 	drag_preview_container.add_child(drag_preview)
@@ -47,11 +46,11 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	#region Drag preview animations
 	var tween := drag_preview_container.create_tween()
 	
-	tween.set_ease(Tween.EASE_IN)
-	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_property(
 		drag_preview, "position",
-		-get_center(), 0.1
+		-get_center(), 0.3
 	)
 	#endregion
 	

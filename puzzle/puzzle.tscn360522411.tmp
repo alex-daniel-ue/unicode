@@ -91,16 +91,17 @@ text = "function"
 [node name="NestedBlock" parent="LeftSideMenu/ToolboxContent/VBoxContainer" instance=ExtResource("5_vlyq7")]
 layout_mode = 2
 toolbox = true
-text = "for i in range"
+text = "for loop"
 
 [node name="ExpressionBlock" parent="LeftSideMenu/ToolboxContent/VBoxContainer" instance=ExtResource("6_j1boe")]
 layout_mode = 2
+socketed = false
 toolbox = true
 text = "expression"
 
 [node name="CapBlock" parent="LeftSideMenu/ToolboxContent/VBoxContainer" instance=ExtResource("7_xr7vu")]
 layout_mode = 2
-text = "begin code"
+text = "start of code"
 
 [node name="RightSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
@@ -138,5 +139,12 @@ autowrap_mode = 3
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(576, 324)
 script = ExtResource("8_sbp70")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+top_level = true
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 500.0
 
 [connection signal="clicked" from="Canvas" to="." method="_on_canvas_clicked"]

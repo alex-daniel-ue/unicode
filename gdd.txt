@@ -1,0 +1,4 @@
+- Puzzles are rated in three stars:
+	- Completion (whether the program satisfies requirements)
+	- Complexity (amount of blocks)
+	- Economy (total runtime)

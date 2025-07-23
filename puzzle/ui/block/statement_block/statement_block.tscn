@@ -37,7 +37,7 @@ theme_override_constants/margin_right = 12
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 mouse_filter = 2
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]

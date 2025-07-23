@@ -3,6 +3,10 @@ extends Panel
 
 
 @warning_ignore("unused_private_class_variable")
+@export_tool_button("Cycle through content") var _cycle_btn := func() -> void:
+	var idx := contents.find(current) + 1
+	set_content(idx % len(contents))
+@warning_ignore("unused_private_class_variable")
 @export_tool_button("Re‑generate buttons") var _regen_btn := regenerate_buttons
 @warning_ignore("unused_private_class_variable")
 @export_tool_button("Update layout now") var _resize_btn := update_layout
@@ -17,23 +21,27 @@ var side_button_scene := preload("res://puzzle/ui/side_menu/side_menu_button.tsc
 var viewport_ratio := 1. / 3
 const MOVE_DURATION := [0.2, 0.4]  # [show, hide] durations
 var shown := true
+var hide_tween: Tween
 
 var contents: Array[Control] = []
 var current: Control
 
 
 func _enter_tree() -> void:
+	if Engine.is_editor_hint(): return
+	
 	get_viewport().size_changed.connect(update_layout)
 
 func _ready() -> void:
+	# Get children & contents
 	_on_child_order_changed()
 	
-	current = contents[0]
-	current.visible = true
-	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
-	
-	show_menu(false, false)
+	# Setup content and buttons
+	set_content(0)
 	regenerate_buttons()
+	
+	# Hide menu and update layout
+	show_menu(false, false)
 	update_layout()
 
 func _on_child_order_changed() -> void:
@@ -68,16 +76,7 @@ func _on_button_pressed(idx: int) -> void:
 		show_menu(false)
 		return
 	
-	current.visible = false
-	
-	current = contents[idx]
-	current.visible = true
-	
-	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
-	current.set_anchors_and_offsets_preset(
-		PRESET_TOP_RIGHT if reverse else PRESET_TOP_LEFT,
-		Control.PRESET_MODE_KEEP_SIZE
-	)
+	set_content(idx)
 
 func show_menu(do_show: bool, animated := true) -> void:
 	if contents.is_empty() or shown == do_show:
@@ -89,12 +88,27 @@ func show_menu(do_show: bool, animated := true) -> void:
 	var target := position + Vector2(_offset, 0)
 	
 	if animated:
-		var tw = create_tween().set_trans(Tween.TRANS_CUBIC)
-		tw.tween_property(self, "position", target, MOVE_DURATION[int(shown)])
+		if hide_tween:
+			hide_tween.kill()
+		hide_tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+		hide_tween.tween_property(self, "position", target, MOVE_DURATION[int(shown)])
 	else:
 		position = target
 	
 	shown = do_show
+
+func set_content(idx: int) -> void:
+	if current:
+		current.visible = false
+	
+	current = contents[idx]
+	current.visible = true
+	
+	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
+	current.set_anchors_and_offsets_preset(
+		PRESET_TOP_RIGHT if reverse else PRESET_TOP_LEFT,
+		Control.PRESET_MODE_KEEP_SIZE
+	)
 
 func update_layout() -> void:
 	var vp_w = get_viewport_rect().size.x
