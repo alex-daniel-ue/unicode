@@ -14,6 +14,7 @@ extends Panel
 @export var reverse := false
 @export var icons: Array[Texture2D]
 
+@export_group("Children")
 @export var button_container: VBoxContainer
 const BUTTON_SIZE := Vector2(50, 50)
 var side_button_scene := preload("res://puzzle/ui/side_menu/side_menu_button.tscn")
@@ -56,11 +57,11 @@ func regenerate_buttons() -> void:
 		btn.queue_free()
 	
 	for idx in range(len(icons)):
-		var icon = icons[idx]
+		var icon := icons[idx]
 		if not icon:
 			continue
 		
-		var btn = side_button_scene.instantiate() as Button
+		var btn := side_button_scene.instantiate() as Button
 		btn.custom_minimum_size = BUTTON_SIZE
 		btn.icon = icon
 		btn.pressed.connect(_on_button_pressed.bind(idx))
@@ -78,14 +79,22 @@ func _on_button_pressed(idx: int) -> void:
 	
 	set_content(idx)
 
+func get_shown_position() -> Vector2:
+	var result := Vector2.ZERO
+	if reverse:
+		result.x = get_viewport_rect().size.x - size.x
+	return result
+
+func get_hidden_position() -> Vector2:
+	var shown_pos := get_shown_position()
+	shown_pos.x += current.size.x * (1 if reverse else -1)
+	return shown_pos
+
 func show_menu(do_show: bool, animated := true) -> void:
 	if contents.is_empty() or shown == do_show:
 		return
 	
-	var _offset := current.size.x
-	if reverse != shown:  # equivalent to reverse ^ shown (XOR operation)
-		_offset *= -1
-	var target := position + Vector2(_offset, 0)
+	var target := get_shown_position() if do_show else get_hidden_position()
 	
 	if animated:
 		if hide_tween:
@@ -134,5 +143,4 @@ func update_layout() -> void:
 			Control.PRESET_MODE_KEEP_SIZE
 		)
 	
-	if not shown:
-		position.x += current.size.x if reverse else -current.size.x
+	position = get_shown_position() if shown else get_hidden_position()

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ch4kyvq1p1lr7"
-path="res://.godot/imported/debug_texture.png-4de07c1d87d0463d9fb88ab74cd47cc7.ctex"
+uid="uid://b70pnopbqh0vl"
+path="res://.godot/imported/Chair-v4-computer.png-2c2f522e0e6844dd4072eb79c989ac07.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/value_block/debug_texture.png"
-dest_files=["res://.godot/imported/debug_texture.png-4de07c1d87d0463d9fb88ab74cd47cc7.ctex"]
+source_file="res://world/sprites/Chair-v4-computer.png"
+dest_files=["res://.godot/imported/Chair-v4-computer.png-2c2f522e0e6844dd4072eb79c989ac07.ctex"]
 
 [params]
 

@@ -1,10 +1,19 @@
 - Blocks some levels deep shouldn't get rendered (or be invisible) when previewing?
+- player shouldn't be able to drag blocks inside blocks (like pre-set socketed blocks)
 - finally do block text and basic functions 
 
 - Block text handling
-	- () Parentheses are value blocks
+	- () Parentheses are value sockets, (text) for uneditable value blocks
 	- [] Square brackets are value blocks for enums
 	- <> Angle brackets are expression blocks
+	- {} Curly brackets for blocks inside, semicolon delimiter
+
+- 
+
+- will blocks have nested blocks 
+
+input value blocks
+socket value blocks
 
 function (name) (arg/s)/[enum]
 move [directions]

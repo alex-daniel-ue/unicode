@@ -3,6 +3,7 @@ class_name NestedBlock
 extends Block
 
 
+@export_group("Children")
 @export var mouth: VBoxContainer
 @export var lower_lip: Control
 

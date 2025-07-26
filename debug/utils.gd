@@ -2,6 +2,8 @@ class_name Utils
 extends Object
 
 
+## Currently primarily used in changing drop preview scale for when canvas is
+## zoomed out.
 static var drag_preview_container: Control
 
 

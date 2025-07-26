@@ -2,6 +2,7 @@
 class_name Block
 extends Control
 
+@export var block_data: BlockData
 
 @export_group("Block")
 @export var draggable := true

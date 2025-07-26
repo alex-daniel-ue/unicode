@@ -3,7 +3,8 @@ class_name SocketableBlock
 extends Block
 
 
-@export var socketed := true
+@export var socketed := true:
+	set = set_socketed
 
 var overridden_socket: SocketableBlock
 
@@ -12,6 +13,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
+	super()
 	if toolbox:
 		socketed = false
 	if socketed:
@@ -41,5 +43,8 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	var container := get_parent()
 	container.add_child(data)
 	container.move_child(data, get_index())
+
+func set_socketed(value: bool) -> void:
+	socketed = value
 
 func _get_block_name() -> String: return "SocketableBlock"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=13 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -8,9 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://cu0q8n6labe07" path="res://puzzle/ui/block/statement_block/statement_block.tscn" id="4_dipl1"]
 [ext_resource type="Texture2D" uid="uid://bv6qygy8ohllx" path="res://puzzle/ui/side_menu/icons/mdi--toolbox.png" id="4_vlyq7"]
 [ext_resource type="PackedScene" uid="uid://cb42xnxj114jp" path="res://puzzle/ui/block/nested_block/nested_block.tscn" id="5_vlyq7"]
-[ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/expression_block/expression_block.tscn" id="6_j1boe"]
+[ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socketable_block/expression_block/expression_block.tscn" id="6_j1boe"]
 [ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="7_xr7vu"]
 [ext_resource type="Script" uid="uid://b0ne4qh25m703" path="res://puzzle/camera_2d.gd" id="8_sbp70"]
+[ext_resource type="PackedScene" uid="uid://da50ywh5cb07s" path="res://puzzle/ui/block/socketable_block/value_block/value_block.tscn" id="11_vlyq7"]
 
 [node name="Puzzle" type="Control"]
 layout_mode = 3
@@ -36,15 +37,15 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -383.333
-offset_right = 50.0
+offset_left = -61.0
+offset_right = -60.3333
 grow_horizontal = 2
 grow_vertical = 2
 icons = Array[Texture2D]([ExtResource("3_dipl1"), ExtResource("4_vlyq7")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 383.333
+offset_right = 61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 mouse_filter = 0
@@ -64,7 +65,7 @@ autowrap_mode = 3
 visible = false
 layout_mode = 1
 offset_right = 383.333
-offset_bottom = 425.0
+offset_bottom = 491.0
 mouse_filter = 0
 theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 16
@@ -102,14 +103,20 @@ text = "expression"
 layout_mode = 2
 text = "begin code"
 
+[node name="ValueBlock" parent="LeftSideMenu/ToolboxContent/VBoxContainer" instance=ExtResource("11_vlyq7")]
+layout_mode = 2
+enum_values = PackedStringArray("north", "east", "west", "south")
+placeable = true
+toolbox = true
+
 [node name="RightSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -50.0
-offset_right = 383.333
-grow_horizontal = 2
+offset_left = -1089.67
+offset_right = -1089.0
+grow_horizontal = 0
 grow_vertical = 2
 reverse = true
 icons = Array[Texture2D]([ExtResource("3_dipl1")])
@@ -119,7 +126,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -383.333
+offset_left = -61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 mouse_filter = 0

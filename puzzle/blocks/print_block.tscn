@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cv28syyr30p23"]
+
+[node name="PrintBlock" type="Node"]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c5atbvk5lcmhc"]
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_gkogg"]
-[ext_resource type="Script" uid="uid://ds7e5xil4w1he" path="res://puzzle/ui/block/expression_block/expression_block.gd" id="2_kykdt"]
-[ext_resource type="Texture2D" uid="uid://cdsk1ty362066" path="res://puzzle/ui/block/expression_block/texture.png" id="3_kykdt"]
+[ext_resource type="Script" uid="uid://ds7e5xil4w1he" path="res://puzzle/ui/block/socketable_block/expression_block/expression_block.gd" id="2_kykdt"]
+[ext_resource type="Texture2D" uid="uid://cdsk1ty362066" path="res://puzzle/ui/block/socketable_block/expression_block/texture.png" id="3_kykdt"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_nr2bq"]
 
 [node name="ExpressionBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]

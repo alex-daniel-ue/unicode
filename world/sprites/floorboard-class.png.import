@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db5kro5t4uc3a"
-path="res://.godot/imported/debug_texture.png-e33341f43bd70723e26030485a92ab79.ctex"
+uid="uid://dx84e7dru6k62"
+path="res://.godot/imported/floorboard-class.png-99bbed7081802ade886a5be8954d03c6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/expression_block/debug_texture.png"
-dest_files=["res://.godot/imported/debug_texture.png-e33341f43bd70723e26030485a92ab79.ctex"]
+source_file="res://world/sprites/floorboard-class.png"
+dest_files=["res://.godot/imported/floorboard-class.png-99bbed7081802ade886a5be8954d03c6.ctex"]
 
 [params]
 
