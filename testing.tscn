@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_jn4p2"]
 [ext_resource type="PackedScene" uid="uid://cu0q8n6labe07" path="res://puzzle/ui/block/statement_block/statement_block.tscn" id="3_11ixh"]
 [ext_resource type="PackedScene" uid="uid://cb42xnxj114jp" path="res://puzzle/ui/block/nested_block/nested_block.tscn" id="4_w078t"]
-[ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socketable_block/expression_block/expression_block.tscn" id="5_20t1u"]
+[ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socket_block/expression_block/expression_block.tscn" id="5_20t1u"]
 [ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="6_fd6ls"]
 
 [node name="Testing" type="Control"]

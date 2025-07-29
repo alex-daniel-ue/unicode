@@ -1,0 +1,33 @@
+each puzzle environment is a scene with a child tilemap/whatever puzzle
+environment and "entities" node that stores entities.
+
+puzzle environment will be slotted into problem environment panel.
+
+environment scene will scan entities which will have exposed blocks that're
+available to the puzzle
+
+these exposed blocks will be bespoke to the entity (move for character, etc.)
+
+when environment scene is dropped into puzzle scene, the environment scene has
+the exposed blocks available in it, which puzzle scene only has to transmit to
+editor/toolbox scene
+
+these exposed blocks will contain stringnames for methods, which are guaranteed
+to work because they come from the entities themselves. (get method name? and
+how to get argument types? worstcase, transmit two arrays, array[variant] and
+packedintarray for values and types respectively)
+
+then interpreter just transmits entity block functions (like move function,
+excluding if/while/control flow blocks) to the puzzle, which puzzle calls down
+on environment
+
+goal is entity, which emits signal to environment, which emits signal to puzzle,
+which will stop interpreter.
+
+scorer node (blank node, pure functionality, part of puzzle scene?) will judge
+actual completion, amount of blocks, amount of time/calls for three respective
+stars
+
+
+
+for static typing in value blocks, don't, but change value block color or textbox color depending on the detected type

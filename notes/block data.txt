@@ -1,0 +1,36 @@
+BlockData:
+draggable
+placeable
+toolbox
+top_notch
+bottom_notch
+text
+
+DerivedBlockData extends BlockData
+base_block: Resource (could be .tres or .tscn)
+
+
+
+print_block.tres extends DerivedBlockData
+base_block = statement_block.tscn
+draggable = true
+placeable = true
+toolbox = true
+top_notch = true
+bottom_notch = true
+text = "print {}"
+text_block_data: Array[Resource] = []
+
+
+base_block.instantiate().with(self)
+
+.with: set data to self
+
+
+- toolbox initializer receives an array of BlockData
+- block = data.base_block.instantiate().with(data)
+- block.format_text(data.text_block_data) 
+	- text = text.split("{}")
+	- strip remaining strings
+	- after each string insert the next text_block_data
+		- text_block_data.base_block.instantiate().with()

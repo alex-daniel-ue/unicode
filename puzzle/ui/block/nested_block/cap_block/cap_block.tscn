@@ -1,8 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1m1bc6snfm4l"]
+[gd_scene load_steps=7 format=3 uid="uid://b1m1bc6snfm4l"]
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_pyflx"]
 [ext_resource type="Script" uid="uid://cd5wechpwb1gl" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.gd" id="2_pyflx"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="3_3fxfc"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_qp2q5"]
+
+[sub_resource type="Resource" id="Resource_w5nrg"]
+resource_local_to_scene = true
+script = ExtResource("3_3fxfc")
+block_name = "Block"
+base_block_path = ""
+draggable = true
+placeable = true
+top_notch = false
+bottom_notch = true
+text = "start code"
+text_block_data = Array[ExtResource("3_3fxfc")]([])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]
 load_path = "res://.godot/imported/debug_texture.png-662692569c30c1c577ccb5ee2eccfc4a.ctex"
@@ -17,7 +31,7 @@ theme = ExtResource("1_pyflx")
 theme_override_constants/separation = 0
 script = ExtResource("2_pyflx")
 mouth = NodePath("Mouth")
-top_notch = false
+data = SubResource("Resource_w5nrg")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="CapHead" type="NinePatchRect" parent="."]

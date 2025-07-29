@@ -1,22 +1,38 @@
-[gd_scene load_steps=5 format=3 uid="uid://cu0q8n6labe07"]
+[gd_scene load_steps=7 format=3 uid="uid://cu0q8n6labe07"]
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_4nm74"]
 [ext_resource type="Script" uid="uid://dnolkknp6247n" path="res://puzzle/ui/block/statement_block/statement_block.gd" id="1_67ekf"]
 [ext_resource type="Texture2D" uid="uid://beklkexpka8cj" path="res://puzzle/ui/block/statement_block/texture.png" id="3_3063f"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="3_hxxvm"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="3_xooy0"]
+
+[sub_resource type="Resource" id="Resource_ngsoi"]
+resource_local_to_scene = true
+script = ExtResource("3_xooy0")
+block_name = "StatementBlock"
+base_block_path = "uid://cu0q8n6labe07"
+draggable = true
+placeable = true
+top_notch = true
+bottom_notch = true
+text = "statement"
+text_block_data = Array[ExtResource("3_xooy0")]([])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"
 
 [node name="StatementBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
 texture_filter = 3
-offset_right = 24.0
+offset_right = 50.0
 offset_bottom = 50.0
 size_flags_horizontal = 0
 theme = ExtResource("1_4nm74")
 script = ExtResource("1_67ekf")
+data = SubResource("Resource_ngsoi")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+size_flags_horizontal = 0
 texture = ExtResource("3_3063f")
 region_rect = Rect2(50, 51, 100, 99)
 patch_margin_left = 8

@@ -8,11 +8,11 @@ extends Block
 @export var lower_lip: Control
 
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	return (
-		not self.toolbox and
-		data is Block and
-		data.top_notch
+		not toolbox and
+		drop is Block and
+		drop.data.top_notch
 	)
 
 # Includes lower_lip in calculation because Mouth can visually gape, but have no

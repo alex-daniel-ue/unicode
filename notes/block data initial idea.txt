@@ -1,0 +1,25 @@
+TODO:
+- reformat parse block data, make more like .format method where {} represents .tres separated by raw labels
+
+TEMPLATE BLOCK
+- block name (inherit blockdata)
+- base block tscn
+- block function
+- construct method, where it takes 
+
+for example: "less than" expression block contains:
+- editable line value block
+- enum (for operations) value block
+- editable line value block
+
+each block is represented by a .tres
+- a variation of ValueBlockData where its socketed, not enum
+- a variation of ValueBlockData where its socketed, enum, and preset values for !=, ==, <, >
+- a variation of ValueBlockData where its socketed, not enum
+
+another example: "print" statement block contains:
+- a variation of ValueBlockData where its socketed, not enum
+its block text will be "print {}"
+its function will be:
+func block_function(vararg: Array[Variant]) -> Variant:
+	print(vararg[0])

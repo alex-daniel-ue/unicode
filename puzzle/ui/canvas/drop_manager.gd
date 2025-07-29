@@ -37,7 +37,7 @@ signal block_dropped
 const DROP_PREVIEW_ALPHA := 0.4
 
 var is_block_dragging := false
-var current_data: Block
+var current_drop: Block
 
 var drop_preview: Control
 var drop_preview_container: Control
@@ -57,17 +57,17 @@ func _process(_delta: float) -> void:
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			current_data = get_viewport().gui_get_drag_data()
+			current_drop = get_viewport().gui_get_drag_data()
 			
 			# Disregard irrelevant drag-and-drops
-			if not (current_data is Block and current_data.top_notch):
-				current_data = null
+			if not (current_drop is Block and current_drop.data.top_notch):
+				current_drop = null
 				return
 			is_block_dragging = true
 			
 			# Clone, not duplicate, because get_parent_block is also used on
 			# the drop preview (and get_parent_block utilizes owners)
-			drop_preview = current_data.clone()
+			drop_preview = current_drop.clone()
 			
 			# Indicate drop preview status to itself and all child Blocks recursively
 			drop_preview.is_drop_preview = true
@@ -79,30 +79,30 @@ func _notification(what: int) -> void:
 			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
 		NOTIFICATION_DRAG_END:
 			# Disregard invalid data
-			if current_data == null:
+			if current_drop == null:
 				return
 			is_block_dragging = false
 			
 			# Drag-and-drop ended on valid container
 			if drop_preview_container != null:
 				# Insert Block data
-				drop_preview_container.add_child(current_data)
-				drop_preview_container.move_child(current_data, drop_preview_idx)
 				block_dropped.emit()
+				drop_preview_container.add_child(current_drop)
+				drop_preview_container.move_child(current_drop, drop_preview_idx)
 			
 			# When the drop isn't successful (when _can_drop_data is false)
 			if not get_viewport().gui_is_drag_successful():
-				if current_data.origin_parent != null:
+				if current_drop.origin_parent != null:
 					# Return Block to origin
-					current_data.origin_parent.add_child(current_data)
-					current_data.origin_parent.move_child(current_data, current_data.origin_idx)
+					current_drop.origin_parent.add_child(current_drop)
+					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
 				else:
 					# If has no origin (like from a toolbox Block), destroy
-					current_data.queue_free()
+					current_drop.queue_free()
 			
 			# Delete the preview and remove references
 			drop_preview.queue_free()
-			for thing in [drop_preview, drop_preview_container, current_data]:
+			for thing in [drop_preview, drop_preview_container, current_drop]:
 				thing = null
 
 func update_drop_preview() -> void:
@@ -133,8 +133,6 @@ func update_drop_preview() -> void:
 				# Move to and store the new index
 				drop_preview_container.move_child(drop_preview, this_idx)
 				drop_preview_idx = this_idx
-				if drop_preview_container != drop_preview.get_parent():
-					Debug.log([drop_preview_container, drop_preview.get_parent()])
 		
 		# If previewing nothing, but recently previewed
 		elif drop_preview_container != null:
@@ -152,7 +150,7 @@ func get_preview_container() -> Container:
 		return null
 	
 	# Toolbox & Blocks without bottom notches can't be dropped onto
-	if block.toolbox or not block.bottom_notch:
+	if block.toolbox or not block.data.bottom_notch:
 		return null
 	
 	# When hovering over drop preview itself, return top-most preview Block's container

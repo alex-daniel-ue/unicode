@@ -25,18 +25,18 @@ func _gui_input(event: InputEvent) -> void:
 	handle_panning(event)
 	handle_zooming(event)
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	Utils.drag_preview_container.scale = scale
 	
 	return (
-		data is Block and
-		data.placeable
+		drop is Block and
+		drop.data.placeable
 	)
 
-func _drop_data(at_position: Vector2, data: Variant) -> void:
-	# data is Block && data.placeable
-	add_child(data)
-	data.position = at_position - data.get_center()
+func _drop_data(at_position: Vector2, drop: Variant) -> void:
+	# drop is Block && drop.data.placeable
+	add_child(drop)
+	drop.position = at_position - drop.size / 2.
 
 func handle_panning(event: InputEvent) -> void:
 	if drop_manager.is_block_dragging:
@@ -54,6 +54,7 @@ func handle_panning(event: InputEvent) -> void:
 			node_start_position = position
 		else:
 			is_panning = false
+	
 	elif event is InputEventMouseMotion and is_panning:
 		var current_global_mouse := get_global_mouse_position()
 		var offset := current_global_mouse - drag_start_position

@@ -1,9 +1,25 @@
-[gd_scene load_steps=5 format=3 uid="uid://c5atbvk5lcmhc"]
+[gd_scene load_steps=8 format=3 uid="uid://c5atbvk5lcmhc"]
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_gkogg"]
-[ext_resource type="Script" uid="uid://ds7e5xil4w1he" path="res://puzzle/ui/block/socketable_block/expression_block/expression_block.gd" id="2_kykdt"]
-[ext_resource type="Texture2D" uid="uid://cdsk1ty362066" path="res://puzzle/ui/block/socketable_block/expression_block/texture.png" id="3_kykdt"]
+[ext_resource type="Script" uid="uid://ds7e5xil4w1he" path="res://puzzle/ui/block/socket_block/expression_block/expression_block.gd" id="2_kykdt"]
+[ext_resource type="Script" uid="uid://bhuaul1ayo0wq" path="res://puzzle/ui/block/socket_block/expression_block/expression_data.gd" id="3_htvym"]
+[ext_resource type="Texture2D" uid="uid://cdsk1ty362066" path="res://puzzle/ui/block/socket_block/expression_block/texture.png" id="3_kykdt"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="4_bhq6w"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_nr2bq"]
+
+[sub_resource type="Resource" id="Resource_bhq6w"]
+resource_local_to_scene = true
+script = ExtResource("3_htvym")
+receptive = true
+block_name = "ExpressionBlock"
+base_block_path = "uid://c5atbvk5lcmhc"
+draggable = true
+placeable = false
+top_notch = false
+bottom_notch = false
+text = "expression"
+text_block_data = Array[ExtResource("4_bhq6w")]([])
+metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 
 [node name="ExpressionBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
 texture_filter = 3
@@ -12,9 +28,7 @@ offset_bottom = 16.0
 size_flags_horizontal = 0
 theme = ExtResource("1_gkogg")
 script = ExtResource("2_kykdt")
-placeable = false
-top_notch = false
-bottom_notch = false
+data = SubResource("Resource_bhq6w")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
