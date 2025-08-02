@@ -123,6 +123,9 @@ func update_layout() -> void:
 	var vp_w = get_viewport_rect().size.x
 	size.x = vp_w * viewport_ratio
 	
+	# Deferred setting doesn't really work. Don't want to debug too, since it works.
+	#set_deferred("size", Vector2(vp_w * viewport_ratio, size.y))
+	
 	if current:
 		current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
 	

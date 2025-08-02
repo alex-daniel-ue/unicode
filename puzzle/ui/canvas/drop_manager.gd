@@ -60,7 +60,7 @@ func _notification(what: int) -> void:
 			current_drop = get_viewport().gui_get_drag_data()
 			
 			# Disregard irrelevant drag-and-drops
-			if not (current_drop is Block and current_drop.data.top_notch):
+			if not current_drop is Block:
 				current_drop = null
 				return
 			is_block_dragging = true
@@ -96,6 +96,9 @@ func _notification(what: int) -> void:
 					# Return Block to origin
 					current_drop.origin_parent.add_child(current_drop)
 					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
+					
+					if current_drop is SocketBlock:
+						current_drop.overridden_socket.visible = false
 				else:
 					# If has no origin (like from a toolbox Block), destroy
 					current_drop.queue_free()
@@ -104,6 +107,7 @@ func _notification(what: int) -> void:
 			drop_preview.queue_free()
 			for thing in [drop_preview, drop_preview_container, current_drop]:
 				thing = null
+			
 
 func update_drop_preview() -> void:
 	if drop_preview == null:
@@ -140,7 +144,15 @@ func update_drop_preview() -> void:
 				drop_preview_container.remove_child(drop_preview)
 			drop_preview_container = null
 
+# FIXME: Blocks with no bottom-notch but has top-notch can stack on top of a Block.
+# That is, the non-bottom-notch connects to a top-notch. Which is a bug. Write an
+# additional check in this method.
 func get_preview_container() -> Container:
+	# FIXME: This should probably be in _notification itself, but I can't find
+	# the ideal spot, or what to change instead.
+	if not current_drop.data.top_notch:
+		return null
+	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()
 	var block := Utils.get_block(control)
@@ -150,7 +162,7 @@ func get_preview_container() -> Container:
 		return null
 	
 	# Toolbox & Blocks without bottom notches can't be dropped onto
-	if block.toolbox or not block.data.bottom_notch:
+	if block.data.toolbox or not block.data.bottom_notch:
 		return null
 	
 	# When hovering over drop preview itself, return top-most preview Block's container

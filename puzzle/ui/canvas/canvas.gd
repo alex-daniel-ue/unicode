@@ -27,7 +27,6 @@ func _gui_input(event: InputEvent) -> void:
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	Utils.drag_preview_container.scale = scale
-	
 	return (
 		drop is Block and
 		drop.data.placeable
@@ -49,6 +48,8 @@ func handle_panning(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			clicked.emit()
+			get_viewport().gui_release_focus()
+			
 			is_panning = true
 			drag_start_position = get_global_mouse_position()
 			node_start_position = position

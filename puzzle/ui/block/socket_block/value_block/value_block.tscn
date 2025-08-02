@@ -8,19 +8,20 @@
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_eg6ck"]
 
 [sub_resource type="Resource" id="Resource_qd24b"]
-resource_local_to_scene = true
 script = ExtResource("3_ryb24")
+editable = true
 is_enum = false
 enum_values = PackedStringArray()
 receptive = true
 block_name = "ValueBlock"
 base_block_path = "uid://da50ywh5cb07s"
+toolbox = true
 draggable = true
 placeable = false
 top_notch = false
 bottom_notch = false
 text = "value"
-text_block_data = Array[ExtResource("3_gkv7p")]([])
+text_data = Array[ExtResource("3_gkv7p")]([])
 metadata/_custom_type_script = "uid://0ni3de62rk0"
 
 [node name="ValueBlock" type="MarginContainer" node_paths=PackedStringArray("editable_container", "line_edit", "option_button", "text_container")]
@@ -64,7 +65,6 @@ mouse_filter = 2
 theme_override_constants/margin_bottom = 6
 
 [node name="LineEdit" type="LineEdit" parent="UpperLip/MarginContainer/EditableMarginContainer"]
-visible = false
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_g73sa")
@@ -77,9 +77,11 @@ deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
 [node name="OptionButton" type="OptionButton" parent="UpperLip/MarginContainer/EditableMarginContainer"]
+visible = false
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_g73sa")
+alignment = 1
 fit_to_longest_item = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
@@ -89,6 +91,4 @@ size_flags_horizontal = 4
 mouse_filter = 2
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
-[connection signal="focus_exited" from="UpperLip/MarginContainer/EditableMarginContainer/LineEdit" to="." method="_on_line_edit_focus_exited"]
-[connection signal="gui_input" from="UpperLip/MarginContainer/EditableMarginContainer/LineEdit" to="." method="_on_line_edit_gui_input"]
 [connection signal="item_selected" from="UpperLip/MarginContainer/EditableMarginContainer/OptionButton" to="UpperLip/MarginContainer/EditableMarginContainer/OptionButton" method="_on_item_selected"]

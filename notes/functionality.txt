@@ -1,0 +1,53 @@
+WHERE SHOULD FUNCTIONS BE INITIALIZED?
+
+requirements:
+- the block (.tres) must reference to a script and a method inside it
+- access to the method should be, in some form, transferrable
+
+
+considerations:
+	print function (vararg arguments)
+inside a dedicated block_functions.gd?
+
+	for loop (children must be packaged with method call)
+separate .gd script, static reference or .new()
+interpreter sees exposed children, as natural
+nestedblock text merely evaluates numerical/boolean values (counter for for/repeat,
+condition for while/if/else)
+inside nestedblockdata, enum of nested types:
+- if
+- else
+- while
+- for
+- repeat
+
+IF, ELSE
+- loops < 1
+	IF
+	- condition true
+	ELSE
+	- can't happen naturally, must be called from IF
+WHILE
+- condition.evaluate == true
+FOR
+- change iterator?
+REPEAT
+- loops less than argument
+
+
+	move character (ideally written in entity itself)
+signal connected to method
+signal is propagated thru environment -> puzzle -> toolbox
+interpreter merely emits signals
+
+
+
+
+getter method, update list of methods inside class in real time?
+@export enum/list, for method stringnames?
+
+
+
+
+get_arguments, is_argument flag for child .tres
+use .callv to just pass the array[string]

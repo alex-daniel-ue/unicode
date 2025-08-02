@@ -8,6 +8,7 @@ signal text_changed
 @export_file("*.tscn") var base_block_path: String
 
 @export_group("Block")
+@export var toolbox := true
 @export var draggable := true
 @export var placeable := true
 @export var top_notch := true
@@ -18,4 +19,5 @@ signal text_changed
 	set(value):
 		text = value
 		text_changed.emit()
-@export var text_block_data: Array[BlockData]
+## See [method Block.format_text].
+@export var text_data: Array[BlockData]

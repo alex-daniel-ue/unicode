@@ -7,16 +7,16 @@
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="3_xooy0"]
 
 [sub_resource type="Resource" id="Resource_ngsoi"]
-resource_local_to_scene = true
 script = ExtResource("3_xooy0")
 block_name = "StatementBlock"
 base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
 draggable = true
 placeable = true
 top_notch = true
 bottom_notch = true
 text = "statement"
-text_block_data = Array[ExtResource("3_xooy0")]([])
+text_data = Array[ExtResource("3_xooy0")]([])
 metadata/_custom_type_script = "uid://sdvo37wqlubv"
 
 [node name="StatementBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
@@ -33,6 +33,7 @@ text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 0
 texture = ExtResource("3_3063f")
 region_rect = Rect2(50, 51, 100, 99)
 patch_margin_left = 8
@@ -49,7 +50,9 @@ offset_right = 24.0
 offset_bottom = 50.0
 mouse_filter = 2
 theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2

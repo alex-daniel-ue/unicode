@@ -1,0 +1,37 @@
+these are ideas for exercises that build upon previous knowledge to recreate
+popular abstractions in coding like for loops, repeat, initialization
+though ones like "if else" that rely on more low-level instructions like JUMP
+won't be covered, probably only up to C++ low-level
+
+
+
+function (name) (arg/s)/[enum]
+move [directions]
+print/say (string)
+
+declare variable (name)
+set variable [name from var_list] to (value)
+(value) [operation] (value)
+
+if <condition>
+
+while <>
+
+for {value} in (list)
+repeat ()
+
+exercises
+- function demonstration
+	expose function and basic say
+- variable declaration & initialization
+	declare (name)
+	set variable [name] to (value)
+- array demonstration
+	
+- for loop
+	expose array
+	declare (counter)
+	declare (item)
+	while <>
+- repeat ()
+	use for block and range block

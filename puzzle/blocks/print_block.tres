@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://ci82nw1voh5qn"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_7o7j3"]
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="2_7y8kg"]
+
+[sub_resource type="Resource" id="Resource_7y8kg"]
+script = ExtResource("2_7y8kg")
+editable = true
+is_enum = false
+enum_values = PackedStringArray()
+receptive = true
+block_name = "ValueBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+bottom_notch = false
+text = "what?"
+text_data = Array[ExtResource("1_7o7j3")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
+
+[resource]
+script = ExtResource("1_7o7j3")
+block_name = "PrintBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = true
+bottom_notch = false
+text = "print {}"
+text_data = Array[ExtResource("1_7o7j3")]([SubResource("Resource_7y8kg")])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"

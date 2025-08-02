@@ -28,9 +28,11 @@ base_block.instantiate().with(self)
 
 
 - toolbox initializer receives an array of BlockData
-- block = data.base_block.instantiate().with(data)
-- block.format_text(data.text_block_data) 
+- block = data.base_block.instantiate() as Block
+- block.data = data
+- block.format_text()
 	- text = text.split("{}")
 	- strip remaining strings
 	- after each string insert the next text_block_data
-		- text_block_data.base_block.instantiate().with()
+		- var block := text_block_data.base_block.instantiate()
+		- 

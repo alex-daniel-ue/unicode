@@ -8,17 +8,17 @@
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_nr2bq"]
 
 [sub_resource type="Resource" id="Resource_bhq6w"]
-resource_local_to_scene = true
 script = ExtResource("3_htvym")
 receptive = true
 block_name = "ExpressionBlock"
 base_block_path = "uid://c5atbvk5lcmhc"
+toolbox = true
 draggable = true
 placeable = false
 top_notch = false
 bottom_notch = false
 text = "expression"
-text_block_data = Array[ExtResource("4_bhq6w")]([])
+text_data = Array[ExtResource("4_bhq6w")]([])
 metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 
 [node name="ExpressionBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
@@ -32,7 +32,7 @@ data = SubResource("Resource_bhq6w")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(64, 50)
 layout_mode = 2
 texture = ExtResource("3_kykdt")
 region_rect = Rect2(26, 70, 132, 72)
@@ -45,13 +45,23 @@ contents = NodePath("MarginContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
 custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 24.0
-offset_bottom = 50.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2

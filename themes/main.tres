@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://88cahjm0kd3k"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://88cahjm0kd3k"]
 
 [ext_resource type="FontFile" uid="uid://dm4f8d7nhiqpn" path="res://themes/fonts/TinyUnicode.ttf" id="1_0avsd"]
 
@@ -9,6 +9,8 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wykhr"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_0avsd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nuec8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k5u3e"]
 
@@ -49,6 +51,7 @@ LineEdit/styles/focus = SubResource("StyleBoxEmpty_0avsd")
 LineEdit/styles/normal = SubResource("StyleBoxEmpty_78ekx")
 LineEdit/styles/read_only = SubResource("StyleBoxEmpty_wykhr")
 OptionButton/colors/font_color = Color(0, 0, 0, 1)
+OptionButton/colors/font_disabled_color = Color(0, 0, 0, 0.501961)
 OptionButton/colors/font_focus_color = Color(0, 0, 0, 1)
 OptionButton/colors/font_hover_color = Color(0, 0, 0, 1)
 OptionButton/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
@@ -58,6 +61,7 @@ OptionButton/constants/h_separation = 0
 OptionButton/font_sizes/font_size = 36
 OptionButton/fonts/font = ExtResource("1_0avsd")
 OptionButton/icons/arrow = SubResource("ImageTexture_0avsd")
+OptionButton/styles/disabled = SubResource("StyleBoxEmpty_nuec8")
 OptionButton/styles/focus = SubResource("StyleBoxEmpty_k5u3e")
 OptionButton/styles/hover = SubResource("StyleBoxEmpty_wc0q8")
 OptionButton/styles/hover_pressed = SubResource("StyleBoxEmpty_kx4sy")

@@ -12,6 +12,6 @@ extends Control
 @export var contents: Control
 
 
-# Resize UpperLip according to Label's size
 func _on_contents_resized() -> void:
+	Debug.log("resized")
 	custom_minimum_size = contents.size
