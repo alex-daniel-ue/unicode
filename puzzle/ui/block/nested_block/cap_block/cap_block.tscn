@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1m1bc6snfm4l"]
+[gd_scene load_steps=9 format=3 uid="uid://b1m1bc6snfm4l"]
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_pyflx"]
 [ext_resource type="Script" uid="uid://cd5wechpwb1gl" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.gd" id="2_pyflx"]
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="3_3fxfc"]
 [ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="3_w5nrg"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="4_63kvq"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="4_qp2q5"]
 
 [sub_resource type="Resource" id="Resource_63kvq"]
@@ -18,6 +19,8 @@ top_notch = false
 bottom_notch = true
 text = "begin code"
 text_data = Array[ExtResource("3_3fxfc")]([])
+method = &"function_begin"
+source = ExtResource("4_63kvq")
 metadata/_custom_type_script = "uid://cxrghbceksfko"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]

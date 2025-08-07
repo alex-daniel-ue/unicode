@@ -19,7 +19,7 @@ toolbox = true
 draggable = true
 placeable = false
 top_notch = false
-bottom_notch = false
+method = &""
 text = "value"
 text_data = Array[ExtResource("3_gkv7p")]([])
 metadata/_custom_type_script = "uid://0ni3de62rk0"
@@ -73,7 +73,6 @@ alignment = 1
 expand_to_text_length = true
 emoji_menu_enabled = false
 middle_mouse_paste_enabled = false
-deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
 [node name="OptionButton" type="OptionButton" parent="UpperLip/MarginContainer/EditableMarginContainer"]
@@ -91,4 +90,3 @@ size_flags_horizontal = 4
 mouse_filter = 2
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
-[connection signal="item_selected" from="UpperLip/MarginContainer/EditableMarginContainer/OptionButton" to="UpperLip/MarginContainer/EditableMarginContainer/OptionButton" method="_on_item_selected"]

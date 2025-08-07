@@ -47,6 +47,8 @@ var drop_preview_idx: int
 var this_container: Control
 var this_idx: int
 
+@onready var canvas := $".." as ColorRect
+
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
@@ -97,8 +99,10 @@ func _notification(what: int) -> void:
 					current_drop.origin_parent.add_child(current_drop)
 					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
 					
+					# MILD FIXME? Kinda out of scope, kinda not
 					if current_drop is SocketBlock:
-						current_drop.overridden_socket.visible = false
+						if current_drop.overridden_socket != null:
+							current_drop.overridden_socket.visible = false
 				else:
 					# If has no origin (like from a toolbox Block), destroy
 					current_drop.queue_free()
@@ -144,12 +148,9 @@ func update_drop_preview() -> void:
 				drop_preview_container.remove_child(drop_preview)
 			drop_preview_container = null
 
-# FIXME: Blocks with no bottom-notch but has top-notch can stack on top of a Block.
-# That is, the non-bottom-notch connects to a top-notch. Which is a bug. Write an
-# additional check in this method.
 func get_preview_container() -> Container:
-	# FIXME: This should probably be in _notification itself, but I can't find
-	# the ideal spot, or what to change instead.
+	# MEDIUM FIXME: This should probably be in _notification itself, but I can't
+	# find the ideal spot, or what to change instead.
 	if not current_drop.data.top_notch:
 		return null
 	
@@ -158,11 +159,8 @@ func get_preview_container() -> Container:
 	var block := Utils.get_block(control)
 	
 	# Fail early when hovering over nothing or non-Block
-	if not (block != null and block is Block):
-		return null
-	
-	# Toolbox & Blocks without bottom notches can't be dropped onto
-	if block.data.toolbox or not block.data.bottom_notch:
+	# Toolbox Blocks can't be dropped onto
+	if block == null or not block is Block or block.data.toolbox:
 		return null
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
@@ -185,7 +183,7 @@ func get_preview_container() -> Container:
 			return parent_block.mouth
 		
 		elif block is NestedBlock:
-			var center_y := control.global_position.y + control.size.y * 0.5
+			var center_y := control.global_position.y + control.size.y * 0.5 * canvas.scale.y
 			var is_above := mouse_pos.y < center_y
 			if control.name == ("UpperLip" if is_above else "LowerLip"):
 				# Mouse has to be inside mouth to be placed relative to Block
@@ -215,7 +213,7 @@ func get_preview_idx(container: Container) -> int:
 	var control := get_viewport().gui_get_hovered_control()
 	var block := Utils.get_block(control)
 	
-	var center_y := block.global_position.y + block.size.y * 0.5
+	var center_y := block.global_position.y + block.size.y * 0.5 * canvas.scale.y
 	var is_above := mouse_pos.y < center_y
 	
 	# No change
@@ -245,7 +243,7 @@ func get_preview_idx(container: Container) -> int:
 			idx -= 1
 		
 		var pos: float = child.global_position.y
-		var hgt: float = pos + child.size.y
+		var hgt: float = pos + child.size.y * canvas.scale.y
 		if pos <= mouse_pos.y and mouse_pos.y < hgt:
 			if not is_above:
 				idx += 1

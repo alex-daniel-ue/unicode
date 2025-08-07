@@ -12,7 +12,10 @@ signal text_changed
 @export var draggable := true
 @export var placeable := true
 @export var top_notch := true
-@export var bottom_notch := true
+
+@export_group("Function")
+@export var source: GDScript
+@export var method: StringName
 
 @export_group("Text")
 @export var text := "":

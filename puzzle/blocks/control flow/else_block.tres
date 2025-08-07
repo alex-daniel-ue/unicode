@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="NestedBlockData" load_steps=4 format=3 uid="uid://caeirgbvpb5kc"]
+
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="1_v63mi"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_7ea5r"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_d01ah"]
+
+[resource]
+script = ExtResource("1_v63mi")
+nested_type = 1
+block_name = "ElseBlock"
+base_block_path = "uid://cb42xnxj114jp"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_7ea5r")
+method = &"function_else"
+text = "else"
+text_data = Array[ExtResource("2_d01ah")]([])
+metadata/_custom_type_script = "uid://cxrghbceksfko"

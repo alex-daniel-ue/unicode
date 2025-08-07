@@ -10,9 +10,6 @@ extends SocketBlock
 
 
 func _ready() -> void:
-	assert(data is ValueBlockData)
-	var data := data as ValueBlockData
-	
 	#region Block data signal connections
 	data.enum_flag_changed.connect(_on_enum_flag_changed)
 	data.editable_changed.connect(_on_editable_changed)
@@ -20,6 +17,12 @@ func _ready() -> void:
 	
 	if Engine.is_editor_hint():
 		return
+	
+	option_button.clear()
+	for item in data.enum_values:
+		option_button.add_item(item)
+	if option_button.item_count > 0:
+		option_button.select.call_deferred(0)
 	
 	super()
 	
@@ -29,10 +32,6 @@ func _ready() -> void:
 	
 	if not data.editable:
 		text_container.modulate.a = 0.5
-	
-	option_button.clear()
-	for item in data.enum_values:
-		option_button.add_item(item)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	# Guaranteed all dropped ValueBlocks will be unsocketed
@@ -44,22 +43,17 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 func format_text() -> void:
 	if data.text.is_empty():
 		data.text = "empty text"
-		push_warning(data.text)
 	
 	var raw_texts := data.text.split("{}")
 	if len(raw_texts) == 1 and data.editable:
-		# FIXME: Review this, if it's ok?
 		line_edit.placeholder_text = data.text
 	
 	super()
 
-func get_text() -> String:
-	if not visible:
-		return ""
-	
+func get_raw_text() -> String:
+	if data.is_enum:
+		return option_button.get_item_text(option_button.get_selected_id())
 	if data.editable:
-		if data.is_enum:
-			return option_button.get_item_text(option_button.selected)
 		return line_edit.text
 	return super()
 

@@ -1,56 +1,27 @@
-[gd_scene load_steps=20 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=23 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
 [ext_resource type="PackedScene" uid="uid://dd1hdbi0o53lg" path="res://puzzle/ui/side_menu/side_menu.tscn" id="2_m1mme"]
 [ext_resource type="Texture2D" uid="uid://drbauahowgu02" path="res://puzzle/ui/side_menu/icons/material-symbols--info-rounded.png" id="3_dipl1"]
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="3_nnviu"]
-[ext_resource type="PackedScene" uid="uid://cu0q8n6labe07" path="res://puzzle/ui/block/statement_block/statement_block.tscn" id="4_dipl1"]
 [ext_resource type="Texture2D" uid="uid://bv6qygy8ohllx" path="res://puzzle/ui/side_menu/icons/mdi--toolbox.png" id="4_vlyq7"]
-[ext_resource type="PackedScene" uid="uid://cb42xnxj114jp" path="res://puzzle/ui/block/nested_block/nested_block.tscn" id="5_vlyq7"]
 [ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socket_block/expression_block/expression_block.tscn" id="6_j1boe"]
 [ext_resource type="Script" uid="uid://bqrh4mt84xqd0" path="res://toolbox_content.gd" id="7_vm51y"]
 [ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="7_xr7vu"]
-[ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/comparison_block.tres" id="8_ctiy3"]
 [ext_resource type="Script" uid="uid://b0ne4qh25m703" path="res://puzzle/camera_2d.gd" id="8_sbp70"]
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="8_xr7vu"]
-[ext_resource type="PackedScene" uid="uid://da50ywh5cb07s" path="res://puzzle/ui/block/socket_block/value_block/value_block.tscn" id="11_vlyq7"]
-[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="13_sbp70"]
-[ext_resource type="Script" uid="uid://n1iead5pmitf" path="res://puzzle/block_interpreter.gd" id="17_ctiy3"]
-
-[sub_resource type="Resource" id="Resource_tkwoe"]
-script = ExtResource("13_sbp70")
-editable = true
-is_enum = false
-enum_values = PackedStringArray("left", "right")
-receptive = true
-block_name = "ValueBlock"
-base_block_path = "uid://da50ywh5cb07s"
-toolbox = true
-draggable = true
-placeable = true
-top_notch = false
-bottom_notch = false
-text = "value"
-text_data = Array[ExtResource("8_xr7vu")]([])
-metadata/_custom_type_script = "uid://0ni3de62rk0"
-
-[sub_resource type="Resource" id="Resource_vm51y"]
-script = ExtResource("13_sbp70")
-editable = true
-is_enum = true
-enum_values = PackedStringArray("left", "right")
-receptive = true
-block_name = "ValueEnumBlock"
-base_block_path = "uid://da50ywh5cb07s"
-toolbox = true
-draggable = true
-placeable = true
-top_notch = false
-bottom_notch = false
-text = "value"
-text_data = Array[ExtResource("8_xr7vu")]([])
-metadata/_custom_type_script = "uid://0ni3de62rk0"
+[ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/comparison_block.tres" id="10_ctiy3"]
+[ext_resource type="Resource" uid="uid://ci82nw1voh5qn" path="res://puzzle/blocks/print_block.tres" id="11_ctiy3"]
+[ext_resource type="Resource" uid="uid://bqxhjob3jcdpm" path="res://puzzle/blocks/declare_var_block.tres" id="12_35gji"]
+[ext_resource type="Resource" uid="uid://gibwvau1pa7m" path="res://puzzle/blocks/arithmetic_block.tres" id="13_bvcr2"]
+[ext_resource type="Resource" uid="uid://ciiuxwd7c066x" path="res://puzzle/blocks/set_var_block.tres" id="13_tkwoe"]
+[ext_resource type="Resource" uid="uid://cgwg3i44m4o4t" path="res://puzzle/blocks/control flow/while_block.tres" id="14_equ7n"]
+[ext_resource type="Resource" uid="uid://8o1brt6rqfn2" path="res://puzzle/blocks/control flow/if_block.tres" id="16_bvcr2"]
+[ext_resource type="Resource" uid="uid://caeirgbvpb5kc" path="res://puzzle/blocks/control flow/else_block.tres" id="17_e1dgq"]
+[ext_resource type="Texture2D" uid="uid://cawaq5ffdklpl" path="res://icon.svg" id="18_35gji"]
+[ext_resource type="Script" uid="uid://tfjon70r0mq2" path="res://puzzle/entities/sample/sprite_2d.gd" id="19_tkwoe"]
+[ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/sample/move_block.tres" id="20_equ7n"]
 
 [node name="Puzzle" type="Control"]
 layout_mode = 3
@@ -60,6 +31,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dipl1")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(576, 324)
+script = ExtResource("8_sbp70")
 
 [node name="Canvas" parent="." instance=ExtResource("1_vkqux")]
 layout_mode = 0
@@ -76,17 +51,17 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -382.0
+offset_left = -372.333
 offset_right = 50.0
-grow_horizontal = 2
 grow_vertical = 2
 icons = Array[Texture2D]([ExtResource("3_dipl1"), ExtResource("4_vlyq7")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 382.0
+offset_right = 372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
+grow_vertical = 2
 mouse_filter = 0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
@@ -103,7 +78,7 @@ autowrap_mode = 3
 [node name="ToolboxContent" type="MarginContainer" parent="LeftSideMenu" node_paths=PackedStringArray("scroll_container")]
 visible = false
 layout_mode = 1
-offset_right = 382.0
+offset_right = 372.333
 offset_bottom = 48.0
 mouse_filter = 0
 theme_override_constants/margin_left = 48
@@ -112,14 +87,13 @@ theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 32
 script = ExtResource("7_vm51y")
 scroll_container = NodePath("ScrollContainer")
-print_block = ExtResource("8_ctiy3")
+print_block = Array[ExtResource("8_xr7vu")]([ExtResource("14_equ7n"), ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq")])
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, 573)
+custom_minimum_size = Vector2(0, 525)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]
-custom_minimum_size = Vector2(0, 573)
 layout_mode = 2
 theme_override_constants/separation = 16
 
@@ -131,33 +105,19 @@ theme_type_variation = &"HeaderLarge"
 text = "TOOLBOX"
 horizontal_alignment = 1
 
-[node name="StatementBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("4_dipl1")]
-layout_mode = 2
-
-[node name="NestedBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("5_vlyq7")]
-layout_mode = 2
-
 [node name="ExpressionBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("6_j1boe")]
 layout_mode = 2
 
 [node name="CapBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("7_xr7vu")]
 layout_mode = 2
 
-[node name="ValueBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("11_vlyq7")]
-layout_mode = 2
-data = SubResource("Resource_tkwoe")
-
-[node name="ValueBlock2" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("11_vlyq7")]
-layout_mode = 2
-data = SubResource("Resource_vm51y")
-
 [node name="RightSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 94.0
-offset_right = 526.0
+offset_left = 65.0
+offset_right = 487.333
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -168,9 +128,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -382.0
+offset_left = -372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
+grow_vertical = 2
 mouse_filter = 0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
@@ -184,11 +145,11 @@ theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
 autowrap_mode = 3
 
-[node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2(576, 324)
-script = ExtResource("8_sbp70")
-
-[node name="BlockInterpreter" type="Node" parent="."]
-script = ExtResource("17_ctiy3")
+[node name="Sprite2D" type="Sprite2D" parent="RightSideMenu/InformationContent"]
+position = Vector2(100, 267)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_35gji")
+script = ExtResource("19_tkwoe")
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("20_equ7n")])
 
 [connection signal="clicked" from="Canvas" to="." method="_on_canvas_clicked"]

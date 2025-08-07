@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="NestedBlockData" load_steps=5 format=3 uid="uid://cgwg3i44m4o4t"]
+
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="1_3cyp5"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_4ry0o"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_y6s4a"]
+[ext_resource type="Resource" uid="uid://w8xwhkblg07e" path="res://puzzle/blocks/generic/receptive_boolean_block.tres" id="4_1y2hx"]
+
+[resource]
+script = ExtResource("1_3cyp5")
+nested_type = 2
+block_name = "WhileBlock"
+base_block_path = "uid://cb42xnxj114jp"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_4ry0o")
+method = &"function_while"
+text = "while {}"
+text_data = Array[ExtResource("2_y6s4a")]([ExtResource("4_1y2hx")])
+metadata/_custom_type_script = "uid://cxrghbceksfko"

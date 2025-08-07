@@ -10,7 +10,3 @@ func log(message: Variant = "", separator := ' ') -> void:
 	elif message is float:
 		message = "%.03f" % message
 	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000., str(message)])
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("debug"):
-		pass

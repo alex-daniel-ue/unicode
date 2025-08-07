@@ -13,6 +13,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
+	function = func(): return Utils.typecast_string(get_raw_text())
+	
 	super()
 	if data.toolbox:
 		data.receptive = false
@@ -24,11 +26,12 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	return super(at_position)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	#var data := data as SocketBlockData
+	var solid := get_solid_parent_block()
 	return (
 		not data.toolbox and
 		data.receptive and
-		drop is SocketBlock
+		drop is SocketBlock and
+		(solid == null or not solid.data.toolbox)
 	)
 
 func _drop_data(_at_position: Vector2, drop: Variant) -> void:
@@ -40,5 +43,8 @@ func _drop_data(_at_position: Vector2, drop: Variant) -> void:
 	container.add_child(drop)
 	container.move_child(drop, get_index())
 
-func get_text() -> String:
-	return super() if visible else ""
+func get_solid_parent_block() -> Block:
+	var result := get_parent_block()
+	while result != null and not result.data.top_notch:
+		result = get_parent_block()
+	return result

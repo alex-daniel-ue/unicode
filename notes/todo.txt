@@ -1,4 +1,4 @@
 - Blocks some levels deep shouldn't get rendered (or be invisible) when previewing?
-- think about:
-	- functionality, for nestedblocks etc.
 - Editable LineEdit ValueBlocks change color based on detected value type
+- _set_block_owner in block.gd should skip known already-set by amount of
+	children of non-set. does that make sense?

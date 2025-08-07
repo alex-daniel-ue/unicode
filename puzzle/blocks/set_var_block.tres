@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://ciiuxwd7c066x"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_p7bla"]
+[ext_resource type="Script" uid="uid://dii7bfva6rsks" path="res://puzzle/functions/generic.gd" id="2_3w5rk"]
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="3_ne0qg"]
+
+[sub_resource type="Resource" id="Resource_ij7p6"]
+script = ExtResource("3_ne0qg")
+editable = true
+is_enum = false
+enum_values = PackedStringArray()
+receptive = false
+block_name = "ReceptiveLineBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = "..."
+text_data = Array[ExtResource("1_p7bla")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
+
+[sub_resource type="Resource" id="Resource_krxry"]
+script = ExtResource("3_ne0qg")
+editable = true
+is_enum = false
+enum_values = PackedStringArray()
+receptive = true
+block_name = "ReceptiveLineBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = "..."
+text_data = Array[ExtResource("1_p7bla")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
+
+[resource]
+script = ExtResource("1_p7bla")
+block_name = "SetVarBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_3w5rk")
+method = &"function_set_var"
+text = "set {} to {}"
+text_data = Array[ExtResource("1_p7bla")]([SubResource("Resource_ij7p6"), SubResource("Resource_krxry")])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"

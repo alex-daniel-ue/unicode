@@ -3,7 +3,9 @@ class_name NestedBlock
 extends Block
 
 
-var loops := 0
+# Functionality variables
+var scope: Dictionary[StringName, Variant]
+var depth: int
 
 @export_group("Children")
 @export var mouth: VBoxContainer
@@ -29,13 +31,17 @@ func within_mouth(global_pos: Vector2) -> bool:
 	return Rect2(mouth.global_position, _size).has_point(global_pos)
 
 func get_blocks() -> Array[Block]:
-	var result := mouth.get_children() as Array[Block]
-	var not_is_else := func(block: Block) -> bool:
-		return (
-			block is NestedBlock and
-			block.data.nested_type == NestedBlockData.NestedType.ELSE
-		)
-	return result.filter(not_is_else)
+	var arr: Array[Block]
+	for node in mouth.get_children():
+		if node is Block: arr.append(node as Block)
+	return arr
+
+func check_type(type: NestedBlockData.Type) -> bool:
+	return (data as NestedBlockData).nested_type == type
 
 func _on_mouth_resized() -> void:
 	set_deferred("size", Vector2.ZERO)
+	# MILD FIXME: Band-aid for container sizing not immediately fitting contents
+	if is_inside_tree():
+		await get_tree().process_frame
+		size = Vector2.ZERO

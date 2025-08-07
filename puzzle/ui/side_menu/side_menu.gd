@@ -29,7 +29,8 @@ var current: Control
 
 
 func _enter_tree() -> void:
-	if Engine.is_editor_hint(): return
+	if Engine.is_editor_hint():
+		return
 	
 	get_viewport().size_changed.connect(update_layout)
 
@@ -120,13 +121,14 @@ func set_content(idx: int) -> void:
 	)
 
 func update_layout() -> void:
-	var vp_w = get_viewport_rect().size.x
+	var vp_w := get_viewport_rect().size.x
 	size.x = vp_w * viewport_ratio
 	
 	# Deferred setting doesn't really work. Don't want to debug too, since it works.
 	#set_deferred("size", Vector2(vp_w * viewport_ratio, size.y))
 	
 	if current:
+		# Setting y to 0 is intentional
 		current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
 	
 	var control_presets: Dictionary[Control, Control.LayoutPreset] = {

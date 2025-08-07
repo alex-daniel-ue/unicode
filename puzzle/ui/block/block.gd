@@ -14,6 +14,9 @@ var drag_preview: Control
 var origin_parent: Node
 var origin_idx: int
 
+var parent_nested: NestedBlock
+var function: Callable
+
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -23,6 +26,15 @@ func _ready() -> void:
 	if not is_drop_preview:
 		data.text_changed.connect(format_text)
 		format_text()
+	
+	if function.is_null():
+		if not data.method.is_empty():
+			function = Callable(
+				self if data.source == null else data.source.new(),
+				data.method
+			).bind(self)
+		else:
+			push_warning("%s has no function assigned!" % get_block_name())
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	# Null for undraggable
@@ -35,7 +47,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	Utils.drag_preview_container = drag_preview_container
 	drag_preview_container.name = "DragPreviewContainer"
 	
-	drag_preview = duplicate(0)  # No signals/groups/instantiation
+	drag_preview = ColorRect.new() #duplicate(0)  # No signals/groups/instantiation
+	drag_preview.size = size
 	drag_preview_container.add_child(drag_preview)
 	drag_preview.position = -get_local_mouse_position()
 	
@@ -69,10 +82,25 @@ func get_parent_block() -> Block:
 func get_block_name() -> String:
 	return "%s#%s" % [data.block_name, get_instance_id()]
 
+func get_text_blocks() -> Array[Block]:
+	var res: Array[Block]
+	for child in text_container.get_children():
+		if child is Block and child.visible:
+			res.append(child as Block)
+	return res
+
+func get_raw_text() -> String:
+	var child_text: Array[String]
+	for child in get_text_blocks():
+		child_text.append(child.get_raw_text())
+	return data.text.format(child_text, "{}")
+
 #region Duplicate fuckery
 func clone() -> Block:
 	# INFO: Node.duplicate() with these flags copy programmatically-added
 	# children, but all nodes have no Node.owner
+	# MILD FIXME: Sometimes causes a (hopefully) benign bug "Node not found" when
+	# duplicating instantiated children nodes with outgoing signals
 	var copy: Block = duplicate(DUPLICATE_SCRIPTS | DUPLICATE_SIGNALS)
 	
 	# Set owners manually, recursively
@@ -80,10 +108,16 @@ func clone() -> Block:
 	
 	copy.name = copy.get_block_name()
 	
+	# NOTE: On duplication, block.function.object shifts to itself. Meaning the
+	# function will be executed on the duplicated block.
+	# This is desirable behavior for block functions, but not for entity methods.
+	# See functionality_notes.txt for more info on block functions/entity methods.
+	if data.source == null and not data.method.is_empty():
+		# Check if entity method
+		copy.function = Callable(function)
+	
 	return copy
 
-# TODO: Potential optimization: if child is Block, get amt. of children and skip
-# ahead that many times?
 func _set_block_owner(node: Node) -> void:
 	# Skip first node to avoid setting its owner to itself
 	for child in Utils.get_children(node).slice(1):
@@ -163,17 +197,4 @@ func _normalize_label(label: Label) -> void:
 	# To make use of negative line spacing, to "center" text
 	# WARNING: Negative line spacing means being restricted to inline text
 	label.text = '\n' + label.text
-
-func get_text() -> String:
-	var fmt_values: Array[String]
-	for child in get_text_blocks():
-		fmt_values.append(child.get_text())
-	return data.text.format(fmt_values, "{}")
-
-func get_text_blocks() -> Array[Block]:
-	var arr: Array[Block]
-	for child in text_container.get_children():
-		if child is Block:
-			arr.append(child)
-	return arr
 #endregion

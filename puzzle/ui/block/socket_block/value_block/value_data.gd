@@ -2,6 +2,7 @@ class_name ValueBlockData
 extends SocketBlockData
 
 
+@warning_ignore("unused_signal")
 signal editable_changed(to: bool)
 signal enum_flag_changed(to: bool)
 

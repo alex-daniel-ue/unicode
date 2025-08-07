@@ -2,7 +2,7 @@ class_name NestedBlockData
 extends BlockData
 
 
-enum NestedType {
+enum Type {
 	IF,
 	ELSE,
 	WHILE,
@@ -12,4 +12,4 @@ enum NestedType {
 }
 
 @export_group("Nested")
-@export var nested_type: NestedType
+@export var nested_type: Type

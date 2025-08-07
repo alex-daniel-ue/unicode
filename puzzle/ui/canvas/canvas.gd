@@ -3,7 +3,7 @@ extends ColorRect
 
 signal clicked
 
-var is_panning = false
+var is_panning := false
 var drag_start_position: Vector2
 var node_start_position: Vector2
 
@@ -18,7 +18,7 @@ var drop_sound := preload("res://puzzle/ui/block/sounds/drop_1.mp3")
 
 
 func _ready() -> void:
-	var viewport_size = get_viewport_rect().size
+	var viewport_size := get_viewport_rect().size
 	pivot_offset = -position + viewport_size / 2
 
 func _gui_input(event: InputEvent) -> void:
@@ -36,6 +36,10 @@ func _drop_data(at_position: Vector2, drop: Variant) -> void:
 	# drop is Block && drop.data.placeable
 	add_child(drop)
 	drop.position = at_position - drop.size / 2.
+	
+	# MEDIUM FIXME: Out of scope, should be in socket_block.gd
+	if drop is SocketBlock:
+		drop.overridden_socket = null
 
 func handle_panning(event: InputEvent) -> void:
 	if drop_manager.is_block_dragging:
@@ -69,9 +73,9 @@ func handle_zooming(event: InputEvent) -> void:
 	var zoom_direction := 0
 	match event.button_index:
 		MOUSE_BUTTON_WHEEL_UP:
-			zoom_direction = -1
-		MOUSE_BUTTON_WHEEL_DOWN:
 			zoom_direction = 1
+		MOUSE_BUTTON_WHEEL_DOWN:
+			zoom_direction = -1
 		_:
 			return
 	

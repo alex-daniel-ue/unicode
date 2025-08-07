@@ -14,10 +14,10 @@ block_name = "ExpressionBlock"
 base_block_path = "uid://c5atbvk5lcmhc"
 toolbox = true
 draggable = true
-placeable = false
+placeable = true
 top_notch = false
-bottom_notch = false
-text = "expression"
+method = &""
+text = "true"
 text_data = Array[ExtResource("4_bhq6w")]([])
 metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 

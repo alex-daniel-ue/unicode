@@ -13,5 +13,4 @@ extends Control
 
 
 func _on_contents_resized() -> void:
-	Debug.log("resized")
 	custom_minimum_size = contents.size

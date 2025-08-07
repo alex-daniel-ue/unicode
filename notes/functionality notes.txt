@@ -1,0 +1,22 @@
+
+
+The reason for `scope` and `this` being backwards is that functions with bound
+arguments go in reverse, for example: "prints().bind(1).bind(2)" prints "2 1"
+The basic structure of each function is as follows:
+
+func function_[FUNCTION NAME](this: Block) -> Utils.Result:
+	# Argument checking
+	# Value checking
+	# Operation
+	return Utils.Result.success()
+
+
+1. Use Utils.evaluate_arguments(this) to get Utils.Result.data, representing all 
+	interpreted Block values. If an error occurs while evaluating arguments
+	(essentially calling their functions, recursively), it returns Utils.Error.
+2. Consider the Source and Method properties of the Function group in block.gd:
+	SOURCE		METHOD
+	  x			  x		=	Literal value block
+	  /			  x		=	Undefined
+	  x			  /		=	Entity method
+	  /			  /		=	Block function

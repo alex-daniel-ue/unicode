@@ -18,7 +18,7 @@ toolbox = false
 draggable = false
 placeable = false
 top_notch = false
-bottom_notch = false
+method = &""
 text = "..."
 text_data = Array[ExtResource("3_dttte")]([])
 metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
@@ -32,7 +32,7 @@ toolbox = true
 draggable = true
 placeable = true
 top_notch = true
-bottom_notch = true
+method = &""
 text = "if {}"
 text_data = Array[ExtResource("3_dttte")]([SubResource("Resource_p8846")])
 metadata/_custom_type_script = "uid://cxrghbceksfko"
@@ -82,6 +82,7 @@ mouse_filter = 2
 [node name="Body" type="NinePatchRect" parent="." node_paths=PackedStringArray("mouth")]
 custom_minimum_size = Vector2(0, 57)
 layout_mode = 2
+size_flags_vertical = 0
 texture = ExtResource("1_wo434")
 region_rect = Rect2(0, 28, 100, 72)
 patch_margin_left = 29
@@ -112,6 +113,8 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
 
+[connection signal="minimum_size_changed" from="UpperLip" to="UpperLip" method="_on_minimum_size_changed"]
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="child_order_changed" from="UpperLip/MarginContainer/HBoxContainer" to="." method="_on_mouth_resized"]
 [connection signal="resized" from="Body/Mouth" to="." method="_on_mouth_resized"]
 [connection signal="resized" from="Body/Mouth" to="Body" method="_on_mouth_resized"]
