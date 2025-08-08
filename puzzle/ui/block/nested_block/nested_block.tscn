@@ -37,7 +37,7 @@ text = "if {}"
 text_data = Array[ExtResource("3_dttte")]([SubResource("Resource_p8846")])
 metadata/_custom_type_script = "uid://cxrghbceksfko"
 
-[node name="NestedBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "text_container")]
+[node name="NestedBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "error_outline_affected", "text_container")]
 texture_filter = 3
 offset_right = 100.0
 offset_bottom = 99.0
@@ -49,6 +49,7 @@ script = ExtResource("1_vaasa")
 mouth = NodePath("Body/Mouth")
 lower_lip = NodePath("Body/LowerLip")
 data = SubResource("Resource_cgbgc")
+error_outline_affected = [NodePath("UpperLip"), NodePath("Body")]
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]

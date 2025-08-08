@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://cxrghbceksfko"
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]
 load_path = "res://.godot/imported/debug_texture.png-662692569c30c1c577ccb5ee2eccfc4a.ctex"
 
-[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "text_container")]
+[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "error_outline_affected", "text_container")]
 texture_filter = 3
 offset_right = 50.0
 offset_bottom = 66.0
@@ -36,6 +36,7 @@ theme_override_constants/separation = 0
 script = ExtResource("2_pyflx")
 mouth = NodePath("Mouth")
 data = SubResource("Resource_63kvq")
+error_outline_affected = [NodePath("CapHead"), NodePath("UpperLip")]
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="CapHead" type="NinePatchRect" parent="."]

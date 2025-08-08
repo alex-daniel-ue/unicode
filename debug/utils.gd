@@ -44,7 +44,7 @@ static func construct_block(data: BlockData) -> Block:
 
 static func typecast_string(string: String) -> Variant:
 	if string.is_empty():
-		return ''
+		return null
 	if string in ["true", "false"]:
 		return str_to_var(string)
 	if string.is_valid_int():
@@ -88,7 +88,6 @@ static func validate_type(args: Array, idx: int, types: PackedInt32Array, this: 
 	
 	if typeof(args[idx]) not in types:
 		var mapped_types := Array(types).map(func(type): return TYPE_MAPPING[type])
-		Debug.log("%s %s" % [args[idx], type_string(typeof(args[idx]))])
 		var err_msg := "%s argument must be %s!" % [to_ordinal(idx+1), format_array(mapped_types)]
 		return Result.error(err_msg, this)
 	
@@ -140,19 +139,3 @@ class Error extends Result:
 	func _init(message: String, block: Block) -> void:
 		self.message = message
 		self.block = block
-
-#static func get_class_ancestry(obj: Object) -> PackedStringArray:
-	#var result: PackedStringArray
-	#var script := obj.get_script() as Script
-	#while script != null:
-		#result.append(script.get_global_name())
-		#script = script.get_base_script()
-	#return result
-
-#static func random_name() -> String:
-	#const alphabet := "abcdefghijklmnopqrstuvwxyz"
-	#
-	#var result := ""
-	#for i in range(randi_range(6, 15)):
-		#result += alphabet[randi_range(0, len(alphabet)-1)]
-	#return result

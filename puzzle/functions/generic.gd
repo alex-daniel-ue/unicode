@@ -40,6 +40,7 @@ static func function_set_var(this: Block) -> Utils.Result:
 	result = _validate_var_name(args, idx, this)
 	if result is Utils.Error: return result
 	var var_name := result.data as StringName
+	
 	if not scope.has(var_name):
 		return Utils.Result.error("Variable '%s' doesn't exist in current scope!" % var_name, this)
 	
@@ -49,8 +50,11 @@ static func function_set_var(this: Block) -> Utils.Result:
 	if result is Utils.Error: return result
 	var value: Variant = result.data
 	
-	# (if) Variable name validation
+	if value == null:
+		return Utils.Result.error("Cannot set to nothing!", this)
+	
 	if value is StringName:
+		# Variable name validation
 		result = _validate_var_name(args, idx, this)
 		if result is Utils.Error: return result
 	
@@ -114,11 +118,12 @@ static func function_operation(
 		TYPE_STRING when typeof(args[2]) != TYPE_STRING:
 			return Utils.Result.error("Operands should be of the same type (string)!", this)
 	
+	# Wrap strings in quotes for Expression execution
 	for idx in [0, 2]:
 		if typeof(args[idx]) == TYPE_STRING:
 			args[idx] = '"%s"' % args[idx]
 	
-	if args[1] not in symbols:
+	if args[1] not in symbols: # Failsafe
 		return Utils.Result.error("Invalid symbol! %s" % BUG_WARNING, this)
 	
 	var expression := Expression.new()

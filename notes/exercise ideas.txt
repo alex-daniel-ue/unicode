@@ -6,16 +6,6 @@ won't be covered, probably only up to C++ low-level
 
 
 function (name) (arg/s)/[enum]
-move [directions]
-print/say (string)
-
-declare variable (name)
-set variable [name from var_list] to (value)
-(value) [operation] (value)
-
-if <condition>
-
-while <>
 
 for {value} in (list)
 repeat ()

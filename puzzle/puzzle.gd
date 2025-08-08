@@ -7,6 +7,8 @@ const MAX_DEPTH := 100
 
 static var is_program_running := false
 
+var error_block: Block
+
 @onready var canvas := $Canvas as ColorRect
 @onready var side_menus := [
 	$LeftSideMenu,
@@ -19,6 +21,9 @@ func run_program() -> void:
 		return
 	
 	is_program_running = true
+	if error_block != null:
+		error_block.is_error = false
+	
 	var begin := _get_begin()
 	if begin == null:
 		push_warning("No start block detected!")
@@ -26,10 +31,10 @@ func run_program() -> void:
 	
 	var result := await begin.function.call() as Utils.Result
 	if result is Utils.Error:
-		printt(result.message, result.block)
+		error_block = result.block
+		error_block.is_error = true
+		printt(result.message)
 		# show message
-		# highlight block with error
-		pass
 	
 	is_program_running = false
 

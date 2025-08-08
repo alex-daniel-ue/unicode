@@ -21,7 +21,7 @@ text = "true"
 text_data = Array[ExtResource("4_bhq6w")]([])
 metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 
-[node name="ExpressionBlock" type="MarginContainer" node_paths=PackedStringArray("text_container")]
+[node name="ExpressionBlock" type="MarginContainer" node_paths=PackedStringArray("error_outline_affected", "text_container")]
 texture_filter = 3
 offset_right = 64.0
 offset_bottom = 16.0
@@ -29,6 +29,7 @@ size_flags_horizontal = 0
 theme = ExtResource("1_gkogg")
 script = ExtResource("2_kykdt")
 data = SubResource("Resource_bhq6w")
+error_outline_affected = [NodePath("UpperLip")]
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]

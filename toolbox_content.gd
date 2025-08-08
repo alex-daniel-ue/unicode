@@ -2,8 +2,6 @@
 extends MarginContainer
 
 
-@warning_ignore("unused_private_class_variable")
-@export_tool_button("as") var _001 := update_vbox_height
 @export var scroll_container: ScrollContainer
 @export var block_data: Array[BlockData]
 @export var entities: Array[Node]
@@ -39,4 +37,3 @@ func update_vbox_height() -> void:
 	scroll_container.custom_minimum_size.y = get_viewport_rect().size.y
 	scroll_container.custom_minimum_size.y -= get_theme_constant("margin_bottom")
 	scroll_container.custom_minimum_size.y -= get_theme_constant("margin_top")
-	#scroll_container.set_deferred("custom_minimum_size", Vector2(custom_minimum_size.x, get_viewport_rect().size.y))

@@ -4,7 +4,7 @@ The reason for `scope` and `this` being backwards is that functions with bound
 arguments go in reverse, for example: "prints().bind(1).bind(2)" prints "2 1"
 The basic structure of each function is as follows:
 
-func function_[FUNCTION NAME](this: Block) -> Utils.Result:
+static func function_[FUNCTION NAME](this: Block) -> Utils.Result:
 	# Argument checking
 	# Value checking
 	# Operation

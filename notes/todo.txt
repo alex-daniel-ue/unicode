@@ -1,4 +1,34 @@
+- Block selection
 - Blocks some levels deep shouldn't get rendered (or be invisible) when previewing?
+	Reduces duplicate lag (even on my machine)
 - Editable LineEdit ValueBlocks change color based on detected value type
 - _set_block_owner in block.gd should skip known already-set by amount of
 	children of non-set. does that make sense?
+
+- Natural error popup
+- Proper in-game print/log block
+
+- Function block (needs to have variable amt. of args...)
+- Array block
+- Dictionary block
+
+- Control flow blocks
+	for, repeat, break, continue
+- "Get {} element of {}" block (for arrays, dictionaries)
+- Increment, decrement block
+- Initialize variable block
+	if existing, get val, if not set val (scope.get_or_add)
+	use function_set_var?
+- Syntactic sugar block?
+	+=, -=, /=, *=, %= ?
+- Boolean operator block
+	AND, OR, NOT
+
+- Puzzle environment
+- Run program button, where to put?
+- Entity class
+- Pickup entity (trash, papers, etc.)
+- Player entity
+	Movement
+	Detection
+	what else?

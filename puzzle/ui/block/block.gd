@@ -8,9 +8,16 @@ const MIN_DRAG_DUR := 0.3
 const MAX_DRAG_DUR := 1.0
 
 @export var data: BlockData
+@export var error_outline_affected: Array[Control]
 
 @export_group("Children")
 @export var text_container: Control
+
+const ERROR_OPACITY_MULT := 4.
+var is_error := false:
+	set = _set_error
+var error_opacity := 2.
+var error_outline := preload("res://puzzle/error_outline.tres").duplicate() as ShaderMaterial
 
 ## To detect whether the cursor is hovering over a preview.
 var is_drop_preview := false
@@ -34,6 +41,16 @@ func _ready() -> void:
 	if data.source != null and not data.method.is_empty():
 		function = Callable(data.source, data.method)
 	function = function.bind(self)
+
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	
+	if is_error:
+		var col := error_outline.get_shader_parameter("outline_color") as Color
+		col.a = pingpong(error_opacity, 1.0)
+		error_outline.set_shader_parameter("outline_color", col)
+		error_opacity = fposmod(error_opacity + delta * ERROR_OPACITY_MULT, 2.0)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	# Null for undraggable
@@ -101,6 +118,13 @@ func get_raw_text() -> String:
 
 func reset() -> void:
 	parent_nested = null
+
+func _set_error(to: bool) -> void:
+	is_error = to
+	error_opacity = 2.
+	
+	for control in error_outline_affected:
+		control.material = error_outline if to else null
 
 #region Duplicate fuckery
 func clone() -> Block:

@@ -71,10 +71,12 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 	for block in this.get_blocks():
 		if block is NestedBlock:
 			if block.check_type(NestedBlockData.Type.ELSE):
-				if (not previous_block is NestedBlock or
-					not previous_block.check_type(NestedBlockData.Type.IF) or 
-					if_block_success):
-						continue
+				if not (previous_block is NestedBlock and
+					previous_block.check_type(NestedBlockData.Type.IF)):
+						return Utils.Result.error("Invalid block placement!", block)
+				
+				if if_block_success:
+					continue
 			
 			block.scope = this.scope.duplicate()
 			block.depth = this.depth + 1
