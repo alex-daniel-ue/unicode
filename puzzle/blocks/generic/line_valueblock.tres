@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ValueBlockData" load_steps=3 format=3 uid="uid://cretiyhkujybi"]
+
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="1_87igo"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_22ote"]
+
+[resource]
+script = ExtResource("1_87igo")
+editable = true
+is_enum = false
+enum_values = PackedStringArray()
+receptive = false
+block_name = "LineBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = "..."
+text_data = Array[ExtResource("2_22ote")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"

@@ -1,0 +1,123 @@
+[gd_scene load_steps=12 format=3 uid="uid://cyrgb3cofrcym"]
+
+[ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_nscxo"]
+[ext_resource type="Script" uid="uid://bfvmmapukcnkd" path="res://puzzle/ui/block/nested_block/cap_block/function_block/function_block.gd" id="2_imrj0"]
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="3_yvi7k"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="5_1lk4t"]
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="5_nscxo"]
+[ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="6_yvl0x"]
+[ext_resource type="Texture2D" uid="uid://cp7s1kousu5w7" path="res://puzzle/ui/block/nested_block/cap_block/function_block/material-symbols--add.png" id="7_ggiit"]
+[ext_resource type="Texture2D" uid="uid://bwb8lc2xqxeum" path="res://puzzle/ui/block/nested_block/cap_block/function_block/material-symbols--remove.png" id="8_yvi7k"]
+
+[sub_resource type="Resource" id="Resource_ggiit"]
+script = ExtResource("5_nscxo")
+editable = true
+is_enum = false
+enum_values = PackedStringArray()
+receptive = false
+block_name = "LineBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = "..."
+text_data = Array[ExtResource("5_1lk4t")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
+
+[sub_resource type="Resource" id="Resource_nscxo"]
+script = ExtResource("3_yvi7k")
+nested_type = 7
+block_name = "FunctionBlock"
+base_block_path = "uid://cyrgb3cofrcym"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = false
+method = &""
+text = "function {} with args"
+text_data = Array[ExtResource("5_1lk4t")]([SubResource("Resource_ggiit")])
+metadata/_custom_type_script = "uid://cxrghbceksfko"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]
+load_path = "res://.godot/imported/debug_texture.png-662692569c30c1c577ccb5ee2eccfc4a.ctex"
+
+[node name="FunctionBlock" type="VBoxContainer" node_paths=PackedStringArray("add_argument_button", "remove_argument_button", "mouth", "error_outline_affected", "text_container")]
+texture_filter = 3
+offset_right = 120.0
+offset_bottom = 82.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("1_nscxo")
+theme_override_constants/separation = 0
+script = ExtResource("2_imrj0")
+add_argument_button = NodePath("UpperLip/MarginContainer/HBoxContainer/AddButton")
+remove_argument_button = NodePath("UpperLip/MarginContainer/HBoxContainer/RemoveButton")
+mouth = NodePath("Mouth")
+data = SubResource("Resource_nscxo")
+error_outline_affected = [NodePath("CapHead"), NodePath("UpperLip")]
+text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
+
+[node name="CapHead" type="NinePatchRect" parent="."]
+custom_minimum_size = Vector2(50, 16)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = SubResource("CompressedTexture2D_helxk")
+region_rect = Rect2(0, 0, 75, 16)
+patch_margin_left = 50
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(120, 66)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+mouse_filter = 1
+texture = SubResource("CompressedTexture2D_helxk")
+region_rect = Rect2(0, 16, 75, 50)
+patch_margin_left = 48
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+script = ExtResource("6_yvl0x")
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 50.0
+offset_bottom = 50.0
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="AddButton" type="Button" parent="UpperLip/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+icon = ExtResource("7_ggiit")
+icon_alignment = 1
+expand_icon = true
+
+[node name="RemoveButton" type="Button" parent="UpperLip/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+icon = ExtResource("8_yvi7k")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Mouth" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="resized" from="Mouth" to="." method="_on_mouth_resized"]

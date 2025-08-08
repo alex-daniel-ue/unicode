@@ -9,7 +9,8 @@ enum Type {
 	WHILE,
 	FOR,
 	REPEAT,
-	BEGIN
+	BEGIN,
+	FUNCTION
 }
 
 @export_group("Nested")

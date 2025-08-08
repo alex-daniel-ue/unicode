@@ -4,11 +4,12 @@
 - Editable LineEdit ValueBlocks change color based on detected value type
 - _set_block_owner in block.gd should skip known already-set by amount of
 	children of non-set. does that make sense?
+- Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
 
 - Natural error popup
 - Proper in-game print/log block
 
-- Function block (needs to have variable amt. of args...)
+- Function block functionality
 - Array block
 - Dictionary block
 

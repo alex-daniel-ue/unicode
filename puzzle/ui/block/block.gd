@@ -3,6 +3,12 @@ class_name Block
 extends Control
 
 
+@warning_ignore("unused_private_class_variable")
+@export_tool_button("Format text") var _001 := format_text
+@warning_ignore("unused_private_class_variable")
+@export_tool_button("Clear text") var _002 := func() -> void:
+	for child in text_container.get_children(): child.queue_free()
+
 const MAX_DRAG_SIZE := 1000 ** 2
 const MIN_DRAG_DUR := 0.3
 const MAX_DRAG_DUR := 1.0

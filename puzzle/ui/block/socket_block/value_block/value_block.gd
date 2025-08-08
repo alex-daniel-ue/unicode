@@ -57,6 +57,9 @@ func get_raw_text() -> String:
 		return line_edit.text
 	return super()
 
+func set_text(to: String) -> void:
+	line_edit.text = to
+
 func set_editing(to: bool) -> void:
 	line_edit.editable = to
 	option_button.disabled = not to
