@@ -30,7 +30,6 @@ func add_to_toolbox(data_or_block: Variant) -> void:
 func add_entity_blocks() -> void:
 	for entity in entities:
 		for block in entity.blocks:
-			print(block)
 			add_to_toolbox(block)
 
 func update_vbox_height() -> void:

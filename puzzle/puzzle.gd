@@ -41,7 +41,7 @@ func run_program() -> void:
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
 		if child is CapBlock:
-			if (child as CapBlock).check_type(NestedBlockData.Type.BEGIN):
+			if child.check_type(NestedBlockData.Type.BEGIN):
 				return child
 	return null
 

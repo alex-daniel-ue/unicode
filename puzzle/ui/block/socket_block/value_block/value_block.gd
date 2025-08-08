@@ -15,7 +15,7 @@ func _ready() -> void:
 	data.editable_changed.connect(_on_editable_changed)
 	#endregion
 	
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
 	option_button.clear()

@@ -36,20 +36,20 @@ var function: Callable
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
 	# Initialize block text
-	if not is_drop_preview:
-		data.text_changed.connect(format_text)
-		format_text()
+	data.text_changed.connect(format_text)
+	format_text()
 	
 	if data.source != null and not data.method.is_empty():
-		function = Callable(data.source, data.method)
-	function = function.bind(self)
+		function = Callable(data.source, data.method).bind(self)
+	
+	printt(self, function.get_argument_count())
 
 func _process(delta: float) -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
 	if is_error:
@@ -152,6 +152,7 @@ func clone() -> Block:
 	if data.source == null and not data.method.is_empty():
 		# Check if entity method
 		copy.function = Callable(function)
+	copy.function = copy.function.bind(copy)
 	
 	return copy
 

@@ -5,16 +5,22 @@
 - _set_block_owner in block.gd should skip known already-set by amount of
 	children of non-set. does that make sense?
 - Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
+- Functions with bound self refer to toolbox value
 
 - Natural error popup
 - Proper in-game print/log block
 
 - Function block functionality
+	- child_exiting_tree & child_entered_tree, function block will have reference to 
+	constructed statementblock for itself
+	- from blockdata, text = ("%s" % func_name) + ("{}" * len(args))
+	- function is reference towards functionblock, then _iterate_children
+	- share scope? probably
 - Array block
 - Dictionary block
 
 - Control flow blocks
-	for, repeat, break, continue
+	for, repeat, break, continue, return
 - "Get {} element of {}" block (for arrays, dictionaries)
 - Increment, decrement block
 - Initialize variable block

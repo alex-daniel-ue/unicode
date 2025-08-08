@@ -36,7 +36,7 @@ draggable = true
 placeable = true
 top_notch = false
 method = &""
-text = "function {} with args"
+text = "function {}"
 text_data = Array[ExtResource("5_1lk4t")]([SubResource("Resource_ggiit")])
 metadata/_custom_type_script = "uid://cxrghbceksfko"
 

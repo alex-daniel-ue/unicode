@@ -8,10 +8,10 @@ var overridden_socket: SocketBlock
 
 func _ready() -> void:
 	assert(data is SocketBlockData)
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
-	function = func(_this: Block):
+	function = func() -> Utils.Result:
 		return Utils.Result.success(Utils.typecast_string(get_raw_text()))
 	
 	super()

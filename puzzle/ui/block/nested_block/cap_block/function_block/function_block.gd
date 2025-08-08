@@ -3,7 +3,10 @@ class_name FunctionBlock
 extends CapBlock
 
 
+signal names_changed
+
 const MAX_ARGUMENTS := 3
+const WITH_ARGS_TEXT := ", with"
 
 @export_tool_button("Add argument") var _003 := add_argument
 @export_tool_button("Remove argument") var _004 := remove_argument
@@ -16,14 +19,13 @@ var line_values: PackedStringArray
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
 	super()
 	
 	add_argument_button.pressed.connect(add_argument)
 	remove_argument_button.pressed.connect(remove_argument)
-	add_argument()
 
 func format_text() -> void:
 	text_container.remove_child(add_argument_button)
@@ -47,14 +49,12 @@ func format_text() -> void:
 			block.set_text(line_values[idx])
 	
 	add_argument_button.visible = len(data.text_data) <= MAX_ARGUMENTS
-	remove_argument_button.visible = len(data.text_data) > 2 and data.text.ends_with(",{}")
+	remove_argument_button.visible = len(data.text_data) > 1 and data.text.ends_with("{}")
 
 func add_argument() -> void:
-	data.text += ",{}"
 	data.text_data.append(line_valueblock.duplicate(true))
-	format_text()
+	data.text += (WITH_ARGS_TEXT if len(data.text_data) <= 1 else "") + "{}"
 
 func remove_argument() -> void:
-	data.text = data.text.trim_suffix(",{}")
 	data.text_data.pop_back()
-	format_text()
+	data.text = data.text.trim_suffix((WITH_ARGS_TEXT if len(data.text_data) <= 1 else "") + "{}")

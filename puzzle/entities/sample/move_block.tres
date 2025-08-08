@@ -1,7 +1,24 @@
-[gd_resource type="Resource" script_class="BlockData" load_steps=3 format=3 uid="uid://itswbfm87c8y"]
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://itswbfm87c8y"]
 
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_qvyh8"]
-[ext_resource type="Resource" uid="uid://ccmh8bba16ecg" path="res://puzzle/entities/sample/direction_block.tres" id="2_b1ccq"]
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="2_b1ccq"]
+
+[sub_resource type="Resource" id="Resource_0210u"]
+script = ExtResource("2_b1ccq")
+editable = true
+is_enum = true
+enum_values = PackedStringArray("up", "down", "left", "right")
+receptive = false
+block_name = "DirectionBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = ""
+text_data = Array[ExtResource("1_qvyh8")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
 
 [resource]
 script = ExtResource("1_qvyh8")
@@ -13,5 +30,5 @@ placeable = true
 top_notch = true
 method = &"move"
 text = "move {}"
-text_data = Array[ExtResource("1_qvyh8")]([ExtResource("2_b1ccq")])
+text_data = Array[ExtResource("1_qvyh8")]([SubResource("Resource_0210u")])
 metadata/_custom_type_script = "uid://sdvo37wqlubv"
