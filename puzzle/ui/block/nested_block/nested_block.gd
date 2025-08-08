@@ -37,6 +37,8 @@ func get_blocks() -> Array[Block]:
 	return arr
 
 func check_type(type: NestedBlockData.Type) -> bool:
+	if (data as NestedBlockData).nested_type == NestedBlockData.Type.ELIF:
+		return type in [NestedBlockData.Type.IF, NestedBlockData.Type.ELSE]
 	return (data as NestedBlockData).nested_type == type
 
 func reset() -> void:

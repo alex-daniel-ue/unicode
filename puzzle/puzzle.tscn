@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=24 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -17,6 +17,7 @@
 [ext_resource type="Resource" uid="uid://gibwvau1pa7m" path="res://puzzle/blocks/arithmetic_block.tres" id="13_bvcr2"]
 [ext_resource type="Resource" uid="uid://ciiuxwd7c066x" path="res://puzzle/blocks/set_var_block.tres" id="13_tkwoe"]
 [ext_resource type="Resource" uid="uid://cgwg3i44m4o4t" path="res://puzzle/blocks/control flow/while_block.tres" id="14_equ7n"]
+[ext_resource type="Resource" uid="uid://bfoi5631rntay" path="res://puzzle/blocks/control flow/elif_block.tres" id="15_n8lp6"]
 [ext_resource type="Resource" uid="uid://8o1brt6rqfn2" path="res://puzzle/blocks/control flow/if_block.tres" id="16_bvcr2"]
 [ext_resource type="Resource" uid="uid://caeirgbvpb5kc" path="res://puzzle/blocks/control flow/else_block.tres" id="17_e1dgq"]
 [ext_resource type="Texture2D" uid="uid://cawaq5ffdklpl" path="res://icon.svg" id="18_35gji"]
@@ -51,14 +52,14 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -61.0
-offset_right = -60.3333
+offset_left = -372.333
+offset_right = 50.0
 grow_vertical = 2
 icons = Array[Texture2D]([ExtResource("3_dipl1"), ExtResource("4_vlyq7")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 61.0
+offset_right = 372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -87,7 +88,7 @@ theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 32
 script = ExtResource("7_vm51y")
 scroll_container = NodePath("ScrollContainer")
-block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3")])
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("15_n8lp6"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3")])
 entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
@@ -117,8 +118,8 @@ layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -1089.67
-offset_right = -1089.0
+offset_left = 65.0
+offset_right = 487.333
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -129,7 +130,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -61.0
+offset_left = -372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2

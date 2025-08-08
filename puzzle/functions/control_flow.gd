@@ -40,6 +40,7 @@ static func function_while(this: NestedBlock) -> Utils.Result:
 	return Utils.Result.success()
 
 ## text: IF [BOOL]
+## text: ELIF [BOOL]
 static func function_if(this: NestedBlock) -> Utils.Result:
 	var result := Utils.evaluate_and_check_arguments(1, this)
 	if result is Utils.Error: return result

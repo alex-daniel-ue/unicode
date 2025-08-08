@@ -5,6 +5,7 @@ extends BlockData
 enum Type {
 	IF,
 	ELSE,
+	ELIF,
 	WHILE,
 	FOR,
 	REPEAT,

@@ -4,7 +4,7 @@ extends Object
 ## NOTE: Functions with bound arguments go in reverse, for example:
 ## prints().bind(1, 2) prints "2 1"
 
-const UNREACHABLE_ERROR_WARNING := "\nThis error shouldn't be reached. This is a bug."
+const BUG_WARNING := "\nThis error shouldn't be reached. This is a bug."
 
 
 ## Text: DECLARE [VAR_NAME]
@@ -86,7 +86,7 @@ static func function_comparison(this: Block) -> Utils.Result:
 static func function_arithmetic(this: Block) -> Utils.Result:
 	return function_operation(this,
 		["+", "-", "*", "/", "%"],
-		[TYPE_INT, TYPE_FLOAT]
+		[TYPE_INT, TYPE_FLOAT, TYPE_STRING]
 	)
 
 ## text: [VALUE/VAR_NAME] [SYMBOL] [VALUE/VAR_NAME]
@@ -108,16 +108,28 @@ static func function_operation(
 		result = Utils.validate_type(args, idx, types, this)
 		if result is Utils.Error: return result
 	
+	match typeof(args[0]):
+		TYPE_INT, TYPE_FLOAT when typeof(args[2]) not in [TYPE_INT, TYPE_FLOAT]:
+			return Utils.Result.error("Operands should be of the same type (number)!", this)
+		TYPE_STRING when typeof(args[2]) != TYPE_STRING:
+			return Utils.Result.error("Operands should be of the same type (string)!", this)
+	
+	for idx in [0, 2]:
+		if typeof(args[idx]) == TYPE_STRING:
+			args[idx] = '"%s"' % args[idx]
+	
 	if args[1] not in symbols:
-		return Utils.Result.error("Invalid symbol! %s" % UNREACHABLE_ERROR_WARNING, this)
+		return Utils.Result.error("Invalid symbol! %s" % BUG_WARNING, this)
 	
 	var expression := Expression.new()
 	if expression.parse("%s %s %s" % args) != OK:
-		return Utils.Result.error("Parsing error: %s. %s" % [expression.get_error_text(), UNREACHABLE_ERROR_WARNING], this)
+		var err_text := expression.get_error_text()
+		return Utils.Result.error("Parsing error: %s. %s" % [err_text, BUG_WARNING], this)
 	
 	var expression_result: Variant = expression.execute()
 	if expression.has_execute_failed():
-		return Utils.Result.error("Execution error: %s. %s" % [expression.get_error_text(), UNREACHABLE_ERROR_WARNING], this)
+		var err_text := expression.get_error_text()
+		return Utils.Result.error("Execution error: %s. %s" % [err_text, BUG_WARNING], this)
 	
 	return Utils.Result.success(expression_result)
 

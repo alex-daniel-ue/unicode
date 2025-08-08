@@ -2,7 +2,7 @@ extends Node
 
 
 var delaying_interpret := true
-var block_interpret_delay := 0
+var block_interpret_delay := 0.4
 
 
 func sleep(seconds: float) -> void:

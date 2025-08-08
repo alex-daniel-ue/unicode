@@ -2,7 +2,7 @@ class_name Puzzle
 extends Control
 
 
-const MAX_LOOPS := 100
+const MAX_LOOPS := 9999
 const MAX_DEPTH := 100
 
 static var is_program_running := false
@@ -14,8 +14,11 @@ static var is_program_running := false
 ]
 
 func run_program() -> void:
-	is_program_running = true
+	if is_program_running:
+		printt("Program is currently running!")
+		return
 	
+	is_program_running = true
 	var begin := _get_begin()
 	if begin == null:
 		push_warning("No start block detected!")
@@ -32,7 +35,8 @@ func run_program() -> void:
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
-		if child is CapBlock and child.data.nested_type == NestedBlockData.Type.BEGIN:
+		if child is CapBlock:
+			if (child as CapBlock).check_type(NestedBlockData.Type.BEGIN):
 				return child
 	return null
 

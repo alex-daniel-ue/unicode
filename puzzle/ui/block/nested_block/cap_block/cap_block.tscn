@@ -9,18 +9,17 @@
 
 [sub_resource type="Resource" id="Resource_63kvq"]
 script = ExtResource("3_w5nrg")
-nested_type = 5
+nested_type = 6
 block_name = "CapBlock"
 base_block_path = "uid://b1m1bc6snfm4l"
 toolbox = false
 draggable = true
 placeable = true
 top_notch = false
-bottom_notch = true
+source = ExtResource("4_63kvq")
+method = &"function_begin"
 text = "begin code"
 text_data = Array[ExtResource("3_3fxfc")]([])
-method = &"function_begin"
-source = ExtResource("4_63kvq")
 metadata/_custom_type_script = "uid://cxrghbceksfko"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]

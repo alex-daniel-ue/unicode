@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="NestedBlockData" load_steps=6 format=3 uid="uid://bfoi5631rntay"]
+
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="1_fvywr"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_31ja1"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_dfja3"]
+[ext_resource type="Script" uid="uid://bhuaul1ayo0wq" path="res://puzzle/ui/block/socket_block/expression_block/expression_data.gd" id="4_unlhb"]
+
+[sub_resource type="Resource" id="Resource_5sd5g"]
+script = ExtResource("4_unlhb")
+receptive = true
+block_name = "BooleanBlock"
+base_block_path = "uid://c5atbvk5lcmhc"
+toolbox = false
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = "..."
+text_data = Array[ExtResource("2_dfja3")]([])
+metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
+
+[resource]
+script = ExtResource("1_fvywr")
+nested_type = 2
+block_name = "ElifBlock"
+base_block_path = "uid://cb42xnxj114jp"
+toolbox = true
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_31ja1")
+method = &"function_if"
+text = "elif {}"
+text_data = Array[ExtResource("2_dfja3")]([SubResource("Resource_5sd5g")])
+metadata/_custom_type_script = "uid://cxrghbceksfko"
