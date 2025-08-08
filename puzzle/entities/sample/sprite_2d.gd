@@ -1,13 +1,6 @@
 extends Sprite2D
 
 
-const dir_to_vec := {
-	up = Vector2.UP,
-	down = Vector2.DOWN,
-	left = Vector2.LEFT,
-	right = Vector2.RIGHT,
-}
-
 var blocks: Array[Block]
 @export var block_data: Array[BlockData]
 
@@ -15,11 +8,18 @@ var blocks: Array[Block]
 func _ready() -> void:
 	for data in block_data:
 		var block := Utils.construct_block(data)
-		block.function = Callable(self, data.method).bind(block)
+		block.function = Callable(self, data.method)
 		blocks.append(block)
 
 ## text: MOVE [up/down/left/right]
 func move(from_this: Block) -> Utils.Result:
+	const dir_to_vec := {
+		up = Vector2.UP,
+		down = Vector2.DOWN,
+		left = Vector2.LEFT,
+		right = Vector2.RIGHT,
+	}
+	
 	var result := Utils.evaluate_and_check_arguments(1, from_this)
 	if result is Utils.Error: return result
 	var args := result.data as Array

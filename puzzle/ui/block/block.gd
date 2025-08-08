@@ -3,6 +3,10 @@ class_name Block
 extends Control
 
 
+const MAX_DRAG_SIZE := 1000 ** 2
+const MIN_DRAG_DUR := 0.3
+const MAX_DRAG_DUR := 1.0
+
 @export var data: BlockData
 
 @export_group("Children")
@@ -27,14 +31,9 @@ func _ready() -> void:
 		data.text_changed.connect(format_text)
 		format_text()
 	
-	if function.is_null():
-		if not data.method.is_empty():
-			function = Callable(
-				self if data.source == null else data.source.new(),
-				data.method
-			).bind(self)
-		else:
-			push_warning("%s has no function assigned!" % get_block_name())
+	if data.source != null and not data.method.is_empty():
+		function = Callable(data.source, data.method)
+	function = function.bind(self)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	# Null for undraggable
@@ -47,19 +46,24 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	Utils.drag_preview_container = drag_preview_container
 	drag_preview_container.name = "DragPreviewContainer"
 	
-	drag_preview = ColorRect.new() #duplicate(0)  # No signals/groups/instantiation
+	drag_preview = duplicate(0)  # No signals/groups/instantiation
 	drag_preview.size = size
 	drag_preview_container.add_child(drag_preview)
 	drag_preview.position = -get_local_mouse_position()
 	
 	#region Drag preview animations
 	var tween := drag_preview_container.create_tween()
+	var center_drag_duration := remap(
+		size.length_squared(),
+		0, MAX_DRAG_SIZE,
+		MIN_DRAG_DUR, MAX_DRAG_DUR
+	)
 	
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_property(
 		drag_preview, "position",
-		size / -2., 0.3
+		size / -2., center_drag_duration
 	)
 	#endregion
 	
@@ -94,6 +98,9 @@ func get_raw_text() -> String:
 	for child in get_text_blocks():
 		child_text.append(child.get_raw_text())
 	return data.text.format(child_text, "{}")
+
+func reset() -> void:
+	parent_nested = null
 
 #region Duplicate fuckery
 func clone() -> Block:

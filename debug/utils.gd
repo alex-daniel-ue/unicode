@@ -54,17 +54,18 @@ static func typecast_string(string: String) -> Variant:
 	
 	var last := len(string)-1
 	if string[last] == '"' and string[0] == '"':
-		return string.substr(1, last)
+		return string.substr(1, last-1)
 	
 	return StringName(string)
 
 static func evaluate_arguments(this: Block) -> Result:
 	var results: Array
 	for block in this.get_text_blocks():
+		block.parent_nested = this if this is NestedBlock else this.parent_nested
 		var result: Variant = block.function.call()
 		if result is Utils.Error: return result
 		
-		results.append(result)
+		results.append(result.data)
 	return Result.success(results)
 
 static func evaluate_and_check_arguments(length: int, this: Block) -> Result:

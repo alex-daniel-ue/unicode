@@ -2,9 +2,10 @@ class_name Puzzle
 extends Control
 
 
-const MAX_LOOPS := 1000
+const MAX_LOOPS := 100
 const MAX_DEPTH := 100
 
+static var is_program_running := false
 
 @onready var canvas := $Canvas as ColorRect
 @onready var side_menus := [
@@ -13,6 +14,8 @@ const MAX_DEPTH := 100
 ]
 
 func run_program() -> void:
+	is_program_running = true
+	
 	var begin := _get_begin()
 	if begin == null:
 		push_warning("No start block detected!")
@@ -24,6 +27,8 @@ func run_program() -> void:
 		# show message
 		# highlight block with error
 		pass
+	
+	is_program_running = false
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():

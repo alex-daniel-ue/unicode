@@ -61,10 +61,11 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			current_drop = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant drag-and-drops
+			# Disregard irrelevant/illegal drag-and-drops
 			if not current_drop is Block:
 				current_drop = null
 				return
+			
 			is_block_dragging = true
 			
 			# Clone, not duplicate, because get_parent_block is also used on

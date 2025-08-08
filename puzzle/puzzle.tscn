@@ -51,14 +51,14 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -372.333
-offset_right = 50.0
+offset_left = -61.0
+offset_right = -60.3333
 grow_vertical = 2
 icons = Array[Texture2D]([ExtResource("3_dipl1"), ExtResource("4_vlyq7")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 372.333
+offset_right = 61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -75,7 +75,7 @@ theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
 autowrap_mode = 3
 
-[node name="ToolboxContent" type="MarginContainer" parent="LeftSideMenu" node_paths=PackedStringArray("scroll_container")]
+[node name="ToolboxContent" type="MarginContainer" parent="LeftSideMenu" node_paths=PackedStringArray("scroll_container", "entities")]
 visible = false
 layout_mode = 1
 offset_right = 372.333
@@ -87,10 +87,11 @@ theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 32
 script = ExtResource("7_vm51y")
 scroll_container = NodePath("ScrollContainer")
-print_block = Array[ExtResource("8_xr7vu")]([ExtResource("14_equ7n"), ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq")])
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3")])
+entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, 525)
+custom_minimum_size = Vector2(0, 773)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]
@@ -116,8 +117,8 @@ layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 65.0
-offset_right = 487.333
+offset_left = -1089.67
+offset_right = -1089.0
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -128,7 +129,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -372.333
+offset_left = -61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2

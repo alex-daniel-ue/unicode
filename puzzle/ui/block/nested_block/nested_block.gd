@@ -39,6 +39,11 @@ func get_blocks() -> Array[Block]:
 func check_type(type: NestedBlockData.Type) -> bool:
 	return (data as NestedBlockData).nested_type == type
 
+func reset() -> void:
+	super()
+	scope.clear()
+	depth = 0
+
 func _on_mouth_resized() -> void:
 	set_deferred("size", Vector2.ZERO)
 	# MILD FIXME: Band-aid for container sizing not immediately fitting contents

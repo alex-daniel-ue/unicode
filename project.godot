@@ -24,6 +24,15 @@ Game="*res://debug/game.gd"
 
 window/stretch/scale_mode="integer"
 
+[file_customization]
+
+folder_colors={
+"res://puzzle/blocks/": "purple",
+"res://puzzle/entities/": "teal",
+"res://puzzle/functions/": "red",
+"res://puzzle/ui/": "yellow"
+}
+
 [input]
 
 click={

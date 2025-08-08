@@ -5,7 +5,8 @@ extends MarginContainer
 @warning_ignore("unused_private_class_variable")
 @export_tool_button("as") var _001 := update_vbox_height
 @export var scroll_container: ScrollContainer
-@export var print_block: Array[BlockData]
+@export var block_data: Array[BlockData]
+@export var entities: Array[Node]
 
 
 func _ready() -> void:
@@ -15,13 +16,24 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	for data in print_block:
-		$ScrollContainer/VBoxContainer.add_child(Utils.construct_block(data))
+	block_data.map(add_to_toolbox)
+	add_entity_blocks.call_deferred()
+
+func add_to_toolbox(data_or_block: Variant) -> void:
+	var block: Block
+	if data_or_block is BlockData:
+		data_or_block.toolbox = true
+		block = Utils.construct_block(data_or_block)
+	elif data_or_block is Block:
+		block = data_or_block as Block
 	
-	var entity := $"../../RightSideMenu/InformationContent/Sprite2D" as Sprite2D
-	await entity.ready
-	for block in entity.blocks:
-		$ScrollContainer/VBoxContainer.add_child(block)
+	$ScrollContainer/VBoxContainer.add_child(block)
+
+func add_entity_blocks() -> void:
+	for entity in entities:
+		for block in entity.blocks:
+			print(block)
+			add_to_toolbox(block)
 
 func update_vbox_height() -> void:
 	scroll_container.custom_minimum_size.y = get_viewport_rect().size.y

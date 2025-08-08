@@ -1,0 +1,9 @@
+ready:
+	construct
+	Callable(self, data.method)
+
+block.ready:
+	if function.is_null:
+		if both src & method:
+			Callable(src, method)
+	function.bind(self)

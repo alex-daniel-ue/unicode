@@ -18,5 +18,5 @@ func function_[FUNCTION NAME](this: Block) -> Utils.Result:
 	SOURCE		METHOD
 	  x			  x		=	Literal value block
 	  /			  x		=	Undefined
-	  x			  /		=	Entity method
+	  x			  /		=	Entity method (from self, )
 	  /			  /		=	Block function
