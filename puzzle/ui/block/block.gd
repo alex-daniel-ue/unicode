@@ -9,25 +9,22 @@ extends Control
 @export_tool_button("Clear text") var _002 := func() -> void:
 	for child in text_container.get_children(): child.queue_free()
 
-const MAX_DRAG_SIZE := 1000 ** 2
-const MIN_DRAG_DUR := 0.3
-const MAX_DRAG_DUR := 1.0
-
 @export var data: BlockData
-@export var error_outline_affected: Array[Control]
+@export var error_affected: Array[Control]
 
 @export_group("Children")
-@export var text_container: Control
+@export var upper_lip: NinePatchRect
+@export var text_container: HBoxContainer
 
-const ERROR_OPACITY_MULT := 4.
+var error_outline := preload("res://puzzle/error_outline.tres").duplicate() as ShaderMaterial
+const ERROR_FLASH_MULT := 4.
+var error_flash := 2.
 var is_error := false:
 	set = _set_error
-var error_opacity := 2.
-var error_outline := preload("res://puzzle/error_outline.tres").duplicate() as ShaderMaterial
 
 ## To detect whether the cursor is hovering over a preview.
 var is_drop_preview := false
-var drag_preview: Control
+var is_drag_preview := false
 var origin_parent: Node
 var origin_idx: int
 
@@ -39,58 +36,57 @@ func _ready() -> void:
 	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
+	if is_drag_preview:
+		var tween := create_tween()
+		tween.set_ease(Tween.EASE_OUT)
+		tween.set_trans(Tween.TRANS_ELASTIC)
+		tween.tween_property(
+			self, "position",
+			size / -2., 0.5
+		)
+		return
+	
 	# Initialize block text
 	data.text_changed.connect(format_text)
 	format_text()
 	
 	if data.source != null and not data.method.is_empty():
 		function = Callable(data.source, data.method).bind(self)
-	
-	printt(self, function.get_argument_count())
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint() or is_drop_preview:
 		return
 	
 	if is_error:
-		var col := error_outline.get_shader_parameter("outline_color") as Color
-		col.a = pingpong(error_opacity, 1.0)
-		error_outline.set_shader_parameter("outline_color", col)
-		error_opacity = fposmod(error_opacity + delta * ERROR_OPACITY_MULT, 2.0)
+		var t := pingpong(error_flash, 1.0)
+		error_flash = fposmod(error_flash + delta * ERROR_FLASH_MULT, 2.0)
+		for control in error_affected:
+			control.self_modulate = Color.RED.lightened(0.5).lerp(Color.WHITE, t)
+		#error_outline.set_shader_parameter("outline_color",
+			#Color(error_outline.get_shader_parameter("outline_color"), t)
+		#)
+
+#region Drag/copy
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			if not (data.draggable or is_drop_preview):
+				return
+			
+			get_viewport().set_input_as_handled()
+			var preview := generate_block_preview()
+			force_drag(pick_self(true), preview)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	# Null for undraggable
 	if not data.draggable:
 		return null
 	
-	# Set drag preview Control
-	var drag_preview_container := Control.new()
-	set_drag_preview(drag_preview_container)
-	Utils.drag_preview_container = drag_preview_container
-	drag_preview_container.name = "DragPreviewContainer"
-	
-	drag_preview = duplicate(0)  # No signals/groups/instantiation
-	drag_preview.size = size
-	drag_preview_container.add_child(drag_preview)
-	drag_preview.position = -get_local_mouse_position()
-	
-	#region Drag preview animations
-	var tween := drag_preview_container.create_tween()
-	var center_drag_duration := remap(
-		size.length_squared(),
-		0, MAX_DRAG_SIZE,
-		MIN_DRAG_DUR, MAX_DRAG_DUR
-	)
-	
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_property(
-		drag_preview, "position",
-		size / -2., center_drag_duration
-	)
-	#endregion
-	
-	if data.toolbox:
+	set_drag_preview(generate_block_preview())
+	return pick_self()
+
+func pick_self(force_copy := false) -> Block:
+	if data.toolbox or force_copy:
 		var copy := clone()
 		copy.data = data.duplicate(true)
 		copy.data.toolbox = false
@@ -102,6 +98,21 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	
 	return self
 
+func generate_block_preview() -> Control:
+	var drag_preview_container := Control.new()
+	Utils.drag_preview_container = drag_preview_container
+	drag_preview_container.name = "DragPreviewContainer"
+	
+	var drag_preview := Utils.construct_block(data)
+	drag_preview.is_drag_preview = true
+	drag_preview_container.add_child(drag_preview)
+	
+	drag_preview.modulate.a = 0.5
+	drag_preview.position = -get_local_mouse_position()
+	
+	return drag_preview_container
+#endregion
+
 ## Returns null when this doesn't have a parent Block.
 func get_parent_block() -> Block:
 	return Utils.get_block(get_parent())
@@ -109,30 +120,19 @@ func get_parent_block() -> Block:
 func get_block_name() -> String:
 	return "%s#%s" % [data.block_name, get_instance_id()]
 
-func get_text_blocks() -> Array[Block]:
-	var res: Array[Block]
-	for child in text_container.get_children():
-		if child is Block and child.visible:
-			res.append(child as Block)
-	return res
-
-func get_raw_text() -> String:
-	var child_text: Array[String]
-	for child in get_text_blocks():
-		child_text.append(child.get_raw_text())
-	return data.text.format(child_text, "{}")
-
 func reset() -> void:
 	parent_nested = null
 
 func _set_error(to: bool) -> void:
 	is_error = to
-	error_opacity = 2.
+	error_flash = 2.
 	
-	for control in error_outline_affected:
-		control.material = error_outline if to else null
+	for control in error_affected:
+		control.self_modulate = Color.WHITE
+	#for control in error_affected:
+		#control.material = error_outline if to else null
 
-#region Duplicate fuckery
+#region Block duplication
 func clone() -> Block:
 	# INFO: Node.duplicate() with these flags copy programmatically-added
 	# children, but all nodes have no Node.owner
@@ -165,8 +165,21 @@ func _set_block_owner(node: Node) -> void:
 				_set_block_owner(child)
 #endregion
 
-#region Block text handling
-# TODO: A better implementation is to smartly reuse Labels, but eh.
+#region Block text
+func get_text_blocks() -> Array[Block]:
+	var res: Array[Block]
+	for child in text_container.get_children():
+		if child is Block and child.visible:
+			res.append(child as Block)
+	return res
+
+func get_raw_text() -> String:
+	var child_text: Array[String]
+	for child in get_text_blocks():
+		child_text.append(child.get_raw_text())
+	return data.text.format(child_text, "{}")
+
+# MILD TODO: A better implementation is to smartly reuse Labels, but eh.
 ## Rebuilds the block's visual representation by replacing "{}" placeholders with child blocks.
 ##
 ## The method:

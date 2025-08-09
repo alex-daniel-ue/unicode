@@ -21,7 +21,7 @@ metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 
 [resource]
 script = ExtResource("1_fvywr")
-nested_type = 2
+nested_type = 3
 block_name = "ElifBlock"
 base_block_path = "uid://cb42xnxj114jp"
 toolbox = true

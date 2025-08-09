@@ -27,8 +27,8 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	var solid := get_solid_parent_block()
 	return (
-		not data.toolbox and
-		data.receptive and
+		not self.data.toolbox and
+		self.data.receptive and
 		drop is SocketBlock and
 		(solid == null or not solid.data.toolbox)
 	)

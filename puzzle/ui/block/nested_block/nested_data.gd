@@ -3,6 +3,7 @@ extends BlockData
 
 
 enum Type {
+	NULL,
 	IF,
 	ELSE,
 	ELIF,
@@ -10,7 +11,7 @@ enum Type {
 	FOR,
 	REPEAT,
 	BEGIN,
-	FUNCTION
+	FUNCTION,
 }
 
 @export_group("Nested")

@@ -4,7 +4,7 @@
 code = "shader_type canvas_item;
 
 uniform bool allow_out_of_bounds = true;
-uniform float outline_thickness: hint_range(0.0, 4.0, 0.1) = 1.0;
+uniform float outline_thickness: hint_range(0.0, 8.0, 0.1) = 1.0;
 uniform vec4 outline_color: source_color = vec4(1.0);
 
 bool is_inside_usquare(vec2 x) {
@@ -79,5 +79,5 @@ void fragment() {
 [resource]
 shader = SubResource("Shader_oau1d")
 shader_parameter/allow_out_of_bounds = true
-shader_parameter/outline_thickness = 2.5
+shader_parameter/outline_thickness = 2.7
 shader_parameter/outline_color = Color(1, 0, 0, 1)

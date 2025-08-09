@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=29 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://clac5hd150bhx" path="res://puzzle/ui/side_menu/icons/pixelarticons--trash.png" id="7_gsymp"]
 [ext_resource type="Script" uid="uid://bqrh4mt84xqd0" path="res://toolbox_content.gd" id="7_vm51y"]
 [ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="7_xr7vu"]
-[ext_resource type="Script" uid="uid://q8aosw0hg5ro" path="res://puzzle/ui/side_menu/functions/trash_button.gd" id="8_a3a4o"]
+[ext_resource type="Script" uid="uid://q8aosw0hg5ro" path="res://puzzle/ui/side_menu/scripts/trash_button.gd" id="8_a3a4o"]
 [ext_resource type="Script" uid="uid://b0ne4qh25m703" path="res://puzzle/camera_2d.gd" id="8_sbp70"]
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="8_xr7vu"]
 [ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/comparison_block.tres" id="10_ctiy3"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://cawaq5ffdklpl" path="res://icon.svg" id="18_35gji"]
 [ext_resource type="Script" uid="uid://tfjon70r0mq2" path="res://puzzle/entities/sample/sprite_2d.gd" id="19_tkwoe"]
 [ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/sample/move_block.tres" id="20_equ7n"]
+[ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/ui/block/nested_block/cap_block/function_block/function_block.tres" id="21_88ajp"]
 [ext_resource type="Texture2D" uid="uid://4n3uiklt1518" path="res://puzzle/ui/side_menu/icons/pixelarticons--list.png" id="23_036m3"]
 [ext_resource type="Texture2D" uid="uid://t0jh4sfphu14" path="res://puzzle/ui/side_menu/icons/pixelarticons--play.png" id="24_q1sip"]
 
@@ -56,8 +57,8 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -372.333
-offset_right = 50.0
+offset_left = -61.0
+offset_right = -60.3333
 grow_vertical = 2
 top_icons = Array[Texture2D]([ExtResource("5_a3a4o"), ExtResource("6_88ajp")])
 bottom_icons = Array[Texture2D]([ExtResource("7_gsymp")])
@@ -65,7 +66,7 @@ bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 372.333
+offset_right = 61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -94,11 +95,11 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 32
 script = ExtResource("7_vm51y")
 scroll_container = NodePath("ScrollContainer")
-block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("15_n8lp6"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3")])
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("15_n8lp6"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3"), ExtResource("21_88ajp")])
 entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, 773)
+custom_minimum_size = Vector2(0, -48)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]
@@ -124,8 +125,8 @@ layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 65.0
-offset_right = 487.333
+offset_left = -1089.67
+offset_right = -1089.0
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -138,7 +139,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -372.333
+offset_left = -61.0
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2

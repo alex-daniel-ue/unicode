@@ -4,7 +4,7 @@ extends NinePatchRect
 
 @warning_ignore("unused_private_class_variable")
 @export_tool_button("Update mouth height") var _update_mouth := _on_mouth_resized
-@export var mouth: Control
+@export var mouth: VBoxContainer
 @export_custom(PROPERTY_HINT_NONE, "suffix:px") var minimum_height := 0.
 
 @onready var padding := patch_margin_top + patch_margin_bottom

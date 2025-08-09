@@ -98,8 +98,8 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 				assert(result.data is bool)
 				if_block_success = result.data
 		
-		if Game.delaying_interpret:
-			await Game.sleep(Game.block_interpret_delay)
+		if Puzzle.delaying_interpret:
+			await Game.sleep(Puzzle.block_interpret_delay)
 		
 		previous_block = block
 		block.reset()

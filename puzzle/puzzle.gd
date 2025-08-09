@@ -6,7 +6,10 @@ const MAX_LOOPS := 9999
 const MAX_DEPTH := 100
 
 static var is_program_running := false
+static var delaying_interpret := true
+static var block_interpret_delay := .4
 
+var error_duration := 2.
 var error_block: Block
 
 @onready var canvas := $Canvas as ColorRect
@@ -33,6 +36,8 @@ func run_program() -> void:
 	if result is Utils.Error:
 		error_block = result.block
 		error_block.is_error = true
+		get_tree().create_timer(error_duration).timeout.connect(func() -> void:
+			error_block.is_error = false)
 		printt(result.message)
 		# show message
 	

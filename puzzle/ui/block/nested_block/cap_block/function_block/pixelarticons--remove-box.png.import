@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwb8lc2xqxeum"
-path="res://.godot/imported/material-symbols--remove.png-f9242cd25feef7f609ca90d4e00a9989.ctex"
+uid="uid://c8lp1ys6mwgsf"
+path="res://.godot/imported/pixelarticons--remove-box.png-523512d5db14d73623aeef5c0df75458.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/nested_block/cap_block/function_block/material-symbols--remove.png"
-dest_files=["res://.godot/imported/material-symbols--remove.png-f9242cd25feef7f609ca90d4e00a9989.ctex"]
+source_file="res://puzzle/ui/block/nested_block/cap_block/function_block/pixelarticons--remove-box.png"
+dest_files=["res://.godot/imported/pixelarticons--remove-box.png-523512d5db14d73623aeef5c0df75458.ctex"]
 
 [params]
 

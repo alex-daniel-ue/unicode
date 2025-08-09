@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_v63mi")
-nested_type = 1
+nested_type = 2
 block_name = "ElseBlock"
 base_block_path = "uid://cb42xnxj114jp"
 toolbox = true

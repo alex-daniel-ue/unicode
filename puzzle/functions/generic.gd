@@ -82,7 +82,7 @@ static func function_print(this: Block) -> Utils.Result:
 static func function_comparison(this: Block) -> Utils.Result:
 	return function_operation(this,
 		["==", "!=", ">", "<", ">=", "<="],
-		[TYPE_INT, TYPE_FLOAT, TYPE_BOOL]
+		[TYPE_INT, TYPE_FLOAT, TYPE_BOOL, TYPE_STRING]
 	)
 
 ## text: [VALUE/VAR_NAME] [SYMBOL] [VALUE/VAR_NAME]

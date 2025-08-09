@@ -24,7 +24,7 @@ text = "value"
 text_data = Array[ExtResource("3_gkv7p")]([])
 metadata/_custom_type_script = "uid://0ni3de62rk0"
 
-[node name="ValueBlock" type="MarginContainer" node_paths=PackedStringArray("editable_container", "line_edit", "option_button", "error_outline_affected", "text_container")]
+[node name="ValueBlock" type="MarginContainer" node_paths=PackedStringArray("editable_container", "line_edit", "option_button", "error_affected", "upper_lip", "text_container")]
 texture_filter = 3
 offset_right = 50.0
 offset_bottom = 50.0
@@ -35,12 +35,14 @@ editable_container = NodePath("UpperLip/MarginContainer/EditableMarginContainer"
 line_edit = NodePath("UpperLip/MarginContainer/EditableMarginContainer/LineEdit")
 option_button = NodePath("UpperLip/MarginContainer/EditableMarginContainer/OptionButton")
 data = SubResource("Resource_qd24b")
-error_outline_affected = [NodePath("UpperLip")]
+error_affected = [NodePath("UpperLip")]
+upper_lip = NodePath("UpperLip")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("3_82xla")
 region_rect = Rect2(0, 0, 100, 100)
 patch_margin_left = 25
@@ -56,13 +58,17 @@ layout_mode = 0
 offset_right = 50.0
 offset_bottom = 50.0
 mouse_filter = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_right = 12
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
 
 [node name="EditableMarginContainer" type="MarginContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 6
 
 [node name="LineEdit" type="LineEdit" parent="UpperLip/MarginContainer/EditableMarginContainer"]
@@ -72,6 +78,7 @@ theme = ExtResource("1_g73sa")
 placeholder_text = "..."
 alignment = 1
 expand_to_text_length = true
+context_menu_enabled = false
 emoji_menu_enabled = false
 middle_mouse_paste_enabled = false
 drag_and_drop_selection_enabled = false
@@ -87,7 +94,6 @@ fit_to_longest_item = false
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
 visible = false
 layout_mode = 2
-size_flags_horizontal = 4
 mouse_filter = 2
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]

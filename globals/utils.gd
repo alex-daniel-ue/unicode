@@ -42,22 +42,6 @@ static func construct_block(data: BlockData) -> Block:
 	
 	return block
 
-static func typecast_string(string: String) -> Variant:
-	if string.is_empty():
-		return null
-	if string in ["true", "false"]:
-		return str_to_var(string)
-	if string.is_valid_int():
-		return string.to_int()
-	if string.is_valid_float():
-		return string.to_float()
-	
-	var last := len(string)-1
-	if string[last] == '"' and string[0] == '"':
-		return string.substr(1, last-1)
-	
-	return StringName(string)
-
 static func evaluate_arguments(this: Block) -> Result:
 	var results: Array
 	for block in this.get_text_blocks():
@@ -76,6 +60,23 @@ static func evaluate_and_check_arguments(length: int, this: Block) -> Result:
 	if len(args) < length:
 		return Result.error("%d argument/s are required!" % length, this)
 	return Result.success(args)
+
+static func typecast_string(string: String) -> Variant:
+	if string.is_empty():
+		return null
+	if string in ["true", "false"]:
+		return str_to_var(string)
+	if string.is_valid_int():
+		return string.to_int()
+	if string.is_valid_float():
+		return string.to_float()
+	
+	const quotes := ['"', "'"]
+	var last := len(string)-1
+	if string[last] in quotes and string[0] in quotes and last >= 1:
+			return string.substr(1, last-1)
+	
+	return StringName(string)
 
 static func validate_type(args: Array, idx: int, types: PackedInt32Array, this: Block) -> Result:
 	const TYPE_MAPPING := {
@@ -120,22 +121,19 @@ static func format_array(arr: Array) -> String:
 class Result:
 	var data: Variant
 	
-	@warning_ignore("shadowed_variable")
-	func _init(data: Variant) -> void:
-		self.data = data
+	func _init(_data: Variant) -> void:
+		self.data = _data
 	
 	static func error(msg: String, block: Block) -> Result:
 		return Utils.Error.new(msg, block)
 	
-	@warning_ignore("shadowed_variable")
-	static func success(data: Variant = null) -> Result:
-		return Result.new(data)
+	static func success(_data: Variant = null) -> Result:
+		return Result.new(_data)
 
 class Error extends Result:
 	var message: String
 	var block: Block
 	
-	@warning_ignore("shadowed_variable")
-	func _init(message: String, block: Block) -> void:
-		self.message = message
-		self.block = block
+	func _init(_message: String, _block: Block) -> void:
+		self.message = _message
+		self.block = _block

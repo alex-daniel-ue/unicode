@@ -35,7 +35,9 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 func _drop_data(at_position: Vector2, drop: Variant) -> void:
 	# drop is Block && drop.data.placeable
 	add_child(drop)
-	drop.position = at_position - drop.size / 2.
+	
+	var drag_preview := Utils.drag_preview_container.get_child(0)
+	drop.position = at_position - drag_preview.size / 2.
 	
 	# MEDIUM FIXME: Out of scope, should be in socket_block.gd
 	if drop is SocketBlock:

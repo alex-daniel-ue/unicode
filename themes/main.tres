@@ -1,6 +1,18 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://88cahjm0kd3k"]
+[gd_resource type="Theme" load_steps=20 format=3 uid="uid://88cahjm0kd3k"]
 
 [ext_resource type="FontFile" uid="uid://dm4f8d7nhiqpn" path="res://themes/fonts/TinyUnicode.ttf" id="1_0avsd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30s71"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7wdlx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ar6a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a70tl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_10so0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nmpmk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0avsd"]
 
@@ -34,6 +46,13 @@ BlockLabel/base_type = &"Label"
 BlockLabel/colors/font_color = Color(0, 0, 0, 1)
 BlockLabel/constants/line_spacing = -29
 BlockLabel/font_sizes/font_size = 32
+FunctionBlockButton/base_type = &"Button"
+FunctionBlockButton/styles/disabled = SubResource("StyleBoxEmpty_30s71")
+FunctionBlockButton/styles/focus = SubResource("StyleBoxEmpty_7wdlx")
+FunctionBlockButton/styles/hover = SubResource("StyleBoxEmpty_8ar6a")
+FunctionBlockButton/styles/hover_pressed = SubResource("StyleBoxEmpty_a70tl")
+FunctionBlockButton/styles/normal = SubResource("StyleBoxEmpty_10so0")
+FunctionBlockButton/styles/pressed = SubResource("StyleBoxEmpty_nmpmk")
 HeaderLarge/colors/font_color = Color(0, 0, 0, 1)
 HeaderLarge/colors/font_outline_color = Color(1, 1, 1, 1)
 HeaderLarge/constants/outline_size = 8

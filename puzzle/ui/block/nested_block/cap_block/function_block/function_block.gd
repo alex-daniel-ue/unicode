@@ -3,14 +3,13 @@ class_name FunctionBlock
 extends CapBlock
 
 
-signal names_changed
-
 const MAX_ARGUMENTS := 3
 const WITH_ARGS_TEXT := ", with"
 
-@export_tool_button("Add argument") var _003 := add_argument
-@export_tool_button("Remove argument") var _004 := remove_argument
+#@export_tool_button("Add argument") var _003 := add_argument
+#@export_tool_button("Remove argument") var _004 := remove_argument
 
+@export_group("Children")
 @export var add_argument_button: Button
 @export var remove_argument_button: Button
 
@@ -53,7 +52,8 @@ func format_text() -> void:
 
 func add_argument() -> void:
 	data.text_data.append(line_valueblock.duplicate(true))
-	data.text += (WITH_ARGS_TEXT if len(data.text_data) <= 1 else "") + "{}"
+	# One-liner so data.text.changed doesn't call twice
+	data.text += (WITH_ARGS_TEXT if len(data.text_data) <= 2 else "") + "{}"
 
 func remove_argument() -> void:
 	data.text_data.pop_back()

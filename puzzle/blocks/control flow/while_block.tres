@@ -7,7 +7,7 @@
 
 [resource]
 script = ExtResource("1_3cyp5")
-nested_type = 3
+nested_type = 4
 block_name = "WhileBlock"
 base_block_path = "uid://cb42xnxj114jp"
 toolbox = true

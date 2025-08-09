@@ -26,7 +26,7 @@ metadata/_custom_type_script = "uid://bhuaul1ayo0wq"
 [sub_resource type="Resource" id="Resource_cgbgc"]
 script = ExtResource("3_rpvu0")
 nested_type = 0
-block_name = "IfBlock"
+block_name = "NestedBlock"
 base_block_path = "uid://cb42xnxj114jp"
 toolbox = true
 draggable = true
@@ -37,7 +37,7 @@ text = "if {}"
 text_data = Array[ExtResource("3_dttte")]([SubResource("Resource_p8846")])
 metadata/_custom_type_script = "uid://cxrghbceksfko"
 
-[node name="NestedBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "error_outline_affected", "text_container")]
+[node name="NestedBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "error_affected", "upper_lip", "text_container")]
 texture_filter = 3
 offset_right = 100.0
 offset_bottom = 99.0
@@ -49,7 +49,8 @@ script = ExtResource("1_vaasa")
 mouth = NodePath("Body/Mouth")
 lower_lip = NodePath("Body/LowerLip")
 data = SubResource("Resource_cgbgc")
-error_outline_affected = [NodePath("UpperLip"), NodePath("Body")]
+error_affected = [NodePath("UpperLip"), NodePath("Body")]
+upper_lip = NodePath("UpperLip")
 text_container = NodePath("UpperLip/MarginContainer/HBoxContainer")
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]

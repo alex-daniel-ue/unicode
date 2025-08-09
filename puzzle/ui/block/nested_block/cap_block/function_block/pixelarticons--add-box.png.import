@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cp7s1kousu5w7"
-path="res://.godot/imported/material-symbols--add.png-b7b9675de71cd955333b2eb93a3d2c5d.ctex"
+uid="uid://bxx262am7vy4h"
+path="res://.godot/imported/pixelarticons--add-box.png-e47d8a1f838e3a4b427de2d641a431ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/nested_block/cap_block/function_block/material-symbols--add.png"
-dest_files=["res://.godot/imported/material-symbols--add.png-b7b9675de71cd955333b2eb93a3d2c5d.ctex"]
+source_file="res://puzzle/ui/block/nested_block/cap_block/function_block/pixelarticons--add-box.png"
+dest_files=["res://.godot/imported/pixelarticons--add-box.png-e47d8a1f838e3a4b427de2d641a431ca.ctex"]
 
 [params]
 

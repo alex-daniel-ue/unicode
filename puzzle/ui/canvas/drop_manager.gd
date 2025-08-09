@@ -61,16 +61,14 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			current_drop = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant/illegal drag-and-drops
+			# Disregard irrelevant drag-and-drops
 			if not current_drop is Block:
 				current_drop = null
 				return
 			
 			is_block_dragging = true
 			
-			# Clone, not duplicate, because get_parent_block is also used on
-			# the drop preview (and get_parent_block utilizes owners)
-			drop_preview = current_drop.clone()
+			drop_preview = Utils.construct_block(current_drop.data)
 			
 			# Indicate drop preview status to itself and all child Blocks recursively
 			drop_preview.is_drop_preview = true
@@ -112,7 +110,14 @@ func _notification(what: int) -> void:
 			drop_preview.queue_free()
 			for thing in [drop_preview, drop_preview_container, current_drop]:
 				thing = null
-			
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			var fake_drop := InputEventMouseButton.new()
+			fake_drop.pressed = false
+			fake_drop.button_index = MOUSE_BUTTON_LEFT
+			Input.parse_input_event(fake_drop)
 
 func update_drop_preview() -> void:
 	if drop_preview == null:
@@ -206,8 +211,6 @@ func get_preview_container() -> Container:
 
 func get_preview_idx(container: Container) -> int:
 	assert(Utils.get_block(container) != null, "Passed Container is null.")
-	assert(Utils.get_block(container) is NestedBlock, "Passed Container isn't part of NestedBlock.")
-	
 	var end := container.get_child_count()
 	
 	var mouse_pos := get_global_mouse_position()
@@ -234,10 +237,9 @@ func get_preview_idx(container: Container) -> int:
 	
 	# Emulate a while loop, but with mutable index/counter
 	var idx := -1
-	for child in children:
+	for child: Block in children:
 		idx += 1
-		if not child is Block:
-			continue
+		if not child is Block: continue
 		
 		# Don't count drop preview (? it works IDK)
 		if child.is_drop_preview:

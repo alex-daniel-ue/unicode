@@ -3,6 +3,15 @@ class_name ValueBlock
 extends SocketBlock
 
 
+const TYPE_COLORS: Dictionary[int, Color] = {
+	TYPE_NIL : Color.WHITE,
+	TYPE_STRING_NAME : Color("#B3B3B3"),
+	TYPE_STRING : Color("#FF8FC7"),
+	TYPE_BOOL : Color("#72F572"),
+	TYPE_INT : Color("#75BAFF"),
+	TYPE_FLOAT : Color("#ADADFF"),
+}
+
 @export_group("Children")
 @export var editable_container: MarginContainer
 @export var line_edit: LineEdit
@@ -30,8 +39,10 @@ func _ready() -> void:
 	_on_editable_changed(data.editable)
 	set_editing(data.editable and not data.toolbox)
 	
-	if not data.editable:
-		text_container.modulate.a = 0.5
+	line_edit.text_changed.connect(set_color)
+	option_button.item_selected.connect(set_color)
+	data.text_changed.connect(set_color)
+	set_color()
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	# Guaranteed all dropped ValueBlocks will be unsocketed
@@ -56,6 +67,13 @@ func get_raw_text() -> String:
 	if data.editable:
 		return line_edit.text
 	return super()
+
+func set_color(__: Variant = null) -> void:
+	upper_lip.self_modulate = (
+		TYPE_COLORS[typeof(Utils.typecast_string(get_raw_text()))]
+		if data.text_data.is_empty() else
+		Color.WHITE
+	)
 
 func set_text(to: String) -> void:
 	line_edit.text = to
