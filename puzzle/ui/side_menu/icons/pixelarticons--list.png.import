@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drbauahowgu02"
-path="res://.godot/imported/material-symbols--info-rounded.png-012435a7a2a9777c24c928529073fcc8.ctex"
+uid="uid://4n3uiklt1518"
+path="res://.godot/imported/pixelarticons--list.png-c0efcf10bf3b8f9a5e8613d72757d6f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/side_menu/icons/material-symbols--info-rounded.png"
-dest_files=["res://.godot/imported/material-symbols--info-rounded.png-012435a7a2a9777c24c928529073fcc8.ctex"]
+source_file="res://puzzle/ui/side_menu/icons/pixelarticons--list.png"
+dest_files=["res://.godot/imported/pixelarticons--list.png-c0efcf10bf3b8f9a5e8613d72757d6f4.ctex"]
 
 [params]
 

@@ -12,10 +12,14 @@ extends Panel
 @export_tool_button("Update layout now") var _resize_btn := update_layout
 
 @export var reverse := false
-@export var icons: Array[Texture2D]
+@export var top_icons: Array[Texture2D]
+@export var bottom_icons: Array[Texture2D]
+@export var bottom_button_scripts: Array[GDScript]
 
 @export_group("Children")
-@export var button_container: VBoxContainer
+@export var top_button_container: VBoxContainer
+@export var bottom_button_container: VBoxContainer
+
 const BUTTON_SIZE := Vector2(50, 50)
 var side_button_scene := preload("res://puzzle/ui/side_menu/side_menu_button.tscn")
 
@@ -49,26 +53,45 @@ func _ready() -> void:
 func _on_child_order_changed() -> void:
 	contents.clear()
 	for child in get_children():
-		if child is Control and child != button_container:
+		if not child is Control:
+			return
+		
+		if child not in [top_button_container, bottom_button_container]:
 			contents.append(child)
 			child.visible = false
 
 func regenerate_buttons() -> void:
-	for btn in button_container.get_children():
+	# Clear existing buttons
+	for btn in top_button_container.get_children() + bottom_button_container.get_children():
 		btn.queue_free()
 	
-	for idx in range(len(icons)):
-		var icon := icons[idx]
+	# Generate top buttons (content switching)
+	for idx in range(len(top_icons)):
+		var icon := top_icons[idx]
 		if not icon:
 			continue
 		
 		var btn := side_button_scene.instantiate() as Button
 		btn.custom_minimum_size = BUTTON_SIZE
 		btn.icon = icon
-		btn.pressed.connect(_on_button_pressed.bind(idx))
-		button_container.add_child(btn)
+		btn.pressed.connect(_on_top_button_pressed.bind(idx))
+		top_button_container.add_child(btn)
+	
+	# Generate bottom buttons (normal buttons)
+	for idx in range(len(bottom_icons)):
+		var icon := bottom_icons[idx]
+		if not icon:
+			continue
+		
+		var btn := side_button_scene.instantiate() as Button
+		btn.custom_minimum_size = BUTTON_SIZE
+		btn.icon = icon
+		if idx < len(bottom_button_scripts):
+			btn.set_script(bottom_button_scripts[idx])
+		else: push_warning("Not enough scripts for bottom buttons in %s!" % name)
+		bottom_button_container.add_child(btn)
 
-func _on_button_pressed(idx: int) -> void:
+func _on_top_button_pressed(idx: int) -> void:
 	if not (0 <= idx and idx < len(contents)):
 		return
 	
@@ -133,13 +156,15 @@ func update_layout() -> void:
 	
 	var control_presets: Dictionary[Control, Control.LayoutPreset] = {
 		self : PRESET_LEFT_WIDE,
-		button_container : PRESET_TOP_RIGHT,
+		top_button_container : PRESET_TOP_RIGHT,
+		bottom_button_container : PRESET_BOTTOM_RIGHT,
 		current : PRESET_TOP_LEFT
 	}
 	
 	if reverse:
 		control_presets[self] = PRESET_RIGHT_WIDE
-		control_presets[button_container] = PRESET_TOP_LEFT
+		control_presets[top_button_container] = PRESET_TOP_LEFT
+		control_presets[bottom_button_container] = PRESET_BOTTOM_LEFT
 		control_presets[current] = PRESET_TOP_RIGHT
 	
 	for control in control_presets:

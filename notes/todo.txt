@@ -5,7 +5,7 @@
 - _set_block_owner in block.gd should skip known already-set by amount of
 	children of non-set. does that make sense?
 - Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
-- Functions with bound self refer to toolbox value
+- Block duplicate (right click)
 
 - Natural error popup
 - Proper in-game print/log block
@@ -15,7 +15,7 @@
 	constructed statementblock for itself
 	- from blockdata, text = ("%s" % func_name) + ("{}" * len(args))
 	- function is reference towards functionblock, then _iterate_children
-	- share scope? probably
+	- share scope? probably (treat as nestedblock)
 - Array block
 - Dictionary block
 

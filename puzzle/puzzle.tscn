@@ -1,14 +1,16 @@
-[gd_scene load_steps=24 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=28 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
 [ext_resource type="PackedScene" uid="uid://dd1hdbi0o53lg" path="res://puzzle/ui/side_menu/side_menu.tscn" id="2_m1mme"]
-[ext_resource type="Texture2D" uid="uid://drbauahowgu02" path="res://puzzle/ui/side_menu/icons/material-symbols--info-rounded.png" id="3_dipl1"]
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="3_nnviu"]
-[ext_resource type="Texture2D" uid="uid://bv6qygy8ohllx" path="res://puzzle/ui/side_menu/icons/mdi--toolbox.png" id="4_vlyq7"]
+[ext_resource type="Texture2D" uid="uid://cad2na4jsjqn2" path="res://puzzle/ui/side_menu/icons/pixelarticons--info-box.png" id="5_a3a4o"]
+[ext_resource type="Texture2D" uid="uid://gsnapmej7nct" path="res://puzzle/ui/side_menu/icons/pixelarticons--briefcase-plus.png" id="6_88ajp"]
 [ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socket_block/expression_block/expression_block.tscn" id="6_j1boe"]
+[ext_resource type="Texture2D" uid="uid://clac5hd150bhx" path="res://puzzle/ui/side_menu/icons/pixelarticons--trash.png" id="7_gsymp"]
 [ext_resource type="Script" uid="uid://bqrh4mt84xqd0" path="res://toolbox_content.gd" id="7_vm51y"]
 [ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="7_xr7vu"]
+[ext_resource type="Script" uid="uid://q8aosw0hg5ro" path="res://puzzle/ui/side_menu/functions/trash_button.gd" id="8_a3a4o"]
 [ext_resource type="Script" uid="uid://b0ne4qh25m703" path="res://puzzle/camera_2d.gd" id="8_sbp70"]
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="8_xr7vu"]
 [ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/comparison_block.tres" id="10_ctiy3"]
@@ -23,6 +25,8 @@
 [ext_resource type="Texture2D" uid="uid://cawaq5ffdklpl" path="res://icon.svg" id="18_35gji"]
 [ext_resource type="Script" uid="uid://tfjon70r0mq2" path="res://puzzle/entities/sample/sprite_2d.gd" id="19_tkwoe"]
 [ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/sample/move_block.tres" id="20_equ7n"]
+[ext_resource type="Texture2D" uid="uid://4n3uiklt1518" path="res://puzzle/ui/side_menu/icons/pixelarticons--list.png" id="23_036m3"]
+[ext_resource type="Texture2D" uid="uid://t0jh4sfphu14" path="res://puzzle/ui/side_menu/icons/pixelarticons--play.png" id="24_q1sip"]
 
 [node name="Puzzle" type="Control"]
 layout_mode = 3
@@ -55,7 +59,9 @@ layout_mode = 1
 offset_left = -372.333
 offset_right = 50.0
 grow_vertical = 2
-icons = Array[Texture2D]([ExtResource("3_dipl1"), ExtResource("4_vlyq7")])
+top_icons = Array[Texture2D]([ExtResource("5_a3a4o"), ExtResource("6_88ajp")])
+bottom_icons = Array[Texture2D]([ExtResource("7_gsymp")])
+bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
 [node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
@@ -82,9 +88,9 @@ layout_mode = 1
 offset_right = 372.333
 offset_bottom = 572.0
 mouse_filter = 0
-theme_override_constants/margin_left = 48
+theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 48
+theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 32
 script = ExtResource("7_vm51y")
 scroll_container = NodePath("ScrollContainer")
@@ -92,7 +98,7 @@ block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource
 entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, 524)
+custom_minimum_size = Vector2(0, 773)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]
@@ -123,7 +129,9 @@ offset_right = 487.333
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
-icons = Array[Texture2D]([ExtResource("3_dipl1")])
+top_icons = Array[Texture2D]([ExtResource("23_036m3")])
+bottom_icons = Array[Texture2D]([ExtResource("24_q1sip")])
+bottom_button_scripts = Array[GDScript]([null])
 
 [node name="InformationContent" type="MarginContainer" parent="RightSideMenu"]
 layout_mode = 1

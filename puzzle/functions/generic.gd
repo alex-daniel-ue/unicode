@@ -20,7 +20,6 @@ static func function_declare_var(this: Block) -> Utils.Result:
 	
 	var scope := this.parent_nested.scope
 	if scope.has(var_name):
-		printt(this, this.parent_nested, scope)
 		return Utils.Result.error("Variable '%s' already exists in current scope!" % var_name, this)
 	
 	# Actual operation

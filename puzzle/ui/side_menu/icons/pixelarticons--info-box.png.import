@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5i8b436g3s53"
-path="res://.godot/imported/material-symbols--menu-rounded.png-fd932c3b5b6f0763acf71186a8f8519f.ctex"
+uid="uid://cad2na4jsjqn2"
+path="res://.godot/imported/pixelarticons--info-box.png-9af60056ba7da583da005d87e8371809.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/side_menu/icons/material-symbols--menu-rounded.png"
-dest_files=["res://.godot/imported/material-symbols--menu-rounded.png-fd932c3b5b6f0763acf71186a8f8519f.ctex"]
+source_file="res://puzzle/ui/side_menu/icons/pixelarticons--info-box.png"
+dest_files=["res://.godot/imported/pixelarticons--info-box.png-9af60056ba7da583da005d87e8371809.ctex"]
 
 [params]
 
