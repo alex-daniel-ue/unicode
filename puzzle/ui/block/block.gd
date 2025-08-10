@@ -3,6 +3,10 @@ class_name Block
 extends Control
 
 
+enum PreviewType {NONE, DRAG, DROP}
+
+const DRAG_CENTER_DURATION := .5
+
 @warning_ignore("unused_private_class_variable")
 @export_tool_button("Format text") var _001 := format_text
 @warning_ignore("unused_private_class_variable")
@@ -16,15 +20,12 @@ extends Control
 @export var upper_lip: NinePatchRect
 @export var text_container: HBoxContainer
 
-var error_outline := preload("res://puzzle/error_outline.tres").duplicate() as ShaderMaterial
 const ERROR_FLASH_MULT := 4.
 var error_flash := 2.
 var is_error := false:
 	set = _set_error
 
-## To detect whether the cursor is hovering over a preview.
-var is_drop_preview := false
-var is_drag_preview := false
+var preview_type := PreviewType.NONE
 var origin_parent: Node
 var origin_idx: int
 
@@ -33,44 +34,43 @@ var function: Callable
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint() or is_drop_preview:
+	if Engine.is_editor_hint():
 		return
 	
-	if is_drag_preview:
-		var tween := create_tween()
-		tween.set_ease(Tween.EASE_OUT)
-		tween.set_trans(Tween.TRANS_ELASTIC)
-		tween.tween_property(
-			self, "position",
-			size / -2., 0.5
-		)
-		return
+	match preview_type:
+		PreviewType.DROP: return
+		PreviewType.DRAG:
+			var tween := create_tween()
+			tween.set_ease(Tween.EASE_OUT)
+			tween.set_trans(Tween.TRANS_ELASTIC)
+			tween.tween_property(self, "position", size / -2., DRAG_CENTER_DURATION)
+			return
 	
 	# Initialize block text
 	data.text_changed.connect(format_text)
 	format_text()
 	
-	if data.source != null and not data.method.is_empty():
+	if not (data.source == null or data.method.is_empty()):
 		function = Callable(data.source, data.method).bind(self)
 
 func _process(delta: float) -> void:
-	if Engine.is_editor_hint() or is_drop_preview:
+	if Engine.is_editor_hint() or preview_type != PreviewType.NONE:
 		return
 	
 	if is_error:
 		var t := pingpong(error_flash, 1.0)
 		error_flash = fposmod(error_flash + delta * ERROR_FLASH_MULT, 2.0)
 		for control in error_affected:
-			control.self_modulate = Color.RED.lightened(0.5).lerp(Color.WHITE, t)
-		#error_outline.set_shader_parameter("outline_color",
-			#Color(error_outline.get_shader_parameter("outline_color"), t)
-		#)
+			control.self_modulate = Color.RED.lightened(.5).lerp(Color.WHITE, t)
 
 #region Drag/copy
 func _gui_input(event: InputEvent) -> void:
+	_handle_copy(event)
+
+func _handle_copy(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			if not (data.draggable or is_drop_preview):
+			if not (data.draggable or preview_type == PreviewType.DROP):
 				return
 			
 			get_viewport().set_input_as_handled()
@@ -104,7 +104,7 @@ func generate_block_preview() -> Control:
 	drag_preview_container.name = "DragPreviewContainer"
 	
 	var drag_preview := Utils.construct_block(data)
-	drag_preview.is_drag_preview = true
+	drag_preview.preview_type = PreviewType.DRAG
 	drag_preview_container.add_child(drag_preview)
 	
 	drag_preview.modulate.a = 0.5
@@ -126,11 +126,8 @@ func reset() -> void:
 func _set_error(to: bool) -> void:
 	is_error = to
 	error_flash = 2.
-	
 	for control in error_affected:
 		control.self_modulate = Color.WHITE
-	#for control in error_affected:
-		#control.material = error_outline if to else null
 
 #region Block duplication
 func clone() -> Block:

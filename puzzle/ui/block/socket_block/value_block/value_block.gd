@@ -3,9 +3,10 @@ class_name ValueBlock
 extends SocketBlock
 
 
+const COLOR_CHANGE_MULT := 10.
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color.WHITE,
-	TYPE_STRING_NAME : Color("#B3B3B3"),
+	TYPE_STRING_NAME : Color("#D8D8D8"),
 	TYPE_STRING : Color("#FF8FC7"),
 	TYPE_BOOL : Color("#72F572"),
 	TYPE_INT : Color("#75BAFF"),
@@ -17,15 +18,31 @@ const TYPE_COLORS: Dictionary[int, Color] = {
 @export var line_edit: LineEdit
 @export var option_button: OptionButton
 
+var current_color: Color
+
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+	
+	match preview_type:
+		PreviewType.DROP: return
+		PreviewType.DRAG:
+			_on_enum_flag_changed(data.is_enum)
+			_on_editable_changed(data.editable)
+			super()
+			return
+	
+	super()
+	
 	#region Block data signal connections
 	data.enum_flag_changed.connect(_on_enum_flag_changed)
 	data.editable_changed.connect(_on_editable_changed)
 	#endregion
 	
-	if Engine.is_editor_hint() or is_drop_preview:
-		return
+	_on_enum_flag_changed(data.is_enum)
+	_on_editable_changed(data.editable)
+	set_editing(data.editable and not data.toolbox)
 	
 	option_button.clear()
 	for item in data.enum_values:
@@ -33,16 +50,18 @@ func _ready() -> void:
 	if option_button.item_count > 0:
 		option_button.select.call_deferred(0)
 	
-	super()
-	
-	_on_enum_flag_changed(data.is_enum)
-	_on_editable_changed(data.editable)
-	set_editing(data.editable and not data.toolbox)
-	
 	line_edit.text_changed.connect(set_color)
 	option_button.item_selected.connect(set_color)
 	data.text_changed.connect(set_color)
 	set_color()
+
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint() or preview_type != PreviewType.NONE:
+		return
+	
+	upper_lip.self_modulate = upper_lip.self_modulate.lerp(
+		current_color, delta * COLOR_CHANGE_MULT
+	)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	# Guaranteed all dropped ValueBlocks will be unsocketed
@@ -69,7 +88,7 @@ func get_raw_text() -> String:
 	return super()
 
 func set_color(__: Variant = null) -> void:
-	upper_lip.self_modulate = (
+	current_color = (
 		TYPE_COLORS[typeof(Utils.typecast_string(get_raw_text()))]
 		if data.text_data.is_empty() else
 		Color.WHITE

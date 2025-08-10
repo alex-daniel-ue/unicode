@@ -87,7 +87,7 @@ autowrap_mode = 3
 visible = false
 layout_mode = 1
 offset_right = 372.333
-offset_bottom = 572.0
+offset_bottom = 605.0
 mouse_filter = 0
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 16
@@ -99,7 +99,7 @@ block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource
 entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, -48)
+custom_minimum_size = Vector2(0, 773)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]

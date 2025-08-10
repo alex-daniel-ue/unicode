@@ -85,8 +85,8 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 		
 		# Default value is true; okay since every IF block resets it to their result
 		if_block_success = true
-		
 		block.parent_nested = this
+		
 		var result: Variant = await block.function.call()
 		if result is Utils.Error: return result
 		

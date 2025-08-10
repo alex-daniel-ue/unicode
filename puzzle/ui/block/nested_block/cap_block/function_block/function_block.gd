@@ -14,17 +14,26 @@ const WITH_ARGS_TEXT := ", with"
 @export var remove_argument_button: Button
 
 var line_valueblock := preload("res://puzzle/blocks/generic/line_valueblock.tres")
+## Mainly used to retain LineEdit values when using format_text.
 var line_values: PackedStringArray
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint() or is_drop_preview:
+	if Engine.is_editor_hint():
 		return
 	
-	super()
+	match preview_type:
+		PreviewType.DROP: return
+		PreviewType.DRAG:
+			super()
+			return
 	
-	add_argument_button.pressed.connect(add_argument)
-	remove_argument_button.pressed.connect(remove_argument)
+	super()
+	if not data.toolbox:
+		print("new func")
+		
+		add_argument_button.pressed.connect(add_argument)
+		remove_argument_button.pressed.connect(remove_argument)
 
 func format_text() -> void:
 	text_container.remove_child(add_argument_button)
@@ -49,6 +58,25 @@ func format_text() -> void:
 	
 	add_argument_button.visible = len(data.text_data) <= MAX_ARGUMENTS
 	remove_argument_button.visible = len(data.text_data) > 1 and data.text.ends_with("{}")
+
+func generate_statement_text() -> Utils.Result:
+	# Get arguments
+	var result := Utils.evaluate_arguments(self)
+	if result is Utils.Error: return result
+	var args := result.data as Array
+	
+	# Validate function name as StringName
+	result = Utils.validate_type(args, 0, [TYPE_STRING_NAME], self)
+	if result is Utils.Error: return result
+	var var_name := result.data as StringName
+	
+	# Validate function name
+	if not var_name.is_valid_ascii_identifier():
+		return Utils.Result.error("'%s' isn't a valid variable name!" % var_name, self)
+	
+	var final_text := var_name + "{}".repeat(len(data.text_data)-1)
+	#var final_text := "func %s" % var_name + "{}".repeat(len(data.text_data)-1)
+	return Utils.Result.success(final_text)
 
 func add_argument() -> void:
 	data.text_data.append(line_valueblock.duplicate(true))

@@ -24,13 +24,13 @@ metadata/_custom_type_script = "uid://0ni3de62rk0"
 [resource]
 script = ExtResource("1_g50by")
 nested_type = 8
-block_name = "FunctionBlock"
+block_name = "DefineBlock"
 base_block_path = "uid://cyrgb3cofrcym"
 toolbox = true
 draggable = true
 placeable = true
 top_notch = false
 method = &""
-text = "function {}"
+text = "define {}"
 text_data = Array[ExtResource("2_vw36r")]([SubResource("Resource_vw36r")])
 metadata/_custom_type_script = "uid://cxrghbceksfko"

@@ -46,6 +46,7 @@ static func evaluate_arguments(this: Block) -> Result:
 	var results: Array
 	for block in this.get_text_blocks():
 		block.parent_nested = this if this is NestedBlock else this.parent_nested
+		
 		var result: Variant = block.function.call()
 		if result is Utils.Error: return result
 		

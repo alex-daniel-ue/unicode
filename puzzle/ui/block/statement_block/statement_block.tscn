@@ -61,4 +61,5 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
+[connection signal="resized" from="." to="." method="update_area2d"]
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]

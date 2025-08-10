@@ -56,25 +56,39 @@ func _process(_delta: float) -> void:
 	
 	update_drop_preview()
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			var fake_drop := InputEventMouseButton.new()
+			fake_drop.pressed = false
+			fake_drop.button_index = MOUSE_BUTTON_LEFT
+			Input.parse_input_event(fake_drop)
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
 			current_drop = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant drag-and-drops
-			if not current_drop is Block:
+			# Disregard irrelevant drag-and-drops, non-top-notched & Socket Blocks
+			if not (current_drop is Block and current_drop.data.top_notch) or current_drop is SocketBlock:
 				current_drop = null
 				return
 			
 			is_block_dragging = true
 			
 			drop_preview = Utils.construct_block(current_drop.data)
+			if current_drop is NestedBlock:
+				var blocks := len(current_drop.get_blocks())
+				if blocks > 0:
+					var dummy_data := current_drop.dummy_block.duplicate(true) as BlockData
+					dummy_data.text = "%s blocks..." % blocks
+					drop_preview.mouth.add_child(Utils.construct_block(dummy_data))
 			
 			# Indicate drop preview status to itself and all child Blocks recursively
-			drop_preview.is_drop_preview = true
+			drop_preview.preview_type = Block.PreviewType.DROP
 			for child in Utils.get_children(drop_preview):
 				if child is Block:
-					child.is_drop_preview = true
+					child.preview_type = Block.PreviewType.DROP
 			
 			drop_preview.name = "DropPreview_%s" % drop_preview.get_block_name()
 			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
@@ -97,11 +111,6 @@ func _notification(what: int) -> void:
 					# Return Block to origin
 					current_drop.origin_parent.add_child(current_drop)
 					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
-					
-					# MILD FIXME? Kinda out of scope, kinda not
-					if current_drop is SocketBlock:
-						if current_drop.overridden_socket != null:
-							current_drop.overridden_socket.visible = false
 				else:
 					# If has no origin (like from a toolbox Block), destroy
 					current_drop.queue_free()
@@ -111,23 +120,16 @@ func _notification(what: int) -> void:
 			for thing in [drop_preview, drop_preview_container, current_drop]:
 				thing = null
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_RIGHT:
-			var fake_drop := InputEventMouseButton.new()
-			fake_drop.pressed = false
-			fake_drop.button_index = MOUSE_BUTTON_LEFT
-			Input.parse_input_event(fake_drop)
-
 func update_drop_preview() -> void:
 	if drop_preview == null:
 		return
 	
-	if get_viewport().gui_is_dragging():
+	if get_viewport().gui_is_dragging(): # MILD FIXME: Failsafe or redundant?
 		this_container = get_preview_container()
 		
 		if this_container != null:
 			this_idx = get_preview_idx(this_container)
+			Utils.drag_preview_container.visible = false
 			
 			# If the preview container has changed
 			if this_container != drop_preview_container:
@@ -153,12 +155,14 @@ func update_drop_preview() -> void:
 			if drop_preview.get_parent() == drop_preview_container:
 				drop_preview_container.remove_child(drop_preview)
 			drop_preview_container = null
+			
+			Utils.drag_preview_container.visible = true
 
 func get_preview_container() -> Container:
 	# MEDIUM FIXME: This should probably be in _notification itself, but I can't
 	# find the ideal spot, or what to change instead.
-	if not current_drop.data.top_notch:
-		return null
+	#if not current_drop.data.top_notch:
+		#return null
 	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()
@@ -171,8 +175,8 @@ func get_preview_container() -> Container:
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
 	var parent_block := block.get_parent_block()
-	if block.is_drop_preview:
-		while parent_block.is_drop_preview:
+	if block.preview_type == Block.PreviewType.DROP:
+		while parent_block.preview_type == Block.PreviewType.DROP:
 			parent_block = parent_block.get_parent_block()
 		return parent_block.mouth
 	
@@ -221,7 +225,7 @@ func get_preview_idx(container: Container) -> int:
 	var is_above := mouse_pos.y < center_y
 	
 	# No change
-	if block.is_drop_preview:
+	if block.preview_type == Block.PreviewType.DROP:
 		return drop_preview_idx
 	
 	# Guaranteed NestedBlock via initial assert() above
@@ -242,7 +246,7 @@ func get_preview_idx(container: Container) -> int:
 		if not child is Block: continue
 		
 		# Don't count drop preview (? it works IDK)
-		if child.is_drop_preview:
+		if child.preview_type == Block.PreviewType.DROP:
 			idx -= 1
 		
 		var pos: float = child.global_position.y

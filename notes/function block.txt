@@ -1,0 +1,12 @@
+1. functionblock placed (differentiate from placing from drag-and-drop? or no?
+2. toolbox updated
+3. function statement connect fblock changed: data.text = functionblock.gnr8_text
+4. format_text
+
+0. function statement connect removed to queue_free
+1. functionblock removed
+2. functionblock emit removed
+3. function statement queue_free
+
+1. functionblock picked up, remove functionstatement from toolbox temporarily
+2. functionblock placed, add child back

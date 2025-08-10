@@ -3,8 +3,8 @@
 	children of non-set. does that make sense?
 - Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
 
-- Natural error popup
 - Proper in-game print/log block
+	Natural error popup
 
 - Function block functionality
 	- child_exiting_tree & child_entered_tree, function block will have reference to 

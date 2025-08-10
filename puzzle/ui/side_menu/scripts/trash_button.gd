@@ -1,6 +1,8 @@
 extends Button
 
 
+signal function_trashed(block: Block)
+
 
 func _ready() -> void:
 	focus_mode = Control.FOCUS_NONE
@@ -14,5 +16,7 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	)
 
 func _drop_data(_at_position: Vector2, drop: Variant) -> void:
-	# drop is Block
+	# drop is Block, drop is not CapBlock.BEGIN
+	if drop is FunctionBlock:
+		function_trashed.emit()
 	drop.queue_free()

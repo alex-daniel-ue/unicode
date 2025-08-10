@@ -84,7 +84,6 @@ middle_mouse_paste_enabled = false
 drag_and_drop_selection_enabled = false
 
 [node name="OptionButton" type="OptionButton" parent="UpperLip/MarginContainer/EditableMarginContainer"]
-visible = false
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_g73sa")
@@ -92,7 +91,6 @@ alignment = 1
 fit_to_longest_item = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
-visible = false
 layout_mode = 2
 mouse_filter = 2
 

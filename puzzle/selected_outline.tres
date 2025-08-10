@@ -80,4 +80,4 @@ void fragment() {
 shader = SubResource("Shader_oau1d")
 shader_parameter/allow_out_of_bounds = true
 shader_parameter/outline_thickness = 2.7
-shader_parameter/outline_color = Color(1, 0, 0, 1)
+shader_parameter/outline_color = Color(1, 1, 0, 1)

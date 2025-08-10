@@ -3,6 +3,8 @@ class_name NestedBlock
 extends Block
 
 
+var dummy_block := preload("res://puzzle/ui/block/nested_block/dummy_block.tres")
+
 # Functionality variables
 var scope: Dictionary[StringName, Variant]
 var depth: int
@@ -11,10 +13,6 @@ var depth: int
 @export var mouth: VBoxContainer
 @export var lower_lip: Control
 
-
-func _ready() -> void:
-	assert(data is NestedBlockData)
-	super()
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	return (
@@ -45,6 +43,16 @@ func reset() -> void:
 	super()
 	scope.clear()
 	depth = 0
+
+func generate_block_preview() -> Control:
+	var drag_preview_container := super()
+	var blocks := len(get_blocks())
+	if blocks > 0:
+		var dummy_data := dummy_block.duplicate(true)
+		dummy_data.text %= [blocks, "s" if blocks != 1 else ""]
+		var dummy := Utils.construct_block(dummy_data)
+		(drag_preview_container.get_child(0) as NestedBlock).mouth.add_child(dummy)
+	return drag_preview_container
 
 func _on_mouth_resized() -> void:
 	set_deferred("size", Vector2.ZERO)
