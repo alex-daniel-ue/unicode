@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=3 format=3 uid="uid://dl6ueisx2kck2"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_88ole"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_0glb1"]
+
+[resource]
+script = ExtResource("1_88ole")
+block_name = "ContinueBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+toolbox_category = "Iterative"
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_0glb1")
+method = &"function_continue"
+text = "continue"
+text_data = Array[ExtResource("1_88ole")]([])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"

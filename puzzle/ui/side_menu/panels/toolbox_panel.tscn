@@ -18,8 +18,9 @@ vbox_container = NodePath("ScrollContainer/VBoxContainer")
 toolbox_label = NodePath("ScrollContainer/VBoxContainer/Label")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-custom_minimum_size = Vector2(0, -40)
+custom_minimum_size = Vector2(0, 565)
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2

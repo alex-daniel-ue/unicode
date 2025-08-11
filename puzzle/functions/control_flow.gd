@@ -1,6 +1,11 @@
 extends Object
 
 
+enum Flag {
+	BREAK,
+}
+
+
 ## text: BEGIN CODE
 static func function_begin(this: NestedBlock) -> Utils.Result:
 	# No argument checking required
@@ -33,6 +38,8 @@ static func function_while(this: NestedBlock) -> Utils.Result:
 		result = await _iterate_children(this)
 		if result is Utils.Error: return result
 		
+		if result.data == Flag.BREAK: break
+		
 		_loops += 1
 		if _loops > Puzzle.MAX_LOOPS:
 			return Utils.Result.error("Reached maximum amount of loops!", this)
@@ -58,10 +65,28 @@ static func function_if(this: NestedBlock) -> Utils.Result:
 
 ## text: ELSE
 static func function_else(this: NestedBlock) -> Utils.Result:
-	# NOTE: If-else logic handled inside _iterate_children
+	# NOTE: If-else logic handled inside _iterate_children, since that's
+	# dependent on factors outside this block.
 	var result := await _iterate_children(this)
 	if result is Utils.Error: return result
 	return Utils.Result.success()
+
+## text: BREAK
+static func function_break(
+	this: StatementBlock,
+	msg := "Cannot break from a non-iterative Block!"
+	) -> Utils.Result:
+		# NOTE: Actual break is inside function_while, and etc. See inside
+		# _iterate_children for more info.
+		if this.parent_nested.data.nested_type not in [
+			NestedBlockData.Type.WHILE,
+			NestedBlockData.Type.FOR,
+			NestedBlockData.Type.REPEAT]:
+				return Utils.Result.error(msg, this)
+		return Utils.Result.success(Flag.BREAK)
+
+static func function_continue(this: StatementBlock) -> Utils.Result:
+	return function_break(this, "Cannot continue from a non-iterative Block!")
 
 
 static func _iterate_children(this: NestedBlock) -> Utils.Result:
@@ -70,7 +95,9 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 	
 	for block in this.get_blocks():
 		if block is NestedBlock:
+			
 			if block.check_type(NestedBlockData.Type.ELSE):
+				
 				if not (previous_block is NestedBlock and
 					previous_block.check_type(NestedBlockData.Type.IF)):
 						return Utils.Result.error("Invalid block placement!", block)
@@ -97,6 +124,15 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 			if block.check_type(NestedBlockData.Type.IF):
 				assert(result.data is bool)
 				if_block_success = result.data
+		
+		elif block is StatementBlock:
+			match block.function.get_method():
+				# NOTE: Condition checking occurs outside of _iterate_children
+				# so can't realistically cause a break from here.
+				&"function_break": return result
+				# NOTE: And technically, "break" now means continue in this
+				# implementation.
+				&"function_continue": break
 		
 		if Puzzle.delaying_interpret:
 			await Game.sleep(Puzzle.block_interpret_delay)

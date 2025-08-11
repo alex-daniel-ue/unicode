@@ -3,9 +3,6 @@
 	children of non-set. does that make sense?
 - Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
 
-- Proper in-game print/log block
-	Natural error popup
-
 - Function block functionality
 	- child_exiting_tree & child_entered_tree, function block will have reference to 
 	constructed statementblock for itself
@@ -16,7 +13,7 @@
 - Dictionary block
 
 - Control flow blocks
-	for, repeat, break, continue, return
+	for, repeat, return
 - "Get {} element of {}" block (for arrays, dictionaries)
 - Increment, decrement block
 - Initialize variable block

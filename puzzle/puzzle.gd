@@ -2,7 +2,10 @@ class_name Puzzle
 extends Control
 
 
+@warning_ignore("unused_signal")
 signal function_block_defined(function_block: FunctionBlock)
+
+enum NotificationType {LOG, ERROR}
 
 const MAX_LOOPS := 9999
 const MAX_DEPTH := 100
@@ -42,7 +45,7 @@ func run_program() -> void:
 		error_block.is_error = true
 		get_tree().create_timer(error_duration).timeout.connect(func() -> void:
 			error_block.is_error = false)
-		notification_container.add_notification(result.message, error_duration * 2.)
+		notification_container.add_notification(result.message, error_duration * 2., NotificationType.ERROR)
 	
 	is_program_running = false
 

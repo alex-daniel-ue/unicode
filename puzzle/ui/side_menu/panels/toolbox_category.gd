@@ -13,13 +13,13 @@ const LABEL_HIDDEN_OPACITY := .5
 var blocks_visible = true
 
 
-func with(category_name: String) -> VBoxContainer:
-	self.category_name = category_name
+func with(_category_name: String) -> VBoxContainer:
+	self.category_name = _category_name
 	return self
 
 func toggle_visibility() -> void:
 	blocks_visible = not blocks_visible
-	category_label.modulate.a = 1 if blocks_visible else LABEL_HIDDEN_OPACITY
+	category_label.modulate.a = 1. if blocks_visible else LABEL_HIDDEN_OPACITY
 	
 	for child in get_children():
 		if child != category_label:

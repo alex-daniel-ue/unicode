@@ -3,21 +3,32 @@ extends MarginContainer
 
 
 const BUTTON_CONTAINER_WIDTH := 50.
+const MAXIMUM_NOTIFS := 5
 
-@export_tool_button("asdsad") var _001 := _update_width
 @export var vbox_container: VBoxContainer
 
-var notification := preload("res://puzzle/ui/notification/notification_panel.tscn")
+var notif_scn := preload("res://puzzle/ui/notification/notification_panel.tscn")
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint():
 		return
 	get_viewport().size_changed.connect(_update_width)
 
-func add_notification(text: String, duration: float) -> void:
-	var notif := notification.instantiate()
+func add_notification(
+		text: String,
+		duration: float,
+		type: Puzzle.NotificationType
+	) -> void:
+	
+	if vbox_container.get_child_count() >= MAXIMUM_NOTIFS:
+		vbox_container.get_child(0).queue_free()
+	
+	var notif := notif_scn.instantiate()
+	
 	notif.duration = duration
+	notif.type = type
 	notif.set_text(text)
+	
 	vbox_container.add_child(notif)
 
 func _update_width() -> void:

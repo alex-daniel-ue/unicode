@@ -43,6 +43,7 @@ func add_block(block: Block) -> void:
 	for child in vbox_container.get_children():
 		if child == toolbox_label: continue
 		vbox_container.move_child(child, _internal_category_order.find(child.category_name))
+	vbox_container.move_child(toolbox_label, 0)
 
 
 func _expand_scroll_container() -> void:

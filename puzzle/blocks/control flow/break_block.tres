@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=3 format=3 uid="uid://ca56xi7rt54bq"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_b6e78"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_ttcvm"]
+
+[resource]
+script = ExtResource("1_b6e78")
+block_name = "BreakBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+toolbox_category = "Iterative"
+draggable = true
+placeable = true
+top_notch = true
+source = ExtResource("2_ttcvm")
+method = &"function_break"
+text = "break"
+text_data = Array[ExtResource("1_b6e78")]([])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"
