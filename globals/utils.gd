@@ -117,8 +117,6 @@ static func format_array(arr: Array) -> String:
 	return ", ".join(arr.slice(0, last)) + (" or %s" % arr[last])
 
 
-
-
 class Result:
 	var data: Variant
 	

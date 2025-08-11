@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=20 format=3 uid="uid://88cahjm0kd3k"]
+[gd_resource type="Theme" load_steps=21 format=3 uid="uid://88cahjm0kd3k"]
 
 [ext_resource type="FontFile" uid="uid://dm4f8d7nhiqpn" path="res://themes/fonts/TinyUnicode.ttf" id="1_0avsd"]
 
@@ -19,6 +19,22 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_78ekx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wykhr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wykhr"]
+bg_color = Color(0.0629984, 0.0838419, 0.101211, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.361893, 0.361893, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 10
+shadow_color = Color(0, 0, 0, 0.141176)
+shadow_size = 6
 
 [sub_resource type="ImageTexture" id="ImageTexture_0avsd"]
 
@@ -75,6 +91,11 @@ LineEdit/fonts/font = ExtResource("1_0avsd")
 LineEdit/styles/focus = SubResource("StyleBoxEmpty_0avsd")
 LineEdit/styles/normal = SubResource("StyleBoxEmpty_78ekx")
 LineEdit/styles/read_only = SubResource("StyleBoxEmpty_wykhr")
+NotificationLabel/base_type = &"Label"
+NotificationLabel/constants/line_spacing = -29
+NotificationLabel/font_sizes/font_size = 32
+NotificationPanel/base_type = &"PanelContainer"
+NotificationPanel/styles/panel = SubResource("StyleBoxFlat_wykhr")
 OptionButton/colors/font_color = Color(0, 0, 0, 1)
 OptionButton/colors/font_disabled_color = Color(0, 0, 0, 0.501961)
 OptionButton/colors/font_focus_color = Color(0, 0, 0, 1)

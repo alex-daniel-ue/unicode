@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds1v83c8hlw20"]
+
+[ext_resource type="Script" uid="uid://tntjupbyd755" path="res://puzzle/ui/notification/notification_panel.gd" id="1_o7e0m"]
+[ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="2_xrkv4"]
+
+[node name="NotificationPanel" type="PanelContainer" node_paths=PackedStringArray("label")]
+size_flags_horizontal = 0
+theme = ExtResource("2_xrkv4")
+theme_type_variation = &"NotificationPanel"
+script = ExtResource("1_o7e0m")
+label = NodePath("MarginContainer/Label")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="MarginContainer"]
+texture_filter = 3
+layout_mode = 2
+theme = ExtResource("2_xrkv4")
+theme_type_variation = &"NotificationLabel"
+text = "
+This shouldn't be ever displayed!"

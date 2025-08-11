@@ -15,10 +15,12 @@ var error_duration := 2.
 var error_block: Block
 
 @onready var canvas := $Canvas as ColorRect
+@onready var notification_container := $NotificationContainer as MarginContainer
 @onready var side_menus := [
 	$LeftSideMenu,
 	$RightSideMenu
 ]
+
 
 func run_program() -> void:
 	if is_program_running:
@@ -40,7 +42,7 @@ func run_program() -> void:
 		error_block.is_error = true
 		get_tree().create_timer(error_duration).timeout.connect(func() -> void:
 			error_block.is_error = false)
-		printt(result.message)
+		notification_container.add_notification(result.message, error_duration * 2.)
 	
 	is_program_running = false
 

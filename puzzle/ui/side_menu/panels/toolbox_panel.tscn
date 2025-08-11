@@ -13,7 +13,6 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 32
 script = ExtResource("1_bp1jx")
 _internal_category_order = PackedStringArray("Generic", "Selection", "Iterative", "Boolean", "Value", "Functions", "Player", "Uncategorized")
-block_data = null
 scroll_container = NodePath("ScrollContainer")
 vbox_container = NodePath("ScrollContainer/VBoxContainer")
 toolbox_label = NodePath("ScrollContainer/VBoxContainer/Label")

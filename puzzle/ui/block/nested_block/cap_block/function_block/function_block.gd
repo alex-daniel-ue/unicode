@@ -17,6 +17,9 @@ var line_valueblock := preload("res://puzzle/blocks/_common/line_valueblock.tres
 ## Mainly used to retain LineEdit values when using format_text.
 var line_values: PackedStringArray
 
+var func_call_data_rsrc := preload("res://puzzle/ui/block/nested_block/cap_block/function_block/function_call_block.tres")
+var func_call_block_data: BlockData
+
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -30,6 +33,10 @@ func _ready() -> void:
 	
 	super()
 	if not data.toolbox:
+		func_call_block_data
+		
+		# MEDIUM FIXME: Reeks of code smell. Watch out if I ever use a FunctionBlock
+		# outside the Puzzle scene.
 		$"/root/Puzzle".function_block_defined(self)
 		add_argument_button.pressed.connect(add_argument)
 		remove_argument_button.pressed.connect(remove_argument)
@@ -74,7 +81,6 @@ func generate_statement_text() -> Utils.Result:
 		return Utils.Result.error("'%s' isn't a valid variable name!" % var_name, self)
 	
 	var final_text := var_name + "{}".repeat(len(data.text_data)-1)
-	#var final_text := "func %s" % var_name + "{}".repeat(len(data.text_data)-1)
 	return Utils.Result.success(final_text)
 
 func add_argument() -> void:

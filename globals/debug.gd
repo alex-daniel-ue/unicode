@@ -15,12 +15,11 @@ func log(message: Variant = "", separator := ' ') -> void:
 		message = "%.03f" % message
 	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000., str(message)])
 
-func get_all_toolbox_categories() -> PackedStringArray:
-	var toolbox_cats: PackedStringArray
+func get_all_toolbox_categories() -> Set:
+	var toolbox_cats := Set.new()
 	var all_block_data := _get_all_block_data()
 	for block_data in all_block_data:
-		if block_data.toolbox_category not in toolbox_cats:
-			toolbox_cats.append(block_data.toolbox_category)
+		toolbox_cats.add(block_data.toolbox_category)
 	return toolbox_cats
 
 func _get_all_block_data(dir := DirAccess.open("res://puzzle/"), result: Array[BlockData] = []) -> Array[BlockData]:

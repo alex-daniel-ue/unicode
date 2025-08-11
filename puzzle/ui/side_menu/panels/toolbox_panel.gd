@@ -21,6 +21,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	
+	_internal_category_order.append("Uncategorized")
 	for data in block_data:
 		add_block(Utils.construct_block(data))
 
@@ -41,7 +42,7 @@ func add_block(block: Block) -> void:
 	
 	for child in vbox_container.get_children():
 		if child == toolbox_label: continue
-		move_child(child, _internal_category_order.find(child.category_name))
+		vbox_container.move_child(child, _internal_category_order.find(child.category_name))
 
 
 func _expand_scroll_container() -> void:

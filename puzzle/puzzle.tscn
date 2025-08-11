@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=29 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -27,6 +27,7 @@
 [ext_resource type="Resource" uid="uid://gibwvau1pa7m" path="res://puzzle/blocks/value/arithmetic_block.tres" id="21_a3a4o"]
 [ext_resource type="Texture2D" uid="uid://4n3uiklt1518" path="res://puzzle/ui/side_menu/icons/pixelarticons--list.png" id="23_036m3"]
 [ext_resource type="Texture2D" uid="uid://t0jh4sfphu14" path="res://puzzle/ui/side_menu/icons/pixelarticons--play.png" id="24_q1sip"]
+[ext_resource type="Script" uid="uid://uvapno4520vq" path="res://puzzle/ui/notification/notification_container.gd" id="28_88ajp"]
 
 [node name="Puzzle" type="Control"]
 layout_mode = 3
@@ -53,6 +54,24 @@ offset_bottom = 5000.0
 grow_horizontal = 1
 grow_vertical = 1
 pivot_offset = Vector2(5000, 5000)
+
+[node name="NotificationContainer" type="MarginContainer" parent="." node_paths=PackedStringArray("vbox_container")]
+custom_minimum_size = Vector2(0, 35.705)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 50.0
+offset_right = 65.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+script = ExtResource("28_88ajp")
+vbox_container = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NotificationContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
@@ -86,6 +105,7 @@ autowrap_mode = 3
 visible = false
 layout_mode = 0
 offset_bottom = 605.0
+_internal_category_order = PackedStringArray("Generic", "Selection", "Iterative", "Boolean", "Value", "Functions", "Player")
 block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_a3a4o"), ExtResource("13_a3a4o"), ExtResource("14_88ajp"), ExtResource("12_1wbjf"), ExtResource("15_gsymp"), ExtResource("16_036m3"), ExtResource("17_q1sip"), ExtResource("18_ifal0"), ExtResource("19_86f8w"), ExtResource("20_1wbjf"), ExtResource("21_a3a4o")])
 
 [node name="RightSideMenu" parent="." instance=ExtResource("2_m1mme")]

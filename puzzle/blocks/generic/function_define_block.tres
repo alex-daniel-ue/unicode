@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="NestedBlockData" load_steps=3 format=3 uid="uid://ce857u63ndh5k"]
+
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="1_sq587"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_5sfdd"]
+
+[resource]
+script = ExtResource("1_sq587")
+nested_type = 0
+block_name = "FunctionDefineBlock"
+base_block_path = "uid://cyrgb3cofrcym"
+toolbox = true
+toolbox_category = "Functions"
+draggable = true
+placeable = true
+top_notch = true
+method = &""
+text = ""
+text_data = Array[ExtResource("2_5sfdd")]([])
+metadata/_custom_type_script = "uid://cxrghbceksfko"

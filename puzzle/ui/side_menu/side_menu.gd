@@ -170,7 +170,7 @@ func update_layout() -> void:
 	for control in control_presets:
 		control.set_anchors_and_offsets_preset(
 			control_presets[control],
-			Control.PRESET_MODE_KEEP_SIZE
+			Control.PRESET_MODE_KEEP_WIDTH
 		)
 	
 	position = get_shown_position() if shown else get_hidden_position()
