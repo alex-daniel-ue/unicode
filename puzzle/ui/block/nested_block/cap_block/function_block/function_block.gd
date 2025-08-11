@@ -13,7 +13,7 @@ const WITH_ARGS_TEXT := ", with"
 @export var add_argument_button: Button
 @export var remove_argument_button: Button
 
-var line_valueblock := preload("res://puzzle/blocks/generic/line_valueblock.tres")
+var line_valueblock := preload("res://puzzle/blocks/_common/line_valueblock.tres")
 ## Mainly used to retain LineEdit values when using format_text.
 var line_values: PackedStringArray
 
@@ -30,8 +30,7 @@ func _ready() -> void:
 	
 	super()
 	if not data.toolbox:
-		print("new func")
-		
+		$"/root/Puzzle".function_block_defined(self)
 		add_argument_button.pressed.connect(add_argument)
 		remove_argument_button.pressed.connect(remove_argument)
 

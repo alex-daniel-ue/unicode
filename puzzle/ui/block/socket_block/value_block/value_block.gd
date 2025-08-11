@@ -7,10 +7,13 @@ const COLOR_CHANGE_MULT := 10.
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color.WHITE,
 	TYPE_STRING_NAME : Color("#D8D8D8"),
-	TYPE_STRING : Color("#FF8FC7"),
-	TYPE_BOOL : Color("#72F572"),
+	TYPE_STRING : Color("#FFBA8F"),
 	TYPE_INT : Color("#75BAFF"),
 	TYPE_FLOAT : Color("#ADADFF"),
+}
+const BOOL_COLORS: Dictionary[bool, Color] = {
+	true: Color("#72F572"),
+	false: Color("#F57373")
 }
 
 @export_group("Children")
@@ -35,10 +38,10 @@ func _ready() -> void:
 	
 	super()
 	
-	#region Block data signal connections
-	data.enum_flag_changed.connect(_on_enum_flag_changed)
-	data.editable_changed.connect(_on_editable_changed)
-	#endregion
+	##region Block data signal connections
+	#data.enum_flag_changed.connect(_on_enum_flag_changed)
+	#data.editable_changed.connect(_on_editable_changed)
+	##endregion
 	
 	_on_enum_flag_changed(data.is_enum)
 	_on_editable_changed(data.editable)
@@ -59,9 +62,12 @@ func _process(delta: float) -> void:
 	if Engine.is_editor_hint() or preview_type != PreviewType.NONE:
 		return
 	
-	upper_lip.self_modulate = upper_lip.self_modulate.lerp(
-		current_color, delta * COLOR_CHANGE_MULT
-	)
+	if not is_error:
+		upper_lip.self_modulate = upper_lip.self_modulate.lerp(
+			current_color, delta * COLOR_CHANGE_MULT
+		)
+	
+	super(delta)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	# Guaranteed all dropped ValueBlocks will be unsocketed
@@ -88,8 +94,10 @@ func get_raw_text() -> String:
 	return super()
 
 func set_color(__: Variant = null) -> void:
+	var val: Variant = Utils.typecast_string(get_raw_text())
+	var type := typeof(val)
 	current_color = (
-		TYPE_COLORS[typeof(Utils.typecast_string(get_raw_text()))]
+		(BOOL_COLORS[val] if type == TYPE_BOOL else TYPE_COLORS[type])
 		if data.text_data.is_empty() else
 		Color.WHITE
 	)

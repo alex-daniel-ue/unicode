@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="NestedBlockData" load_steps=4 format=3 uid="uid://be2l144h5wnvm"]
+
+[ext_resource type="Script" uid="uid://cxrghbceksfko" path="res://puzzle/ui/block/nested_block/nested_data.gd" id="1_4b4oc"]
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="2_a572h"]
+[ext_resource type="Script" uid="uid://csghwc00dwphr" path="res://puzzle/functions/control_flow.gd" id="2_i40qe"]
+
+[resource]
+script = ExtResource("1_4b4oc")
+nested_type = 7
+block_name = "BeginBlock"
+base_block_path = "uid://b1m1bc6snfm4l"
+toolbox = false
+toolbox_category = "Generic"
+draggable = true
+placeable = true
+top_notch = false
+source = ExtResource("2_i40qe")
+method = &"function_begin"
+text = "begin code"
+text_data = Array[ExtResource("2_a572h")]([])
+metadata/_custom_type_script = "uid://cxrghbceksfko"

@@ -9,6 +9,7 @@ receptive = true
 block_name = "BooleanBlock"
 base_block_path = "uid://c5atbvk5lcmhc"
 toolbox = false
+toolbox_category = "Uncategorized"
 draggable = false
 placeable = false
 top_notch = false

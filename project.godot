@@ -30,7 +30,8 @@ folder_colors={
 "res://puzzle/blocks/": "purple",
 "res://puzzle/entities/": "teal",
 "res://puzzle/functions/": "red",
-"res://puzzle/ui/": "yellow"
+"res://puzzle/ui/": "yellow",
+"res://puzzle/ui/block/": "yellow"
 }
 
 [input]

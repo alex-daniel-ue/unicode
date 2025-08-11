@@ -2,6 +2,8 @@ class_name Puzzle
 extends Control
 
 
+signal function_block_defined(function_block: FunctionBlock)
+
 const MAX_LOOPS := 9999
 const MAX_DEPTH := 100
 
@@ -39,7 +41,6 @@ func run_program() -> void:
 		get_tree().create_timer(error_duration).timeout.connect(func() -> void:
 			error_block.is_error = false)
 		printt(result.message)
-		# show message
 	
 	is_program_running = false
 

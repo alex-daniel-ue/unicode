@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnh7p04o2uim2"]
+
+[ext_resource type="Script" uid="uid://c8ory6ryntaoo" path="res://puzzle/ui/side_menu/panels/toolbox_category.gd" id="1_4cemn"]
+[ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="13_06ufr"]
+
+[node name="ToolboxCategory" type="VBoxContainer" node_paths=PackedStringArray("category_label")]
+offset_right = 90.0
+offset_bottom = 38.0
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+script = ExtResource("1_4cemn")
+category_label = NodePath("CategoryLabel")
+
+[node name="CategoryLabel" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 2
+mouse_filter = 1
+theme = ExtResource("13_06ufr")
+theme_type_variation = &"HeaderMedium"
+text = "Undefined"
+horizontal_alignment = 1
+
+[connection signal="gui_input" from="CategoryLabel" to="." method="_on_label_gui_input"]

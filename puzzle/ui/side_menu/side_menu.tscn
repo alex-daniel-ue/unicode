@@ -6,12 +6,9 @@
 [node name="SideMenu" type="Panel" node_paths=PackedStringArray("top_button_container", "bottom_button_container")]
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 422.333
+offset_right = 0.666667
 theme = ExtResource("1_uwipr")
 script = ExtResource("2_uwipr")
-top_icons = null
-bottom_icons = null
-bottom_button_scripts = null
 top_button_container = NodePath("TopButtonContainer")
 bottom_button_container = NodePath("BottomButtonContainer")
 

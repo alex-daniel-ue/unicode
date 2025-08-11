@@ -7,6 +7,7 @@ script = ExtResource("1_wiy0j")
 block_name = "DummyBlock"
 base_block_path = "uid://cu0q8n6labe07"
 toolbox = false
+toolbox_category = "Uncategorized"
 draggable = false
 placeable = false
 top_notch = true

@@ -12,6 +12,7 @@ receptive = false
 block_name = "DirectionBlock"
 base_block_path = "uid://da50ywh5cb07s"
 toolbox = false
+toolbox_category = "Uncategorized"
 draggable = false
 placeable = false
 top_notch = false

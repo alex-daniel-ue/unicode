@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=28 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -6,26 +6,25 @@
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="3_nnviu"]
 [ext_resource type="Texture2D" uid="uid://cad2na4jsjqn2" path="res://puzzle/ui/side_menu/icons/pixelarticons--info-box.png" id="5_a3a4o"]
 [ext_resource type="Texture2D" uid="uid://gsnapmej7nct" path="res://puzzle/ui/side_menu/icons/pixelarticons--briefcase-plus.png" id="6_88ajp"]
-[ext_resource type="PackedScene" uid="uid://c5atbvk5lcmhc" path="res://puzzle/ui/block/socket_block/expression_block/expression_block.tscn" id="6_j1boe"]
 [ext_resource type="Texture2D" uid="uid://clac5hd150bhx" path="res://puzzle/ui/side_menu/icons/pixelarticons--trash.png" id="7_gsymp"]
-[ext_resource type="Script" uid="uid://bqrh4mt84xqd0" path="res://toolbox_content.gd" id="7_vm51y"]
-[ext_resource type="PackedScene" uid="uid://b1m1bc6snfm4l" path="res://puzzle/ui/block/nested_block/cap_block/cap_block.tscn" id="7_xr7vu"]
 [ext_resource type="Script" uid="uid://q8aosw0hg5ro" path="res://puzzle/ui/side_menu/scripts/trash_button.gd" id="8_a3a4o"]
 [ext_resource type="Script" uid="uid://b0ne4qh25m703" path="res://puzzle/camera_2d.gd" id="8_sbp70"]
 [ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="8_xr7vu"]
-[ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/comparison_block.tres" id="10_ctiy3"]
-[ext_resource type="Resource" uid="uid://ci82nw1voh5qn" path="res://puzzle/blocks/print_block.tres" id="11_ctiy3"]
-[ext_resource type="Resource" uid="uid://bqxhjob3jcdpm" path="res://puzzle/blocks/declare_var_block.tres" id="12_35gji"]
-[ext_resource type="Resource" uid="uid://gibwvau1pa7m" path="res://puzzle/blocks/arithmetic_block.tres" id="13_bvcr2"]
-[ext_resource type="Resource" uid="uid://ciiuxwd7c066x" path="res://puzzle/blocks/set_var_block.tres" id="13_tkwoe"]
-[ext_resource type="Resource" uid="uid://cgwg3i44m4o4t" path="res://puzzle/blocks/control flow/while_block.tres" id="14_equ7n"]
-[ext_resource type="Resource" uid="uid://bfoi5631rntay" path="res://puzzle/blocks/control flow/elif_block.tres" id="15_n8lp6"]
-[ext_resource type="Resource" uid="uid://8o1brt6rqfn2" path="res://puzzle/blocks/control flow/if_block.tres" id="16_bvcr2"]
-[ext_resource type="Resource" uid="uid://caeirgbvpb5kc" path="res://puzzle/blocks/control flow/else_block.tres" id="17_e1dgq"]
+[ext_resource type="PackedScene" uid="uid://cs11djnl1h821" path="res://puzzle/ui/side_menu/panels/toolbox_panel.tscn" id="10_vm51y"]
+[ext_resource type="Resource" uid="uid://ci82nw1voh5qn" path="res://puzzle/blocks/generic/print_block.tres" id="12_1wbjf"]
+[ext_resource type="Resource" uid="uid://be2l144h5wnvm" path="res://puzzle/blocks/generic/begin_block.tres" id="12_a3a4o"]
+[ext_resource type="Resource" uid="uid://bqxhjob3jcdpm" path="res://puzzle/blocks/generic/declare_var_block.tres" id="13_a3a4o"]
+[ext_resource type="Resource" uid="uid://ciiuxwd7c066x" path="res://puzzle/blocks/generic/set_var_block.tres" id="14_88ajp"]
+[ext_resource type="Resource" uid="uid://8o1brt6rqfn2" path="res://puzzle/blocks/control flow/if_block.tres" id="15_gsymp"]
+[ext_resource type="Resource" uid="uid://caeirgbvpb5kc" path="res://puzzle/blocks/control flow/else_block.tres" id="16_036m3"]
+[ext_resource type="Resource" uid="uid://bfoi5631rntay" path="res://puzzle/blocks/control flow/elif_block.tres" id="17_q1sip"]
 [ext_resource type="Texture2D" uid="uid://cawaq5ffdklpl" path="res://icon.svg" id="18_35gji"]
+[ext_resource type="Resource" uid="uid://cgwg3i44m4o4t" path="res://puzzle/blocks/control flow/while_block.tres" id="18_ifal0"]
+[ext_resource type="Resource" uid="uid://dx4csiwhf5w78" path="res://puzzle/blocks/bool/comparison_block.tres" id="19_86f8w"]
 [ext_resource type="Script" uid="uid://tfjon70r0mq2" path="res://puzzle/entities/sample/sprite_2d.gd" id="19_tkwoe"]
+[ext_resource type="Resource" uid="uid://kguktaba4ism" path="res://puzzle/blocks/bool/boolean_block.tres" id="20_1wbjf"]
 [ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/sample/move_block.tres" id="20_equ7n"]
-[ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/ui/block/nested_block/cap_block/function_block/function_block.tres" id="21_88ajp"]
+[ext_resource type="Resource" uid="uid://gibwvau1pa7m" path="res://puzzle/blocks/value/arithmetic_block.tres" id="21_a3a4o"]
 [ext_resource type="Texture2D" uid="uid://4n3uiklt1518" path="res://puzzle/ui/side_menu/icons/pixelarticons--list.png" id="23_036m3"]
 [ext_resource type="Texture2D" uid="uid://t0jh4sfphu14" path="res://puzzle/ui/side_menu/icons/pixelarticons--play.png" id="24_q1sip"]
 
@@ -57,16 +56,16 @@ pivot_offset = Vector2(5000, 5000)
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -61.0
-offset_right = -60.3333
+offset_left = -372.333
+offset_right = 50.0
 grow_vertical = 2
 top_icons = Array[Texture2D]([ExtResource("5_a3a4o"), ExtResource("6_88ajp")])
 bottom_icons = Array[Texture2D]([ExtResource("7_gsymp")])
 bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
-[node name="InformationContent" type="MarginContainer" parent="LeftSideMenu"]
+[node name="InformationPanel" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 61.0
+offset_right = 372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -76,57 +75,26 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Label" type="Label" parent="LeftSideMenu/InformationContent"]
+[node name="Label" type="Label" parent="LeftSideMenu/InformationPanel"]
 layout_mode = 2
 size_flags_vertical = 0
 theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
 autowrap_mode = 3
 
-[node name="ToolboxContent" type="MarginContainer" parent="LeftSideMenu" node_paths=PackedStringArray("scroll_container", "entities")]
+[node name="ToolboxPanel" parent="LeftSideMenu" instance=ExtResource("10_vm51y")]
 visible = false
-layout_mode = 1
-offset_right = 372.333
+layout_mode = 0
 offset_bottom = 605.0
-mouse_filter = 0
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 32
-script = ExtResource("7_vm51y")
-scroll_container = NodePath("ScrollContainer")
-block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_35gji"), ExtResource("13_tkwoe"), ExtResource("11_ctiy3"), ExtResource("16_bvcr2"), ExtResource("17_e1dgq"), ExtResource("15_n8lp6"), ExtResource("14_equ7n"), ExtResource("13_bvcr2"), ExtResource("10_ctiy3"), ExtResource("21_88ajp")])
-entities = [NodePath("../../RightSideMenu/InformationContent/Sprite2D")]
-
-[node name="ScrollContainer" type="ScrollContainer" parent="LeftSideMenu/ToolboxContent"]
-custom_minimum_size = Vector2(0, 773)
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LeftSideMenu/ToolboxContent/ScrollContainer"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer"]
-texture_filter = 3
-layout_mode = 2
-theme = ExtResource("3_nnviu")
-theme_type_variation = &"HeaderLarge"
-text = "TOOLBOX"
-horizontal_alignment = 1
-
-[node name="ExpressionBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("6_j1boe")]
-layout_mode = 2
-
-[node name="CapBlock" parent="LeftSideMenu/ToolboxContent/ScrollContainer/VBoxContainer" instance=ExtResource("7_xr7vu")]
-layout_mode = 2
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("12_a3a4o"), ExtResource("13_a3a4o"), ExtResource("14_88ajp"), ExtResource("12_1wbjf"), ExtResource("15_gsymp"), ExtResource("16_036m3"), ExtResource("17_q1sip"), ExtResource("18_ifal0"), ExtResource("19_86f8w"), ExtResource("20_1wbjf"), ExtResource("21_a3a4o")])
 
 [node name="RightSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -1089.67
-offset_right = -1089.0
+offset_left = 65.0
+offset_right = 487.333
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -134,12 +102,12 @@ top_icons = Array[Texture2D]([ExtResource("23_036m3")])
 bottom_icons = Array[Texture2D]([ExtResource("24_q1sip")])
 bottom_button_scripts = Array[GDScript]([null])
 
-[node name="InformationContent" type="MarginContainer" parent="RightSideMenu"]
+[node name="InformationPanel" type="MarginContainer" parent="RightSideMenu"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -61.0
+offset_left = -372.333
 offset_bottom = 1943.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -149,18 +117,19 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Label" type="Label" parent="RightSideMenu/InformationContent"]
+[node name="Label" type="Label" parent="RightSideMenu/InformationPanel"]
 layout_mode = 2
 size_flags_vertical = 0
 theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
 autowrap_mode = 3
 
-[node name="Sprite2D" type="Sprite2D" parent="RightSideMenu/InformationContent"]
+[node name="Sprite2D" type="Sprite2D" parent="RightSideMenu/InformationPanel"]
 position = Vector2(100, 267)
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("18_35gji")
 script = ExtResource("19_tkwoe")
 block_data = Array[ExtResource("8_xr7vu")]([ExtResource("20_equ7n")])
 
+[connection signal="child_entered_tree" from="Canvas" to="Canvas" method="_on_child_entered_tree"]
 [connection signal="clicked" from="Canvas" to="." method="_on_canvas_clicked"]
