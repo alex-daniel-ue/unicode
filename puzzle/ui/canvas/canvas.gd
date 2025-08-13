@@ -84,6 +84,12 @@ func handle_zooming(event: InputEvent) -> void:
 	scale *= 1 + zoom_direction * zoom_speed
 	scale = scale.clampf(min_zoom, max_zoom)
 
+func clear() -> void:
+	for child in get_children():
+		Debug.log([child, child is Block])
+		if child is Block:
+			child.queue_free()
+
 func _on_block_dropped() -> void:
 	#var sound := drop_sounds[randi() % len(drop_sounds)]
 	audio_stream_player.stream = drop_sound

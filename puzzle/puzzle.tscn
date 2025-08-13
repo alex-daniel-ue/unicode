@@ -31,7 +31,7 @@
 [ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/blocks/control flow/function_define_block.tres" id="26_036m3"]
 [ext_resource type="Script" uid="uid://uvapno4520vq" path="res://puzzle/ui/notification/notification_container.gd" id="28_88ajp"]
 
-[node name="Puzzle" type="Control"]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "camera", "notification_container", "toolbox_panel", "side_menus")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,6 +39,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dipl1")
+canvas = NodePath("Canvas")
+camera = NodePath("Camera2D")
+notification_container = NodePath("NotificationContainer")
+toolbox_panel = NodePath("LeftSideMenu/ToolboxPanel")
+side_menus = [NodePath("LeftSideMenu"), NodePath("RightSideMenu")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(576, 324)
@@ -77,8 +82,8 @@ theme_override_constants/separation = 6
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -61.0
-offset_right = -60.3333
+offset_left = -260.0
+offset_right = -259.333
 grow_vertical = 2
 top_icons = Array[Texture2D]([ExtResource("5_a3a4o"), ExtResource("6_88ajp")])
 bottom_icons = Array[Texture2D]([ExtResource("7_gsymp")])
@@ -86,8 +91,8 @@ bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
 [node name="InformationPanel" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 61.0
-offset_bottom = 1943.0
+offset_right = 260.0
+offset_bottom = 221.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 0
@@ -97,11 +102,12 @@ theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
 [node name="Label" type="Label" parent="LeftSideMenu/InformationPanel"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 0
 theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
-autowrap_mode = 3
+autowrap_mode = 2
 
 [node name="ToolboxPanel" parent="LeftSideMenu" instance=ExtResource("10_vm51y")]
 visible = false
@@ -115,8 +121,8 @@ layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -1089.67
-offset_right = -1089.0
+offset_left = -890.667
+offset_right = -890.0
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
@@ -129,8 +135,8 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -61.0
-offset_bottom = 1943.0
+offset_left = -260.0
+offset_bottom = 221.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 0
@@ -140,11 +146,12 @@ theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
 [node name="Label" type="Label" parent="RightSideMenu/InformationPanel"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 0
 theme = ExtResource("3_nnviu")
 text = "This is where the instructions will be placed!"
-autowrap_mode = 3
+autowrap_mode = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="RightSideMenu/InformationPanel"]
 position = Vector2(100, 267)

@@ -32,16 +32,19 @@ func _ready() -> void:
 			return
 	
 	super()
-	if not data.toolbox:
-		add_argument_button.pressed.connect(add_argument)
-		remove_argument_button.pressed.connect(remove_argument)
-		
-		var func_call_data := load("res://puzzle/blocks/control flow/function_call_block.tres")
-		func_call_block = Utils.construct_block(func_call_data.duplicate(true))
-		func_call_block.visible = false
-		# MEDIUM FIXME: Code smell. Watch out if I ever use a FunctionBlock
-		# outside the Puzzle scene.
-		$"/root/Puzzle"._on_function_defined(self)
+	
+	if data.toolbox:
+		return
+	
+	add_argument_button.pressed.connect(add_argument)
+	remove_argument_button.pressed.connect(remove_argument)
+	
+	var func_call_data := load("res://puzzle/blocks/control flow/function_call_block.tres")
+	func_call_block = Utils.construct_block(func_call_data.duplicate(true))
+	func_call_block.visible = false
+	# MEDIUM FIXME: Code smell. Watch out if I ever use a FunctionBlock
+	# outside the Puzzle scene.
+	$"/root/Puzzle"._on_function_defined(self)
 
 func format_text() -> void:
 	for button in [add_argument_button, remove_argument_button]:

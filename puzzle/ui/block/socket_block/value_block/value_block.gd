@@ -40,10 +40,10 @@ func _ready() -> void:
 	
 	super()
 	
-	##region Block data signal connections
-	#data.enum_flag_changed.connect(_on_enum_flag_changed)
-	#data.editable_changed.connect(_on_editable_changed)
-	##endregion
+	#region Block data signal connections
+	data.enum_flag_changed.connect(_on_enum_flag_changed)
+	data.editable_changed.connect(_on_editable_changed)
+	#endregion
 	
 	_on_enum_flag_changed(data.is_enum)
 	_on_editable_changed(data.editable)
@@ -111,6 +111,7 @@ func set_text(to: String) -> void:
 	line_edit.text = to
 
 func set_editing(to: bool) -> void:
+	Debug.log([self, data.editable, data.toolbox, to])
 	line_edit.editable = to
 	option_button.disabled = not to
 

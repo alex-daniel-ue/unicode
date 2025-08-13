@@ -14,10 +14,12 @@ static var block_interpret_delay := .4
 var error_duration := 2.
 var error_block: Block
 
-@onready var canvas := $Canvas as ColorRect
-@onready var notification_container := $NotificationContainer as MarginContainer
-@onready var toolbox_panel := $LeftSideMenu/ToolboxPanel as MarginContainer
-@onready var side_menus := [$LeftSideMenu, $RightSideMenu]
+@export_group("Children")
+@export var canvas: ColorRect
+@export var camera: Camera2D
+@export var notification_container: MarginContainer
+@export var toolbox_panel: MarginContainer
+@export var side_menus: Array[Panel]
 
 
 func run_program() -> void:

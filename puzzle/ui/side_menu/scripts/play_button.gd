@@ -2,5 +2,4 @@ extends Button
 
 
 func _ready() -> void:
-	$"."
-	pass
+	pressed.connect($"/root/Puzzle".run_program)
