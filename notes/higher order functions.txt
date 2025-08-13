@@ -1,0 +1,10 @@
+
+
+scope is calculated from start, 
+
+always return a valueblock
+use util blocks:
+	bool(), which evaluates args and utils.result.success if type_bool
+	call(), which just evaluates arguments, doing nothing
+
+dont do higher order functions, functions are never accessible by name, only by calling

@@ -13,6 +13,7 @@ nested_type = 7
 block_name = "CapBlock"
 base_block_path = "uid://b1m1bc6snfm4l"
 toolbox = false
+toolbox_category = "Uncategorized"
 draggable = true
 placeable = true
 top_notch = false
@@ -25,7 +26,7 @@ metadata/_custom_type_script = "uid://cxrghbceksfko"
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_helxk"]
 load_path = "res://.godot/imported/debug_texture.png-662692569c30c1c577ccb5ee2eccfc4a.ctex"
 
-[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "error_affected", "upper_lip", "text_container")]
+[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "error_affected", "upper_lip", "text_container")]
 texture_filter = 3
 offset_right = 50.0
 offset_bottom = 66.0
@@ -35,6 +36,7 @@ theme = ExtResource("1_pyflx")
 theme_override_constants/separation = 0
 script = ExtResource("2_pyflx")
 mouth = NodePath("Mouth")
+lower_lip = NodePath("Control")
 data = SubResource("Resource_63kvq")
 error_affected = [NodePath("CapHead"), NodePath("UpperLip")]
 upper_lip = NodePath("UpperLip")
@@ -85,6 +87,12 @@ layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
 [connection signal="resized" from="Mouth" to="." method="_on_mouth_resized"]

@@ -37,8 +37,8 @@ func add_block(block: Block) -> void:
 	
 	var new_cat := category_scn.instantiate()
 	new_cat.category_name = block.data.toolbox_category
-	vbox_container.add_child(new_cat)
 	new_cat.add_child(block)
+	vbox_container.add_child(new_cat)
 	
 	for child in vbox_container.get_children():
 		if child == toolbox_label: continue

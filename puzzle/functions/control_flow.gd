@@ -2,7 +2,7 @@ extends Object
 
 
 enum Flag {
-	BREAK,
+	BREAK, CONTINUE
 }
 
 
@@ -74,19 +74,22 @@ static func function_else(this: NestedBlock) -> Utils.Result:
 ## text: BREAK
 static func function_break(
 	this: StatementBlock,
-	msg := "Cannot break from a non-iterative Block!"
+	msg := "Cannot break without a non-iterative Block!",
+	flag := Flag.BREAK
 	) -> Utils.Result:
+		
 		# NOTE: Actual break is inside function_while, and etc. See inside
 		# _iterate_children for more info.
-		if this.parent_nested.data.nested_type not in [
-			NestedBlockData.Type.WHILE,
-			NestedBlockData.Type.FOR,
-			NestedBlockData.Type.REPEAT]:
-				return Utils.Result.error(msg, this)
-		return Utils.Result.success(Flag.BREAK)
+		if _has_iterative_parent(this):
+			return Utils.Result.success(flag)
+		return Utils.Result.error(msg, this)
 
 static func function_continue(this: StatementBlock) -> Utils.Result:
-	return function_break(this, "Cannot continue from a non-iterative Block!")
+	return function_break(
+		this,
+		"Cannot continue without a non-iterative Block!",
+		Flag.CONTINUE
+	)
 
 
 static func _iterate_children(this: NestedBlock) -> Utils.Result:
@@ -126,13 +129,13 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 				if_block_success = result.data
 		
 		elif block is StatementBlock:
-			match block.function.get_method():
-				# NOTE: Condition checking occurs outside of _iterate_children
-				# so can't realistically cause a break from here.
-				&"function_break": return result
-				# NOTE: And technically, "break" now means continue in this
-				# implementation.
-				&"function_continue": break
+			if block.function.get_method() in [
+				&"function_break",
+				&"function_continue"]:
+					# NOTE: Condition checking occurs outside of _iterate_children
+					# so can't realistically cause a break/continue from here. These
+					# results have result.data of type Flag
+					return result
 		
 		if Puzzle.delaying_interpret:
 			await Game.sleep(Puzzle.block_interpret_delay)
@@ -141,3 +144,16 @@ static func _iterate_children(this: NestedBlock) -> Utils.Result:
 		block.reset()
 	
 	return Utils.Result.success()
+
+
+static func _has_iterative_parent(this: Block) -> bool:
+	while this.parent_nested != null:
+		this = this.parent_nested
+		if not this is NestedBlock: continue
+		if this.data.nested_type in [
+			NestedBlockData.Type.WHILE,
+			NestedBlockData.Type.FOR,
+			NestedBlockData.Type.REPEAT]:
+				return true
+	
+	return false

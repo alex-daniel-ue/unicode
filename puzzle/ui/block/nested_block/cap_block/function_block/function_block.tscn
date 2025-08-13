@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://88cahjm0kd3k" path="res://themes/main.tres" id="1_nscxo"]
 [ext_resource type="Script" uid="uid://bfvmmapukcnkd" path="res://puzzle/ui/block/nested_block/cap_block/function_block/function_block.gd" id="2_imrj0"]
-[ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/ui/block/nested_block/cap_block/function_block/function_block.tres" id="3_nscxo"]
+[ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/blocks/control flow/function_define_block.tres" id="3_nscxo"]
 [ext_resource type="Script" uid="uid://b8cw2qprc16fw" path="res://puzzle/ui/block/upper_lip.gd" id="6_yvl0x"]
 [ext_resource type="Texture2D" uid="uid://bxx262am7vy4h" path="res://puzzle/ui/block/nested_block/cap_block/function_block/pixelarticons--add-box.png" id="7_yvi7k"]
 [ext_resource type="Texture2D" uid="uid://c8lp1ys6mwgsf" path="res://puzzle/ui/block/nested_block/cap_block/function_block/pixelarticons--remove-box.png" id="8_jaafl"]

@@ -3,6 +3,8 @@ class_name ValueBlock
 extends SocketBlock
 
 
+signal value_text_changed
+
 const COLOR_CHANGE_MULT := 10.
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color.WHITE,
@@ -53,9 +55,12 @@ func _ready() -> void:
 	if option_button.item_count > 0:
 		option_button.select.call_deferred(0)
 	
-	line_edit.text_changed.connect(set_color)
-	option_button.item_selected.connect(set_color)
-	data.text_changed.connect(set_color)
+	value_text_changed.connect(set_color)
+	for _signal in [
+		line_edit.text_changed,
+		option_button.item_selected,
+		data.text_changed]:
+			_signal.connect(value_text_changed.emit)
 	set_color()
 
 func _process(delta: float) -> void:

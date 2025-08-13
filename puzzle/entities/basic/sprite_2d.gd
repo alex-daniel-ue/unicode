@@ -1,15 +1,5 @@
-extends Sprite2D
+extends Entity
 
-
-var blocks: Array[Block]
-@export var block_data: Array[BlockData]
-
-
-func _ready() -> void:
-	for data in block_data:
-		var block := Utils.construct_block(data)
-		block.function = Callable(self, data.method)
-		blocks.append(block)
 
 ## text: MOVE [up/down/left/right]
 func move(from_this: Block) -> Utils.Result:

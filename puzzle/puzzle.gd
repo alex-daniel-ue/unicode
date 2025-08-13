@@ -2,9 +2,6 @@ class_name Puzzle
 extends Control
 
 
-@warning_ignore("unused_signal")
-signal function_block_defined(function_block: FunctionBlock)
-
 enum NotificationType {LOG, ERROR}
 
 const MAX_LOOPS := 9999
@@ -19,10 +16,8 @@ var error_block: Block
 
 @onready var canvas := $Canvas as ColorRect
 @onready var notification_container := $NotificationContainer as MarginContainer
-@onready var side_menus := [
-	$LeftSideMenu,
-	$RightSideMenu
-]
+@onready var toolbox_panel := $LeftSideMenu/ToolboxPanel as MarginContainer
+@onready var side_menus := [$LeftSideMenu, $RightSideMenu]
 
 
 func run_program() -> void:
@@ -55,6 +50,9 @@ func _get_begin() -> CapBlock:
 			if child.check_type(NestedBlockData.Type.BEGIN):
 				return child
 	return null
+
+func _on_function_defined(block: FunctionBlock) -> void:
+	toolbox_panel.add_block(block.func_call_block)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug"):

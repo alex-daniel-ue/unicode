@@ -200,13 +200,11 @@ func format_text() -> void:
 		push_warning(data.text)
 	
 	var raw_texts := data.text.split("{}")
-	if len(raw_texts)-1 != len(data.text_data):
-		if len(raw_texts)-1 > len(data.text_data):
-			push_error("(%s) Not enough Blocks inside text_data! (%s, %s)" %
-				[get_block_name(), len(raw_texts)-1, len(data.text_data)]
-			)
-			return
-		else: push_warning("(%s) Too many Blocks inside text_data.")
+	if len(raw_texts) > len(data.text_data)+1:
+		push_error("(%s) Not enough Blocks inside text_data! (%s, %s)" %
+			[get_block_name(), len(raw_texts)-1, len(data.text_data)]
+		)
+		return
 	
 	# Remove old children
 	for child in text_container.get_children():

@@ -45,6 +45,9 @@ static func construct_block(data: BlockData) -> Block:
 static func evaluate_arguments(this: Block) -> Result:
 	var results: Array
 	for block in this.get_text_blocks():
+		if not block.visible:
+			continue
+		
 		block.parent_nested = this if this is NestedBlock else this.parent_nested
 		
 		var result: Variant = block.function.call()
