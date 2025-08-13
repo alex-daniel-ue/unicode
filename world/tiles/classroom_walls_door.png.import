@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cx31tubvkav87"
-path="res://.godot/imported/Table(1).png-a53765ff1773ccf12ba58d22285e991f.ctex"
+uid="uid://ubl71jugeo0q"
+path="res://.godot/imported/classroom_walls_door.png-7ec54480fa95d0dbc90f594da22b67b6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Table(1).png"
-dest_files=["res://.godot/imported/Table(1).png-a53765ff1773ccf12ba58d22285e991f.ctex"]
+source_file="res://world/tiles/classroom_walls_door.png"
+dest_files=["res://.godot/imported/classroom_walls_door.png-7ec54480fa95d0dbc90f594da22b67b6.ctex"]
 
 [params]
 

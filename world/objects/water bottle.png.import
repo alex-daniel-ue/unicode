@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://33xmgud6sfp"
-path="res://.godot/imported/Whiteboard(1).png-9d1aba53dce0c30ed1535dbd3668fe16.ctex"
+uid="uid://dh6tai3m11ltx"
+path="res://.godot/imported/water bottle.png-02129359a3da985524417848a4f4d476.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Whiteboard(1).png"
-dest_files=["res://.godot/imported/Whiteboard(1).png-9d1aba53dce0c30ed1535dbd3668fe16.ctex"]
+source_file="res://world/objects/water bottle.png"
+dest_files=["res://.godot/imported/water bottle.png-02129359a3da985524417848a4f4d476.ctex"]
 
 [params]
 

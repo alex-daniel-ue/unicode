@@ -10,11 +10,10 @@
 	- function is reference towards functionblock, then _iterate_children
 	- share scope? probably (treat as nestedblock)
 - Array block
-- Dictionary block
 
 - Control flow blocks
 	for, repeat, return
-- "Get {} element of {}" block (for arrays, dictionaries)
+- "Get {} element of {}" block (for array)
 - Increment, decrement block
 - Initialize variable block
 	if existing, get val, if not set val (scope.get_or_add)
@@ -25,7 +24,6 @@
 	AND, OR, NOT
 
 - Puzzle environment
-- Run program button, where to put?
 - Entity class
 - Pickup entity (trash, papers, etc.)
 - Player entity

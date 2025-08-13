@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bw1q61qqin1k5"
-path="res://.godot/imported/Water-Bottle.png-87b53b86002cc30588d84e9450208d65.ctex"
+uid="uid://coqy7em15rsdy"
+path="res://.godot/imported/chair.png-a04507ba144b20cb35f1688fff5c2c26.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Water-Bottle.png"
-dest_files=["res://.godot/imported/Water-Bottle.png-87b53b86002cc30588d84e9450208d65.ctex"]
+source_file="res://world/objects/chair.png"
+dest_files=["res://.godot/imported/chair.png-a04507ba144b20cb35f1688fff5c2c26.ctex"]
 
 [params]
 

@@ -1,7 +1,10 @@
 extends Control
 
 
+signal block_dropped
+
 var current_drop: Block
+
 
 func _notification(what: int) -> void:
 	match what:
@@ -11,13 +14,13 @@ func _notification(what: int) -> void:
 				current_drop = null
 				return
 		
-		
-		
 		NOTIFICATION_DRAG_END:
 			if current_drop == null:
 				return
 			
-			if not get_viewport().gui_is_drag_successful():
+			if get_viewport().gui_is_drag_successful():
+				block_dropped.emit()
+			else:
 				if current_drop.origin_parent != null:
 					current_drop.origin_parent.add_child(current_drop)
 					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)

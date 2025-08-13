@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://danl3xs2lujna"
-path="res://.godot/imported/Table.png-23a2443d686d4e3f90398cd8718cc7b0.ctex"
+uid="uid://bx7xpv646bd8t"
+path="res://.godot/imported/lab computer.png-6b1d3c621c4be1ab9c3479843bb2da79.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Table.png"
-dest_files=["res://.godot/imported/Table.png-23a2443d686d4e3f90398cd8718cc7b0.ctex"]
+source_file="res://world/objects/lab computer.png"
+dest_files=["res://.godot/imported/lab computer.png-6b1d3c621c4be1ab9c3479843bb2da79.ctex"]
 
 [params]
 

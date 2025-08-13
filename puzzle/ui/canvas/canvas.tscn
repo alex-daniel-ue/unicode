@@ -41,3 +41,4 @@ stream = ExtResource("4_u8ea8")
 volume_db = 13.705
 
 [connection signal="block_dropped" from="DropManager" to="." method="_on_block_dropped"]
+[connection signal="block_dropped" from="SocketDropManager" to="." method="_on_block_dropped"]

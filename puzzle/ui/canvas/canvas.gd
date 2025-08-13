@@ -86,7 +86,6 @@ func handle_zooming(event: InputEvent) -> void:
 
 func clear() -> void:
 	for child in get_children():
-		Debug.log([child, child is Block])
 		if child is Block:
 			child.queue_free()
 

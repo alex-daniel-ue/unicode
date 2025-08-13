@@ -90,6 +90,8 @@ func pick_self(force_copy := false) -> Block:
 		var copy := clone()
 		copy.data = data.duplicate(true)
 		copy.data.toolbox = false
+		for text_data in copy.data.text_data:
+			text_data.toolbox = false
 		return copy
 	
 	origin_parent = get_parent()

@@ -7,7 +7,7 @@
 script = ExtResource("1_xkf7h")
 editable = true
 is_enum = true
-enum_values = PackedStringArray("up", "down", "left", "right")
+enum_values = PackedStringArray("\"up\"", "\"down\"", "\"left\"", "\"right\"")
 receptive = false
 block_name = "DirectionBlock"
 base_block_path = "uid://da50ywh5cb07s"

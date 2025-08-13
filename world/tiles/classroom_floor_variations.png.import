@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcnt3g7e3sw8c"
-path="res://.godot/imported/Whiteboard.png-96c896c6bfc9b1f02882a8e70a143e1a.ctex"
+uid="uid://yjshejkly7y7"
+path="res://.godot/imported/classroom_floor_variations.png-0c63f573bb440f8817d8ea678d66e086.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Whiteboard.png"
-dest_files=["res://.godot/imported/Whiteboard.png-96c896c6bfc9b1f02882a8e70a143e1a.ctex"]
+source_file="res://world/tiles/classroom_floor_variations.png"
+dest_files=["res://.godot/imported/classroom_floor_variations.png-0c63f573bb440f8817d8ea678d66e086.ctex"]
 
 [params]
 

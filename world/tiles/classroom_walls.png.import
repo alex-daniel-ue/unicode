@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8jtmldng7xxk"
-path="res://.godot/imported/furniture.png-36bab695dc1d48132ac4aa744a2496a5.ctex"
+uid="uid://u4lh8yp4x4ab"
+path="res://.godot/imported/classroom_walls.png-ad472802a352ca1c41b8b704a4651fad.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/tilesets/furniture.png"
-dest_files=["res://.godot/imported/furniture.png-36bab695dc1d48132ac4aa744a2496a5.ctex"]
+source_file="res://world/tiles/classroom_walls.png"
+dest_files=["res://.godot/imported/classroom_walls.png-ad472802a352ca1c41b8b704a4651fad.ctex"]
 
 [params]
 

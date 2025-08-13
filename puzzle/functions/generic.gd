@@ -71,10 +71,11 @@ static func function_print(this: Block) -> Utils.Result:
 	# Value checking
 	result = _resolve_var_or_val(args[0], this)
 	if result is Utils.Error: return result
-	var value: Variant = result.data
+	var value := "OUTPUT: %s" % str(result.data)
 	
 	# Actual operation
-	print(value)
+	var puzzle := this.get_node("/root/Puzzle")
+	puzzle.add_notification(value, 4., Puzzle.NotificationType.LOG)
 	
 	return Utils.Result.success()
 

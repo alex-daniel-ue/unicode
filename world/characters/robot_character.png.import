@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx84e7dru6k62"
-path="res://.godot/imported/floorboard-class.png-99bbed7081802ade886a5be8954d03c6.ctex"
+uid="uid://bjk0si0ovqu72"
+path="res://.godot/imported/robot_character.png-bf903247a31ea7ffc08d5902481d0b3d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/floorboard-class.png"
-dest_files=["res://.godot/imported/floorboard-class.png-99bbed7081802ade886a5be8954d03c6.ctex"]
+source_file="res://world/characters/robot_character.png"
+dest_files=["res://.godot/imported/robot_character.png-bf903247a31ea7ffc08d5902481d0b3d.ctex"]
 
 [params]
 

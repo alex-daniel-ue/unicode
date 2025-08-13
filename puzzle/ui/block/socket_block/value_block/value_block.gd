@@ -111,7 +111,6 @@ func set_text(to: String) -> void:
 	line_edit.text = to
 
 func set_editing(to: bool) -> void:
-	Debug.log([self, data.editable, data.toolbox, to])
 	line_edit.editable = to
 	option_button.disabled = not to
 

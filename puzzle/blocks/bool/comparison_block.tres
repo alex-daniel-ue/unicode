@@ -31,7 +31,7 @@ enum_values = PackedStringArray("==", "!=", ">", "<", ">=", "<=")
 receptive = false
 block_name = "SymbolBlock"
 base_block_path = "uid://da50ywh5cb07s"
-toolbox = false
+toolbox = true
 toolbox_category = "Uncategorized"
 draggable = false
 placeable = false

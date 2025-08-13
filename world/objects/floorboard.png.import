@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b70pnopbqh0vl"
-path="res://.godot/imported/Chair-v4-computer.png-2c2f522e0e6844dd4072eb79c989ac07.ctex"
+uid="uid://c3we108cohc6h"
+path="res://.godot/imported/floorboard.png-e11c779d0c0250d62039103e74bf186e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/sprites/Chair-v4-computer.png"
-dest_files=["res://.godot/imported/Chair-v4-computer.png-2c2f522e0e6844dd4072eb79c989ac07.ctex"]
+source_file="res://world/objects/floorboard.png"
+dest_files=["res://.godot/imported/floorboard.png-e11c779d0c0250d62039103e74bf186e.ctex"]
 
 [params]
 

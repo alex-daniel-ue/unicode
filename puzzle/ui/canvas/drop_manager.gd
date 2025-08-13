@@ -69,7 +69,7 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			current_drop = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant drag-and-drops, non-top-notched & Socket Blocks
+			# Disregard irrelevant drag-and-drops: non-top-notched & Socket Blocks
 			if not (current_drop is Block and current_drop.data.top_notch) or current_drop is SocketBlock:
 				current_drop = null
 				return
@@ -99,6 +99,7 @@ func _notification(what: int) -> void:
 			is_block_dragging = false
 			
 			# Drag-and-drop ended on valid container
+			Debug.log(drop_preview_container)
 			if drop_preview_container != null:
 				# Insert Block data
 				block_dropped.emit()

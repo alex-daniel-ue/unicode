@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djt31rqestcki"
-path="res://.godot/imported/classroom.png-3558afc8efd324e43156772eb60934a9.ctex"
+uid="uid://dxec0tggksyai"
+path="res://.godot/imported/classroom_floor_shadows.png-b743252b0a6abc228d382b5b1c3f6ca5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/tilesets/classroom.png"
-dest_files=["res://.godot/imported/classroom.png-3558afc8efd324e43156772eb60934a9.ctex"]
+source_file="res://world/tiles/classroom_floor_shadows.png"
+dest_files=["res://.godot/imported/classroom_floor_shadows.png-b743252b0a6abc228d382b5b1c3f6ca5.ctex"]
 
 [params]
 

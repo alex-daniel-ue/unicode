@@ -3,48 +3,73 @@ extends Control
 
 
 enum NotificationType {LOG, ERROR}
+enum SideMenu {LEFT, RIGHT}
 
 const MAX_LOOPS := 9999
 const MAX_DEPTH := 100
 
 static var is_program_running := false
 static var delaying_interpret := true
-static var block_interpret_delay := .4
+static var block_interpret_delay := .15
 
-var error_duration := 2.
+var error_duration := 4.
 var error_block: Block
 
 @export_group("Children")
-@export var canvas: ColorRect
+@export var error_timer: Timer
 @export var camera: Camera2D
+@export var canvas: ColorRect
 @export var notification_container: MarginContainer
-@export var toolbox_panel: MarginContainer
 @export var side_menus: Array[Panel]
+@export var toolbox_panel: MarginContainer
+@export var environment_panel: MarginContainer
 
+
+
+func _ready() -> void:
+	for block in environment_panel.get_exposed_blocks():
+		toolbox_panel.add_block(block)
 
 func run_program() -> void:
 	if is_program_running:
-		printt("Program is currently running!")
+		add_notification(
+			"Program is currently running!",
+			error_duration,
+			NotificationType.ERROR
+		)
 		return
-	
-	is_program_running = true
-	if error_block != null:
-		error_block.is_error = false
 	
 	var begin := _get_begin()
 	if begin == null:
-		push_warning("No start block detected!")
+		add_notification(
+			"No begin block detected!",
+			error_duration,
+			NotificationType.ERROR
+		)
 		return
+	
+	is_program_running = true
+	side_menus[SideMenu.RIGHT].show_menu(true)
+	side_menus[SideMenu.RIGHT].keep_shown = true
+	if error_block != null:
+		error_block.is_error = false
 	
 	var result := await begin.function.call() as Utils.Result
 	if result is Utils.Error:
 		error_block = result.block
 		error_block.is_error = true
-		get_tree().create_timer(error_duration).timeout.connect(func() -> void:
-			error_block.is_error = false)
-		notification_container.add_notification(result.message, error_duration * 2., NotificationType.ERROR)
+		
+		error_timer.start(error_duration)
+		error_timer.timeout.connect(func() -> void: error_block.is_error = false)
+		
+		add_notification(
+			result.message,
+			error_duration,
+			NotificationType.ERROR
+		)
 	
 	is_program_running = false
+	side_menus[SideMenu.RIGHT].keep_shown = false
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
@@ -53,9 +78,14 @@ func _get_begin() -> CapBlock:
 				return child
 	return null
 
-func _on_function_defined(block: FunctionBlock) -> void:
-	toolbox_panel.add_block(block.func_call_block)
+func add_notification(msg: String, dur: float, type: NotificationType) -> void:
+	side_menus[SideMenu.LEFT].show_menu(false)
+	notification_container.add_notification(msg, dur, type)
 
-func _on_canvas_clicked() -> void:
+func show_canvas() -> void:
+	release_focus()
 	for side_menu in side_menus:
 		side_menu.show_menu(false)
+
+func _on_function_defined(block: FunctionBlock) -> void:
+	toolbox_panel.add_block(block.func_call_block)

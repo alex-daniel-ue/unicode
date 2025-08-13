@@ -24,9 +24,6 @@ func _ready() -> void:
 	)
 	
 	confirm.confirmed.connect(puzzle.canvas.clear)
-	
-	#get_viewport().size_changed.connect(_update_position)
-	#_update_position()
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	return (
@@ -40,6 +37,3 @@ func _drop_data(_at_position: Vector2, drop: Variant) -> void:
 	if drop is FunctionBlock:
 		function_trashed.emit()
 	drop.queue_free()
-
-#func _update_position() -> void:
-	#confirm.position = puzzle.camera.get_screen_center_position() - confirm.size / 2.

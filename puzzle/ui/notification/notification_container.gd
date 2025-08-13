@@ -21,7 +21,7 @@ func add_notification(
 	) -> void:
 	
 	if vbox_container.get_child_count() >= MAXIMUM_NOTIFS:
-		vbox_container.get_child(0).queue_free()
+		vbox_container.get_child(vbox_container.get_child_count()-1).queue_free()
 	
 	var notif := notif_scn.instantiate()
 	
@@ -30,6 +30,7 @@ func add_notification(
 	notif.set_text(text)
 	
 	vbox_container.add_child(notif)
+	vbox_container.move_child(notif, 0)
 
 func _update_width() -> void:
 	position = Vector2.ZERO

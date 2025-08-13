@@ -36,6 +36,7 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 		not data.toolbox and
 		data.receptive and
 		drop is SocketBlock and
+		# Not in a Block's text or otherwise in the toolbox
 		(solid == null or not solid.data.toolbox)
 	)
 

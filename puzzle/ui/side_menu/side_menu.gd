@@ -27,6 +27,7 @@ var viewport_ratio := 1. / 3
 const MOVE_DURATION := [0.2, 0.4]  # [show, hide] durations
 var shown := true
 var hide_tween: Tween
+var keep_shown := false
 
 var contents: Array[Control] = []
 var current: Control
@@ -115,6 +116,8 @@ func get_hidden_position() -> Vector2:
 	return shown_pos
 
 func show_menu(do_show: bool, animated := true) -> void:
+	if keep_shown:
+		do_show = true
 	if contents.is_empty() or shown == do_show:
 		return
 	
@@ -137,7 +140,7 @@ func set_content(idx: int) -> void:
 	current = contents[idx]
 	current.visible = true
 	
-	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
+	current.size = Vector2(size.x - BUTTON_SIZE.x, size.y)
 	current.set_anchors_and_offsets_preset(
 		PRESET_TOP_RIGHT if reverse else PRESET_TOP_LEFT,
 		Control.PRESET_MODE_KEEP_SIZE
@@ -152,25 +155,25 @@ func update_layout() -> void:
 	
 	if current:
 		# Setting y to 0 is intentional
-		current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
+		current.size = Vector2(size.x - BUTTON_SIZE.x, size.y)
 	
 	var control_presets: Dictionary[Control, Control.LayoutPreset] = {
 		self : PRESET_LEFT_WIDE,
 		top_button_container : PRESET_TOP_RIGHT,
 		bottom_button_container : PRESET_BOTTOM_RIGHT,
-		current : PRESET_TOP_LEFT
+		current : PRESET_LEFT_WIDE
 	}
 	
 	if reverse:
 		control_presets[self] = PRESET_RIGHT_WIDE
 		control_presets[top_button_container] = PRESET_TOP_LEFT
 		control_presets[bottom_button_container] = PRESET_BOTTOM_LEFT
-		control_presets[current] = PRESET_TOP_RIGHT
+		control_presets[current] = PRESET_RIGHT_WIDE
 	
 	for control in control_presets:
 		control.set_anchors_and_offsets_preset(
 			control_presets[control],
-			Control.PRESET_MODE_KEEP_WIDTH
+			Control.PRESET_MODE_KEEP_SIZE
 		)
 	
 	position = get_shown_position() if shown else get_hidden_position()
