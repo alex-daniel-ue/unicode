@@ -11,5 +11,6 @@ var blocks: Array[Block]
 func _ready() -> void:
 	for data in block_data:
 		var block := Utils.construct_block(data)
+		printt(self, "setting entity func")
 		block.function = Callable(parent, data.method)
 		blocks.append(block)

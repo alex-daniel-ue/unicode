@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=4 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=74 format=4 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -33,16 +33,17 @@
 [ext_resource type="Texture2D" uid="uid://ubl71jugeo0q" path="res://world/tiles/classroom_walls_door.png" id="29_4oke1"]
 [ext_resource type="Script" uid="uid://bx2tr8dbj1s5t" path="res://puzzle/ui/side_menu/scripts/play_button.gd" id="29_q1sip"]
 [ext_resource type="Texture2D" uid="uid://coqy7em15rsdy" path="res://world/objects/chair.png" id="30_a68tm"]
-[ext_resource type="Script" uid="uid://qf3ykbmtfr5m" path="res://puzzle/environment_panel.gd" id="30_waw8j"]
+[ext_resource type="Script" uid="uid://qf3ykbmtfr5m" path="res://puzzle/ui/side_menu/panels/environment_panel.gd" id="30_waw8j"]
 [ext_resource type="Texture2D" uid="uid://c3we108cohc6h" path="res://world/objects/floorboard.png" id="31_waw8j"]
 [ext_resource type="Texture2D" uid="uid://bx7xpv646bd8t" path="res://world/objects/lab computer.png" id="32_kbmhu"]
 [ext_resource type="Texture2D" uid="uid://d306ae6eoky1h" path="res://world/objects/paper trash.png" id="33_nco8q"]
 [ext_resource type="Texture2D" uid="uid://dh6tai3m11ltx" path="res://world/objects/water bottle.png" id="34_ihuli"]
 [ext_resource type="Texture2D" uid="uid://dgki2o31njbxn" path="res://world/objects/whiteboard.png" id="35_qpsav"]
-[ext_resource type="Script" uid="uid://bbhnfi8flndq0" path="res://puzzle/robot_character.gd" id="39_4oke1"]
+[ext_resource type="Script" uid="uid://bbhnfi8flndq0" path="res://puzzle/entities/robot/robot_character.gd" id="39_4oke1"]
 [ext_resource type="Texture2D" uid="uid://bjk0si0ovqu72" path="res://world/characters/robot_character.png" id="39_l4fxj"]
-[ext_resource type="Script" uid="uid://qlqd7ghspjwt" path="res://puzzle/entities/entity.gd" id="40_6chpa"]
-[ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/basic/move_block.tres" id="41_4oke1"]
+[ext_resource type="Script" uid="uid://qlqd7ghspjwt" path="res://puzzle/entities/entity_data.gd" id="40_6chpa"]
+[ext_resource type="Resource" uid="uid://itswbfm87c8y" path="res://puzzle/entities/robot/move_block.tres" id="41_4oke1"]
+[ext_resource type="Resource" uid="uid://beebks6855iyb" path="res://puzzle/entities/robot/can_move_block.tres" id="44_waw8j"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_deynx"]
 viewport_path = NodePath("RightSideMenu/EnvironmentPanel/SubViewport")
@@ -350,6 +351,7 @@ vbox_container = NodePath("VBoxContainer")
 [node name="VBoxContainer" type="VBoxContainer" parent="NotificationContainer"]
 layout_mode = 2
 theme_override_constants/separation = 6
+alignment = 2
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
@@ -362,8 +364,9 @@ bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
 [node name="InformationPanel" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
 offset_right = 373.0
-offset_bottom = 221.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 0
@@ -469,7 +472,7 @@ shape = SubResource("RectangleShape2D_l4fxj")
 [node name="EntityData" type="Node" parent="RightSideMenu/EnvironmentPanel/SubViewport/Y-sort/RobotCharacter" node_paths=PackedStringArray("parent")]
 script = ExtResource("40_6chpa")
 parent = NodePath("..")
-block_data = Array[ExtResource("8_xr7vu")]([ExtResource("41_4oke1")])
+block_data = Array[ExtResource("8_xr7vu")]([ExtResource("41_4oke1"), ExtResource("44_waw8j")])
 
 [connection signal="child_entered_tree" from="Canvas" to="Canvas" method="_on_child_entered_tree"]
 [connection signal="clicked" from="Canvas" to="." method="show_canvas"]

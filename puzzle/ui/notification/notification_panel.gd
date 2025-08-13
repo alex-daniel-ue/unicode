@@ -13,7 +13,7 @@ var type: Puzzle.NotificationType
 
 
 func _ready() -> void:
-	var stylebox := get_theme_stylebox("panel") as StyleBoxFlat
+	var stylebox := (get_theme_stylebox("panel") as StyleBoxFlat).duplicate(true)
 	stylebox.border_color = TYPE_COLORS[type]
 	add_theme_stylebox_override("panel", stylebox)
 	

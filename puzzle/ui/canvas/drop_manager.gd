@@ -69,8 +69,8 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			current_drop = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant drag-and-drops: non-top-notched & Socket Blocks
-			if not (current_drop is Block and current_drop.data.top_notch) or current_drop is SocketBlock:
+			# Disregard irrelevant drag-and-drops: Socket Blocks
+			if current_drop is SocketBlock:
 				current_drop = null
 				return
 			
@@ -99,7 +99,6 @@ func _notification(what: int) -> void:
 			is_block_dragging = false
 			
 			# Drag-and-drop ended on valid container
-			Debug.log(drop_preview_container)
 			if drop_preview_container != null:
 				# Insert Block data
 				block_dropped.emit()
@@ -162,8 +161,8 @@ func update_drop_preview() -> void:
 func get_preview_container() -> Container:
 	# MEDIUM FIXME: This should probably be in _notification itself, but I can't
 	# find the ideal spot, or what to change instead.
-	#if not current_drop.data.top_notch:
-		#return null
+	if not current_drop.data.top_notch:
+		return null
 	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()

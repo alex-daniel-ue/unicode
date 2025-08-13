@@ -90,7 +90,7 @@ func generate_statement_text() -> Utils.Result:
 	var arg_count := len(data.text_data)-1
 	return Utils.Result.success(var_name + "{}".repeat(arg_count))
 
-func update_call_block() -> void:
+func update_call_block(__) -> void:
 	if func_call_block == null:
 		return
 	

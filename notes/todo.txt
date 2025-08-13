@@ -1,7 +1,5 @@
 - Block selection
-- _set_block_owner in block.gd should skip known already-set by amount of
-	children of non-set. does that make sense?
-- Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
+	Dragging from CapBlocks (or Blocks with no LowerLip) should drag all below it
 
 - Function block functionality
 	- child_exiting_tree & child_entered_tree, function block will have reference to 
@@ -24,9 +22,8 @@
 	AND, OR, NOT
 
 - Puzzle environment
-- Entity class
 - Pickup entity (trash, papers, etc.)
-- Player entity
-	Movement
-	Detection
-	what else?
+- Environment reset on play (needs loading from pre-set data!)
+	think about format of levels (xml/json?)
+		scene
+		win condition?

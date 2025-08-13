@@ -140,9 +140,9 @@ func set_content(idx: int) -> void:
 	current = contents[idx]
 	current.visible = true
 	
-	current.size = Vector2(size.x - BUTTON_SIZE.x, size.y)
+	current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
 	current.set_anchors_and_offsets_preset(
-		PRESET_TOP_RIGHT if reverse else PRESET_TOP_LEFT,
+		PRESET_RIGHT_WIDE if reverse else PRESET_LEFT_WIDE,
 		Control.PRESET_MODE_KEEP_SIZE
 	)
 
@@ -155,7 +155,7 @@ func update_layout() -> void:
 	
 	if current:
 		# Setting y to 0 is intentional
-		current.size = Vector2(size.x - BUTTON_SIZE.x, size.y)
+		current.size = Vector2(size.x - BUTTON_SIZE.x, 0)
 	
 	var control_presets: Dictionary[Control, Control.LayoutPreset] = {
 		self : PRESET_LEFT_WIDE,

@@ -20,8 +20,9 @@ func add_notification(
 		type: Puzzle.NotificationType
 	) -> void:
 	
-	if vbox_container.get_child_count() >= MAXIMUM_NOTIFS:
-		vbox_container.get_child(vbox_container.get_child_count()-1).queue_free()
+	var length := vbox_container.get_child_count()
+	if length >= MAXIMUM_NOTIFS:
+		vbox_container.get_child(length-1).queue_free()
 	
 	var notif := notif_scn.instantiate()
 	

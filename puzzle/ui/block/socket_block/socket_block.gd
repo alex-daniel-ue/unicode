@@ -17,8 +17,9 @@ func _ready() -> void:
 			super()
 			return
 	
-	function = func() -> Utils.Result:
-		return Utils.Result.success(Utils.typecast_string(get_raw_text()))
+	if data.source == null and data.method.is_empty():
+		function = func() -> Utils.Result:
+			return Utils.Result.success(Utils.typecast_string(get_raw_text()))
 	
 	super()
 	if data.toolbox:

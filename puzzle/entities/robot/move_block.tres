@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://itswbfm87c8y"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_pnif8"]
+[ext_resource type="Script" uid="uid://0ni3de62rk0" path="res://puzzle/ui/block/socket_block/value_block/value_data.gd" id="2_tik8y"]
+
+[sub_resource type="Resource" id="Resource_jwt6y"]
+script = ExtResource("2_tik8y")
+editable = true
+is_enum = true
+enum_values = PackedStringArray("\"up\"", "\"down\"", "\"left\"", "\"right\"")
+receptive = false
+block_name = "DirectionBlock"
+base_block_path = "uid://da50ywh5cb07s"
+toolbox = true
+toolbox_category = "Uncategorized"
+draggable = false
+placeable = false
+top_notch = false
+method = &""
+text = ""
+text_data = Array[ExtResource("1_pnif8")]([])
+metadata/_custom_type_script = "uid://0ni3de62rk0"
+
+[resource]
+script = ExtResource("1_pnif8")
+block_name = "MoveBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+toolbox_category = "Player"
+draggable = true
+placeable = true
+top_notch = true
+method = &"move"
+text = "move {}"
+text_data = Array[ExtResource("1_pnif8")]([SubResource("Resource_jwt6y")])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"

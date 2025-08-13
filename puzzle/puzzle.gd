@@ -49,8 +49,12 @@ func run_program() -> void:
 		return
 	
 	is_program_running = true
+	
 	side_menus[SideMenu.RIGHT].show_menu(true)
 	side_menus[SideMenu.RIGHT].keep_shown = true
+	
+	environment_panel.reset()
+	
 	if error_block != null:
 		error_block.is_error = false
 	

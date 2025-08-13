@@ -86,8 +86,16 @@ func handle_zooming(event: InputEvent) -> void:
 
 func clear() -> void:
 	for child in get_children():
-		if child is Block:
+		if not child is Block:
+			continue
+		
+		if not child is CapBlock:
 			child.queue_free()
+			continue
+		
+		for inner_child in child.mouth.get_children():
+			if inner_child is Block:
+				inner_child.queue_free()
 
 func _on_block_dropped() -> void:
 	#var sound := drop_sounds[randi() % len(drop_sounds)]
