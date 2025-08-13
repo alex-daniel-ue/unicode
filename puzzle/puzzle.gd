@@ -56,10 +56,6 @@ func _get_begin() -> CapBlock:
 func _on_function_defined(block: FunctionBlock) -> void:
 	toolbox_panel.add_block(block.func_call_block)
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("debug"):
-		run_program()
-
 func _on_canvas_clicked() -> void:
 	for side_menu in side_menus:
 		side_menu.show_menu(false)

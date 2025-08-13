@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://dtt1aynykie4d"]
+[gd_scene load_steps=32 format=3 uid="uid://dtt1aynykie4d"]
 
 [ext_resource type="Script" uid="uid://ba5hbnld2c7av" path="res://puzzle/puzzle.gd" id="1_dipl1"]
 [ext_resource type="PackedScene" uid="uid://buw8bbb2oqrni" path="res://puzzle/ui/canvas/canvas.tscn" id="1_vkqux"]
@@ -30,6 +30,7 @@
 [ext_resource type="Resource" uid="uid://dl6ueisx2kck2" path="res://puzzle/blocks/control flow/continue_block.tres" id="25_036m3"]
 [ext_resource type="Resource" uid="uid://bkctq4ajo3oi3" path="res://puzzle/blocks/control flow/function_define_block.tres" id="26_036m3"]
 [ext_resource type="Script" uid="uid://uvapno4520vq" path="res://puzzle/ui/notification/notification_container.gd" id="28_88ajp"]
+[ext_resource type="Script" uid="uid://bx2tr8dbj1s5t" path="res://puzzle/ui/side_menu/scripts/play_button.gd" id="29_q1sip"]
 
 [node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "camera", "notification_container", "toolbox_panel", "side_menus")]
 layout_mode = 3
@@ -82,8 +83,8 @@ theme_override_constants/separation = 6
 
 [node name="LeftSideMenu" parent="." instance=ExtResource("2_m1mme")]
 layout_mode = 1
-offset_left = -260.0
-offset_right = -259.333
+offset_left = -373.0
+offset_right = 50.0
 grow_vertical = 2
 top_icons = Array[Texture2D]([ExtResource("5_a3a4o"), ExtResource("6_88ajp")])
 bottom_icons = Array[Texture2D]([ExtResource("7_gsymp")])
@@ -91,7 +92,7 @@ bottom_button_scripts = Array[GDScript]([ExtResource("8_a3a4o")])
 
 [node name="InformationPanel" type="MarginContainer" parent="LeftSideMenu"]
 layout_mode = 1
-offset_right = 260.0
+offset_right = 373.0
 offset_bottom = 221.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -121,21 +122,21 @@ layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -890.667
-offset_right = -890.0
+offset_left = 67.0
+offset_right = 490.0
 grow_horizontal = 0
 grow_vertical = 2
 reverse = true
 top_icons = Array[Texture2D]([ExtResource("23_036m3")])
 bottom_icons = Array[Texture2D]([ExtResource("24_q1sip")])
-bottom_button_scripts = Array[GDScript]([null])
+bottom_button_scripts = Array[GDScript]([ExtResource("29_q1sip")])
 
 [node name="InformationPanel" type="MarginContainer" parent="RightSideMenu"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
+offset_left = -373.0
 offset_bottom = 221.0
 grow_horizontal = 0
 grow_vertical = 2
