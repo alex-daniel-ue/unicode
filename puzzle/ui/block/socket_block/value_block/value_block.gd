@@ -76,6 +76,7 @@ func _process(delta: float) -> void:
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	# Guaranteed all dropped ValueBlocks will be unsocketed
+	Debug.log(drop is ValueBlock)
 	return (
 		super(_at_position, drop) and
 		drop is ValueBlock

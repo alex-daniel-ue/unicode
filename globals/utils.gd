@@ -2,6 +2,8 @@ class_name Utils
 extends Object
 
 
+enum FunctionType {STATIC, ENTITY, LAMBDA}
+
 ## Currently primarily used in changing drop preview scale for when canvas is
 ## zoomed out.
 static var drag_preview_container: Control
@@ -97,6 +99,14 @@ static func validate_type(args: Array, idx: int, types: PackedInt32Array, this: 
 		return Result.error(err_msg, this)
 	
 	return Result.success(args[idx])
+
+static func is_func_type(type: FunctionType, data: BlockData) -> bool:
+	if data.method.is_empty():
+		return type == FunctionType.LAMBDA
+	elif data.source == null:
+		return type == FunctionType.ENTITY
+	else:
+		return type == FunctionType.STATIC
 
 static func to_ordinal(n: int) -> String:
 	var suffix := ""

@@ -50,7 +50,8 @@ func _ready() -> void:
 	data.text_changed.connect(format_text)
 	format_text()
 	
-	if not (data.source == null or data.method.is_empty()):
+	#if not (data.source == null or data.method.is_empty()):
+	if Utils.is_func_type(Utils.FunctionType.STATIC, data):
 		function = Callable(data.source, data.method).bind(self)
 
 func _process(delta: float) -> void:
@@ -148,7 +149,7 @@ func clone() -> Block:
 	# function will be executed on the duplicated block.
 	# This is desirable behavior for block functions, but not for entity methods.
 	# See functionality_notes.txt for more info on block functions/entity methods.
-	if data.source == null and not data.method.is_empty():
+	if Utils.is_func_type(Utils.FunctionType.ENTITY, data):
 		# Check if entity method
 		copy.function = Callable(function)
 	copy.function = copy.function.bind(copy)

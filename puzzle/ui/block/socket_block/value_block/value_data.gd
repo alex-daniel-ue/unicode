@@ -7,7 +7,10 @@ signal editable_changed(to: bool)
 signal enum_flag_changed(to: bool)
 
 @export_group("Value")
-@export var editable := true
+@export var editable := true:
+	set(value):
+		editable = value
+		editable_changed.emit()
 @export var is_enum := false:
 	set(value):
 		is_enum = value

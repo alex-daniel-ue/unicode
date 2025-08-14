@@ -48,7 +48,7 @@ func _ready() -> void:
 	regenerate_buttons()
 	
 	# Hide menu and update layout
-	show_menu(false, false)
+	show_menu(true, false)
 	update_layout()
 
 func _on_child_order_changed() -> void:

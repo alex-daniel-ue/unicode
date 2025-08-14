@@ -3,7 +3,7 @@ extends Button
 
 signal function_trashed(block: Block)
 
-var confirm := (preload("res://puzzle/ui/side_menu/scripts/confirm_popup.tscn")
+var confirm := (preload("res://puzzle/ui/side_menu/button scripts/confirm_popup.tscn")
 	.instantiate() as PopupPanel)
 
 @onready var puzzle := $"/root/Puzzle"

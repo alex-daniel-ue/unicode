@@ -8,7 +8,7 @@ signal text_changed
 @export_file("*.tscn") var base_block_path: String
 
 @export_group("Block")
-@export var toolbox := true
+var toolbox := true
 @export var toolbox_category := "Uncategorized"
 @export var draggable := true
 @export var placeable := true

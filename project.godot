@@ -27,6 +27,7 @@ window/stretch/scale_mode="integer"
 [file_customization]
 
 folder_colors={
+"res://levels/": "blue",
 "res://puzzle/blocks/": "purple",
 "res://puzzle/entities/": "teal",
 "res://puzzle/functions/": "red",

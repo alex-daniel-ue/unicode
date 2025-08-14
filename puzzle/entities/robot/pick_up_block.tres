@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=2 format=3 uid="uid://dsx5inedo8g5p"]
+
+[ext_resource type="Script" uid="uid://sdvo37wqlubv" path="res://puzzle/ui/block/block_data.gd" id="1_hjlkg"]
+
+[resource]
+script = ExtResource("1_hjlkg")
+block_name = "PickUpBlock"
+base_block_path = "uid://cu0q8n6labe07"
+toolbox = true
+toolbox_category = "Player"
+draggable = true
+placeable = true
+top_notch = true
+func_type = 0
+method = &"pick_up"
+text = "pick up"
+text_data = Array[ExtResource("1_hjlkg")]([])
+metadata/_custom_type_script = "uid://sdvo37wqlubv"

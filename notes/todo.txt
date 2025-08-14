@@ -23,7 +23,3 @@
 
 - Puzzle environment
 - Pickup entity (trash, papers, etc.)
-- Environment reset on play (needs loading from pre-set data!)
-	think about format of levels (xml/json?)
-		scene
-		win condition?

@@ -16,6 +16,7 @@ toolbox_category = "Uncategorized"
 draggable = false
 placeable = false
 top_notch = false
+func_type = 0
 method = &""
 text = "..."
 text_data = Array[ExtResource("2_ul12x")]([])

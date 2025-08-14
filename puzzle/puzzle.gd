@@ -53,7 +53,7 @@ func run_program() -> void:
 	side_menus[SideMenu.RIGHT].show_menu(true)
 	side_menus[SideMenu.RIGHT].keep_shown = true
 	
-	environment_panel.reset()
+	environment_panel.current_level.reset()
 	
 	if error_block != null:
 		error_block.is_error = false
@@ -90,6 +90,10 @@ func show_canvas() -> void:
 	release_focus()
 	for side_menu in side_menus:
 		side_menu.show_menu(false)
+
+func force_stop_program() -> void:
+	
+	pass
 
 func _on_function_defined(block: FunctionBlock) -> void:
 	toolbox_panel.add_block(block.func_call_block)

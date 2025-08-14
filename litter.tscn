@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvpcvhe0hdgd2"]
+
+[ext_resource type="Script" uid="uid://ro2t601024dp" path="res://litter.gd" id="1_ujm0e"]
+[ext_resource type="Texture2D" uid="uid://d306ae6eoky1h" path="res://world/objects/paper trash.png" id="2_vph0r"]
+[ext_resource type="Texture2D" uid="uid://dh6tai3m11ltx" path="res://world/objects/water bottle.png" id="3_xqbmn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ujm0e"]
+radius = 14.0
+
+[node name="Litter" type="Area2D" node_paths=PackedStringArray("sprite")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_ujm0e")
+litter_offsets = Dictionary[Texture2D, Vector2]({
+ExtResource("2_vph0r"): Vector2(-4, 0),
+ExtResource("3_xqbmn"): Vector2(-1.5, -1.25)
+})
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3.86904, 3.94075)
+texture = ExtResource("2_vph0r")
+offset = Vector2(4, 0)
+flip_h = true
+flip_v = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ujm0e")

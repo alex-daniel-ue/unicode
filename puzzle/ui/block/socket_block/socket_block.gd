@@ -17,13 +17,11 @@ func _ready() -> void:
 			super()
 			return
 	
-	if data.source == null and data.method.is_empty():
+	if Utils.is_func_type(Utils.FunctionType.LAMBDA, data):
 		function = func() -> Utils.Result:
 			return Utils.Result.success(Utils.typecast_string(get_raw_text()))
 	
 	super()
-	if data.toolbox:
-		data.receptive = false
 
 func _get_drag_data(at_position: Vector2) -> Variant:
 	if overridden_socket != null:
@@ -33,11 +31,12 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	var solid := get_solid_parent_block()
+	Debug.log([not data.toolbox, data.receptive, drop is SocketBlock, (solid == null or not solid.data.toolbox)])
 	return (
 		not data.toolbox and
 		data.receptive and
 		drop is SocketBlock and
-		# Not in a Block's text or otherwise in the toolbox
+		# if in a Block, Block must not be toolbox
 		(solid == null or not solid.data.toolbox)
 	)
 
