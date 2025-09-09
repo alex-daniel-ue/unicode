@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://c4f1tp3s11tra"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_3syst"]
+[ext_resource type="Script" uid="uid://csjw2llid2pph" path="res://puzzle/functions/generic.gd" id="1_vc66g"]
+[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value_editable_line_notype.tres" id="3_q6h8s"]
+
+[resource]
+script = ExtResource("1_3syst")
+name = "DeclareBlock"
+base_path = "uid://5ilfnnt1k22"
+type = 0
+toolbox = true
+category = "Generic"
+draggable = true
+placeable = true
+top_notch = true
+text = "declare var {}"
+text_blocks = Array[ExtResource("1_3syst")]([ExtResource("3_q6h8s")])
+Function/script = ExtResource("1_vc66g")
+Function/method = &"_declare_var"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

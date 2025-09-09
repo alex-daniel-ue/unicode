@@ -1,161 +1,194 @@
-extends Object
+extends Node
 
 
-## NOTE: Functions with bound arguments go in reverse, for example:
-## prints().bind(1, 2) prints "2 1"
-
-const BUG_WARNING := "\nThis error shouldn't be reached. This is a bug."
-
-
-## Text: DECLARE [VAR_NAME]
-static func function_declare_var(this: Block) -> Utils.Result:
-	var result := Utils.evaluate_and_check_arguments(1, this)
-	if result is Utils.Error: return result
-	var args := result.data as Array
+## text: print {value/variable}
+func _print(this: Block) -> void:
+	var args := await this.function.evaluate_args(1)
+	if Puzzle.has_errored:
+		return
 	
-	# Variable name validation
-	result = _validate_var_name(args, 0, this)
-	if result is Utils.Error: return result
-	var var_name := result.data as StringName
-	
-	var scope := this.parent_nested.scope
-	if scope.has(var_name):
-		return Utils.Result.error("Variable '%s' already exists in current scope!" % var_name, this)
-	
-	# Actual operation
-	scope[var_name] = null
-	
-	return Utils.Result.success()
-
-## Text: SET [VAR_NAME] TO [VAR_NAME/VALUE]
-static func function_set_var(this: Block) -> Utils.Result:
-	var result := Utils.evaluate_and_check_arguments(2, this)
-	if result is Utils.Error: return result
-	var args := result.data as Array
-	var scope := this.parent_nested.scope
-	
-	var idx := 0
-	# Variable name validation
-	result = _validate_var_name(args, idx, this)
-	if result is Utils.Error: return result
-	var var_name := result.data as StringName
-	
-	if not scope.has(var_name):
-		return Utils.Result.error("Variable '%s' doesn't exist in current scope!" % var_name, this)
-	
-	# Value checking (value)
-	idx = 1
-	result = _resolve_var_or_val(args[idx], this)
-	if result is Utils.Error: return result
-	var value: Variant = result.data
-	
-	if value == null:
-		return Utils.Result.error("Cannot set to nothing!", this)
-	
-	if value is StringName:
-		# Variable name validation
-		result = _validate_var_name(args, idx, this)
-		if result is Utils.Error: return result
-	
-	# Actual operation
-	scope[var_name] = value
-	
-	return Utils.Result.success()
-
-## Text: PRINT [VALUE/VAR_NAME]
-static func function_print(this: Block) -> Utils.Result:
-	var result := Utils.evaluate_and_check_arguments(1, this)
-	if result is Utils.Error: return result
-	var args := result.data as Array
-	
-	# Value checking
-	result = _resolve_var_or_val(args[0], this)
-	if result is Utils.Error: return result
-	var value := "OUTPUT: %s" % str(result.data)
-	
-	# Actual operation
-	var puzzle := this.get_node("/root/Puzzle")
-	puzzle.add_notification(value, 4., Puzzle.NotificationType.LOG)
-	
-	return Utils.Result.success()
-
-## text: [VALUE/VAR_NAME] [SYMBOL] [VALUE/VAR_NAME]
-static func function_comparison(this: Block) -> Utils.Result:
-	return function_operation(this,
-		["==", "!=", ">", "<", ">=", "<="],
-		[TYPE_INT, TYPE_FLOAT, TYPE_BOOL, TYPE_STRING]
-	)
-
-## text: [VALUE/VAR_NAME] [SYMBOL] [VALUE/VAR_NAME]
-static func function_arithmetic(this: Block) -> Utils.Result:
-	return function_operation(this,
-		["+", "-", "*", "/", "%"],
-		[TYPE_INT, TYPE_FLOAT, TYPE_STRING]
-	)
-
-## text: [VALUE/VAR_NAME] [SYMBOL] [VALUE/VAR_NAME]
-static func function_operation(
-		this: Block,
-		symbols: PackedStringArray,
-		types: PackedInt32Array
-	) -> Utils.Result:
-	
-	var result := Utils.evaluate_and_check_arguments(3, this)
-	if result is Utils.Error: return result
-	var args := result.data as Array
-	
-	for idx in [0, 2]:
-		result = _resolve_var_or_val(args[idx], this)
-		if result is Utils.Error: return result
-		args[idx] = result.data
+	var value: Variant = args[0]
+	if typeof(value) == TYPE_STRING_NAME:
+		var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
 		
-		result = Utils.validate_type(args, idx, types, this)
-		if result is Utils.Error: return result
+		if not parent_nested.scope.has(value):
+			this.function.error("Variable \"%s\" doesn't exist in the current scope!" % value)
+			return
+		
+		value = parent_nested.scope[value]
 	
-	match typeof(args[0]):
-		TYPE_INT, TYPE_FLOAT when typeof(args[2]) not in [TYPE_INT, TYPE_FLOAT]:
-			return Utils.Result.error("Operands should be of the same type (number)!", this)
-		TYPE_STRING when typeof(args[2]) != TYPE_STRING:
-			return Utils.Result.error("Operands should be of the same type (string)!", this)
+	var output := "OUTPUT: %s" % str(value)
+	this.function.notif_pushed.emit(output, Puzzle.NotificationType.LOG)
 	
-	# Wrap strings in quotes for Expression execution
-	for idx in [0, 2]:
-		if typeof(args[idx]) == TYPE_STRING:
-			args[idx] = '"%s"' % args[idx]
-	
-	if args[1] not in symbols: # Failsafe
-		return Utils.Result.error("Invalid symbol! %s" % BUG_WARNING, this)
-	
-	var expression := Expression.new()
-	if expression.parse("%s %s %s" % args) != OK:
-		var err_text := expression.get_error_text()
-		return Utils.Result.error("Parsing error: %s. %s" % [err_text, BUG_WARNING], this)
-	
-	var expression_result: Variant = expression.execute()
-	if expression.has_execute_failed():
-		var err_text := expression.get_error_text()
-		return Utils.Result.error("Execution error: %s. %s" % [err_text, BUG_WARNING], this)
-	
-	return Utils.Result.success(expression_result)
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
 
-
-static func _resolve_var_or_val(value: Variant, this: Block) -> Utils.Result:
-	var scope := this.parent_nested.scope
-	if this is NestedBlock:
-		scope = this.scope
+## text: declare {variable}
+func _declare_var(this: Block) -> void:
+	var args := await this.function.evaluate_args(1)
+	if Puzzle.has_errored:
+		return
 	
+	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
+	
+	var var_name := args[0] as StringName
+	if not var_name.is_valid_ascii_identifier():
+		this.function.error("'%s' isn't a valid variable name." % var_name)
+		return
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	if parent_nested.scope.has(var_name):
+		this.function.error("Variable '%s' already exists in scope." % var_name)
+		return
+	
+	parent_nested.scope[var_name] = null
+
+## text: set {variable} to {value/variable}
+func _set_var(this: Block) -> void:
+	var args := await this.function.evaluate_args(2)
+	if Puzzle.has_errored:
+		return
+	
+	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
+	var var_name := args[0] as StringName
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	
+	var value: Variant = args[1]
 	if value is StringName:
-		if not scope.has(value):
-			return Utils.Result.error("Variable '%s' doesn't exist in current scope!" % value, this)
-		return Utils.Result.success(scope[value])
-	return Utils.Result.success(value)
+		if not parent_nested.scope.has(value):
+			this.function.error("Variable '%s' doesn't exist in scope." % value)
+			return
+		value = parent_nested.scope[value]
+	
+	parent_nested.scope[var_name] = value
 
-static func _validate_var_name(args: Array, idx: int, this: Block) -> Utils.Result:
-	var result := Utils.validate_type(args, idx, [TYPE_STRING_NAME], this)
-	if result is Utils.Error: return result
-	var name := result.data as StringName
+## text: initialize {variable} to {variable/value}
+func _initialize(this: Block) -> void:
+	var args := await this.function.evaluate_args(2)
+	if Puzzle.has_errored:
+		return
 	
-	if not name.is_valid_ascii_identifier():
-		return Utils.Result.error("'%s' isn't a valid variable name!" % name, this)
+	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
 	
-	return Utils.Result.success(name)
+	var var_name := args[0] as StringName
+	if not var_name.is_valid_ascii_identifier():
+		this.function.error("'%s' isn't a valid variable name." % var_name)
+		return
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	if parent_nested.scope.has(var_name):
+		this.function.error("Variable '%s' already exists in the current scope." % var_name)
+		return
+	
+	var value: Variant = args[1]
+	if value is StringName:
+		if not parent_nested.scope.has(value):
+			this.function.error("Variable '%s' doesn't exist in the current scope." % value)
+			return
+		value = parent_nested.scope[value]
+	
+	parent_nested.scope[var_name] = value
+
+## text: {value/variable} {symbol} {value/variable}
+func _comparison(this: Block) -> Variant:
+	var args := await __resolve_operation_args(this)
+	if args.is_empty():
+		return
+
+	var value1 = args[0]
+	var symbol = args[1]
+	var value2 = args[2]
+	
+	var type1 = typeof(value1)
+	var type2 = typeof(value2)
+	
+	if type1 == TYPE_STRING or type2 == TYPE_STRING:
+		if type1 != type2:
+			this.function.error("Cannot compare a string with a non-string value.")
+			return
+		if symbol not in ["==", "!="]:
+			this.function.error("Can only use '==' and '!=' on strings." % symbol)
+			return
+	
+	elif (type1 in [TYPE_INT, TYPE_FLOAT] and type2 not in [TYPE_INT, TYPE_FLOAT]) or \
+		(type1 == TYPE_BOOL and type2 != TYPE_BOOL):
+			this.function.error("Cannot compare values of different types.")
+			return
+	
+	return _execute_expression(this, [value1, symbol, value2])
+
+## text: {value/variable} {symbol} {value/variable}
+func _arithmetic(this: Block) -> Variant:
+	var args := await __resolve_operation_args(this)
+	if args.is_empty():
+		return
+
+	var value1 = args[0]
+	var symbol = args[1]
+	var value2 = args[2]
+
+	var type1 = typeof(value1)
+	var type2 = typeof(value2)
+	
+	if type1 == TYPE_STRING or type2 == TYPE_STRING:
+		if type1 != TYPE_STRING or type2 != TYPE_STRING:
+			this.function.error("Both values must be strings for string concatenation.")
+			return
+		if symbol != "+":
+			this.function.error("Only '+' (concatenation) is a valid operation for strings.")
+			return
+	
+	elif type1 not in [TYPE_INT, TYPE_FLOAT] or type2 not in [TYPE_INT, TYPE_FLOAT]:
+		this.function.error("Arithmetic operations can only be performed on numbers.")
+		return
+	
+	return _execute_expression(this, [value1, symbol, value2])
+
+func _execute_expression(this: Block, args: Array) -> Variant:
+	if typeof(args[0]) == TYPE_STRING:
+		args[0] = '"%s"' % args[0]
+	if typeof(args[2]) == TYPE_STRING:
+		args[2] = '"%s"' % args[2]
+
+	var expression := Expression.new()
+	var parse_error := expression.parse("%s %s %s" % args)
+	if parse_error != OK:
+		this.function.error("Parsing error: %s." % expression.get_error_text())
+		return
+	
+	var result = expression.execute([], null, false, true)
+	if expression.has_execute_failed():
+		this.function.error("Execution error: %s." % expression.get_error_text())
+		return
+	
+	return result
+
+
+#region Generic helper methods
+func __resolve_operation_args(this: Block) -> Array:
+	var args := await this.function.evaluate_args(3)
+	if Puzzle.has_errored:
+		return []
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	
+	for i in [0, 2]:
+		if args[i] is StringName:
+			if not parent_nested.scope.has(args[i]):
+				this.function.error("Variable '%s' doesn't exist in the current scope!" % args[i])
+				return []
+			args[i] = parent_nested.scope[args[i]]
+	
+	return args
+#endregion

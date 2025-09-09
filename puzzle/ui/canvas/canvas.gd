@@ -1,7 +1,10 @@
+class_name PuzzleCanvas
 extends ColorRect
 
 
-signal clicked
+signal focus_clicked
+
+static var drag_preview: Block
 
 var is_panning := false
 var drag_start_position: Vector2
@@ -11,11 +14,8 @@ var zoom_speed := 0.05
 var min_zoom := 0.5
 var max_zoom := 2.0
 
-var drop_sound := preload("res://puzzle/ui/block/sounds/drop_1.mp3")
-
-@onready var drop_manager := $DropManager as Control
-@onready var audio_stream_player := $AudioStreamPlayer as AudioStreamPlayer
-
+@export var drop_manager: Control
+#@onready var audio_stream_player := $AudioStreamPlayer as AudioStreamPlayer
 
 func _ready() -> void:
 	var viewport_size := get_viewport_rect().size
@@ -26,7 +26,7 @@ func _gui_input(event: InputEvent) -> void:
 	handle_zooming(event)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	Utils.drag_preview_container.scale = scale
+	drag_preview.scale = scale
 	return (
 		drop is Block and
 		drop.data.placeable
@@ -34,26 +34,19 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 
 func _drop_data(at_position: Vector2, drop: Variant) -> void:
 	# drop is Block && drop.data.placeable
+	drop.orphan()
 	add_child(drop)
-	
-	var drag_preview := Utils.drag_preview_container.get_child(0)
 	drop.position = at_position - drag_preview.size / 2.
-	
-	# MEDIUM FIXME: Out of scope, should be in socket_block.gd
-	if drop is SocketBlock:
-		drop.overridden_socket = null
 
 func handle_panning(event: InputEvent) -> void:
-	if drop_manager.is_block_dragging:
-		return
-	
 	# Check is_panning first before checking hovered Control is Canvas
 	if not (is_panning or get_viewport().gui_get_hovered_control() == self):
 		return
 	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			clicked.emit()
+			if has_focus():
+				focus_clicked.emit()
 			get_viewport().gui_release_focus()
 			
 			is_panning = true
@@ -72,17 +65,15 @@ func handle_zooming(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed):
 		return
 	
-	var zoom_direction := 0
-	match event.button_index:
-		MOUSE_BUTTON_WHEEL_UP:
-			zoom_direction = 1
-		MOUSE_BUTTON_WHEEL_DOWN:
-			zoom_direction = -1
-		_:
-			return
+	var zoom_amount := zoom_speed
+	if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		zoom_amount *= -1
+	elif event.button_index != MOUSE_BUTTON_WHEEL_UP:
+		return
 	
-	scale *= 1 + zoom_direction * zoom_speed
-	scale = scale.clampf(min_zoom, max_zoom)
+	var new_scale := scale.x + zoom_amount
+	if min_zoom < new_scale and new_scale < max_zoom:
+		scale = Vector2(new_scale, new_scale)
 
 func clear() -> void:
 	for child in get_children():
@@ -93,11 +84,5 @@ func clear() -> void:
 			child.queue_free()
 			continue
 		
-		for inner_child in child.mouth.get_children():
-			if inner_child is Block:
-				inner_child.queue_free()
-
-func _on_block_dropped() -> void:
-	#var sound := drop_sounds[randi() % len(drop_sounds)]
-	audio_stream_player.stream = drop_sound
-	audio_stream_player.play(0.05)
+		for inner_block in child.get_blocks():
+			inner_block.queue_free()

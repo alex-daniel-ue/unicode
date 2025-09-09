@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://bxjjm3ig67sq2"]
+
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="1_34tds"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_naw0e"]
+[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="2_3r2a5"]
+[ext_resource type="Resource" uid="uid://d1l6xcrdba5wr" path="res://puzzle/blocks/_common/expression_receptive.tres" id="4_34tds"]
+
+[sub_resource type="Resource" id="Resource_dnf4h"]
+script = ExtResource("2_3r2a5")
+type = 3
+
+[resource]
+script = ExtResource("1_naw0e")
+name = "ElifBlock"
+base_path = "uid://cpqoky88f8xdb"
+type = 1
+nested = SubResource("Resource_dnf4h")
+toolbox = true
+category = "Selection"
+draggable = true
+placeable = true
+top_notch = true
+text = "elif {}"
+text_blocks = Array[ExtResource("1_naw0e")]([ExtResource("4_34tds")])
+Type/nested = SubResource("Resource_dnf4h")
+Function/script = ExtResource("1_34tds")
+Function/method = &"_if"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

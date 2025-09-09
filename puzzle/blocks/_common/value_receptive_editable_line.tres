@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://ku4fdpi3fdcc"]
+
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_gke33"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="2_sotoc"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_efw4j"]
+
+[sub_resource type="Resource" id="Resource_hb0ia"]
+script = ExtResource("1_gke33")
+receptive = true
+
+[sub_resource type="Resource" id="Resource_1vt8s"]
+script = ExtResource("2_sotoc")
+show_type = true
+editable = true
+editable_shown = true
+enum_flag = false
+enum_as_string = false
+enum_values = PackedStringArray()
+_socket_ref = SubResource("Resource_hb0ia")
+
+[resource]
+script = ExtResource("3_efw4j")
+name = "ReceptiveEditableLineBlock"
+base_path = "uid://bq81wkp8sa2wb"
+type = 3
+socket = SubResource("Resource_hb0ia")
+value = SubResource("Resource_1vt8s")
+toolbox = true
+category = "Uncategorized"
+draggable = false
+placeable = false
+top_notch = false
+text = "..."
+text_blocks = Array[ExtResource("3_efw4j")]([])
+Type/value = SubResource("Resource_1vt8s")
+Type/socket = SubResource("Resource_hb0ia")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

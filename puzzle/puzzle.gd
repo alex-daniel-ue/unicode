@@ -2,98 +2,101 @@ class_name Puzzle
 extends Control
 
 
-enum NotificationType {LOG, ERROR}
-enum SideMenu {LEFT, RIGHT}
+enum NotificationType {
+	LOG,
+	ERROR,
+	SUCCESS
+}
 
-const MAX_LOOPS := 9999
-const MAX_DEPTH := 100
+const NOTIF_DURATION := 2.0
+const MAX_DEPTH := 1000
+const MAX_LOOPS := 10000
 
-static var is_program_running := false
-static var delaying_interpret := true
-static var block_interpret_delay := .15
+static var is_running := false
+static var interpret_delay := 0.3
+static var has_errored := false
 
-var error_duration := 4.
-var error_block: Block
-
-@export_group("Children")
-@export var error_timer: Timer
-@export var camera: Camera2D
 @export var canvas: ColorRect
-@export var notification_container: MarginContainer
-@export var side_menus: Array[Panel]
-@export var toolbox_panel: MarginContainer
-@export var environment_panel: MarginContainer
+@export var side_panels: Array[Panel]
+@export var notification_stack: VBoxContainer
+@export var run_button: Button
+@export var stop_button: Button
+@export var trash_button: Button
 
+# NOTE: Avoid refactoring this. This is perfectly fine.
+var errored_blocks: Array[Block]
 
-
-func _ready() -> void:
-	for block in environment_panel.get_exposed_blocks():
-		toolbox_panel.add_block(block)
 
 func run_program() -> void:
-	if is_program_running:
-		add_notification(
-			"Program is currently running!",
-			error_duration,
+	for block in errored_blocks:
+		if is_instance_valid(block):
+			block.visual.set_error(false)
+	errored_blocks.clear()
+	
+	if is_running:
+		notification_stack.add(
+			"Program is already running.",
+			NOTIF_DURATION,
 			NotificationType.ERROR
 		)
 		return
 	
 	var begin := _get_begin()
 	if begin == null:
-		add_notification(
-			"No begin block detected!",
-			error_duration,
+		notification_stack.add(
+			"No begin block on Canvas.",
+			NOTIF_DURATION,
 			NotificationType.ERROR
 		)
 		return
 	
-	is_program_running = true
+	set_running_state(true)
+	side_panels[0].show_menu(false)
+	side_panels[1].show_menu(true)
 	
-	side_menus[SideMenu.RIGHT].show_menu(true)
-	side_menus[SideMenu.RIGHT].keep_shown = true
+	for panel in side_panels:
+		panel.keep = true
 	
-	environment_panel.current_level.reset()
+	await begin.function.run()
 	
-	if error_block != null:
-		error_block.is_error = false
+	set_running_state(false)
+	for panel in side_panels:
+		panel.keep = false
+
+func set_running_state(to: bool) -> void:
+	is_running = to
 	
-	var result := await begin.function.call() as Utils.Result
-	if result is Utils.Error:
-		error_block = result.block
-		error_block.is_error = true
-		
-		error_timer.start(error_duration)
-		error_timer.timeout.connect(func() -> void: error_block.is_error = false)
-		
-		add_notification(
-			result.message,
-			error_duration,
-			NotificationType.ERROR
-		)
+	run_button.disabled = to
+	trash_button.disabled = to
+	stop_button.disabled = not to
 	
-	is_program_running = false
-	side_menus[SideMenu.RIGHT].keep_shown = false
+	if not to:
+		has_errored = false
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
-		if child is CapBlock:
-			if child.check_type(NestedBlockData.Type.BEGIN):
-				return child
+		if child is CapBlock and child.is_type(NestedData.Type.BEGIN):
+			return child
 	return null
 
-func add_notification(msg: String, dur: float, type: NotificationType) -> void:
-	side_menus[SideMenu.LEFT].show_menu(false)
-	notification_container.add_notification(msg, dur, type)
+func hide_side_menus() -> void:
+	for panel in side_panels:
+		if panel.has_method(&"show_menu"):
+			panel.show_menu(false)
 
-func show_canvas() -> void:
-	release_focus()
-	for side_menu in side_menus:
-		side_menu.show_menu(false)
+func _on_block_errored(block: Block) -> void:
+	has_errored = true
+	if not errored_blocks.has(block):
+		errored_blocks.append(block)
 
-func force_stop_program() -> void:
-	
-	pass
+func _on_notif_pushed(message: String, type: NotificationType) -> void:
+	notification_stack.add(message, 2., type)
 
-func _on_function_defined(block: FunctionBlock) -> void:
-	toolbox_panel.add_block(block.func_call_block)
+func _on_stop_button_pressed() -> void:
+	if is_running:
+		has_errored = true
+		notification_stack.add(
+			"Program terminated.",
+			NOTIF_DURATION,
+			NotificationType.ERROR
+		)

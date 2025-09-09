@@ -1,0 +1,144 @@
+[gd_scene load_steps=12 format=3 uid="uid://bq81wkp8sa2wb"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_aaln3"]
+[ext_resource type="Script" uid="uid://caogwuts3hwxd" path="res://puzzle/ui/block/templates/socket/value/value_block.gd" id="2_ix1lh"]
+[ext_resource type="Texture2D" uid="uid://cgbux3a3yqg6t" path="res://puzzle/ui/block/templates/socket/value/debug_texture.png" id="3_ix1lh"]
+[ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="4_77jiv"]
+[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="5_420ih"]
+[ext_resource type="Script" uid="uid://c1m7ivmnlop5l" path="res://puzzle/ui/block/templates/socket/value/type_label.gd" id="5_1873k"]
+[ext_resource type="Script" uid="uid://2mu0khv36s0v" path="res://puzzle/ui/block/templates/socket/value/line_edit.gd" id="5_e00od"]
+[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="6_lnvnh"]
+[ext_resource type="Script" uid="uid://bmfm6vseh2n2g" path="res://puzzle/ui/block/component/derivations/text_comp_value.gd" id="7_ix1lh"]
+[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="8_d16wi"]
+[ext_resource type="Script" uid="uid://px6s8s2ecxm7" path="res://puzzle/ui/block/component/derivations/visual_comp_value.gd" id="9_s7p63"]
+
+[node name="ValueBlock" type="VBoxContainer" node_paths=PackedStringArray("editable_container", "type_label", "line_edit", "option_button", "text_container", "drag", "function", "text", "visual")]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 50.0
+offset_bottom = 50.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("1_aaln3")
+script = ExtResource("2_ix1lh")
+editable_container = NodePath("UpperLip/MarginContainer/EditableContainer")
+type_label = NodePath("UpperLip/MarginContainer/EditableContainer/HBoxContainer/TypeLabel")
+line_edit = NodePath("UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit")
+option_button = NodePath("UpperLip/MarginContainer/EditableContainer/HBoxContainer/OptionButton")
+text_container = NodePath("UpperLip/MarginContainer/TextContainer")
+drag = NodePath("DragComponent")
+function = NodePath("FunctionComponent")
+text = NodePath("TextComponent")
+visual = NodePath("VisualComponent")
+metadata/_access_modifiers = {
+&"_upper_lip": 2,
+&"_upper_lip_text": 2,
+&"drag": 2,
+&"editable_container": 2,
+&"function": 2,
+&"line_edit": 2,
+&"option_button": 2,
+&"text": 2,
+&"text_container": 2,
+&"upper_lip": 2,
+&"visual": 2
+}
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("3_ix1lh")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 25
+patch_margin_top = 24
+patch_margin_right = 25
+patch_margin_bottom = 24
+script = ExtResource("4_77jiv")
+actual_minimum_size = Vector2(50, 50)
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -23.0
+offset_top = -16.0
+offset_right = 23.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="EditableContainer" type="MarginContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer/EditableContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="UpperLip/MarginContainer/EditableContainer/HBoxContainer" node_paths=PackedStringArray("base")]
+visible = false
+self_modulate = Color(1, 1, 1, 0.498039)
+layout_mode = 2
+theme_type_variation = &"BlockLabel"
+text = "type"
+script = ExtResource("5_1873k")
+base = NodePath("../../../../..")
+
+[node name="LineEdit" type="LineEdit" parent="UpperLip/MarginContainer/EditableContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_filter = 1
+theme_type_variation = &"ValueLineEdit"
+placeholder_text = "..."
+expand_to_text_length = true
+context_menu_enabled = false
+emoji_menu_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+caret_blink = true
+script = ExtResource("5_e00od")
+
+[node name="OptionButton" type="OptionButton" parent="UpperLip/MarginContainer/EditableContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"ValueOptionButton"
+alignment = 1
+fit_to_longest_item = false
+
+[node name="TextContainer" type="VBoxContainer" parent="UpperLip/MarginContainer"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ComponentManager" type="Node" parent="."]
+script = ExtResource("5_420ih")
+
+[node name="DragComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("6_lnvnh")
+base = NodePath("..")
+
+[node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("8_d16wi")
+base = NodePath("..")
+
+[node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("7_ix1lh")
+base = NodePath("..")
+
+[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
+script = ExtResource("9_s7p63")
+color_affected = [NodePath("../UpperLip")]
+base = NodePath("..")
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="text_changed" from="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" to="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" method="_on_text_changed"]

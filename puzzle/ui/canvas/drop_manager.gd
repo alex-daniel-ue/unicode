@@ -1,64 +1,24 @@
 extends Control
-## 
-## Manages drop previews and insertion of Blocks on drag-and-drop events.
-## 
-## Basic process
-## 1. On drag start (NOTIFICATION_DRAG_BEGIN):
-##    a. Retrieve drag data and verify it's a valid Block
-##    b. Create translucent drop preview clone
-## 2. During drag (_process loop):
-##    a. Continuously find potential drop containers under cursor
-##    b. Determine optimal insertion index in container
-##    c. Position/update drop preview accordingly
-## 3. On drag end (NOTIFICATION_DRAG_END):
-##    a. Insert actual Block at preview position if valid
-##    b. Handle failed drops:
-##        - Return Block to origin if exists
-##        - Destroy toolbox-originated Blocks
-##    c. Clean up preview and reset state
-##
-## Container detection
-## - Traverses from hovered Control to parent Blocks
-## - Finds nearest valid NestedBlock container
-## - Handles special cases:
-##    * Drop previews: Uses top-most non-preview parent
-##    * StatementBlocks: Requires mouse in parent's mouth
-##    * NestedBlocks: Accepts drops directly into mouth
-##
-## Index determination
-## - Splits Blocks vertically at midpoint
-## - Above midpoint: Insert before hovered Block
-## - Below midpoint: Insert after hovered Block
-## - Handles edge cases (lips, empty containers, previews)
 
 
 signal block_dropped
 
-const DROP_PREVIEW_ALPHA := 0.4
-
-var is_block_dragging := false
-var current_drop: Block
+var current_block: Block
 
 var drop_preview: Control
-var drop_preview_container: Control
-var drop_preview_idx: int
+var dp_container: Control
+var dp_idx: int
 
-# Drop preview variables that update every frame
-var this_container: Control
-var this_idx: int
-
-@onready var canvas := $".." as ColorRect
+@export var canvas: ColorRect
 
 
 func _process(_delta: float) -> void:
-	if Engine.is_editor_hint():
-		return
-	
 	update_drop_preview()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
+			# Simulate a fake drop from releasing right-click (copy Block)
 			var fake_drop := InputEventMouseButton.new()
 			fake_drop.pressed = false
 			fake_drop.button_index = MOUSE_BUTTON_LEFT
@@ -67,111 +27,96 @@ func _unhandled_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			current_drop = get_viewport().gui_get_drag_data()
+			current_block = get_viewport().gui_get_drag_data()
 			
-			# Disregard irrelevant drag-and-drops: Socket Blocks
-			if current_drop is SocketBlock:
-				current_drop = null
+			if current_block is SocketBlock:
+				current_block = null
 				return
 			
-			is_block_dragging = true
-			
-			drop_preview = Utils.construct_block(current_drop.data)
-			if current_drop is NestedBlock:
-				var blocks := len(current_drop.get_blocks())
-				if blocks > 0:
-					var dummy_data := current_drop.dummy_block.duplicate(true) as BlockData
-					dummy_data.text = "%s blocks..." % blocks
-					drop_preview.mouth.add_child(Utils.construct_block(dummy_data))
-			
-			# Indicate drop preview status to itself and all child Blocks recursively
-			drop_preview.preview_type = Block.PreviewType.DROP
-			for child in Utils.get_children(drop_preview):
+			# Cannot merely duplicate, as preview_idx checks whether hovered
+			# Blocks are Block.PreviewType.DROP. Drop previews can be hovered.
+			drop_preview = Block.construct(current_block.data.duplicate(true))
+			drop_preview.name = "DropPreview_%s" % drop_preview.name
+			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
+			for child in Core.get_children_recursive(drop_preview):
 				if child is Block:
 					child.preview_type = Block.PreviewType.DROP
 			
-			drop_preview.name = "DropPreview_%s" % drop_preview.get_block_name()
-			drop_preview.modulate.a = DROP_PREVIEW_ALPHA
+			if drop_preview is NestedBlock:
+				if len(current_block.get_blocks()) > 0:
+					var dummy := PuzzleCanvas.drag_preview.mouth.get_child(0) as Block
+					drop_preview.mouth.add_child(dummy.duplicate(0))
+		
 		NOTIFICATION_DRAG_END:
-			# Disregard invalid data
-			if current_drop == null:
+			if current_block == null:
 				return
-			is_block_dragging = false
 			
-			# Drag-and-drop ended on valid container
-			if drop_preview_container != null:
+			current_block.visible = true
+			if dp_container != null:
 				# Insert Block data
+				current_block.orphan()
+				dp_container.add_child(current_block)
+				dp_container.move_child(current_block, dp_idx)
+				
 				block_dropped.emit()
-				drop_preview_container.add_child(current_drop)
-				drop_preview_container.move_child(current_drop, drop_preview_idx)
-			
-			# When the drop isn't successful (when _can_drop_data is false)
-			if not get_viewport().gui_is_drag_successful():
-				if current_drop.origin_parent != null:
-					# Return Block to origin
-					current_drop.origin_parent.add_child(current_drop)
-					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
-				else:
-					# If has no origin (like from a toolbox Block), destroy
-					current_drop.queue_free()
 			
 			# Delete the preview and remove references
 			drop_preview.queue_free()
-			for thing in [drop_preview, drop_preview_container, current_drop]:
-				thing = null
+			drop_preview = null
+			dp_container = null
+			current_block = null
 
 func update_drop_preview() -> void:
 	if drop_preview == null:
 		return
 	
-	if get_viewport().gui_is_dragging(): # MILD FIXME: Failsafe or redundant?
-		this_container = get_preview_container()
+	var this_container := get_preview_container()
+	
+	if this_container != null:
+		var this_idx := get_preview_idx(this_container)
+		PuzzleCanvas.drag_preview.visible = false
 		
-		if this_container != null:
-			this_idx = get_preview_idx(this_container)
-			Utils.drag_preview_container.visible = false
+		# If the preview container has changed
+		if this_container != dp_container:
+			# If there was a previous container
+			if dp_container != null:
+				dp_container.remove_child(drop_preview)
 			
-			# If the preview container has changed
-			if this_container != drop_preview_container:
-				# If there was a previous container
-				if drop_preview_container != null:
-					drop_preview_container.remove_child(drop_preview)
-				
-				this_container.add_child(drop_preview)
-				this_container.move_child(drop_preview, this_idx)
-				
-				# Update stored container, index, and thresholds
-				drop_preview_container = this_container
-				drop_preview_idx = this_idx
-				
-			# If only the index has changed
-			elif this_idx != drop_preview_idx:
-				# Move to and store the new index
-				drop_preview_container.move_child(drop_preview, this_idx)
-				drop_preview_idx = this_idx
+			this_container.add_child(drop_preview)
+			this_container.move_child(drop_preview, this_idx)
+			
+			# Update stored container, index, and thresholds
+			dp_container = this_container
+			dp_idx = this_idx
+			
+		# If only the index has changed
+		elif this_idx != dp_idx:
+			# Move to and store the new index
+			dp_container.move_child(drop_preview, this_idx)
+			dp_idx = this_idx
+	
+	# If previewing nothing, but recently previewed
+	elif dp_container != null:
+		if drop_preview.get_parent() == dp_container:
+			dp_container.remove_child(drop_preview)
+		dp_container = null
 		
-		# If previewing nothing, but recently previewed
-		elif drop_preview_container != null:
-			if drop_preview.get_parent() == drop_preview_container:
-				drop_preview_container.remove_child(drop_preview)
-			drop_preview_container = null
-			
-			Utils.drag_preview_container.visible = true
+		PuzzleCanvas.drag_preview.visible = true
 
 func get_preview_container() -> Container:
-	# MEDIUM FIXME: This should probably be in _notification itself, but I can't
-	# find the ideal spot, or what to change instead.
-	if not current_drop.data.top_notch:
+	if not current_block.data.top_notch:
 		return null
 	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()
-	var block := Utils.get_block(control)
+	var block := Core.get_block(control)
 	
 	# Fail early when hovering over nothing or non-Block
 	# Toolbox Blocks can't be dropped onto
 	if block == null or not block is Block or block.data.toolbox:
 		return null
+	
+	block = block.get_parent_matching(Block.IS_SOLID)
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
 	var parent_block := block.get_parent_block()
@@ -207,29 +152,28 @@ func get_preview_container() -> Container:
 			return null
 		
 		elif block is NestedBlock:
-			if block._can_drop_data(mouse_pos, drop_preview):
+			if block._can_drop_data(mouse_pos, current_block):
 				return block.mouth
 	
 	push_error('Unhandled case for drop container! "%s" of Block "%s"' % [control, block])
 	return null
 
 func get_preview_idx(container: Container) -> int:
-	assert(Utils.get_block(container) != null, "Passed Container is null.")
 	var end := container.get_child_count()
 	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()
-	var block := Utils.get_block(control)
+	var block := Core.get_block(control).get_parent_matching(Block.IS_SOLID)
 	
 	var center_y := block.global_position.y + block.size.y * 0.5 * canvas.scale.y
 	var is_above := mouse_pos.y < center_y
 	
 	# No change
 	if block.preview_type == Block.PreviewType.DROP:
-		return drop_preview_idx
+		return dp_idx
 	
-	# Guaranteed NestedBlock via initial assert() above
-	var container_block: NestedBlock = Utils.get_block(container)
+	# Guaranteed NestedBlock...?
+	var container_block := Core.get_block(container).get_parent_matching(Block.IS_SOLID) as NestedBlock
 	if not container_block.within_mouth(mouse_pos):
 		if is_above or not container_block.lower_lip:
 			return 0
@@ -241,9 +185,11 @@ func get_preview_idx(container: Container) -> int:
 	
 	# Emulate a while loop, but with mutable index/counter
 	var idx := -1
-	for child: Block in children:
+	for child in children:
 		idx += 1
-		if not child is Block: continue
+		
+		if not child is Block:
+			continue
 		
 		# Don't count drop preview (? it works IDK)
 		if child.preview_type == Block.PreviewType.DROP:

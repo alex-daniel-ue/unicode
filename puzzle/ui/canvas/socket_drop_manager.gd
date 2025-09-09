@@ -1,29 +1,26 @@
 extends Control
 
 
-signal block_dropped
-
-var current_drop: Block
+var current_block: Block
 
 
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			current_drop = get_viewport().gui_get_drag_data()
-			if not current_drop is SocketBlock:
-				current_drop = null
+			current_block = get_viewport().gui_get_drag_data()
+			
+			if not current_block is SocketBlock:
+				current_block = null
 				return
 		
 		NOTIFICATION_DRAG_END:
-			if current_drop == null:
+			if current_block == null:
 				return
 			
-			if get_viewport().gui_is_drag_successful():
-				block_dropped.emit()
-			else:
-				if current_drop.origin_parent != null:
-					current_drop.origin_parent.add_child(current_drop)
-					current_drop.origin_parent.move_child(current_drop, current_drop.origin_idx)
-					
-					if current_drop.overridden_socket != null:
-						current_drop.overridden_socket.visible = false
+			current_block.visible = true
+			
+			if current_block.overridden_socket != null:
+				if get_viewport().gui_is_drag_successful():
+					current_block.overridden_socket = null
+				else:
+					current_block.overridden_socket.visible = false

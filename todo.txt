@@ -1,0 +1,6 @@
+
+2. Socket drop preview onto possible receptacles.
+3. Begin blocks in Toolbox shouldn't accept blocks before being put on the Canvas.
+	An alternative would be having the begin block already be inside the Canvas
+	from the start.
+4. Pin button on panels, stopping them from being hidden. (use keep_shown)

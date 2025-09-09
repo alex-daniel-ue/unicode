@@ -1,0 +1,93 @@
+[gd_scene load_steps=10 format=3 uid="uid://cuvgglg6xlr6p"]
+
+[ext_resource type="Texture2D" uid="uid://byl0ec0u44q3s" path="res://puzzle/ui/block/templates/socket/expression/texture.png" id="1_8l24w"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_82gmi"]
+[ext_resource type="Script" uid="uid://d2eomgwrbistq" path="res://puzzle/ui/block/templates/socket/expression/expression_block.gd" id="1_nm1rc"]
+[ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="2_uxx3b"]
+[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="3_315uh"]
+[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="5_82gmi"]
+[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="5_nm1rc"]
+[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="6_3br77"]
+[ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="9_5td25"]
+
+[node name="ExpressionBlock" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
+custom_minimum_size = Vector2(50, 50)
+offset_right = 64.0
+offset_bottom = 64.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("1_82gmi")
+script = ExtResource("1_nm1rc")
+text_container = NodePath("UpperLip/MarginContainer/TextContainer")
+drag = NodePath("DragComponent")
+function = NodePath("FunctionComponent")
+text = NodePath("TextComponent")
+visual = NodePath("VisualComponent")
+metadata/_access_modifiers = {
+&"_upper_lip": 2,
+&"_upper_lip_text": 2,
+&"drag": 2,
+&"function": 2,
+&"text": 2,
+&"text_container": 2,
+&"visual": 2
+}
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("1_8l24w")
+region_rect = Rect2(26, 70, 132, 72)
+patch_margin_left = 32
+patch_margin_top = 8
+patch_margin_right = 32
+patch_margin_bottom = 8
+script = ExtResource("2_uxx3b")
+actual_minimum_size = Vector2(50, 50)
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.5
+offset_top = -19.5
+offset_right = 8.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="TextContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ComponentManager" type="Node" parent="."]
+script = ExtResource("3_315uh")
+
+[node name="DragComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("5_nm1rc")
+base = NodePath("..")
+
+[node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("6_3br77")
+base = NodePath("..")
+
+[node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("5_82gmi")
+base = NodePath("..")
+
+[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
+script = ExtResource("9_5td25")
+color_affected = [NodePath("../UpperLip")]
+base = NodePath("..")
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]

@@ -1,0 +1,99 @@
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://dndk60sn664bq"]
+
+[ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="1_02q3g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v43nb"]
+bg_color = Color(0.0077, 0.0077, 0.07, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.407843, 0, 1, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 10
+shadow_color = Color(0, 0, 0, 0.188235)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02q3g"]
+bg_color = Color(0.0118993, 0.0118993, 0.106258, 1)
+shadow_color = Color(0, 0, 0, 0.25098)
+shadow_size = 28
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_02q3g"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7qx72"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jay4a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v43nb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ddr13"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bwr3i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xweav"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_08s51"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u47ie"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mbw5q"]
+
+[resource]
+Block/base_type = &"VBoxContainer"
+Block/constants/separation = 0
+BlockLabel/base_type = &"Label"
+BlockLabel/colors/font_color = Color(0, 0, 0, 1)
+BlockLabel/constants/line_spacing = 2
+BlockLabel/constants/outline_size = 0
+BlockLabel/font_sizes/font_size = 16
+Label/constants/line_spacing = 5
+Label/constants/outline_size = 5
+Label/font_sizes/font_size = 22
+Label/fonts/font = ExtResource("1_02q3g")
+NotificationLabel/base_type = &"Label"
+NotificationLabel/font_sizes/font_size = 16
+NotificationPanel/base_type = &"PanelContainer"
+NotificationPanel/styles/panel = SubResource("StyleBoxFlat_v43nb")
+PopupMenu/constants/v_separation = 8
+PopupMenu/fonts/font = ExtResource("1_02q3g")
+SidePanel/base_type = &"Panel"
+SidePanel/styles/panel = SubResource("StyleBoxFlat_02q3g")
+ToolboxHeading/base_type = &"Label"
+ToolboxHeading/font_sizes/font_size = 32
+ToolboxSubheading/base_type = &"Label"
+ToolboxSubheading/font_sizes/font_size = 24
+ValueLineEdit/base_type = &"LineEdit"
+ValueLineEdit/colors/caret_color = Color(0, 0, 0, 1)
+ValueLineEdit/colors/font_color = Color(0, 0, 0, 1)
+ValueLineEdit/colors/font_placeholder_color = Color(0, 0, 0, 0.498039)
+ValueLineEdit/colors/font_selected_color = Color(0, 0, 0, 1)
+ValueLineEdit/constants/caret_width = 1
+ValueLineEdit/constants/minimum_character_width = 0
+ValueLineEdit/fonts/font = ExtResource("1_02q3g")
+ValueLineEdit/styles/focus = SubResource("StyleBoxEmpty_02q3g")
+ValueLineEdit/styles/normal = SubResource("StyleBoxEmpty_7qx72")
+ValueLineEdit/styles/read_only = SubResource("StyleBoxEmpty_jay4a")
+ValueOptionButton/base_type = &"OptionButton"
+ValueOptionButton/colors/font_color = Color(0, 0, 0, 1)
+ValueOptionButton/colors/font_disabled_color = Color(0, 0, 0, 0.498039)
+ValueOptionButton/colors/font_focus_color = Color(0, 0, 0, 1)
+ValueOptionButton/colors/font_hover_color = Color(0, 0, 0, 1)
+ValueOptionButton/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+ValueOptionButton/colors/font_outline_color = Color(0, 0, 0, 1)
+ValueOptionButton/colors/font_pressed_color = Color(0, 0, 0, 1)
+ValueOptionButton/constants/arrow_margin = 0
+ValueOptionButton/constants/h_separation = 2
+ValueOptionButton/constants/modulate_arrow = 1
+ValueOptionButton/fonts/font = ExtResource("1_02q3g")
+ValueOptionButton/styles/disabled = SubResource("StyleBoxEmpty_v43nb")
+ValueOptionButton/styles/focus = SubResource("StyleBoxEmpty_ddr13")
+ValueOptionButton/styles/hover = SubResource("StyleBoxEmpty_bwr3i")
+ValueOptionButton/styles/hover_mirrored = SubResource("StyleBoxEmpty_xweav")
+ValueOptionButton/styles/hover_pressed = SubResource("StyleBoxEmpty_08s51")
+ValueOptionButton/styles/normal = SubResource("StyleBoxEmpty_u47ie")
+ValueOptionButton/styles/pressed = SubResource("StyleBoxEmpty_mbw5q")

@@ -1,44 +1,42 @@
-[gd_scene load_steps=7 format=3 uid="uid://buw8bbb2oqrni"]
+[gd_scene load_steps=6 format=3 uid="uid://blied6nj0jtq5"]
 
-[ext_resource type="Script" uid="uid://c7hnacb62jbl2" path="res://puzzle/ui/canvas/canvas.gd" id="1_75aqd"]
-[ext_resource type="Shader" uid="uid://bso1h7okeonrg" path="res://themes/shaders/canvas_bg.gdshader" id="1_uur5t"]
-[ext_resource type="Script" uid="uid://hfalmbcw7k7l" path="res://puzzle/ui/canvas/drop_manager.gd" id="2_p4jra"]
-[ext_resource type="AudioStream" uid="uid://didnewleaum75" path="res://puzzle/ui/block/sounds/drop_1.mp3" id="4_u8ea8"]
-[ext_resource type="Script" uid="uid://4m1ygxccpes0" path="res://puzzle/ui/canvas/socket_drop_manager.gd" id="4_vifbn"]
+[ext_resource type="Script" uid="uid://g23mxvs1iv8r" path="res://puzzle/ui/canvas/drop_manager.gd" id="1_15w7l"]
+[ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_c3b4b"]
+[ext_resource type="Script" uid="uid://cqxa806q7p01u" path="res://puzzle/ui/canvas/canvas.gd" id="1_uoc13"]
+[ext_resource type="Script" uid="uid://bihny42mf57sx" path="res://puzzle/ui/canvas/socket_drop_manager.gd" id="3_wplfe"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_u8ea8"]
-shader = ExtResource("1_uur5t")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
+shader = ExtResource("1_c3b4b")
 shader_parameter/cell_size = 25.0
 shader_parameter/dot_size = 0.05
-shader_parameter/background_color = Color(0.12, 0.08, 0.12, 1)
-shader_parameter/dot_color = Color(0.375998, 0.274638, 0.375883, 1)
+shader_parameter/background_color = Color(0.015227, 0.0145274, 0.14699, 1)
+shader_parameter/dot_color = Color(0.0901598, 0.264478, 0.391381, 1)
 shader_parameter/resolution = Vector2(1152, 648)
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Canvas" type="ColorRect"]
-material = SubResource("ShaderMaterial_u8ea8")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_75aqd")
+[node name="Canvas" type="ColorRect" node_paths=PackedStringArray("drop_manager")]
+material = SubResource("ShaderMaterial_vifbn")
+offset_left = -5000.0
+offset_top = -5000.0
+offset_right = 5000.0
+offset_bottom = 5000.0
+focus_mode = 1
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_uoc13")
+drop_manager = NodePath("DropManager")
+metadata/_access_modifiers = {
+&"drop_manager": 2
+}
 
-[node name="DropManager" type="Control" parent="."]
+[node name="DropManager" type="Control" parent="." node_paths=PackedStringArray("canvas")]
 anchors_preset = 0
-script = ExtResource("2_p4jra")
+script = ExtResource("1_15w7l")
+canvas = NodePath("..")
 
 [node name="SocketDropManager" type="Control" parent="."]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("4_vifbn")
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_u8ea8")
-volume_db = 13.705
-
-[connection signal="block_dropped" from="DropManager" to="." method="_on_block_dropped"]
-[connection signal="block_dropped" from="SocketDropManager" to="." method="_on_block_dropped"]
+script = ExtResource("3_wplfe")

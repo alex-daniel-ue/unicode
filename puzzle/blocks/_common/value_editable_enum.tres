@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://bijgd1hgs3gg2"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_8xhwh"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_olv7a"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="2_4xtaq"]
+
+[sub_resource type="Resource" id="Resource_5vdka"]
+script = ExtResource("1_olv7a")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_mk5nd"]
+script = ExtResource("2_4xtaq")
+show_type = true
+editable = true
+editable_shown = true
+enum_flag = true
+enum_values = PackedStringArray()
+enum_as_string = false
+_socket_ref = SubResource("Resource_5vdka")
+
+[resource]
+script = ExtResource("1_8xhwh")
+name = "ValueEditableEnumBlock"
+base_path = "uid://bq81wkp8sa2wb"
+type = 3
+socket = SubResource("Resource_5vdka")
+value = SubResource("Resource_mk5nd")
+toolbox = true
+category = "Uncategorized"
+draggable = false
+placeable = false
+top_notch = false
+text = ""
+text_blocks = Array[ExtResource("1_8xhwh")]([])
+Type/value = SubResource("Resource_mk5nd")
+Type/socket = SubResource("Resource_5vdka")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

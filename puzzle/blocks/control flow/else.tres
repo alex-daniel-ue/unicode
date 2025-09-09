@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3 uid="uid://d2m2q1m1gwxsg"]
+
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="1_stgik"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_ycgc5"]
+[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="2_jutci"]
+
+[sub_resource type="Resource" id="Resource_jncwb"]
+script = ExtResource("2_jutci")
+type = 2
+
+[resource]
+script = ExtResource("1_ycgc5")
+name = "ElseBlock"
+base_path = "uid://cpqoky88f8xdb"
+type = 1
+nested = SubResource("Resource_jncwb")
+toolbox = true
+category = "Selection"
+draggable = true
+placeable = true
+top_notch = true
+text = "else"
+text_blocks = Array[ExtResource("1_ycgc5")]([])
+Type/nested = SubResource("Resource_jncwb")
+Function/script = ExtResource("1_stgik")
+Function/method = &"_else"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

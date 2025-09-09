@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3 uid="uid://ih285nrl3m6r"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_248as"]
+[ext_resource type="Script" uid="uid://csjw2llid2pph" path="res://puzzle/functions/generic.gd" id="1_ro2y0"]
+[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value_editable_line_notype.tres" id="3_j7uow"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value_receptive_editable_line.tres" id="3_ro2y0"]
+
+[resource]
+script = ExtResource("1_248as")
+name = "SetBlock"
+base_path = "uid://5ilfnnt1k22"
+type = 0
+toolbox = true
+category = "Generic"
+draggable = true
+placeable = true
+top_notch = true
+text = "set var {} to {}"
+text_blocks = Array[ExtResource("1_248as")]([ExtResource("3_j7uow"), ExtResource("3_ro2y0")])
+Function/script = ExtResource("1_ro2y0")
+Function/method = &"_set_var"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

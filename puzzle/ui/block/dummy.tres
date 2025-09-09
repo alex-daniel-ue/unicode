@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=2 format=3 uid="uid://cmm6li8oodere"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_ewwdl"]
+
+[resource]
+script = ExtResource("1_ewwdl")
+name = "DummyBlock"
+base_path = "uid://5ilfnnt1k22"
+method = &""
+toolbox = true
+category = "Uncategorized"
+draggable = false
+placeable = false
+top_notch = true
+text = "%s block%s..."
+text_blocks = Array[ExtResource("1_ewwdl")]([])
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

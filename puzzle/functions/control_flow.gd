@@ -1,159 +1,240 @@
-extends Object
+extends Node
 
 
-enum Flag {
-	BREAK, CONTINUE
+enum ControlSignal {
+	NONE,
+	CONTINUE,
+	BREAK,
+}
+
+# Manual const Set
+const ITERATIVE_BLOCKS := {
+	NestedData.Type.WHILE: true,
+	NestedData.Type.FOR: true,
+	NestedData.Type.REPEAT: true,
 }
 
 
-## text: BEGIN CODE
-static func function_begin(this: NestedBlock) -> Utils.Result:
-	# No argument checking required
-	this.reset()
+func _begin(this: NestedBlock) -> void:
+	this.scope.clear()
+	this.depth = 0
 	
-	var result: Variant = await _iterate_children(this)
-	if result is Utils.Error: return result
-	
-	return Utils.Result.success()
-	
-	@warning_ignore("unreachable_code")
-	return Utils.Result.error("sabi ni sai", this)
+	await __iterate_children(this)
 
-## text: WHILE [BOOL]
-static func function_while(this: NestedBlock) -> Utils.Result:
-	var _loops := 0
+#region Iterative
+## text: while {boolean}
+func _while(this: NestedBlock) -> void:
+	var loop_count := 0
 	while true:
-		var result := Utils.evaluate_and_check_arguments(1, this)
-		if result is Utils.Error: return result
-		var args := result.data as Array
+		this.visual.highlight()
+		await Game.sleep(Puzzle.interpret_delay)
 		
-		# Type checking
-		result = Utils.validate_type(args, 0, [TYPE_BOOL], this)
-		if result is Utils.Error: return result
-		var condition := result.data as bool
+		var condition: Variant = await this.function.evaluate_arg(0)
+		this.visual.reset()
 		
-		# Loop condition check
-		if not condition: break
+		if Puzzle.has_errored:
+			return
 		
-		result = await _iterate_children(this)
-		if result is Utils.Error: return result
+		var err_message := Core.validate_type(condition, [TYPE_BOOL])
+		if not err_message.is_empty():
+			this.function.error(err_message)
+			return
 		
-		if result.data == Flag.BREAK: break
+		if not (condition as bool):
+			break
 		
-		_loops += 1
-		if _loops > Puzzle.MAX_LOOPS:
-			return Utils.Result.error("Reached maximum amount of loops!", this)
+		var outcome := await __iterate_children(this)
+		if Puzzle.has_errored:
+			return
+		
+		match outcome:
+			ControlSignal.BREAK:
+				return
+			ControlSignal.CONTINUE:
+				pass
+		
+		loop_count += 1
+		if loop_count > Puzzle.MAX_LOOPS:
+			this.function.error("Reached maximum amount of loops.")
+			return
+
+## text: for var {variable}, from {int}\nuntil {int}, at step {int}
+func _for(this: NestedBlock) -> void:
+	var args := await this.function.evaluate_args(3)
+	if Puzzle.has_errored:
+		return
 	
-	return Utils.Result.success()
-
-## text: IF [BOOL]
-## text: ELIF [BOOL]
-static func function_if(this: NestedBlock) -> Utils.Result:
-	var result := Utils.evaluate_and_check_arguments(1, this)
-	if result is Utils.Error: return result
-	var args := result.data as Array
+	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
+	var var_name := args[0] as StringName
 	
-	result = Utils.validate_type(args, 0, [TYPE_BOOL], this)
-	if result is Utils.Error: return result
-	var condition := result.data as bool
+	err_message = Core.validate_type(args[1], [TYPE_INT])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
 	
-	if condition:
-		result = await _iterate_children(this)
-		if result is Utils.Error: return result
+	err_message = Core.validate_type(args[2], [TYPE_INT])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
+	var to := args[2] as int
 	
-	return Utils.Result.success(condition)
-
-## text: ELSE
-static func function_else(this: NestedBlock) -> Utils.Result:
-	# NOTE: If-else logic handled inside _iterate_children, since that's
-	# dependent on factors outside this block.
-	var result := await _iterate_children(this)
-	if result is Utils.Error: return result
-	return Utils.Result.success()
-
-## text: BREAK
-static func function_break(
-	this: StatementBlock,
-	msg := "Cannot break without a non-iterative Block!",
-	flag := Flag.BREAK
-	) -> Utils.Result:
-		
-		# NOTE: Actual break is inside function_while, and etc. See inside
-		# _iterate_children for more info.
-		if _has_iterative_parent(this):
-			return Utils.Result.success(flag)
-		return Utils.Result.error(msg, this)
-
-static func function_continue(this: StatementBlock) -> Utils.Result:
-	return function_break(
-		this,
-		"Cannot continue without a non-iterative Block!",
-		Flag.CONTINUE
-	)
-
-
-static func _iterate_children(this: NestedBlock) -> Utils.Result:
-	var previous_block: Block = null
-	var if_block_success: bool
+	err_message = Core.validate_type(args[3], [TYPE_INT])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return
+	var step := args[3] as int
 	
-	for block in this.get_blocks():
-		if block is NestedBlock:
-			
-			if block.check_type(NestedBlockData.Type.ELSE):
-				
-				if not (previous_block is NestedBlock and
-					previous_block.check_type(NestedBlockData.Type.IF)):
-						return Utils.Result.error("Invalid block placement!", block)
-				
-				if if_block_success:
-					continue
-			
-			block.scope = this.scope.duplicate()
-			block.depth = this.depth + 1
-			if block.depth > Puzzle.MAX_DEPTH:
-				return Utils.Result.error("Reached maximum depth of recursion!", this)
-		
-		# Default value is true; okay since every IF block resets it to their result
-		if_block_success = true
-		block.parent_nested = this
-		
-		var result: Variant = await block.function.call()
-		if result is Utils.Error: return result
-		
-		if block is NestedBlock:
-			for variable in this.scope:
-				this.scope[variable] = block.scope[variable]
-			
-			if block.check_type(NestedBlockData.Type.IF):
-				assert(result.data is bool)
-				if_block_success = result.data
-		
-		elif block is StatementBlock:
-			if block.function.get_method() in [
-				&"function_break",
-				&"function_continue"]:
-					# NOTE: Condition checking occurs outside of _iterate_children
-					# so can't realistically cause a break/continue from here. These
-					# results have result.data of type Flag
-					return result
-		
-		if Puzzle.delaying_interpret:
-			await Game.sleep(Puzzle.block_interpret_delay)
-		
-		previous_block = block
-		block.reset()
+	if step == 0:
+		this.function.error("Step cannot be zero. Use a while true loop instead.")
+		return
 	
-	return Utils.Result.success()
+	this.scope[var_name] = args[1] as int
+	var loop_count := 0
+	
+	while (step > 0 and this.scope[var_name] <= to) or \
+		  (step < 0 and this.scope[var_name] >= to):
+		
+		this.visual.highlight()
+		await Game.sleep(Puzzle.interpret_delay)
+		this.visual.reset()
+		
+		var outcome := await __iterate_children(this)
+		if Puzzle.has_errored:
+			return
+		
+		match outcome:
+			ControlSignal.BREAK:
+				return
+			ControlSignal.CONTINUE:
+				pass
+		
+		loop_count += 1
+		if loop_count > Puzzle.MAX_LOOPS:
+			this.function.error("Reached maximum amount of loops.")
+			return
+		
+		err_message = Core.validate_type(this.scope[var_name], [TYPE_INT])
+		if not err_message.is_empty():
+			this.function.error("Loop variable was changed to non-integer.")
+			return
+		
+		this.scope[var_name] += step
+#endregion
 
-
-static func _has_iterative_parent(this: Block) -> bool:
-	while this.parent_nested != null:
-		this = this.parent_nested
-		if not this is NestedBlock: continue
-		if this.data.nested_type in [
-			NestedBlockData.Type.WHILE,
-			NestedBlockData.Type.FOR,
-			NestedBlockData.Type.REPEAT]:
-				return true
+#region Conditional
+## text: if {boolean}, elif {boolean} -> [bool, ControlSignal]
+func _if(this: NestedBlock) -> Variant:
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	
+	var condition: Variant = await this.function.evaluate_arg(0)
+	this.visual.reset()
+	
+	if Puzzle.has_errored:
+		return true  # Halt chain on error
+	
+	var err_message := Core.validate_type(condition, [TYPE_BOOL])
+	if not err_message.is_empty():
+		this.function.error(err_message)
+		return true  # Halt chain on error
+	
+	if condition as bool:
+		var outcome := await __iterate_children(this)
+		if outcome != ControlSignal.NONE:
+			return outcome
+		
+		return true  # Halt chain for both on success and on error
 	
 	return false
+
+## text: else
+func _else(this: NestedBlock) -> ControlSignal:
+	# NOTE: If-else logic is handled inside _iterate_children, since that's
+	# dependent on factors outside this block.
+	return await __iterate_children(this)
+#endregion
+
+#region Modifiers
+## text: break
+func _break(this: StatementBlock) -> ControlSignal:
+	var is_iterative := func(block: Block) -> bool:
+		return block is NestedBlock and block.data.nested.type in ITERATIVE_BLOCKS
+	
+	if this.get_parent_matching(is_iterative, false) == null:
+		this.function.error("Can't break from outside a loop.")
+		return ControlSignal.NONE
+	
+	return ControlSignal.BREAK
+
+## text: continue
+func _continue(this: StatementBlock) -> ControlSignal:
+	var is_iterative := func(block: Block) -> bool:
+		return block is NestedBlock and block.data.nested.type in ITERATIVE_BLOCKS
+	
+	if this.get_parent_matching(is_iterative, false) == null:
+		this.function.error("Cannot use 'continue' outside of a loop.")
+		return ControlSignal.NONE
+	
+	return ControlSignal.CONTINUE
+#endregion
+
+
+#region Generic control flow methods
+func __iterate_children(this: NestedBlock) -> ControlSignal:
+	var previous_block: Block = null
+	var if_chain_succeeded: bool
+	
+	for block in this.get_blocks():
+		if not __validate_else_placement(block, previous_block):
+			block.function.error("Invalid 'else' or 'elif' block placement.")
+			return ControlSignal.NONE
+		
+		if block is NestedBlock:
+			if block.is_type(NestedData.Type.ELSE) and if_chain_succeeded:
+				continue
+			
+			block.scope = this.scope.duplicate(true)
+			block.depth = this.depth + 1
+			if block.depth > Puzzle.MAX_DEPTH:
+				this.function.error("Reached maximum depth of recursion.")
+				return ControlSignal.NONE
+		
+		var outcome: Variant = await block.function.run()
+		if Puzzle.has_errored:
+			return ControlSignal.NONE
+		
+		if outcome is ControlSignal and outcome != ControlSignal.NONE:
+			return outcome as ControlSignal
+		
+		if block is NestedBlock:
+			# Update original scope's existing variables with changed values
+			# inside child scope
+			for var_name in this.scope:
+				this.scope[var_name] = block.scope[var_name]
+			
+			if block.is_type(NestedData.Type.IF):
+				if not if_chain_succeeded:
+					assert(outcome is bool)
+					if_chain_succeeded = outcome as bool
+			
+			# Reset NestedBlock scope and depth
+			block.scope.clear()
+			block.depth = -1
+		
+		previous_block = block
+		
+		# MEDIUM FIXME: Check if there is Tween, then wait max(tween_dur, delay)
+		#await Game.sleep(Puzzle.interpret_delay)
+	
+	return ControlSignal.NONE
+
+func __validate_else_placement(block: Block, prev_block: Block) -> bool:
+	if block is NestedBlock and block.is_type(NestedData.Type.ELSE):
+		return (prev_block is NestedBlock and
+				prev_block.is_type(NestedData.Type.IF))
+	
+	return true
+#endregion

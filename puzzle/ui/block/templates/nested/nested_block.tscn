@@ -1,0 +1,127 @@
+[gd_scene load_steps=11 format=3 uid="uid://cpqoky88f8xdb"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_cljt5"]
+[ext_resource type="Script" uid="uid://b4x5iuieg1rbx" path="res://puzzle/ui/block/templates/nested/nested_block.gd" id="1_ff4af"]
+[ext_resource type="Texture2D" uid="uid://o8tj5n3xayk3" path="res://puzzle/ui/block/templates/nested/nested.png" id="2_rrt74"]
+[ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="3_xnkmy"]
+[ext_resource type="Script" uid="uid://beog8e0bckh58" path="res://puzzle/ui/block/templates/nested/body.gd" id="4_ttsye"]
+[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="5_euqqd"]
+[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="6_1pb65"]
+[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="7_cljt5"]
+[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="9_7qb2m"]
+[ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="10_tqqxn"]
+
+[node name="NestedBlock" type="VBoxContainer" node_paths=PackedStringArray("mouth", "lower_lip", "text_container", "drag", "function", "text", "visual")]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 100.0
+offset_bottom = 100.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("1_cljt5")
+theme_override_constants/separation = 0
+script = ExtResource("1_ff4af")
+mouth = NodePath("Body/Mouth")
+lower_lip = NodePath("Body/LowerLip")
+text_container = NodePath("UpperLip/MarginContainer/TextContainer")
+drag = NodePath("DragComponent")
+function = NodePath("FunctionComponent")
+text = NodePath("TextComponent")
+visual = NodePath("VisualComponent")
+metadata/_access_modifiers = {
+&"_upper_lip": 2,
+&"_upper_lip_text": 2,
+&"drag": 2,
+&"function": 2,
+&"lower_lip": 2,
+&"mouth": 2,
+&"text": 2,
+&"text_container": 2,
+&"visual": 2
+}
+
+[node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+texture = ExtResource("2_rrt74")
+region_rect = Rect2(0, 0, 100, 36)
+patch_margin_left = 28
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+script = ExtResource("3_xnkmy")
+actual_minimum_size = Vector2(100, 50)
+contents = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -12.0
+offset_right = 28.0
+offset_bottom = 12.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="TextContainer" type="VBoxContainer" parent="UpperLip/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Body" type="NinePatchRect" parent="." node_paths=PackedStringArray("mouth", "lower_lip")]
+custom_minimum_size = Vector2(17, 49)
+layout_mode = 2
+texture = ExtResource("2_rrt74")
+region_rect = Rect2(0, 36, 100, 64)
+patch_margin_left = 28
+patch_margin_right = 8
+patch_margin_bottom = 24
+script = ExtResource("4_ttsye")
+minimum_height = 25.0
+mouth = NodePath("Mouth")
+lower_lip = NodePath("LowerLip")
+
+[node name="Mouth" type="VBoxContainer" parent="Body"]
+layout_mode = 1
+offset_left = 28.0
+offset_right = 28.0
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="LowerLip" type="Control" parent="Body"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+
+[node name="ComponentManager" type="Node" parent="."]
+script = ExtResource("5_euqqd")
+
+[node name="DragComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("6_1pb65")
+base = NodePath("..")
+
+[node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("9_7qb2m")
+base = NodePath("..")
+
+[node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
+script = ExtResource("7_cljt5")
+base = NodePath("..")
+
+[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
+script = ExtResource("10_tqqxn")
+color_affected = [NodePath("../UpperLip"), NodePath("../Body")]
+base = NodePath("..")
+
+[connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="resized" from="Body/Mouth" to="Body" method="_on_mouth_resized"]

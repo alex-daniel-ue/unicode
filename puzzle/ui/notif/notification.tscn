@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsbw5by2bjcge"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_nhyce"]
+[ext_resource type="Script" uid="uid://2701g4pv5lbe" path="res://puzzle/ui/notif/notification.gd" id="2_t1s2m"]
+
+[node name="Notification" type="PanelContainer" node_paths=PackedStringArray("label")]
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("1_nhyce")
+theme_type_variation = &"NotificationPanel"
+script = ExtResource("2_t1s2m")
+label = NodePath("MarginContainer/Label")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"NotificationLabel"
+text = "Something has gone wrong!"
