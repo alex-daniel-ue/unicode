@@ -52,3 +52,6 @@ func insert_quote_pair(quote: String) -> void:
 	insert_text_at_caret(quote + quote)
 	text_changed.emit(text)
 	caret_column = caret_pos + 1
+
+func _on_focus_exited() -> void:
+	deselect()

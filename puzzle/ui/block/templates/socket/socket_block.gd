@@ -12,13 +12,14 @@ func _ready() -> void:
 	super()
 
 func _get_drag_data(at_position: Vector2) -> Variant:
-	if overridden_socket != null:
+	var result: Variant = super(at_position)
+	if not (result == null or data.toolbox or overridden_socket == null):
 		overridden_socket.visible = true
-	
-	return super(at_position)
+	return result
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	var solid := get_solid_parent_block()
+	var solid := get_parent_matching(_has_top_notch)
+	
 	return (
 		not data.toolbox and
 		data.socket.receptive and
@@ -27,23 +28,17 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 		(solid == null or not solid.data.toolbox)
 	)
 
-func _drop_data(_at_position: Vector2, drop: Variant) -> void:
-	# From the perspective of the socketed SocketBlock
-	visible = false
-	
-	# Deffered, So that SocketDropManager knows whether it's being taken out
-	drop.set_deferred(&"overridden_socket", self)
-	drop.orphan()
-	
-	var container := get_parent()
-	container.add_child(drop)
-	container.move_child(drop, get_index())
-
-func get_solid_parent_block() -> Block:
-	var result := get_parent_block()
-	while result != null and not result.data.top_notch:
-		result = result.get_parent_block()
-	return result
+#func _drop_data(_at_position: Vector2, drop: Variant) -> void:
+	## From the perspective of the socketed SocketBlock
+	#visible = false
+	#
+	## Deffered, So that SocketDropManager knows whether it's being taken out
+	#drop.set_deferred(&"overridden_socket", self)
+	#drop.orphan()
+	#
+	#var container := get_parent()
+	#container.add_child(drop)
+	#container.move_child(drop, get_index())
 
 func typecast(string: String) -> Variant:
 	## Order of typecasting:
@@ -63,5 +58,11 @@ func typecast(string: String) -> Variant:
 	
 	return null
 
+func has_overridden() -> bool:
+	return overridden_socket != null
+
 func socket_function() -> Variant:
 	return typecast(text.get_raw())
+
+func _has_top_notch(block: Block) -> bool:
+	return block.data.top_notch

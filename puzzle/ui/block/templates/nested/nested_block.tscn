@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://cpqoky88f8xdb"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_cljt5"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_cljt5"]
 [ext_resource type="Script" uid="uid://b4x5iuieg1rbx" path="res://puzzle/ui/block/templates/nested/nested_block.gd" id="1_ff4af"]
-[ext_resource type="Texture2D" uid="uid://o8tj5n3xayk3" path="res://puzzle/ui/block/templates/nested/nested.png" id="2_rrt74"]
+[ext_resource type="Texture2D" uid="uid://o8tj5n3xayk3" path="res://puzzle/ui/block/templates/nested/nested_texture.png" id="2_rrt74"]
 [ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="3_xnkmy"]
 [ext_resource type="Script" uid="uid://beog8e0bckh58" path="res://puzzle/ui/block/templates/nested/body.gd" id="4_ttsye"]
 [ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="5_euqqd"]

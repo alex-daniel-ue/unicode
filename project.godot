@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="unicode components"
+config/name="unicode"
 run/main_scene="uid://cr6e3ajrul0dk"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -20,6 +20,7 @@ config/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)
 
 Debug="*res://global/debug.gd"
 Game="*res://global/game.gd"
+Core="*res://global/core.gd"
 
 [display]
 

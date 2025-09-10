@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dobqbboxweqv8"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_1yhrl"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_1yhrl"]
 [ext_resource type="Script" uid="uid://uykgloaecw65" path="res://puzzle/ui/side panel/bottom buttons/trash/confirm_dialog.gd" id="2_h7om3"]
 [ext_resource type="Texture2D" uid="uid://by7tcpkwtberr" path="res://puzzle/ui/side panel/icons/pixelarticons--check.png" id="3_foaiq"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="4_q3q0t"]

@@ -1,20 +1,25 @@
-class_name Core
-extends Object
+extends Node
 
 
-static func get_children_recursive(node: Node, exclude_self := false) -> Array[Node]:
+func get_children_recursive(node: Node, exclude_self := false) -> Array[Node]:
+	if not node.is_inside_tree():
+		add_child(node)
+	
 	var result := _get_children(node)
 	if exclude_self:
 		result.pop_front()
+	
+	if node.get_parent() == self:
+		remove_child(node)
 	return result
 
-static func _get_children(node: Node, result: Array[Node] = []) -> Array[Node]:
+func _get_children(node: Node, result: Array[Node] = []) -> Array[Node]:
 	result.push_back(node)
 	for child: Node in node.get_children():
 		result = _get_children(child, result)
 	return result
 
-static func get_block(of_node: Node) -> Block:
+func get_block(of_node: Node) -> Block:
 	if of_node == null:
 		return null
 	
@@ -35,7 +40,7 @@ static func get_block(of_node: Node) -> Block:
 	# No Block parent anywhere in lineage
 	return null
 
-static func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String:
+func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String:
 	const TYPE_MAPPING := {
 		TYPE_BOOL: "a Boolean",
 		TYPE_INT: "an integer",
@@ -57,7 +62,7 @@ static func validate_type(value: Variant, types: PackedInt32Array, idx := -1) ->
 		
 	return ""
 
-static func _format_array(arr: Array, conjunction := "or") -> String:
+func _format_array(arr: Array, conjunction := "or") -> String:
 	arr = arr.map(str)
 	match len(arr):
 		0: return ""
@@ -65,7 +70,7 @@ static func _format_array(arr: Array, conjunction := "or") -> String:
 	var last := len(arr)-1
 	return ", ".join(arr.slice(0, last)) + (" %s %s" % [conjunction, arr[last]])
 
-static func _to_ordinal(n: int) -> String:
+func _to_ordinal(n: int) -> String:
 	var suffix := ""
 	
 	if n % 100 in [11, 12, 13]:

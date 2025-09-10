@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://cuvgglg6xlr6p"]
 
-[ext_resource type="Texture2D" uid="uid://byl0ec0u44q3s" path="res://puzzle/ui/block/templates/socket/expression/texture.png" id="1_8l24w"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_82gmi"]
+[ext_resource type="Texture2D" uid="uid://byl0ec0u44q3s" path="res://puzzle/ui/block/templates/socket/expression/expression_texture.png" id="1_8l24w"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_82gmi"]
 [ext_resource type="Script" uid="uid://d2eomgwrbistq" path="res://puzzle/ui/block/templates/socket/expression/expression_block.gd" id="1_nm1rc"]
 [ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="2_uxx3b"]
 [ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="3_315uh"]
@@ -61,9 +61,9 @@ offset_bottom = 19.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 16
+theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 16
+theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 8
 
 [node name="TextContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]

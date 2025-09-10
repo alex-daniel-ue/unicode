@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
 [ext_resource type="Script" uid="uid://6rosxy60tqsx" path="res://puzzle/ui/side panel/panel.gd" id="2_3gr0x"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="2_xv3xb"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_xv3xb"]
 [ext_resource type="Script" uid="uid://bl501vpm8qns7" path="res://puzzle/ui/side panel/button_container.gd" id="4_8isiv"]
 [ext_resource type="PackedScene" uid="uid://c0d71dt2bes7j" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.tscn" id="5_vlyq7"]
 [ext_resource type="Script" uid="uid://coidfkqmv7bsy" path="res://puzzle/ui/side panel/side_panel_button.gd" id="6_82356"]
@@ -20,7 +20,7 @@
 [sub_resource type="ViewportTexture" id="ViewportTexture_nnviu"]
 viewport_path = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewport")
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "notification_stack", "run_button", "stop_button")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "notification_stack", "run_button", "stop_button", "trash_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,6 +33,7 @@ side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInter
 notification_stack = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 run_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/PlayButton")
 stop_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/StopButton")
+trash_button = NodePath("UserInterface/SideMenuLeft/ButtonContainer/TrashButton")
 
 [node name="Canvas" parent="." instance=ExtResource("1_n7lcs")]
 layout_mode = 1
@@ -104,6 +105,8 @@ panel = NodePath("../Panel")
 [node name="InfoMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("6_nnviu")
 expand_icon = true
 script = ExtResource("6_82356")
@@ -112,6 +115,8 @@ associated_contents = NodePath("../../Panel/PuzzleInformation")
 [node name="ToolboxMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("8_dipl1")
 expand_icon = true
 script = ExtResource("6_82356")
@@ -127,6 +132,8 @@ metadata/_edit_lock_ = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 focus_mode = 0
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("9_vlyq7")
 expand_icon = true
 script = ExtResource("11_xr7vu")
@@ -172,6 +179,8 @@ panel = NodePath("../Panel")
 [node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("10_dipl1")
 expand_icon = true
 script = ExtResource("6_82356")
@@ -186,12 +195,16 @@ metadata/_edit_lock_ = true
 [node name="PlayButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("11_vlyq7")
 expand_icon = true
 
 [node name="StopButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("16_vm51y")
 expand_icon = true
 

@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=3 uid="uid://bq81wkp8sa2wb"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_aaln3"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_aaln3"]
 [ext_resource type="Script" uid="uid://caogwuts3hwxd" path="res://puzzle/ui/block/templates/socket/value/value_block.gd" id="2_ix1lh"]
-[ext_resource type="Texture2D" uid="uid://cgbux3a3yqg6t" path="res://puzzle/ui/block/templates/socket/value/debug_texture.png" id="3_ix1lh"]
+[ext_resource type="Texture2D" uid="uid://7sm8jvsmm7bh" path="res://puzzle/ui/block/templates/socket/value/value_texture.png" id="3_1873k"]
 [ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="4_77jiv"]
 [ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="5_420ih"]
 [ext_resource type="Script" uid="uid://c1m7ivmnlop5l" path="res://puzzle/ui/block/templates/socket/value/type_label.gd" id="5_1873k"]
@@ -13,9 +13,8 @@
 [ext_resource type="Script" uid="uid://px6s8s2ecxm7" path="res://puzzle/ui/block/component/derivations/visual_comp_value.gd" id="9_s7p63"]
 
 [node name="ValueBlock" type="VBoxContainer" node_paths=PackedStringArray("editable_container", "type_label", "line_edit", "option_button", "text_container", "drag", "function", "text", "visual")]
-custom_minimum_size = Vector2(50, 50)
-offset_right = 50.0
-offset_bottom = 50.0
+offset_right = 21.0
+offset_bottom = 21.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme = ExtResource("1_aaln3")
@@ -44,16 +43,17 @@ metadata/_access_modifiers = {
 }
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
+custom_minimum_size = Vector2(21, 21)
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("3_ix1lh")
-region_rect = Rect2(0, 0, 100, 100)
-patch_margin_left = 25
-patch_margin_top = 25
-patch_margin_right = 25
-patch_margin_bottom = 25
+texture = ExtResource("3_1873k")
+region_rect = Rect2(116, 84, 21, 21)
+patch_margin_left = 7
+patch_margin_top = 7
+patch_margin_right = 7
+patch_margin_bottom = 7
 script = ExtResource("4_77jiv")
-actual_minimum_size = Vector2(0, 50)
+actual_minimum_size = Vector2(21, 21)
 contents = NodePath("MarginContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="UpperLip"]
@@ -63,10 +63,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -23.0
-offset_top = -16.0
-offset_right = 23.0
-offset_bottom = 16.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -76,9 +76,12 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="EditableContainer" type="MarginContainer" parent="UpperLip/MarginContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UpperLip/MarginContainer/EditableContainer"]
 layout_mode = 2
@@ -115,7 +118,6 @@ alignment = 1
 fit_to_longest_item = false
 
 [node name="TextContainer" type="VBoxContainer" parent="UpperLip/MarginContainer"]
-visible = false
 layout_mode = 2
 mouse_filter = 2
 
@@ -140,4 +142,5 @@ color_affected = [NodePath("../UpperLip")]
 base = NodePath("..")
 
 [connection signal="resized" from="UpperLip/MarginContainer" to="UpperLip" method="_on_contents_resized"]
+[connection signal="focus_exited" from="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" to="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" method="_on_focus_exited"]
 [connection signal="text_changed" from="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" to="UpperLip/MarginContainer/EditableContainer/HBoxContainer/LineEdit" method="_on_text_changed"]

@@ -46,6 +46,10 @@ func _declare_var(this: Block) -> void:
 		return
 	
 	parent_nested.scope[var_name] = null
+	
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
 
 ## text: set {variable} to {value/variable}
 func _set_var(this: Block) -> void:
@@ -69,6 +73,10 @@ func _set_var(this: Block) -> void:
 		value = parent_nested.scope[value]
 	
 	parent_nested.scope[var_name] = value
+	
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
 
 ## text: initialize {variable} to {variable/value}
 func _initialize(this: Block) -> void:
@@ -99,6 +107,10 @@ func _initialize(this: Block) -> void:
 		value = parent_nested.scope[value]
 	
 	parent_nested.scope[var_name] = value
+	
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
 
 ## text: {value/variable} {symbol} {value/variable}
 func _comparison(this: Block) -> Variant:
@@ -126,6 +138,10 @@ func _comparison(this: Block) -> Variant:
 			this.function.error("Cannot compare values of different types.")
 			return
 	
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
+	
 	return _execute_expression(this, [value1, symbol, value2])
 
 ## text: {value/variable} {symbol} {value/variable}
@@ -152,6 +168,10 @@ func _arithmetic(this: Block) -> Variant:
 	elif type1 not in [TYPE_INT, TYPE_FLOAT] or type2 not in [TYPE_INT, TYPE_FLOAT]:
 		this.function.error("Arithmetic operations can only be performed on numbers.")
 		return
+	
+	this.visual.highlight()
+	await Game.sleep(Puzzle.interpret_delay)
+	this.visual.reset()
 	
 	return _execute_expression(this, [value1, symbol, value2])
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c0d71dt2bes7j"]
 
 [ext_resource type="Script" uid="uid://dor2i7pvxafan" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.gd" id="1_osgvg"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_pe4tv"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_pe4tv"]
 [ext_resource type="PackedScene" uid="uid://bfu3kkn3xy7sr" path="res://puzzle/ui/side panel/tabs/toolbox/category.tscn" id="3_pntoy"]
 
 [node name="Toolbox" type="MarginContainer" node_paths=PackedStringArray("category_container")]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfu3kkn3xy7sr"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_efhf7"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_efhf7"]
 [ext_resource type="Script" uid="uid://c18qpqrtsywdv" path="res://puzzle/ui/side panel/tabs/toolbox/category.gd" id="2_mmmcm"]
 
 [node name="Category" type="VBoxContainer" node_paths=PackedStringArray("label", "container")]

@@ -1,5 +1,5 @@
 class_name Block
-extends Control
+extends VBoxContainer
 
 
 @warning_ignore("unused_signal")

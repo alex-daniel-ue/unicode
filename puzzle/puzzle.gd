@@ -2,6 +2,8 @@ class_name Puzzle
 extends Control
 
 
+signal running_state_changed(to: bool)
+
 enum NotificationType {
 	LOG,
 	ERROR,
@@ -13,7 +15,7 @@ const MAX_DEPTH := 1000
 const MAX_LOOPS := 10000
 
 static var is_running := false
-static var interpret_delay := 0.3
+static var interpret_delay := 0.15
 static var has_errored := false
 
 @export var canvas: ColorRect
@@ -72,6 +74,8 @@ func set_running_state(to: bool) -> void:
 	
 	if not to:
 		has_errored = false
+	
+	running_state_changed.emit(is_running)
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():

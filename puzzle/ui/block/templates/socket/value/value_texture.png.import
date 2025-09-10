@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://o8tj5n3xayk3"
-path="res://.godot/imported/nested.png-10720a0c8f586aeeb4720fc689747d0d.ctex"
+uid="uid://7sm8jvsmm7bh"
+path="res://.godot/imported/value_texture.png-579cfa19f219324c63dded00adffea02.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/nested/nested.png"
-dest_files=["res://.godot/imported/nested.png-10720a0c8f586aeeb4720fc689747d0d.ctex"]
+source_file="res://puzzle/ui/block/templates/socket/value/value_texture.png"
+dest_files=["res://.godot/imported/value_texture.png-579cfa19f219324c63dded00adffea02.ctex"]
 
 [params]
 

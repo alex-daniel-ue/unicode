@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bsbw5by2bjcge"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_nhyce"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_nhyce"]
 [ext_resource type="Script" uid="uid://2701g4pv5lbe" path="res://puzzle/ui/notif/notification.gd" id="2_t1s2m"]
 
 [node name="Notification" type="PanelContainer" node_paths=PackedStringArray("label")]

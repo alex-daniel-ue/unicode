@@ -2,6 +2,9 @@ class_name BlockTextComponent
 extends BlockBaseComponent
 
 
+var line_hbox_scene := preload("res://puzzle/ui/block/templates/line_hbox.tscn")
+
+
 func _ready() -> void:
 	base.data.text_changed.connect(format)
 
@@ -36,8 +39,7 @@ func format() -> void:
 	
 	var block_idx := 0
 	for line in base.data.text.split("\\n"):
-		var hbox := HBoxContainer.new()
-		hbox.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		var hbox := line_hbox_scene.instantiate()
 		base.text_container.add_child(hbox)
 		
 		var plaintexts := line.split("{}")

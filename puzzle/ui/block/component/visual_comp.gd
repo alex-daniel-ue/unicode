@@ -6,7 +6,7 @@ const COLOR_CHANGE_MULT := 10.0
 const ERROR_SPD_MULT := 4.0
 const ERROR_DURATION := 2.0
 
-@export var highlight_color := Color("#ffe350")
+@export var highlight_color := Color("#ffec8a")
 @export var error_color := Color("ff8080")
 @export var color_affected: Array[Control]
 
@@ -23,6 +23,10 @@ func _ready() -> void:
 	error_timer.one_shot = true
 	error_timer.timeout.connect(set_error.bind(false))
 	add_child(error_timer)
+	
+	# MEDIUM FIXME: vro🥀 what the helly
+	await get_tree().process_frame
+	base.queue_sort()
 
 func _update(delta: float) -> void:
 		var final_target := target_color

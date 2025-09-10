@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sb1wha8va8sl"
-path="res://.godot/imported/InputBlock.png-a363034ac181b4e16d1c322e5d7727cc.ctex"
+uid="uid://o8tj5n3xayk3"
+path="res://.godot/imported/nested_texture.png-4cc37cf2502e5ac77fd42a9ac3682fc9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/value/InputBlock.png"
-dest_files=["res://.godot/imported/InputBlock.png-a363034ac181b4e16d1c322e5d7727cc.ctex"]
+source_file="res://puzzle/ui/block/templates/nested/nested_texture.png"
+dest_files=["res://.godot/imported/nested_texture.png-4cc37cf2502e5ac77fd42a9ac3682fc9.ctex"]
 
 [params]
 

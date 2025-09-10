@@ -4,7 +4,6 @@ extends Control
 signal block_dropped
 
 var current_block: Block
-
 var drop_preview: Control
 var dp_container: Control
 var dp_idx: int
@@ -13,6 +12,9 @@ var dp_idx: int
 
 
 func _process(_delta: float) -> void:
+	if not is_instance_valid(current_block):
+		return
+	
 	update_drop_preview()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -29,6 +31,7 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_BEGIN:
 			current_block = get_viewport().gui_get_drag_data()
 			
+			# Socket Blocks handled inside socket_drop_manager.gd 
 			if current_block is SocketBlock:
 				current_block = null
 				return
@@ -42,6 +45,7 @@ func _notification(what: int) -> void:
 				if child is Block:
 					child.preview_type = Block.PreviewType.DROP
 			
+			# Add filler block if a nested Block
 			if drop_preview is NestedBlock:
 				if len(current_block.get_blocks()) > 0:
 					var dummy := PuzzleCanvas.drag_preview.mouth.get_child(0) as Block
@@ -51,6 +55,7 @@ func _notification(what: int) -> void:
 			if current_block == null:
 				return
 			
+			# Handle drop event
 			current_block.visible = true
 			if dp_container != null:
 				# Insert Block data

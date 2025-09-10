@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byl0ec0u44q3s"
-path="res://.godot/imported/texture.png-925fa8abac9fdc5d6dd358050a1cef09.ctex"
+path="res://.godot/imported/expression_texture.png-70902ac29e8c72514a6804e8055238ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/expression/texture.png"
-dest_files=["res://.godot/imported/texture.png-925fa8abac9fdc5d6dd358050a1cef09.ctex"]
+source_file="res://puzzle/ui/block/templates/socket/expression/expression_texture.png"
+dest_files=["res://.godot/imported/expression_texture.png-70902ac29e8c72514a6804e8055238ff.ctex"]
 
 [params]
 

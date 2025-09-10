@@ -23,10 +23,10 @@ func generate_preview() -> Control:
 	if base is NestedBlock:
 		var block_count := len(base.get_blocks())
 		if block_count > 0:
-			dummy_data = dummy_data.duplicate(true)
-			dummy_data.text %= [block_count, "s" if block_count != 1 else ""]
+			var dummy := Block.construct(dummy_data.duplicate(true))
+			dummy.data.text %= [block_count, "s" if block_count != 1 else ""]
 			
-			drag_preview.mouth.add_child(Block.construct(dummy_data))
+			drag_preview.mouth.add_child(dummy)
 	
 	return drag_preview_container
 

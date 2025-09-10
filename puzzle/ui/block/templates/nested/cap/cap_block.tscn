@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://bn2314laa6f2u"]
 
 [ext_resource type="Script" uid="uid://nrgx8s4alnrc" path="res://puzzle/ui/block/templates/nested/cap/cap_block.gd" id="1_1vde0"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_fb5re"]
-[ext_resource type="Texture2D" uid="uid://xp4jui5w8dx7" path="res://puzzle/ui/block/templates/nested/cap/cap_texture.png" id="3_h4y1w"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_fb5re"]
+[ext_resource type="Texture2D" uid="uid://di61alcg2gees" path="res://puzzle/ui/block/templates/nested/cap/cap_texture.png" id="3_h4y1w"]
 [ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="3_ulu5y"]
 [ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="4_17osp"]
 [ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_comp_cap.gd" id="6_17osp"]
@@ -13,6 +13,7 @@
 [node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip", "text_container", "drag", "function", "text", "visual")]
 offset_right = 100.0
 offset_bottom = 135.0
+scale = Vector2(1.00214, 1)
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme = ExtResource("1_fb5re")
@@ -49,23 +50,23 @@ custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_h4y1w")
-region_rect = Rect2(41, 8, 148, 154)
-patch_margin_left = 33
-patch_margin_top = 54
-patch_margin_right = 35
+region_rect = Rect2(49, 40, 129, 125)
+patch_margin_left = 27
+patch_margin_top = 25
+patch_margin_right = 32
 patch_margin_bottom = 8
 
 [node name="UpperLip" type="NinePatchRect" parent="HBoxContainer" node_paths=PackedStringArray("contents")]
-custom_minimum_size = Vector2(12, 100)
+custom_minimum_size = Vector2(128, 67)
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_h4y1w")
-region_rect = Rect2(189, 8, 130, 154)
-patch_margin_top = 54
+region_rect = Rect2(187, 40, 140, 125)
+patch_margin_top = 25
 patch_margin_right = 8
 patch_margin_bottom = 8
 script = ExtResource("3_ulu5y")
-actual_minimum_size = Vector2(0, 100)
+actual_minimum_size = Vector2(0, 67)
 contents = NodePath("MarginContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/UpperLip"]
@@ -85,6 +86,11 @@ theme_override_constants/margin_bottom = 16
 [node name="TextContainer" type="HBoxContainer" parent="HBoxContainer/UpperLip/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/UpperLip/MarginContainer/TextContainer"]
+layout_mode = 2
+theme_type_variation = &"BlockLabel"
+text = "asdasdasdsdasdasds"
 
 [node name="Mouth" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -112,9 +118,10 @@ base = NodePath("..")
 script = ExtResource("6_vuud4")
 base = NodePath("..")
 
-[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected")]
+[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
 script = ExtResource("9_h4y1w")
 color_affected = [NodePath("../HBoxContainer/Head"), NodePath("../HBoxContainer/UpperLip")]
+base = NodePath("..")
 
 [connection signal="resized" from="." to="." method="_on_resized"]
 [connection signal="resized" from="HBoxContainer/UpperLip/MarginContainer" to="HBoxContainer/UpperLip" method="_on_contents_resized"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://5ilfnnt1k22"]
 
 [ext_resource type="Script" uid="uid://bsobouo2ukflv" path="res://puzzle/ui/block/templates/statement/statement_block.gd" id="1_6r6m2"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main.tres" id="1_hu32r"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_hu32r"]
 [ext_resource type="Texture2D" uid="uid://xssk7re4jfpt" path="res://puzzle/ui/block/templates/block.png" id="1_ov5y0"]
 [ext_resource type="Script" uid="uid://dgbdgub53juhs" path="res://puzzle/ui/block/templates/upper_lip.gd" id="1_p2cip"]
 [ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="4_ei7cr"]
