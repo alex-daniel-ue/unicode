@@ -44,17 +44,16 @@ metadata/_access_modifiers = {
 }
 
 [node name="UpperLip" type="NinePatchRect" parent="." node_paths=PackedStringArray("contents")]
-custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("3_ix1lh")
 region_rect = Rect2(0, 0, 100, 100)
 patch_margin_left = 25
-patch_margin_top = 24
+patch_margin_top = 25
 patch_margin_right = 25
-patch_margin_bottom = 24
+patch_margin_bottom = 25
 script = ExtResource("4_77jiv")
-actual_minimum_size = Vector2(50, 50)
+actual_minimum_size = Vector2(0, 50)
 contents = NodePath("MarginContainer")
 
 [node name="MarginContainer" type="MarginContainer" parent="UpperLip"]

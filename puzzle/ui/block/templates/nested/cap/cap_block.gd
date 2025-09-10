@@ -2,6 +2,9 @@ class_name CapBlock
 extends NestedBlock
 
 
+@export var upper_lip: NinePatchRect
+
+
 func within_mouth(global_pos: Vector2) -> bool:
 	return Rect2(mouth.global_position, mouth.size).has_point(global_pos)
 

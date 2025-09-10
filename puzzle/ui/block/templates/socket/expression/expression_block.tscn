@@ -13,7 +13,7 @@
 [node name="ExpressionBlock" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
 custom_minimum_size = Vector2(50, 50)
 offset_right = 64.0
-offset_bottom = 64.0
+offset_bottom = 50.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme = ExtResource("1_82gmi")
