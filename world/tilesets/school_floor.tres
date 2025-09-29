@@ -1,0 +1,29 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://lo4s6najnf6a"]
+
+[ext_resource type="Texture2D" uid="uid://bgqnvktq87uya" path="res://world/assets/tilesets/school_tile_variations.png" id="1_nl6nf"]
+[ext_resource type="Texture2D" uid="uid://dcpf1d3v6khak" path="res://world/assets/tilesets/school_tile_shadows.png" id="2_4qdxa"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4qdxa"]
+texture = ExtResource("1_nl6nf")
+texture_region_size = Vector2i(32, 32)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+1:0/0 = 0
+2:0/next_alternative_id = 8
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cq0d1"]
+texture = ExtResource("2_4qdxa")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+
+[resource]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_4qdxa")
+sources/1 = SubResource("TileSetAtlasSource_cq0d1")

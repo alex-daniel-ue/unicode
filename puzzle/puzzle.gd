@@ -10,23 +10,48 @@ enum NotificationType {
 	SUCCESS
 }
 
-const NOTIF_DURATION := 2.0
 const MAX_DEPTH := 1000
 const MAX_LOOPS := 10000
+const SLOW_DELAY := 0.6
+const FAST_DELAY := 0.2
+const NOTIF_DURATION := 2.0
 
 static var is_running := false
-static var interpret_delay := 0.15
+static var is_fast := false
+static var interpret_delay := SLOW_DELAY
 static var has_errored := false
 
+#region Exports
 @export var canvas: ColorRect
 @export var side_panels: Array[Panel]
 @export var notification_stack: VBoxContainer
+@export var level_viewport: SubViewport
+@export var toolbox: MarginContainer
+@export var level_complete_popup: PopupPanel
+
+@export_group("Buttons")
 @export var run_button: Button
 @export var stop_button: Button
 @export var trash_button: Button
+@export var speed_button: Button
+#endregion
 
 # NOTE: Avoid refactoring this. This is perfectly fine.
 var errored_blocks: Array[Block]
+var level: Level
+
+
+func _ready() -> void:
+	side_panels[0].show_menu(true)
+	if Game.pending_level != null:
+		level = Game.pending_level.instantiate() as Level
+		level.completed.connect(_on_level_completed)
+		level_viewport.add_child(level)
+		
+		for block in level.get_blocks():
+			toolbox.add_block(block)
+		
+		Game.pending_level = null
 
 
 func run_program() -> void:
@@ -52,6 +77,7 @@ func run_program() -> void:
 		)
 		return
 	
+	level.reset_state()
 	set_running_state(true)
 	side_panels[0].show_menu(false)
 	side_panels[1].show_menu(true)
@@ -70,7 +96,9 @@ func set_running_state(to: bool) -> void:
 	
 	run_button.disabled = to
 	trash_button.disabled = to
+	
 	stop_button.disabled = not to
+	speed_button.disabled = not to
 	
 	if not to:
 		has_errored = false
@@ -96,6 +124,10 @@ func _on_block_errored(block: Block) -> void:
 func _on_notif_pushed(message: String, type: NotificationType) -> void:
 	notification_stack.add(message, 2., type)
 
+func _on_level_completed() -> void:
+	has_errored = true
+	level_complete_popup.show()
+
 func _on_stop_button_pressed() -> void:
 	if is_running:
 		has_errored = true
@@ -104,3 +136,10 @@ func _on_stop_button_pressed() -> void:
 			NOTIF_DURATION,
 			NotificationType.ERROR
 		)
+
+func _on_speed_button_pressed() -> void:
+	interpret_delay = SLOW_DELAY if is_fast else FAST_DELAY
+	is_fast = not is_fast
+
+func _on_return_button_pressed() -> void:
+	Game.return_to_world()

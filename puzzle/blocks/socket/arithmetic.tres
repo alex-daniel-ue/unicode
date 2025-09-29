@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://csjw2llid2pph" path="res://puzzle/functions/generic.gd" id="1_kjfid"]
 [ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_8sb0k"]
 [ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_bvl8k"]
-[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value_receptive_editable_line.tres" id="5_sg2fk"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="5_sg2fk"]
 
 [sub_resource type="Resource" id="Resource_i86qa"]
 script = ExtResource("2_8sb0k")
@@ -12,12 +12,8 @@ receptive = false
 
 [sub_resource type="Resource" id="Resource_r4xr0"]
 script = ExtResource("3_bvl8k")
-show_type = true
 editable = false
 editable_shown = false
-enum_flag = false
-enum_as_string = false
-enum_values = PackedStringArray()
 _socket_ref = SubResource("Resource_i86qa")
 
 [sub_resource type="Resource" id="Resource_7u70j"]
@@ -27,8 +23,6 @@ receptive = false
 [sub_resource type="Resource" id="Resource_14hxo"]
 script = ExtResource("3_bvl8k")
 show_type = false
-editable = true
-editable_shown = true
 enum_flag = true
 enum_as_string = true
 enum_values = PackedStringArray("+", "-", "*", "/", "%")
@@ -41,13 +35,9 @@ base_path = "uid://bq81wkp8sa2wb"
 type = 3
 socket = SubResource("Resource_7u70j")
 value = SubResource("Resource_14hxo")
-toolbox = true
-category = "Uncategorized"
 draggable = false
 placeable = false
 top_notch = false
-text = ""
-text_blocks = Array[ExtResource("1_jgc47")]([])
 Type/value = SubResource("Resource_14hxo")
 Type/socket = SubResource("Resource_7u70j")
 Function/method = &""
@@ -60,9 +50,7 @@ base_path = "uid://bq81wkp8sa2wb"
 type = 3
 socket = SubResource("Resource_i86qa")
 value = SubResource("Resource_r4xr0")
-toolbox = true
 category = "Value"
-draggable = true
 placeable = false
 top_notch = false
 text = "{} {} {}"

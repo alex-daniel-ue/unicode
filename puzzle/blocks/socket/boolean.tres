@@ -1,45 +1,12 @@
-[gd_resource type="Resource" script_class="BlockData" load_steps=8 format=3 uid="uid://dkqtd8xcp0c2"]
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3 uid="uid://dkqtd8xcp0c2"]
 
 [ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_1f1hn"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_tchex"]
-[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_rj3j8"]
+[ext_resource type="Resource" uid="uid://7tw3ahy2fijm" path="res://puzzle/blocks/_common/value/editable_line.tres" id="3_rj3j8"]
 
 [sub_resource type="Resource" id="Resource_rj3j8"]
 script = ExtResource("1_1f1hn")
 receptive = false
-
-[sub_resource type="Resource" id="Resource_5ng6o"]
-script = ExtResource("1_1f1hn")
-receptive = false
-
-[sub_resource type="Resource" id="Resource_7ycbh"]
-script = ExtResource("3_rj3j8")
-show_type = true
-editable = true
-editable_shown = true
-enum_flag = true
-enum_values = PackedStringArray("true", "false")
-enum_as_string = false
-_socket_ref = SubResource("Resource_5ng6o")
-
-[sub_resource type="Resource" id="Resource_kbqc7"]
-script = ExtResource("1_tchex")
-name = "ValueEditableEnumBlock"
-base_path = "uid://bq81wkp8sa2wb"
-type = 3
-socket = SubResource("Resource_5ng6o")
-value = SubResource("Resource_7ycbh")
-toolbox = true
-category = "Uncategorized"
-draggable = false
-placeable = false
-top_notch = false
-text = ""
-text_blocks = Array[ExtResource("1_tchex")]([])
-Type/value = SubResource("Resource_7ycbh")
-Type/socket = SubResource("Resource_5ng6o")
-Function/method = &""
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
 [resource]
 script = ExtResource("1_tchex")
@@ -47,13 +14,11 @@ name = "BooleanBlock"
 base_path = "uid://cuvgglg6xlr6p"
 type = 2
 socket = SubResource("Resource_rj3j8")
-toolbox = true
 category = "Boolean"
-draggable = true
 placeable = false
 top_notch = false
 text = "{}"
-text_blocks = Array[ExtResource("1_tchex")]([SubResource("Resource_kbqc7")])
+text_blocks = Array[ExtResource("1_tchex")]([ExtResource("3_rj3j8")])
 Type/socket = SubResource("Resource_rj3j8")
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

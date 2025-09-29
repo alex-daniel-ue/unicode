@@ -1,6 +1,23 @@
 
-2. Socket drop preview onto possible receptacles.
 3. Begin blocks in Toolbox shouldn't accept blocks before being put on the Canvas.
 	An alternative would be having the begin block already be inside the Canvas
 	from the start.
 4. Pin button on panels, stopping them from being hidden. (use keep_shown)
+5. Make variable declaration and references change color during runtime, reflecting
+	their data type
+6. Add whitespace/spacer block to separate code blocks
+7. When exiting a NestedBlock, all variable declarations should be carried over.
+	For example, the following pseudocode doesn't work:
+	if true:
+		var x = 0
+	print(x)
+8. Scene transitions
+9. Puzzle environment camera panning/zooming
+10. Put evaluate_type inside BlockData
+11. Level blocks to Toolbox doesn't work, probably BlockProvider problem 
+
+
+1. Segmented open world
+2. Level ideas
+3. Story system
+4. Menus

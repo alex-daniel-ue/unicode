@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 
@@ -61,6 +62,21 @@ func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String
 		return message + _format_array(required_types) + '.'
 		
 	return ""
+
+func get_type_string(variant: Variant) -> String:
+	if variant == null:
+		return "null"
+	
+	if variant is Object:
+		var obj: Object = variant
+		var script = obj.get_script()
+		
+		if script and script.get_global_name() != &"":
+			return str(script.get_global_name())
+		
+		return obj.get_class()
+	
+	return type_string(typeof(variant))
 
 func _format_array(arr: Array, conjunction := "or") -> String:
 	arr = arr.map(str)

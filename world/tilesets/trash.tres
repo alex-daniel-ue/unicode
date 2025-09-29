@@ -1,0 +1,18 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://b763fvj7ku0wd"]
+
+[ext_resource type="Texture2D" uid="uid://csa5uhuw5bwuc" path="res://world/assets/objects/trash_bottle.png" id="1_74xgm"]
+[ext_resource type="Texture2D" uid="uid://rne3005tq5h2" path="res://world/assets/objects/trash_paper.png" id="2_v1wty"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34xnp"]
+texture = ExtResource("1_74xgm")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rj1tw"]
+texture = ExtResource("2_v1wty")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_34xnp")
+sources/1 = SubResource("TileSetAtlasSource_rj1tw")

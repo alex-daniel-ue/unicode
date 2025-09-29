@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=8 format=3 uid="uid://cwd65tj740jxa"]
+
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://puzzle/level/objects/entities/robot/robot.gd" id="1_8ids4"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_mcce4"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_8ids4"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_x775g"]
+
+[sub_resource type="Resource" id="Resource_dsi4v"]
+script = ExtResource("2_8ids4")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_oi253"]
+script = ExtResource("3_x775g")
+show_type = false
+enum_flag = true
+enum_as_string = true
+enum_values = PackedStringArray("up", "down", "left", "right")
+_socket_ref = SubResource("Resource_dsi4v")
+
+[sub_resource type="Resource" id="Resource_dsa6u"]
+script = ExtResource("1_mcce4")
+name = "ValueEditableEnumBlock"
+base_path = "uid://bq81wkp8sa2wb"
+type = 3
+socket = SubResource("Resource_dsi4v")
+value = SubResource("Resource_oi253")
+draggable = false
+placeable = false
+top_notch = false
+Type/value = SubResource("Resource_oi253")
+Type/socket = SubResource("Resource_dsi4v")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[resource]
+script = ExtResource("1_mcce4")
+name = "MoveBlock"
+base_path = "uid://5ilfnnt1k22"
+category = "Robot"
+text = "move {}"
+text_blocks = Array[ExtResource("1_mcce4")]([SubResource("Resource_dsa6u")])
+Function/entity_script = ExtResource("1_8ids4")
+Function/method = &"move"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

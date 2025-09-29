@@ -2,18 +2,13 @@
 
 [ext_resource type="Script" uid="uid://csjw2llid2pph" path="res://puzzle/functions/generic.gd" id="1_w4dyv"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_4vrd7"]
-[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value_receptive_editable_line.tres" id="3_iectr"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="3_iectr"]
 
 [resource]
 script = ExtResource("2_4vrd7")
 name = "PrintBlock"
 base_path = "uid://5ilfnnt1k22"
-type = 0
-toolbox = true
 category = "Generic"
-draggable = true
-placeable = true
-top_notch = true
 text = "print {}"
 text_blocks = Array[ExtResource("2_4vrd7")]([ExtResource("3_iectr")])
 Function/script = ExtResource("1_w4dyv")

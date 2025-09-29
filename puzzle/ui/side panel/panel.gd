@@ -15,8 +15,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_update_expand_size)
 
 func show_menu(to_open: bool) -> void:
-	if keep:
-		return
+	if keep: return
 	
 	is_open = to_open
 	

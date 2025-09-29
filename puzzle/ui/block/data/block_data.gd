@@ -11,6 +11,12 @@ enum Type {
 	SOCKET, VALUE
 }
 
+enum FuncType {
+	STANDARD,
+	ENTITY,
+	LAMBDA
+}
+
 const DATA_CLASSES: Dictionary[String, StringName] = {
 	nested = &"NestedData",
 	socket = &"SocketData",
@@ -50,7 +56,10 @@ const GROUPS := {
 @export var text_blocks: Array[BlockData]
 
 var func_script: GDScript
+var func_entity_script: GDScript
 var func_method: StringName
+var func_type: FuncType:
+	get = get_func_type
 
 
 #region Editor shenanigans
@@ -88,11 +97,23 @@ func _get_property_list() -> Array[Dictionary]:
 	})
 	
 	properties.append({
+		"name": GROUPS.FUNC + "entity_script",
+		"type": TYPE_OBJECT,
+		"usage": (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_NEVER_DUPLICATE),
+		"hint": PROPERTY_HINT_RESOURCE_TYPE,
+		"hint_string": &"GDScript",
+	})
+	
+	var script_for_methods := func_script
+	if script_for_methods == null:
+		script_for_methods = func_entity_script 
+	
+	properties.append({
 		"name": GROUPS.FUNC + "method",
 		"type": TYPE_STRING,
 		"usage": PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR,
 		"hint": PROPERTY_HINT_ENUM,
-		"hint_string": ",".join(_get_method_names(func_script))
+		"hint_string": ','.join(_get_method_names(script_for_methods))
 	})
 	
 	return properties
@@ -102,6 +123,8 @@ func _get(property: StringName) -> Variant:
 		return func_script
 	if property == GROUPS.FUNC + "method":
 		return func_method
+	if property == GROUPS.FUNC + "entity_script":
+		return func_entity_script
 	
 	if property.begins_with(GROUPS.TYPE):
 		return get(property.trim_prefix(GROUPS.TYPE))
@@ -115,6 +138,10 @@ func _set(property: StringName, val: Variant) -> bool:
 		return true
 	if property == GROUPS.FUNC + "method":
 		func_method = val
+		notify_property_list_changed()
+		return true
+	if property == GROUPS.FUNC + "entity_script":
+		func_entity_script = val
 		notify_property_list_changed()
 		return true
 	
@@ -170,6 +197,13 @@ func _get_method_names(script: Script) -> PackedStringArray:
 	return custom_methods
 #endregion
 
+
+func get_func_type() -> FuncType:
+	if not func_method.is_empty():
+		if func_script != null:
+			return FuncType.STANDARD
+		return FuncType.ENTITY
+	return FuncType.LAMBDA
 
 func has_text_blocks() -> bool:
 	return text.contains("{}")

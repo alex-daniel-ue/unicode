@@ -18,5 +18,4 @@ mono_crash.*.json
 .editorconfig
 *.tmp
 
-*.py
-combined_*.txt
+.combined/

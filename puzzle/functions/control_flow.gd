@@ -64,24 +64,24 @@ func _for(this: NestedBlock) -> void:
 	if Puzzle.has_errored:
 		return
 	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME])
+	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
 	if not err_message.is_empty():
 		this.function.error(err_message)
 		return
 	var var_name := args[0] as StringName
 	
-	err_message = Core.validate_type(args[1], [TYPE_INT])
+	err_message = Core.validate_type(args[1], [TYPE_INT], 1)
 	if not err_message.is_empty():
 		this.function.error(err_message)
 		return
 	
-	err_message = Core.validate_type(args[2], [TYPE_INT])
+	err_message = Core.validate_type(args[2], [TYPE_INT], 2)
 	if not err_message.is_empty():
 		this.function.error(err_message)
 		return
 	var to := args[2] as int
 	
-	err_message = Core.validate_type(args[3], [TYPE_INT])
+	err_message = Core.validate_type(args[3], [TYPE_INT], 3)
 	if not err_message.is_empty():
 		this.function.error(err_message)
 		return
@@ -225,9 +225,6 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			block.depth = -1
 		
 		previous_block = block
-		
-		# MEDIUM FIXME: Check if there is Tween, then wait max(tween_dur, delay)
-		#await Game.sleep(Puzzle.interpret_delay)
 	
 	return ControlSignal.NONE
 

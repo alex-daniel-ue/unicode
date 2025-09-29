@@ -60,14 +60,15 @@ func copy() -> Block:
 	assert(packed_scn.pack(base) == OK)
 	var block := packed_scn.instantiate()
 	
-	#var block := base.duplicate(DUPLICATE_SIGNALS | DUPLICATE_SCRIPTS) as Block
-	
 	block.name = "%s%d" % [base.name, block.get_instance_id()]
 	block.data = base.data.duplicate(true)
 	
 	block.data.toolbox = false
 	for text_block in block.data.text_blocks:
 		text_block.toolbox = false
+	
+	if block.data.func_type == BlockData.FuncType.ENTITY:
+		block.function.object = base.function.object
 	
 	return block
 

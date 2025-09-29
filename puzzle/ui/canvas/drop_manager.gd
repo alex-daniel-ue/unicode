@@ -41,7 +41,7 @@ func _notification(what: int) -> void:
 			drop_preview = Block.construct(current_block.data.duplicate(true))
 			drop_preview.name = "DropPreview_%s" % drop_preview.name
 			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
-			for child in Core.get_children_recursive(drop_preview):
+			for child in Core._get_children(drop_preview):
 				if child is Block:
 					child.preview_type = Block.PreviewType.DROP
 			

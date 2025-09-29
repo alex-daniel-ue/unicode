@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=19 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -15,12 +15,11 @@
 [ext_resource type="Texture2D" uid="uid://b64w4rorm4jdl" path="res://puzzle/ui/side panel/icons/pixelarticons--play.png" id="11_vlyq7"]
 [ext_resource type="Script" uid="uid://djagmtqt1y8sg" path="res://puzzle/ui/side panel/bottom buttons/trash/trash_button.gd" id="11_xr7vu"]
 [ext_resource type="PackedScene" uid="uid://dobqbboxweqv8" path="res://puzzle/ui/side panel/bottom buttons/trash/confirm_dialog.tscn" id="12_sbp70"]
+[ext_resource type="Texture2D" uid="uid://83eu6oqlg0ta" path="res://puzzle/ui/side panel/bottom buttons/speed/fast_forward.png" id="15_35gji"]
+[ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_nnviu"]
-viewport_path = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewport")
-
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "notification_stack", "run_button", "stop_button", "trash_button")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "notification_stack", "level_viewport", "toolbox", "level_complete_popup", "run_button", "stop_button", "trash_button", "speed_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,9 +30,13 @@ script = ExtResource("1_iy1cu")
 canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
 notification_stack = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
+level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
+toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
+level_complete_popup = NodePath("LevelCompletePopup")
 run_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/PlayButton")
 stop_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/StopButton")
 trash_button = NodePath("UserInterface/SideMenuLeft/ButtonContainer/TrashButton")
+speed_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/SpeedButton")
 
 [node name="Canvas" parent="." instance=ExtResource("1_n7lcs")]
 layout_mode = 1
@@ -55,7 +58,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="SideMenuLeft" type="HBoxContainer" parent="UserInterface"]
+[node name="SideMenuLeft" type="HBoxContainer" parent="UserInterface" groups=["a"]]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
@@ -140,6 +143,7 @@ script = ExtResource("11_xr7vu")
 confirm_dialog = NodePath("ConfirmDialog")
 
 [node name="ConfirmDialog" parent="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" instance=ExtResource("12_sbp70")]
+oversampling_override = 1.0
 visible = false
 
 [node name="MiddleSpace" type="Control" parent="UserInterface"]
@@ -192,6 +196,16 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
+[node name="SpeedButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+disabled = true
+icon = ExtResource("15_35gji")
+expand_icon = true
+script = ExtResource("16_tkwoe")
+
 [node name="PlayButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
@@ -226,17 +240,53 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="TextureRect" type="TextureRect" parent="UserInterface/SideMenuRight/Panel/PuzzleEnvironment"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="UserInterface/SideMenuRight/Panel/PuzzleEnvironment"]
 layout_mode = 2
-mouse_filter = 2
-texture = SubResource("ViewportTexture_nnviu")
-expand_mode = 3
-stretch_mode = 5
+stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="UserInterface/SideMenuRight/Panel/PuzzleEnvironment"]
-size = Vector2i(768, 1024)
+[node name="SubViewport" type="SubViewport" parent="UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(2, 648)
+render_target_update_mode = 4
+
+[node name="LevelCompletePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(350, 145)
+theme = ExtResource("2_xv3xb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePopup"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -72.5
+offset_right = 175.0
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Label" type="Label" parent="LevelCompletePopup/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"HeaderLarge"
+text = "Level complete!"
+horizontal_alignment = 1
+
+[node name="ReturnButton" type="Button" parent="LevelCompletePopup/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back to world"
 
 [connection signal="pressed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" to="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" method="_on_pressed"]
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="." method="_on_speed_button_pressed"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="." method="run_program"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/StopButton" to="." method="_on_stop_button_pressed"]
+[connection signal="pressed" from="LevelCompletePopup/VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

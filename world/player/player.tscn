@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://cy0m6n26anx30"]
+
+[ext_resource type="Script" uid="uid://b22iqnwlnrlmh" path="res://world/player/player.gd" id="1_bvkkv"]
+[ext_resource type="SpriteFrames" uid="uid://iidgs7f0vbdo" path="res://world/player/sprite_frames.tres" id="1_yynsy"]
+[ext_resource type="Script" uid="uid://bxda1j33jaak1" path="res://world/player/interaction_component.gd" id="3_cvtd2"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="4_40qjc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yynsy"]
+radius = 9.0
+height = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bvkkv"]
+radius = 15.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("animated_sprite_2d")]
+script = ExtResource("1_bvkkv")
+animated_sprite_2d = NodePath("AnimatedSprite2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+y_sort_enabled = true
+sprite_frames = ExtResource("1_yynsy")
+animation = &"idle_left"
+autoplay = "idle_left"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 7)
+shape = SubResource("CapsuleShape2D_yynsy")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="InteractionComponent" type="Area2D" parent="." node_paths=PackedStringArray("label")]
+script = ExtResource("3_cvtd2")
+label = NodePath("Label")
+
+[node name="InteractionRange" type="CollisionShape2D" parent="InteractionComponent"]
+position = Vector2(1, 7)
+shape = SubResource("CircleShape2D_bvkkv")
+
+[node name="Label" type="Label" parent="InteractionComponent"]
+visible = false
+z_index = 99
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -48.0
+offset_right = 36.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("4_40qjc")
+theme_override_font_sizes/font_size = 16
+text = "Interact"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[connection signal="area_entered" from="InteractionComponent" to="InteractionComponent" method="_on_area_entered"]
+[connection signal="area_exited" from="InteractionComponent" to="InteractionComponent" method="_on_area_exited"]

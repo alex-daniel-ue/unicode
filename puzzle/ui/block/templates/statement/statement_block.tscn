@@ -67,7 +67,7 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="TextContainer" type="HBoxContainer" parent="UpperLip/MarginContainer"]
+[node name="TextContainer" type="VBoxContainer" parent="UpperLip/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 

@@ -7,14 +7,8 @@
 script = ExtResource("2_c18da")
 name = "BreakBlock"
 base_path = "uid://5ilfnnt1k22"
-type = 0
-toolbox = true
 category = "Iterative"
-draggable = true
-placeable = true
-top_notch = true
 text = "break"
-text_blocks = Array[ExtResource("2_c18da")]([])
 Function/script = ExtResource("1_rcpm2")
 Function/method = &"_break"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

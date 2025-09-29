@@ -41,7 +41,7 @@ if __name__ == '__main__':
     search_directory = '.' 
     
     # Set the name of the output file.
-    combined_file = 'combined_tscn_scenes.txt'
+    combined_file = '.combined/combined_tscn_scenes.txt'
 
     # --- Execution ---
     try:

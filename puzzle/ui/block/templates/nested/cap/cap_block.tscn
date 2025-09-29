@@ -11,15 +11,15 @@
 [ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="9_h4y1w"]
 
 [node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip", "text_container", "drag", "function", "text", "visual")]
-offset_right = 100.0
-offset_bottom = 135.0
-scale = Vector2(1.00214, 1)
+offset_right = 92.0
+offset_bottom = 102.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
+mouse_filter = 2
 theme = ExtResource("1_fb5re")
 theme_override_constants/separation = 0
 script = ExtResource("1_1vde0")
-upper_lip = NodePath("HBoxContainer/UpperLip")
+upper_lip = NodePath("HBoxContainer")
 mouth = NodePath("Mouth")
 lower_lip = NodePath("LowerLip")
 text_container = NodePath("HBoxContainer/UpperLip/MarginContainer/TextContainer")
@@ -57,7 +57,7 @@ patch_margin_right = 32
 patch_margin_bottom = 8
 
 [node name="UpperLip" type="NinePatchRect" parent="HBoxContainer" node_paths=PackedStringArray("contents")]
-custom_minimum_size = Vector2(128, 67)
+custom_minimum_size = Vector2(12, 67)
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_h4y1w")
@@ -83,14 +83,9 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 16
 
-[node name="TextContainer" type="HBoxContainer" parent="HBoxContainer/UpperLip/MarginContainer"]
+[node name="TextContainer" type="VBoxContainer" parent="HBoxContainer/UpperLip/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
-
-[node name="Label" type="Label" parent="HBoxContainer/UpperLip/MarginContainer/TextContainer"]
-layout_mode = 2
-theme_type_variation = &"BlockLabel"
-text = "asdasdasdsdasdasds"
 
 [node name="Mouth" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -101,7 +96,7 @@ theme_override_constants/separation = 0
 custom_minimum_size = Vector2(92, 35)
 layout_mode = 2
 size_flags_horizontal = 0
-mouse_filter = 1
+mouse_filter = 2
 
 [node name="ComponentManager" type="Node" parent="."]
 script = ExtResource("4_17osp")

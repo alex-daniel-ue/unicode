@@ -7,14 +7,8 @@
 script = ExtResource("1_qj0o7")
 name = "ContinueBlock"
 base_path = "uid://5ilfnnt1k22"
-type = 0
-toolbox = true
 category = "Iterative"
-draggable = true
-placeable = true
-top_notch = true
 text = "continue"
-text_blocks = Array[ExtResource("1_qj0o7")]([])
 Function/script = ExtResource("1_j8ieb")
 Function/method = &"_continue"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

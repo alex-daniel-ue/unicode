@@ -2,7 +2,7 @@ class_name CapBlock
 extends NestedBlock
 
 
-@export var upper_lip: NinePatchRect
+@export var upper_lip: Control
 
 
 func within_mouth(global_pos: Vector2) -> bool:

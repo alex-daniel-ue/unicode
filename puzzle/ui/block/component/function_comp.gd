@@ -14,11 +14,6 @@ signal errored(block: Block)
 ## 3. LAMBDA - When none are present. Relies on earlier manual setting of
 ##		_function, usually in overridden _ready methods of the main Block script.
 ## There's no type for when only script is present, since that means nothing.
-enum Type {
-	STANDARD,
-	ENTITY,
-	LAMBDA
-}
 
 var _function: Callable:
 	set = set_func
@@ -27,36 +22,33 @@ var object: Node
 
 func run() -> Variant:
 	assert(_function != null)
-	
+	Debug.view_callable(_function)
 	var value: Variant = await _function.call()
 	return value
 
 func initialize() -> void:
-	var type := evaluate_type()
-	if type != Type.LAMBDA:
-		if type == Type.ENTITY:
+	var type := base.data.func_type
+	if type != BlockData.FuncType.LAMBDA:
+		if type == BlockData.FuncType.ENTITY:
 			assert(object != null)
+			_function = Callable(object, base.data.func_method).bind(base)
 		
-		if object == null:
+		elif object == null:
 			var node := Node.new()
 			add_child(node)
 			node.set_script(base.data.func_script)
+			
 			_function = Callable(node, base.data.func_method).bind(base)
+		
+		else: assert(false)
 
 func is_initialized() -> bool:
 	return not _function.is_null()
 
-func evaluate_type() -> Type:
-	if not base.data.func_method.is_empty():
-		if base.data.func_script != null:
-			return Type.STANDARD
-		return Type.ENTITY
-	return Type.LAMBDA
-
 func evaluate_arg(at: int) -> Variant:
 	var visible_blocks: Array = base.text.get_blocks().filter(
-		func(block: Block) -> bool:
-			return block.visible
+		func(_block: Block) -> bool:
+			return _block.visible
 	)
 	
 	assert(at < len(visible_blocks))

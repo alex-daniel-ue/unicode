@@ -1,10 +1,6 @@
 extends Node
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		pass
-
 func log(message: Variant = "", separator := ' ') -> void:
 	if message is Array[Variant]:
 		for index in range(len(message)):
@@ -26,5 +22,4 @@ func view_callable(_function: Callable) -> void:
 		"get_method()": _function.get_method(),
 		"get_object()": _function.get_object(),
 	}
-	
 	pass

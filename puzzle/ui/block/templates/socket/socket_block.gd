@@ -6,7 +6,7 @@ var overridden_socket: SocketBlock
 
 
 func _ready() -> void:
-	if function.evaluate_type() == function.Type.LAMBDA:
+	if data.func_type == BlockData.FuncType.LAMBDA:
 		function.set_func(socket_function)
 	
 	super()
@@ -27,18 +27,6 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 		# if in a Block, Block must not be toolbox
 		(solid == null or not solid.data.toolbox)
 	)
-
-#func _drop_data(_at_position: Vector2, drop: Variant) -> void:
-	## From the perspective of the socketed SocketBlock
-	#visible = false
-	#
-	## Deffered, So that SocketDropManager knows whether it's being taken out
-	#drop.set_deferred(&"overridden_socket", self)
-	#drop.orphan()
-	#
-	#var container := get_parent()
-	#container.add_child(drop)
-	#container.move_child(drop, get_index())
 
 func typecast(string: String) -> Variant:
 	## Order of typecasting:

@@ -41,7 +41,7 @@ if __name__ == '__main__':
     search_directory = '.' 
     
     # Set the name of the output file.
-    combined_file = 'combined_gd_scripts.txt'
+    combined_file = '.combined/combined_gd_scripts.txt'
 
     # --- Execution ---
     try:

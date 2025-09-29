@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="1_3865f"]
 [ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="1_i0wp3"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_rp0sv"]
-[ext_resource type="Resource" uid="uid://7tw3ahy2fijm" path="res://puzzle/blocks/_common/value_editable_line.tres" id="3_c74cp"]
-[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value_editable_line_notype.tres" id="3_c75mr"]
+[ext_resource type="Resource" uid="uid://7tw3ahy2fijm" path="res://puzzle/blocks/_common/value/editable_line.tres" id="3_c74cp"]
+[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value/editable_line_notype.tres" id="3_c75mr"]
 
 [sub_resource type="Resource" id="Resource_igej2"]
 script = ExtResource("1_3865f")
@@ -16,11 +16,7 @@ name = "ForBlock (Integer)"
 base_path = "uid://cpqoky88f8xdb"
 type = 1
 nested = SubResource("Resource_igej2")
-toolbox = true
 category = "Iterative"
-draggable = true
-placeable = true
-top_notch = true
 text = "for var {}, from {}\\nto {}, at step {}"
 text_blocks = Array[ExtResource("1_rp0sv")]([ExtResource("3_c75mr"), ExtResource("3_c74cp"), ExtResource("3_c74cp"), ExtResource("3_c74cp")])
 Type/nested = SubResource("Resource_igej2")
