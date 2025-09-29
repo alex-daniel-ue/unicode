@@ -29,7 +29,6 @@ window/stretch/scale_mode="integer"
 [file_customization]
 
 folder_colors={
-"res://addons/": "gray",
 "res://puzzle/": "yellow",
 "res://puzzle/blocks/": "purple",
 "res://puzzle/functions/": "teal",
