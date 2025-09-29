@@ -3,6 +3,7 @@ class_name Resettable
 extends Node
 
 
+@warning_ignore("unused_private_class_variable")
 @export_tool_button("Save initial state") var _save_initial_btn := save_initial
 
 @export var base: Node

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2x75p4hb2bs4"
-path="res://.godot/imported/robot_back.png-dd47a7ce846e81a012313346fe05bde5.ctex"
+uid="uid://dagoksfww1jgg"
+path="res://.godot/imported/robot_front.png-3df6a8e73306ce294fc0ec369bcab5ba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/level/objects/entities/robot/robot_back.png"
-dest_files=["res://.godot/imported/robot_back.png-dd47a7ce846e81a012313346fe05bde5.ctex"]
+source_file="res://level/objects/entities/robot/robot_front.png"
+dest_files=["res://.godot/imported/robot_front.png-3df6a8e73306ce294fc0ec369bcab5ba.ctex"]
 
 [params]
 

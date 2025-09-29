@@ -19,7 +19,7 @@
 [ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "notification_stack", "level_viewport", "toolbox", "level_complete_popup", "run_button", "stop_button", "trash_button", "speed_button")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notification_stack", "level_viewport", "level_complete_popup", "run_button", "stop_button", "speed_button", "trash_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,14 +29,15 @@ grow_vertical = 2
 script = ExtResource("1_iy1cu")
 canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
+information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/Label")
+toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 notification_stack = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
-toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 level_complete_popup = NodePath("LevelCompletePopup")
 run_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/PlayButton")
 stop_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/StopButton")
-trash_button = NodePath("UserInterface/SideMenuLeft/ButtonContainer/TrashButton")
 speed_button = NodePath("UserInterface/SideMenuRight/ButtonContainer/SpeedButton")
+trash_button = NodePath("UserInterface/SideMenuLeft/ButtonContainer/TrashButton")
 
 [node name="Canvas" parent="." instance=ExtResource("1_n7lcs")]
 layout_mode = 1
@@ -262,10 +263,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -175.0
-offset_top = -72.5
-offset_right = 175.0
-offset_bottom = 72.5
+offset_right = 350.0
+offset_bottom = 145.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 14

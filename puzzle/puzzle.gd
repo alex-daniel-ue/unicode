@@ -12,8 +12,8 @@ enum NotificationType {
 
 const MAX_DEPTH := 1000
 const MAX_LOOPS := 10000
-const SLOW_DELAY := 0.6
-const FAST_DELAY := 0.2
+const SLOW_DELAY := 0.5
+const FAST_DELAY := 0.15
 const NOTIF_DURATION := 2.0
 
 static var is_running := false
@@ -24,16 +24,17 @@ static var has_errored := false
 #region Exports
 @export var canvas: ColorRect
 @export var side_panels: Array[Panel]
+@export var information: Label
+@export var toolbox: MarginContainer
 @export var notification_stack: VBoxContainer
 @export var level_viewport: SubViewport
-@export var toolbox: MarginContainer
 @export var level_complete_popup: PopupPanel
 
 @export_group("Buttons")
 @export var run_button: Button
 @export var stop_button: Button
-@export var trash_button: Button
 @export var speed_button: Button
+@export var trash_button: Button
 #endregion
 
 # NOTE: Avoid refactoring this. This is perfectly fine.
@@ -43,9 +44,13 @@ var level: Level
 
 func _ready() -> void:
 	side_panels[0].show_menu(true)
+	side_panels[1].show_menu(true)
+	
 	if Game.pending_level != null:
 		level = Game.pending_level.instantiate() as Level
 		level.completed.connect(_on_level_completed)
+		level.failed.connect(_on_level_failed)
+		information.text = level.instructions
 		level_viewport.add_child(level)
 		
 		for block in level.get_blocks():
@@ -127,6 +132,10 @@ func _on_notif_pushed(message: String, type: NotificationType) -> void:
 func _on_level_completed() -> void:
 	has_errored = true
 	level_complete_popup.show()
+
+func _on_level_failed() -> void:
+	has_errored = true
+	_on_notif_pushed("Level failed!", NotificationType.ERROR)
 
 func _on_stop_button_pressed() -> void:
 	if is_running:

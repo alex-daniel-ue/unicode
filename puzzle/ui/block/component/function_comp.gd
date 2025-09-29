@@ -22,7 +22,7 @@ var object: Node
 
 func run() -> Variant:
 	assert(_function != null)
-	Debug.view_callable(_function)
+	
 	var value: Variant = await _function.call()
 	return value
 

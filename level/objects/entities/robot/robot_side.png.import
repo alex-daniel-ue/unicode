@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cd3h3g4d5kbao"
-path="res://.godot/imported/robot_side.png-f77b490419cdc84d97968ae049706178.ctex"
+path="res://.godot/imported/robot_side.png-121c809da02063f6afd154660becdb50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/level/objects/entities/robot/robot_side.png"
-dest_files=["res://.godot/imported/robot_side.png-f77b490419cdc84d97968ae049706178.ctex"]
+source_file="res://level/objects/entities/robot/robot_side.png"
+dest_files=["res://.godot/imported/robot_side.png-121c809da02063f6afd154660becdb50.ctex"]
 
 [params]
 

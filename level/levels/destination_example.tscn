@@ -1,0 +1,80 @@
+[gd_scene load_steps=13 format=4 uid="uid://j7qvjmr5oje7"]
+
+[ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://level/level.gd" id="1_1yusr"]
+[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://level/components/block_provider.gd" id="2_86e1e"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="3_asouj"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_lba1h"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="4_lba1h"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="4_ufi1f"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="5_ufi1f"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="6_a0vli"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="7_uyvrt"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="8_8tqom"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_comp.gd" id="9_h2m81"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dqsgw"]
+
+[node name="Level1" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_1yusr")
+instructions = "Get to the door!
+
+Drag-and-drop blocks.
+Right-click to copy blocks.
+
+"
+
+[node name="GenericBlockProvider" type="Node" parent="."]
+script = ExtResource("2_86e1e")
+block_data = Array[ExtResource("3_lba1h")]([ExtResource("4_ufi1f")])
+
+[node name="GoalManager" type="Node" parent="." node_paths=PackedStringArray("goals")]
+script = ExtResource("3_asouj")
+goals = [NodePath("DestinationGoal")]
+
+[node name="DestinationGoal" type="Node" parent="GoalManager" node_paths=PackedStringArray("required_entity")]
+script = ExtResource("4_lba1h")
+required_entity = NodePath("../../YSorted/RobotCharacter")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(112, 128)
+zoom = Vector2(2.25, 2.25)
+
+[node name="Floor" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAAIAAAABAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAAAAAAAAAABAAYAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAABAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAA=")
+tile_set = ExtResource("5_ufi1f")
+
+[node name="Doodads" type="TileMapLayer" parent="."]
+
+[node name="YSorted" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAACAAMAAAAAAAAAAAACAAUAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAYAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAYAAAAAAAAAAAABAAYAAAAAAAAAAAA=")
+tile_set = ExtResource("6_a0vli")
+
+[node name="Walls" type="TileMapLayer" parent="YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQAAAAEAADAGAAQAAQADAAAAAAAGAAUAAQADAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
+tile_set = ExtResource("7_uyvrt")
+
+[node name="RobotCharacter" parent="YSorted" instance=ExtResource("8_8tqom")]
+position = Vector2(79.5, 79.5)
+
+[node name="ResettableComponent" type="Node" parent="YSorted/RobotCharacter" node_paths=PackedStringArray("base")]
+script = ExtResource("9_h2m81")
+base = NodePath("..")
+initial_properties = Dictionary[StringName, Variant]({
+&"transform": Transform2D(1, 0, 0, 1, 79.5, 79.5)
+})
+
+[node name="Destination" type="Area2D" parent="."]
+position = Vector2(176, 175)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Destination"]
+shape = SubResource("CircleShape2D_dqsgw")
+
+[connection signal="body_entered" from="Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
+[connection signal="body_exited" from="Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]

@@ -1,6 +1,36 @@
-[gd_resource type="Theme" load_steps=16 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=21 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="1_xejr6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdcft"]
+bg_color = Color(0.8509804, 0.92156863, 1, 0.5019608)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oiocf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l74f8"]
+bg_color = Color(0.9490196, 0.98039216, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2yahv"]
+bg_color = Color(0.8509804, 0.92156863, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vm8ny"]
+bg_color = Color(0.23921569, 0.39215687, 0.6392157, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v43nb"]
 bg_color = Color(0.0077, 0.0077, 0.07, 1)
@@ -69,7 +99,17 @@ Label/constants/outline_size = 5
 Label/font_sizes/font_size = 22
 Label/fonts/font = ExtResource("1_xejr6")
 MainMenuButton/base_type = &"Button"
+MainMenuButton/colors/font_color = Color(0.14901961, 0.14901961, 0.2, 1)
+MainMenuButton/colors/font_disabled_color = Color(0.14901961, 0.14901961, 0.2, 0.4)
+MainMenuButton/colors/font_focus_color = Color(0.14901961, 0.14901961, 0.2, 1)
+MainMenuButton/colors/font_hover_color = Color(0.14901961, 0.14901961, 0.2, 1)
+MainMenuButton/colors/font_pressed_color = Color(1, 1, 1, 1)
 MainMenuButton/font_sizes/font_size = 22
+MainMenuButton/styles/disabled = SubResource("StyleBoxFlat_hdcft")
+MainMenuButton/styles/focus = SubResource("StyleBoxEmpty_oiocf")
+MainMenuButton/styles/hover = SubResource("StyleBoxFlat_l74f8")
+MainMenuButton/styles/normal = SubResource("StyleBoxFlat_2yahv")
+MainMenuButton/styles/pressed = SubResource("StyleBoxFlat_vm8ny")
 NotificationLabel/base_type = &"Label"
 NotificationLabel/font_sizes/font_size = 16
 NotificationPanel/base_type = &"PanelContainer"

@@ -9,3 +9,5 @@ signal completion_changed
 	set(value):
 		is_complete = value
 		completion_changed.emit()
+@export var must_maintain := false
+@export var fail_warning: String

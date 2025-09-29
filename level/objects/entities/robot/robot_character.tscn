@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://cmxfefkbr2y3a"]
 
-[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://puzzle/level/components/block_provider.gd" id="1_2oojt"]
-[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://puzzle/level/objects/entities/robot/robot.gd" id="1_odhmp"]
-[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://puzzle/level/objects/entities/robot/sprite_frames.tres" id="1_ql3ht"]
+[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://level/components/block_provider.gd" id="1_2oojt"]
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="1_odhmp"]
+[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="1_ql3ht"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_bwqil"]
-[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://puzzle/level/objects/entities/robot/blocks/move.tres" id="5_5f2gm"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="5_5f2gm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwqil"]
 size = Vector2(28, 28)

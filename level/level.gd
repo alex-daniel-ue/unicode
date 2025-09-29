@@ -7,6 +7,7 @@ signal completed
 @warning_ignore("unused_signal")
 signal failed(reason: String)
 
+@export_multiline var instructions: String
 
 
 func _ready() -> void:

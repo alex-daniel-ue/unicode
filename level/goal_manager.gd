@@ -17,6 +17,8 @@ func _ready() -> void:
 func _goal_completion_changed() -> void:
 	for goal in goals:
 		if not goal.is_complete:
+			if goal.must_maintain:
+				level.failed.emit()
 			return
 	
 	level.completed.emit()

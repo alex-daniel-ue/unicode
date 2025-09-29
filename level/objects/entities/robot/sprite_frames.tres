@@ -1,8 +1,8 @@
 [gd_resource type="SpriteFrames" load_steps=52 format=3 uid="uid://bbra16dnqb2nc"]
 
-[ext_resource type="Texture2D" uid="uid://b2x75p4hb2bs4" path="res://puzzle/level/objects/entities/robot/robot_back.png" id="1_iknpy"]
-[ext_resource type="Texture2D" uid="uid://dagoksfww1jgg" path="res://puzzle/level/objects/entities/robot/robot_front.png" id="1_inllq"]
-[ext_resource type="Texture2D" uid="uid://cd3h3g4d5kbao" path="res://puzzle/level/objects/entities/robot/robot_side.png" id="3_fmcjp"]
+[ext_resource type="Texture2D" uid="uid://b2x75p4hb2bs4" path="res://level/objects/entities/robot/robot_back.png" id="1_iknpy"]
+[ext_resource type="Texture2D" uid="uid://dagoksfww1jgg" path="res://level/objects/entities/robot/robot_front.png" id="1_inllq"]
+[ext_resource type="Texture2D" uid="uid://cd3h3g4d5kbao" path="res://level/objects/entities/robot/robot_side.png" id="3_fmcjp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hsiuo"]
 atlas = ExtResource("1_inllq")
