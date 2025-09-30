@@ -54,6 +54,11 @@ func _ready() -> void:
 		level_viewport.add_child(level)
 		
 		for block in level.get_blocks():
+			if block is CapBlock and block.is_type(NestedData.Type.BEGIN):
+				canvas.add_child(block)
+				block.position = canvas.size / 2.
+				continue
+			
 			toolbox.add_block(block)
 		
 		Game.pending_level = null

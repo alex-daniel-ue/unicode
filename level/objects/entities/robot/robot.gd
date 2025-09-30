@@ -33,13 +33,15 @@ func move(from_this: Block) -> void:
 		return
 	
 	from_this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
 	
 	var velocity := DIR_TO_VEC[direction] * step_size
-	if not test_move(global_transform, velocity):
-		var tween := create_tween()
-		tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		tween.tween_property(self, "position", position + velocity, move_duration)
-		await tween.finished
+	if test_move(global_transform, velocity):
+		from_this.function.error("I can't move %s!" % direction)
+		return
 	
+	var tween := create_tween()
+	tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(self, "position", position + velocity, move_duration)
+	
+	await tween.finished
 	from_this.visual.reset()
