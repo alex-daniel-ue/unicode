@@ -1,0 +1,107 @@
+[gd_scene load_steps=14 format=3 uid="uid://dsc4sl1d5r71o"]
+
+[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://level/components/block_provider.gd" id="1_rms4i"]
+[ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://level/level.gd" id="1_xhm1o"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_xhm1o"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_bsoo4"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="4_yofvs"]
+[ext_resource type="Texture2D" uid="uid://d13evgwis11f8" path="res://level/levels/father_transparent.png" id="6_dx3a6"]
+[ext_resource type="Script" uid="uid://ji78aa52der7" path="res://level/goals/match_goal.gd" id="6_vtsd0"]
+[ext_resource type="Texture2D" uid="uid://b7qame3wy717k" path="res://level/levels/MC_transparent.png" id="7_548f3"]
+[ext_resource type="Script" uid="uid://dwywryl8xg8xi" path="res://level/goals/sequential_goal.gd" id="7_rtinc"]
+[ext_resource type="Texture2D" uid="uid://vqp3s6m1l5wg" path="res://level/levels/bubble.png" id="8_g5n8s"]
+[ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="9_548f3"]
+[ext_resource type="Script" uid="uid://c8eej1v5tkug7" path="res://level/levels/conversation_manager.gd" id="10_g5n8s"]
+
+[sub_resource type="Theme" id="Theme_g5n8s"]
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/font_sizes/font_size = 56
+Label/fonts/font = ExtResource("9_548f3")
+
+[node name="ConversationExample" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_xhm1o")
+
+[node name="GenericBlockProvider" type="Node" parent="."]
+script = ExtResource("1_rms4i")
+block_data = Array[ExtResource("2_xhm1o")]([ExtResource("3_bsoo4")])
+
+[node name="GoalManager" type="Node" parent="." node_paths=PackedStringArray("goals")]
+script = ExtResource("4_yofvs")
+goals = [NodePath("SequentialGoal")]
+
+[node name="SequentialGoal" type="Node" parent="GoalManager"]
+script = ExtResource("7_rtinc")
+
+[node name="MatchGoal" type="Node" parent="GoalManager/SequentialGoal"]
+script = ExtResource("6_vtsd0")
+match_var = "Good morning!"
+
+[node name="MatchGoal2" type="Node" parent="GoalManager/SequentialGoal"]
+script = ExtResource("6_vtsd0")
+match_var = "Did you sleep well?"
+active = false
+
+[node name="MatchGoal3" type="Node" parent="GoalManager/SequentialGoal"]
+script = ExtResource("6_vtsd0")
+match_var = "I need your help."
+active = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(564, 303)
+limit_enabled = false
+
+[node name="ProtagonistSprite" type="Sprite2D" parent="."]
+position = Vector2(339, 367)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("7_548f3")
+
+[node name="LeftSpeechBubble" type="Sprite2D" parent="ProtagonistSprite"]
+position = Vector2(556, -204)
+scale = Vector2(0.388, 0.388)
+texture = ExtResource("8_g5n8s")
+metadata/_edit_group_ = true
+
+[node name="ProtagonistText" type="Label" parent="ProtagonistSprite/LeftSpeechBubble"]
+offset_left = -556.701
+offset_top = -402.06174
+offset_right = 515.46356
+offset_bottom = 402.0618
+theme = SubResource("Theme_g5n8s")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="FatherSprite" type="Sprite2D" parent="."]
+position = Vector2(789, 352)
+rotation = 3.1415927
+scale = Vector2(0.25, -0.25)
+texture = ExtResource("6_dx3a6")
+
+[node name="RightSpeechBubble" type="Sprite2D" parent="FatherSprite"]
+position = Vector2(547.9999, -271.99994)
+scale = Vector2(0.396, 0.396)
+texture = ExtResource("8_g5n8s")
+metadata/_edit_group_ = true
+
+[node name="FatherText" type="Label" parent="FatherSprite/RightSpeechBubble"]
+offset_left = -570.3651
+offset_top = -383.83844
+offset_right = 536.21204
+offset_bottom = 416.69116
+theme = SubResource("Theme_g5n8s")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="ConversationManager" type="Node" parent="." node_paths=PackedStringArray("father_label", "protag_label")]
+script = ExtResource("10_g5n8s")
+father_label = NodePath("../FatherSprite/RightSpeechBubble/FatherText")
+protag_label = NodePath("../ProtagonistSprite/LeftSpeechBubble/ProtagonistText")
+
+[node name="BlockProvider" type="Node" parent="ConversationManager"]
+script = ExtResource("1_rms4i")

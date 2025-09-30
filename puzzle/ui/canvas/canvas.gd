@@ -43,17 +43,16 @@ func handle_panning(event: InputEvent) -> void:
 	if not (is_panning or get_viewport().gui_get_hovered_control() == self):
 		return
 	
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			if has_focus():
-				focus_clicked.emit()
-			get_viewport().gui_release_focus()
-			
-			is_panning = true
-			drag_start_position = get_global_mouse_position()
-			node_start_position = position
-		else:
-			is_panning = false
+	if event.is_action_pressed("pan"):
+		if has_focus():
+			focus_clicked.emit()
+		get_viewport().gui_release_focus()
+		
+		is_panning = true
+		drag_start_position = get_global_mouse_position()
+		node_start_position = position
+	elif event.is_action_released("pan"):
+		is_panning = false
 	
 	elif event is InputEventMouseMotion and is_panning:
 		var current_global_mouse := get_global_mouse_position()

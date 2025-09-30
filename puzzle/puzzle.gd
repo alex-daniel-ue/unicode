@@ -47,22 +47,27 @@ func _ready() -> void:
 	side_panels[1].show_menu(true)
 	
 	if Game.pending_level != null:
-		level = Game.pending_level.instantiate() as Level
-		level.completed.connect(_on_level_completed)
-		level.failed.connect(_on_level_failed)
-		information.text = level.instructions
-		level_viewport.add_child(level)
-		
-		for block in level.get_blocks():
-			if block is CapBlock and block.is_type(NestedData.Type.BEGIN):
-				canvas.add_child(block)
-				block.position = canvas.size / 2.
-				continue
-			
-			toolbox.add_block(block)
-		
-		Game.pending_level = null
+		configure_level()
 
+func configure_level() -> void:
+	level = Game.pending_level.instantiate() as Level
+	level.completed.connect(_on_level_completed)
+	level.failed.connect(_on_level_failed)
+	information.text = level.instructions
+	
+	for node in level_viewport.get_children():
+		node.queue_free()
+	level_viewport.add_child(level)
+	
+	for block in level.get_blocks():
+		if block is CapBlock and block.is_type(NestedData.Type.BEGIN):
+			canvas.add_child(block)
+			block.position = canvas.size / 2.
+			continue
+		
+		toolbox.add_block(block)
+	
+	Game.pending_level = null
 
 func run_program() -> void:
 	for block in errored_blocks:

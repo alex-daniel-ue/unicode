@@ -49,7 +49,7 @@ shadow_color = Color(0, 0, 0, 0.188235)
 shadow_size = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xejr6"]
-bg_color = Color(0.22352941, 0.35686275, 0.8862745, 0.7607843)
+bg_color = Color(0.0611, 0.14288001, 0.47, 0.8627451)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -94,6 +94,7 @@ BlockLabel/font_sizes/font_size = 16
 Button/fonts/font = ExtResource("1_xejr6")
 HeaderLarge/base_type = &"Label"
 HeaderLarge/font_sizes/font_size = 36
+HeaderMedium/base_type = &"Label"
 Label/constants/line_spacing = 5
 Label/constants/outline_size = 5
 Label/font_sizes/font_size = 22

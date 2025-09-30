@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://csnpjqy3o8pvv"]
+[gd_scene load_steps=10 format=4 uid="uid://csnpjqy3o8pvv"]
 
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="1_t2yv8"]
 [ext_resource type="TileSet" uid="uid://b763fvj7ku0wd" path="res://world/tilesets/trash.tres" id="2_lecyo"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cy0m6n26anx30" path="res://world/player/player.tscn" id="5_eb2ob"]
 [ext_resource type="Script" uid="uid://cjepw5v5ebtww" path="res://world/buffer_level.gd" id="6_0qdwm"]
 [ext_resource type="PackedScene" uid="uid://j7qvjmr5oje7" path="res://level/levels/destination_example.tscn" id="7_een3g"]
+[ext_resource type="PackedScene" uid="uid://dsc4sl1d5r71o" path="res://level/levels/conversation_example.tscn" id="8_rxunq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0qdwm"]
 radius = 28.0
@@ -45,4 +46,16 @@ call_to_action = "Go to Puzzle"
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BufferLevel"]
+shape = SubResource("CircleShape2D_0qdwm")
+
+[node name="BufferLevel2" type="Area2D" parent="."]
+position = Vector2(264, 168)
+monitoring = false
+monitorable = false
+script = ExtResource("6_0qdwm")
+scene = ExtResource("8_rxunq")
+call_to_action = "Go to Puzzle"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BufferLevel2"]
 shape = SubResource("CircleShape2D_0qdwm")

@@ -9,6 +9,10 @@
 	print(x)
 6. Scene transitions
 7. Puzzle environment camera panning/zooming
+	Fix stutter. Maybe due to SubViewport?
+8. Sequenced goals/tests
+9. SubViewport fitting
+10. 
 
 
 1. Segmented open world
