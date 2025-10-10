@@ -29,10 +29,10 @@ window/stretch/scale_mode="integer"
 [file_customization]
 
 folder_colors={
-"res://level/": "red",
 "res://puzzle/": "yellow",
 "res://puzzle/blocks/": "purple",
 "res://puzzle/functions/": "teal",
+"res://puzzle/level/": "red",
 "res://puzzle/ui/": "yellow",
 "res://world/": "green"
 }

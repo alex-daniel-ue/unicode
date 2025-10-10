@@ -1,21 +1,12 @@
 
 3. Make variable declaration and references change color during runtime, reflecting
 	their data type
-4. Add whitespace/spacer block to separate code blocks
-5. When exiting a NestedBlock, all variable declarations should be carried over.
-	For example, the following pseudocode doesn't work:
-	if true:
-		var x = 0
-	print(x)
 6. Scene transitions
-7. Puzzle environment camera panning/zooming
-	Fix stutter. Maybe due to SubViewport?
+7. Puzzle environment zooming
 8. Sequenced goals/tests
 9. SubViewport fitting
-10. 
+10. Either make level approach center or reset on play
 
 
-1. Segmented open world
 2. Level ideas
-3. Story system
 4. Menus
