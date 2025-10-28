@@ -1,0 +1,118 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdilcamcaiut0"]
+
+[ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_lhy6y"]
+[ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="1_ofcge"]
+[ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_soyww"]
+[ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="2_bsw82"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_lhy6y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
+shader = ExtResource("1_soyww")
+shader_parameter/cell_size = 25.0
+shader_parameter/dot_size = 0.05
+shader_parameter/background_color = Color(0.015227, 0.0145274, 0.14699, 1)
+shader_parameter/dot_color = Color(0.0901598, 0.264478, 0.391381, 1)
+shader_parameter/resolution = Vector2(1152, 648)
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/anti_aliasing_factor = 0.01
+shader_parameter/stochastic_samples = 16
+
+[node name="LevelSelect" type="ColorRect"]
+material = SubResource("ShaderMaterial_vifbn")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_lhy6y")
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_lhy6y")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="HomeButton" type="Button" parent="MarginContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+icon = ExtResource("1_ofcge")
+expand_icon = true
+
+[node name="LevelLabel" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("2_bsw82")
+theme_override_font_sizes/font_size = 60
+text = "SEQUENCING - MOVEMENT"
+
+[node name="LevelRow" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="Button" type="Button" parent="MarginContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+text = "LEVEL 1"
+
+[node name="Button2" type="Button" parent="MarginContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+text = "LEVEL 2
+"
+
+[node name="Button3" type="Button" parent="MarginContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 3"
+
+[node name="Button4" type="Button" parent="MarginContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 4"
+
+[node name="Button5" type="Button" parent="MarginContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 5"
+
+[node name="Label" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "STARS: 0/6"
+
+[connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]
+[connection signal="pressed" from="MarginContainer/LevelRow/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/LevelRow/Button2" to="." method="_on_button_2_pressed"]

@@ -7,14 +7,32 @@ const WORLD_SCENE := preload("res://world/rooms/computer_lab.tscn")
 var pending_level: PackedScene
 var completed_levels: PackedStringArray
 var last_world_pos: Vector2
+var level_star_counts: Dictionary = {}
 
+
+func update_level_stars(level_path: String, stars: int) -> void:
+	if not level_star_counts.has(level_path):
+		level_star_counts[level_path] = stars
+	else:
+		level_star_counts[level_path] = max(stars, level_star_counts[level_path])
+	
+	print("Star count for '%s' updated to: %s" % [level_path.get_file(), level_star_counts[level_path]])
 
 func start_puzzle() -> void:
+	Transition.cover()
+	await Transition.current_tween.finished
+	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
+	
 	get_tree().change_scene_to_packed(PUZZLE_SCENE)
+	
 	await get_tree().scene_changed
 	pending_level = null
 
 func return_to_world() -> void:
+	Transition.cover()
+	await Transition.current_tween.finished
+	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
+	
 	get_tree().change_scene_to_packed(WORLD_SCENE)
 
 func save_to_disk() -> void:

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://blied6nj0jtq5"]
+[gd_scene load_steps=7 format=3 uid="uid://blied6nj0jtq5"]
 
 [ext_resource type="Script" uid="uid://g23mxvs1iv8r" path="res://puzzle/ui/canvas/drop_manager.gd" id="1_15w7l"]
 [ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_c3b4b"]
 [ext_resource type="Script" uid="uid://cqxa806q7p01u" path="res://puzzle/ui/canvas/canvas.gd" id="1_uoc13"]
+[ext_resource type="Script" uid="uid://cfijmiguorv7u" path="res://puzzle/ui/canvas/serializer.gd" id="3_vifbn"]
 [ext_resource type="Script" uid="uid://bihny42mf57sx" path="res://puzzle/ui/canvas/socket_drop_manager.gd" id="3_wplfe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
@@ -16,7 +17,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Canvas" type="ColorRect" node_paths=PackedStringArray("drop_manager")]
+[node name="Canvas" type="ColorRect" node_paths=PackedStringArray("serializer", "drop_manager")]
 material = SubResource("ShaderMaterial_vifbn")
 offset_left = -5000.0
 offset_top = -5000.0
@@ -25,10 +26,14 @@ offset_bottom = 5000.0
 focus_mode = 1
 color = Color(1, 1, 1, 0)
 script = ExtResource("1_uoc13")
+serializer = NodePath("Serializer")
 drop_manager = NodePath("DropManager")
 metadata/_access_modifiers = {
 &"drop_manager": 2
 }
+
+[node name="Serializer" type="Node" parent="."]
+script = ExtResource("3_vifbn")
 
 [node name="DropManager" type="Control" parent="." node_paths=PackedStringArray("canvas")]
 anchors_preset = 0

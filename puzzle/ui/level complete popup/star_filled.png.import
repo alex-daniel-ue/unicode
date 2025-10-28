@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://i7h3gcnbn2yy"
-path="res://.godot/imported/background.png-bba699213b0637a86cb54c2e624e9d3a.ctex"
+uid="uid://cd5n4lwu7jyyf"
+path="res://.godot/imported/star_filled.png-5446a267ff57e81ad72d5de16de65809.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://main menu/background.png"
-dest_files=["res://.godot/imported/background.png-bba699213b0637a86cb54c2e624e9d3a.ctex"]
+source_file="res://puzzle/ui/level complete popup/star_filled.png"
+dest_files=["res://.godot/imported/star_filled.png-5446a267ff57e81ad72d5de16de65809.ctex"]
 
 [params]
 

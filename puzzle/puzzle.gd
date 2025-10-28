@@ -16,6 +16,8 @@ const SLOW_DELAY := 0.5
 const FAST_DELAY := 0.15
 const NOTIF_DURATION := 2.0
 
+const LEVEL_SELECT_SCENE := preload("res://menus/level select/level_select.tscn")
+
 static var is_running := false
 static var is_fast := false
 static var interpret_delay := SLOW_DELAY
@@ -29,6 +31,8 @@ static var has_errored := false
 @export var notification_stack: VBoxContainer
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
+@export var stars: HBoxContainer
+@export var pause_menu: PopupPanel
 
 @export_group("Buttons")
 @export var run_button: Button
@@ -48,6 +52,12 @@ func _ready() -> void:
 	
 	if Game.pending_level != null:
 		configure_level()
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		pause_menu.show()
+	elif event.is_action_released("pause"):
+		pause_menu.hide()
 
 func configure_level() -> void:
 	level = Game.pending_level.instantiate() as Level
@@ -70,6 +80,7 @@ func configure_level() -> void:
 	Game.pending_level = null
 
 func run_program() -> void:
+	#print(canvas.serializer.yaml_serialize())
 	for block in errored_blocks:
 		if is_instance_valid(block):
 			block.visual.set_error(false)
@@ -92,6 +103,7 @@ func run_program() -> void:
 		)
 		return
 	
+	level.visuals.position = Vector2.ZERO
 	level.reset_state()
 	set_running_state(true)
 	side_panels[0].show_menu(false)
@@ -141,6 +153,42 @@ func _on_notif_pushed(message: String, type: NotificationType) -> void:
 
 func _on_level_completed() -> void:
 	has_errored = true
+	
+	var star_count := 1
+	
+	#region Put this entire section into its own .gd script, "level_complete_popup" probably
+	var blocks := 0
+	for node in canvas.get_children():
+		if node is Block:
+			var descendants = Core.get_children_recursive(node, false)
+			for descendant in descendants:
+				if descendant is Block and descendant.data.top_notch:
+					blocks += 1
+	
+	for child in stars.get_children():
+		child.queue_free()
+	
+	var FILLED_STAR := load("res://puzzle/ui/level complete popup/star_filled.png")
+	var EMPTY_STAR := load("res://puzzle/ui/level complete popup/star_empty.png")
+	
+	var star := TextureRect.new()
+	star.texture = FILLED_STAR
+	star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	star.custom_minimum_size = Vector2(50, 50)
+	stars.add_child(star)
+	
+	for threshold in [level.two_star_threshold, level.three_star_threshold]:
+		star = TextureRect.new()
+		star.texture = EMPTY_STAR
+		if blocks <= threshold:
+			star.texture = FILLED_STAR
+			star_count += 1
+		star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		star.custom_minimum_size = Vector2(50, 50)
+		stars.add_child(star)
+	#endregion
+	
+	Game.update_level_stars(level.scene_file_path, star_count)
 	level_complete_popup.show()
 
 func _on_level_failed() -> void:
@@ -161,4 +209,8 @@ func _on_speed_button_pressed() -> void:
 	is_fast = not is_fast
 
 func _on_return_button_pressed() -> void:
-	Game.return_to_world()
+	Transition.cover()
+	await Transition.current_tween.finished
+	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
+	
+	get_tree().change_scene_to_packed(LEVEL_SELECT_SCENE)

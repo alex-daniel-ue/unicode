@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vqp3s6m1l5wg"
-path="res://.godot/imported/bubble.png-6411378291eb01c58fc8ef0ce69bbd98.ctex"
+uid="uid://d4grxfc7bjwtd"
+path="res://.godot/imported/star_empty.png-2ac9c458ac6edd0d3f48af68da0b429a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/level/levels/level_2/bubble.png"
-dest_files=["res://.godot/imported/bubble.png-6411378291eb01c58fc8ef0ce69bbd98.ctex"]
+source_file="res://puzzle/ui/level complete popup/star_empty.png"
+dest_files=["res://.godot/imported/star_empty.png-2ac9c458ac6edd0d3f48af68da0b429a.ctex"]
 
 [params]
 

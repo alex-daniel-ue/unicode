@@ -1,14 +1,14 @@
 [gd_scene load_steps=8 format=3 uid="uid://dn6k0vavrdg2u"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_7vrkn"]
-[ext_resource type="Script" uid="uid://c2owe7cy41x6l" path="res://main menu/background.gd" id="2_6fy38"]
-[ext_resource type="Texture2D" uid="uid://i7h3gcnbn2yy" path="res://main menu/background.png" id="2_45qoi"]
-[ext_resource type="Texture2D" uid="uid://ciawrox1ewjo3" path="res://main menu/logo.png" id="3_6fy38"]
-[ext_resource type="Script" uid="uid://iidas1panjvu" path="res://main menu/start_button.gd" id="3_cp2es"]
-[ext_resource type="Script" uid="uid://db4kq5u8ecsod" path="res://main menu/exit_button.gd" id="3_fu7sn"]
+[ext_resource type="Script" uid="uid://c2owe7cy41x6l" path="res://menus/main/background.gd" id="2_6fy38"]
+[ext_resource type="Texture2D" uid="uid://i7h3gcnbn2yy" path="res://menus/main/background.png" id="2_45qoi"]
+[ext_resource type="Texture2D" uid="uid://ciawrox1ewjo3" path="res://menus/main/logo.png" id="3_6fy38"]
+[ext_resource type="Script" uid="uid://iidas1panjvu" path="res://menus/main/start_button.gd" id="3_cp2es"]
+[ext_resource type="Script" uid="uid://db4kq5u8ecsod" path="res://menus/main/exit_button.gd" id="3_fu7sn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_45qoi"]
-bg_color = Color(0.29951698, 0.56294864, 0.8797844, 1)
+bg_color = Color(0.3372549, 0.7019608, 0.9843137, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -60,34 +60,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 60
-theme_override_constants/margin_top = 60
 theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 60
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="PanelContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/PanelContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 90
 alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_45qoi")
 
-[node name="LogoTexture" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/PanelContainer"]
+[node name="LogoTexture" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/PanelContainer"]
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("3_6fy38")
 expand_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -95,7 +102,8 @@ theme_type_variation = &"MainMenuButton"
 text = "Start"
 script = ExtResource("3_cp2es")
 
-[node name="ContinueButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -103,7 +111,7 @@ theme_type_variation = &"MainMenuButton"
 disabled = true
 text = "Continue"
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -111,7 +119,7 @@ theme_type_variation = &"MainMenuButton"
 disabled = true
 text = "Settings"
 
-[node name="ExitButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -123,5 +131,5 @@ script = ExtResource("3_fu7sn")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/StartButton" to="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/StartButton" method="_on_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/ExitButton" to="MarginContainer/HBoxContainer/VBoxContainer/VBoxContainer/ExitButton" method="_on_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" method="_on_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" method="_on_pressed"]

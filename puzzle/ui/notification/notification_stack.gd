@@ -3,7 +3,7 @@ extends VBoxContainer
 
 const MAXIMUM_NOTIFS := 5
 
-var notif_scene := preload("res://puzzle/ui/notif/notification.tscn")
+var notif_scene := preload("res://puzzle/ui/notification/notification.tscn")
 
 
 func add(message: String, duration: float, type: Puzzle.NotificationType) -> void:

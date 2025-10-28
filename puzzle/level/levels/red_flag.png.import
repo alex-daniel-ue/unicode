@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ciawrox1ewjo3"
-path="res://.godot/imported/logo.png-3315d68d2d598c0c14d594d04af82c49.ctex"
+uid="uid://cuiikqm47033j"
+path="res://.godot/imported/red_flag.png-f031e71d004685aecf21c08ad7fa91f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://main menu/logo.png"
-dest_files=["res://.godot/imported/logo.png-3315d68d2d598c0c14d594d04af82c49.ctex"]
+source_file="res://puzzle/level/levels/red_flag.png"
+dest_files=["res://.godot/imported/red_flag.png-f031e71d004685aecf21c08ad7fa91f7.ctex"]
 
 [params]
 

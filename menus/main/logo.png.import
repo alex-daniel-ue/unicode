@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7qame3wy717k"
-path="res://.godot/imported/MC_transparent.png-b15f246c4fc6a1f8a6cd5d39a0e617b3.ctex"
+uid="uid://ciawrox1ewjo3"
+path="res://.godot/imported/logo.png-731ee7306da86e858b3758c22d0f17e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/level/levels/level_2/MC_transparent.png"
-dest_files=["res://.godot/imported/MC_transparent.png-b15f246c4fc6a1f8a6cd5d39a0e617b3.ctex"]
+source_file="res://menus/main/logo.png"
+dest_files=["res://.godot/imported/logo.png-731ee7306da86e858b3758c22d0f17e1.ctex"]
 
 [params]
 

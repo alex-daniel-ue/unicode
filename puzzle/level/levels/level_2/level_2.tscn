@@ -1,0 +1,101 @@
+[gd_scene load_steps=28 format=4 uid="uid://ggwb5oxm173d"]
+
+[ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://puzzle/level/level.gd" id="1_sfmnp"]
+[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://puzzle/level/components/block_provider.gd" id="2_xgp4r"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_8hd5a"]
+[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="4_ngysj"]
+[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="5_5wfqt"]
+[ext_resource type="Resource" uid="uid://bxjjm3ig67sq2" path="res://puzzle/blocks/control flow/elif.tres" id="6_moskg"]
+[ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="7_xncrg"]
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="8_sc2l6"]
+[ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="9_mahwe"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="10_qc40d"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="11_888os"]
+[ext_resource type="Resource" uid="uid://c4f1tp3s11tra" path="res://puzzle/blocks/generic/declare_var.tres" id="12_cdr80"]
+[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="13_6e76t"]
+[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="14_ov8c3"]
+[ext_resource type="Resource" uid="uid://ih285nrl3m6r" path="res://puzzle/blocks/generic/set_var.tres" id="15_sthl6"]
+[ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="16_sd0ub"]
+[ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="17_5ueqj"]
+[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="18_ktbt0"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://puzzle/level/goal_manager.gd" id="19_ad463"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://puzzle/level/goals/destination_goal.gd" id="20_rciae"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="21_brd0a"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://puzzle/level/tilesets/school_furniture.tres" id="22_lxy28"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="23_44r8y"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://puzzle/level/objects/entities/robot/robot_character.tscn" id="24_q0b3s"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://puzzle/level/components/resettable_comp.gd" id="25_b12yw"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://puzzle/level/levels/red_flag.png" id="26_10hi1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dqsgw"]
+
+[node name="Level2" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_sfmnp")
+pan_speed = 2.0
+instructions = "Get to the classroom door again!"
+three_star_threshold = 6
+two_star_threshold = 8
+
+[node name="GenericBlockProvider" type="Node" parent="."]
+script = ExtResource("2_xgp4r")
+block_data = Array[ExtResource("3_8hd5a")]([ExtResource("4_ngysj"), ExtResource("5_5wfqt"), ExtResource("6_moskg"), ExtResource("7_xncrg"), ExtResource("8_sc2l6"), ExtResource("9_mahwe"), ExtResource("10_qc40d"), ExtResource("11_888os"), ExtResource("12_cdr80"), ExtResource("13_6e76t"), ExtResource("14_ov8c3"), ExtResource("15_sthl6"), ExtResource("16_sd0ub"), ExtResource("17_5ueqj"), ExtResource("18_ktbt0")])
+
+[node name="GoalManager" type="Node" parent="." node_paths=PackedStringArray("goals")]
+script = ExtResource("19_ad463")
+goals = [NodePath("DestinationGoal")]
+
+[node name="DestinationGoal" type="Node" parent="GoalManager" node_paths=PackedStringArray("required_entity")]
+script = ExtResource("20_rciae")
+required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(112, 128)
+zoom = Vector2(1.905, 1.905)
+limit_enabled = false
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals"]
+tile_map_data = PackedByteArray("AAABAAIAAAABAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAAAAAAAAAABAAYAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAABAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAAGAAQAAAABAAAAAAA=")
+tile_set = ExtResource("21_brd0a")
+
+[node name="Doodads" type="TileMapLayer" parent="Visuals"]
+
+[node name="Destination" type="Area2D" parent="Visuals"]
+position = Vector2(176, 143)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination"]
+shape = SubResource("CircleShape2D_dqsgw")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/Destination"]
+position = Vector2(9.536743e-07, -9.536743e-07)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("26_10hi1")
+
+[node name="YSorted" type="Node2D" parent="Visuals"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAADAAQAAAAAAAAAAAADAAMAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+tile_set = ExtResource("22_lxy28")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQADAAAAAAAGAAQAAQADAAEAAAAGAAUAAQACAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
+tile_set = ExtResource("23_44r8y")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("24_q0b3s")]
+position = Vector2(47.5, 143.5)
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" node_paths=PackedStringArray("base")]
+script = ExtResource("25_b12yw")
+base = NodePath("..")
+initial_properties = Dictionary[StringName, Variant]({
+&"transform": Transform2D(1, 0, 0, 1, 79.5, 175.5)
+})
+
+[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
+[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]

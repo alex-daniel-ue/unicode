@@ -1,19 +1,19 @@
 [gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://7tw3ahy2fijm"]
 
-[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_ip3ct"]
-[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="2_0o528"]
-[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_iabf3"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_w2w52"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="2_fyb5y"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_mdkie"]
 
 [sub_resource type="Resource" id="Resource_hb0ia"]
-script = ExtResource("1_ip3ct")
+script = ExtResource("1_w2w52")
 receptive = false
 
 [sub_resource type="Resource" id="Resource_1vt8s"]
-script = ExtResource("2_0o528")
+script = ExtResource("2_fyb5y")
 _socket_ref = SubResource("Resource_hb0ia")
 
 [resource]
-script = ExtResource("3_iabf3")
+script = ExtResource("3_mdkie")
 name = "ReceptiveEditableLineBlock"
 base_path = "uid://bq81wkp8sa2wb"
 type = 3

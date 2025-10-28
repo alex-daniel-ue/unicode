@@ -7,10 +7,10 @@
 
 [resource]
 script = ExtResource("1_ji57x")
-name = "InitBlock"
+name = "DeclareAsBlock"
 base_path = "uid://5ilfnnt1k22"
 category = "Generic"
-text = "initialize var {} to {}"
+text = "declare var {} as {}"
 text_blocks = Array[ExtResource("1_ji57x")]([ExtResource("3_kwrrs"), ExtResource("4_8ud6s")])
 Function/script = ExtResource("1_7s37g")
 Function/method = &"_initialize"

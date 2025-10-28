@@ -6,8 +6,8 @@
 [ext_resource type="TileSet" uid="uid://8muviyskgtp3" path="res://world/tilesets/school_furniture.tres" id="2_x4en2"]
 [ext_resource type="PackedScene" uid="uid://cy0m6n26anx30" path="res://world/player/player.tscn" id="5_eb2ob"]
 [ext_resource type="Script" uid="uid://cjepw5v5ebtww" path="res://world/buffer_level.gd" id="6_0qdwm"]
-[ext_resource type="PackedScene" uid="uid://j7qvjmr5oje7" path="res://puzzle/level/levels/destination_example.tscn" id="7_een3g"]
-[ext_resource type="PackedScene" uid="uid://dsc4sl1d5r71o" path="res://puzzle/level/levels/level_2/conversation_example.tscn" id="8_rxunq"]
+[ext_resource type="PackedScene" uid="uid://j7qvjmr5oje7" path="res://puzzle/level/levels/level_1/level_1.tscn" id="7_een3g"]
+[ext_resource type="PackedScene" uid="uid://dsc4sl1d5r71o" path="res://puzzle/level/levels/prototypes/conversation/conversation_example.tscn" id="8_rxunq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0qdwm"]
 radius = 28.0

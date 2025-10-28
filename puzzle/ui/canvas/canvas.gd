@@ -14,6 +14,7 @@ var zoom_speed := 0.05
 var min_zoom := 0.5
 var max_zoom := 2.0
 
+@export var serializer: Node
 @export var drop_manager: Control
 #@onready var audio_stream_player := $AudioStreamPlayer as AudioStreamPlayer
 

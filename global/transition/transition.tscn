@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bn27f2a7ek7cp"]
+
+[ext_resource type="Script" uid="uid://2c8ga5ssa0c1" path="res://global/transition/transition.gd" id="1_o2xgr"]
+
+[node name="TransitionLayer" type="CanvasLayer"]
+script = ExtResource("1_o2xgr")
+
+[node name="TopLeft" type="Polygon2D" parent="."]
+visible = false
+color = Color(0.040799998, 0.08567999, 0.12, 1)
+
+[node name="BottomRight" type="Polygon2D" parent="."]
+visible = false
+color = Color(0.040799998, 0.08567999, 0.12, 1)

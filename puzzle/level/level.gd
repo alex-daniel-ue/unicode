@@ -10,6 +10,10 @@ signal failed(reason: String)
 @export var pan_speed := 1.0
 @export_multiline var instructions: String
 
+@export_group("Rating")
+@export var three_star_threshold := 0
+@export var two_star_threshold := 0
+
 var is_panning := false
 var pan_start: Vector2
 var visuals_origin: Vector2
@@ -37,7 +41,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and is_panning:
 		var mouse_offset = get_global_mouse_position() - pan_start
 		visuals.global_position = visuals_origin + mouse_offset
-		Debug.log(get_global_mouse_position())
 		get_viewport().set_input_as_handled()
 
 func get_blocks() -> Array[Block]:

@@ -5,13 +5,13 @@
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_xhm1o"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_bsoo4"]
 [ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://puzzle/level/goal_manager.gd" id="4_yofvs"]
-[ext_resource type="Texture2D" uid="uid://d13evgwis11f8" path="res://puzzle/level/levels/level_2/father_transparent.png" id="6_dx3a6"]
+[ext_resource type="Texture2D" uid="uid://d13evgwis11f8" path="res://puzzle/level/levels/prototypes/conversation/father_transparent.png" id="6_dx3a6"]
 [ext_resource type="Script" uid="uid://ji78aa52der7" path="res://puzzle/level/goals/match_goal.gd" id="6_vtsd0"]
-[ext_resource type="Texture2D" uid="uid://b7qame3wy717k" path="res://puzzle/level/levels/level_2/MC_transparent.png" id="7_548f3"]
+[ext_resource type="Texture2D" uid="uid://b7qame3wy717k" path="res://puzzle/level/levels/prototypes/conversation/MC_transparent.png" id="7_548f3"]
 [ext_resource type="Script" uid="uid://dwywryl8xg8xi" path="res://puzzle/level/goals/sequential_goal.gd" id="7_rtinc"]
-[ext_resource type="Texture2D" uid="uid://vqp3s6m1l5wg" path="res://puzzle/level/levels/level_2/bubble.png" id="8_g5n8s"]
+[ext_resource type="Texture2D" uid="uid://vqp3s6m1l5wg" path="res://puzzle/level/levels/prototypes/conversation/bubble.png" id="8_g5n8s"]
 [ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="9_548f3"]
-[ext_resource type="Script" uid="uid://c8eej1v5tkug7" path="res://puzzle/level/levels/level_2/conversation_manager.gd" id="10_g5n8s"]
+[ext_resource type="Script" uid="uid://c8eej1v5tkug7" path="res://puzzle/level/levels/prototypes/conversation/conversation_manager.gd" id="10_g5n8s"]
 
 [sub_resource type="Theme" id="Theme_g5n8s"]
 Label/colors/font_color = Color(0, 0, 0, 1)
