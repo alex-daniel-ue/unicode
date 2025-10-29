@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://xdlq68bmovso"]
+
+[ext_resource type="Shader" uid="uid://difkhkh8ku7re" path="res://puzzle/ui/themes/shaders/buttonshaders.gdshader" id="1_yel4l"]
+
+[resource]
+shader = ExtResource("1_yel4l")
+shader_parameter/hover = false
