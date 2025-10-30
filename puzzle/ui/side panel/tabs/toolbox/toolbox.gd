@@ -4,7 +4,7 @@ extends MarginContainer
 @export var _internal_category_order: PackedStringArray
 @export var category_container: VBoxContainer
 
-var category_scene := preload("res://puzzle/ui/side panel/tabs/toolbox/category.tscn")
+const category_scene := preload("res://puzzle/ui/side panel/tabs/toolbox/category.tscn")
 var existing_categories: PackedStringArray
 
 

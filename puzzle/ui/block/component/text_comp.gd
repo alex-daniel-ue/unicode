@@ -2,7 +2,7 @@ class_name BlockTextComponent
 extends BlockBaseComponent
 
 
-var line_hbox_scene := preload("res://puzzle/ui/block/templates/line_hbox.tscn")
+const line_hbox_scene := preload("res://puzzle/ui/block/templates/line_hbox.tscn")
 
 
 func _ready() -> void:

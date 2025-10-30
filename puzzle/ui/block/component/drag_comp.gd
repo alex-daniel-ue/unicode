@@ -5,7 +5,7 @@ extends BlockBaseComponent
 const DRAG_CENTER_DURATION := 0.5
 const DRAG_PREVIEW_TRANSPARENCY := 0.5
 
-var dummy_data := preload("res://puzzle/ui/block/dummy.tres")
+var dummy_data := load("res://puzzle/ui/block/dummy.tres")
 
 
 func generate_preview() -> Control:
@@ -57,7 +57,7 @@ func copy() -> Block:
 	# Workaround found on Github issue #78060
 	# WARNING: Unforeseen consequences, especially owner logic
 	var packed_scn := PackedScene.new()
-	assert(packed_scn.pack(base) == OK)
+	Debug.log("Copy success (packed scene workaround)? %b" % [packed_scn.pack(base) == OK])
 	var block := packed_scn.instantiate()
 	
 	block.name = "%s%d" % [base.name, block.get_instance_id()]
