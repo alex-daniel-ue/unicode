@@ -7,6 +7,8 @@ signal errored(message: String)
 
 enum PreviewType { NONE, DRAG, DROP }
 
+const DROP_SOUND := preload("res://audio/block_drop.mp3")
+
 static var IS_SOLID := func(block: Block) -> bool:
 	return not block is SocketBlock
 static var IS_NESTED := func(block: Block) -> bool:

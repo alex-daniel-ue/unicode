@@ -21,3 +21,8 @@ func _on_return_button_7_pressed() -> void:
 	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
 	
 	get_tree().change_scene_to_file("res://menus/level select/level_select.tscn")
+
+
+func _on_return_button_4_pressed() -> void:
+	Settings.show()
+	hide()

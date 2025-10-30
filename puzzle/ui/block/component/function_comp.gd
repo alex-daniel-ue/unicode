@@ -5,6 +5,8 @@ extends BlockBaseComponent
 signal notif_pushed(message: String, type: Puzzle.NotificationType)
 signal errored(block: Block)
 
+const ERROR_SOUND := preload("res://audio/fail.mp3")
+
 ## Function types are based on the existence of `func_script` and `func_method`
 ## in a BlockData.
 ## 1. STANDARD - When both are present. Creates a dummy Node and attaches
@@ -96,6 +98,8 @@ func error(message: String) -> void:
 	
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
+	
+	SfxPlayer.play(ERROR_SOUND)
 	
 	errored.emit(base)
 	notif_pushed.emit(message, Puzzle.NotificationType.ERROR)

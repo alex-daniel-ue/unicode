@@ -17,6 +17,8 @@ const FAST_DELAY := 0.15
 const NOTIF_DURATION := 2.0
 
 const LEVEL_SELECT_SCENE := preload("res://menus/level select/level_select.tscn")
+const COMPLETE_SOUND := preload("res://audio/success.mp3")
+const PUZZLE_MUSIC := preload("res://audio/12 - River Boy - Pilgrim's Passage.mp3")
 
 static var is_running := false
 static var is_fast := false
@@ -49,6 +51,8 @@ var level: Level
 func _ready() -> void:
 	side_panels[0].show_menu(true)
 	side_panels[1].show_menu(true)
+	
+	MusicPlayer.play_track(PUZZLE_MUSIC)
 	
 	if Game.pending_level != null:
 		configure_level()
@@ -155,6 +159,7 @@ func _on_level_completed() -> void:
 	has_errored = true
 	
 	var star_count := 1
+	SfxPlayer.play(COMPLETE_SOUND)
 	
 	#region Put this entire section into its own .gd script, "level_complete_popup" probably
 	var blocks := 0

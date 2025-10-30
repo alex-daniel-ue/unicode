@@ -57,7 +57,7 @@ func copy() -> Block:
 	# Workaround found on Github issue #78060
 	# WARNING: Unforeseen consequences, especially owner logic
 	var packed_scn := PackedScene.new()
-	Debug.log("Copy success (packed scene workaround)? %b" % [packed_scn.pack(base) == OK])
+	Debug.log("Copy success (packed scene workaround)? %s" % [packed_scn.pack(base) == OK])
 	var block := packed_scn.instantiate()
 	
 	block.name = "%s%d" % [base.name, block.get_instance_id()]

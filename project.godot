@@ -22,6 +22,9 @@ Debug="*res://global/debug.gd"
 Game="*res://game.gd"
 Core="*res://global/core.gd"
 Transition="*res://global/transition/transition.tscn"
+MusicPlayer="*res://global/audio/music_player.tscn"
+SfxPlayer="*res://global/audio/sfx_player.gd"
+Settings="*res://menus/settings/settings.tscn"
 
 [display]
 

@@ -56,23 +56,34 @@ theme_override_fonts/font = ExtResource("2_bsw82")
 theme_override_font_sizes/font_size = 60
 text = "SEQUENCING - MOVEMENT"
 
-[node name="LevelRow" type="HBoxContainer" parent="MarginContainer"]
+[node name="Label" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "STARS: 0/6"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 34
+
+[node name="LevelRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 64
+theme_override_constants/separation = 44
 alignment = 1
 
-[node name="Button" type="Button" parent="MarginContainer/LevelRow"]
-custom_minimum_size = Vector2(120, 120)
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(121.52, 79.285)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
 text = "LEVEL 1"
 
-[node name="Button2" type="Button" parent="MarginContainer/LevelRow"]
-custom_minimum_size = Vector2(120, 120)
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(121.52, 79.285)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
@@ -80,8 +91,8 @@ theme_override_font_sizes/font_size = 25
 text = "LEVEL 2
 "
 
-[node name="Button3" type="Button" parent="MarginContainer/LevelRow"]
-custom_minimum_size = Vector2(120, 120)
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(121.52, 79.285)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
@@ -89,8 +100,8 @@ theme_override_font_sizes/font_size = 25
 disabled = true
 text = "LEVEL 3"
 
-[node name="Button4" type="Button" parent="MarginContainer/LevelRow"]
-custom_minimum_size = Vector2(120, 120)
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(121.52, 79.285)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
@@ -98,8 +109,8 @@ theme_override_font_sizes/font_size = 25
 disabled = true
 text = "LEVEL 4"
 
-[node name="Button5" type="Button" parent="MarginContainer/LevelRow"]
-custom_minimum_size = Vector2(120, 120)
+[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(121.52, 79.285)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
@@ -107,12 +118,115 @@ theme_override_font_sizes/font_size = 25
 disabled = true
 text = "LEVEL 5"
 
-[node name="Label" type="Label" parent="MarginContainer"]
+[node name="LevelRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
-text = "STARS: 0/6"
+size_flags_vertical = 4
+theme_override_constants/separation = 44
+alignment = 1
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 6"
+
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 7"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 8"
+
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 9"
+
+[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 10"
+
+[node name="LevelRow3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 44
+alignment = 1
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/LevelRow3"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 11"
+
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/LevelRow3"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 12
+"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/LevelRow3"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 13"
+
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/LevelRow3"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 14"
+
+[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/LevelRow3"]
+custom_minimum_size = Vector2(121.52, 79.285)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "LEVEL 15"
 
 [connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]
-[connection signal="pressed" from="MarginContainer/LevelRow/Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="MarginContainer/LevelRow/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow2/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow2/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow3/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelRow3/Button2" to="." method="_on_button_2_pressed"]

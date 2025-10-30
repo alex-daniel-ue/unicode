@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dn6k0vavrdg2u"]
+[gd_scene load_steps=7 format=3 uid="uid://dn6k0vavrdg2u"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_7vrkn"]
 [ext_resource type="Script" uid="uid://c2owe7cy41x6l" path="res://menus/main/background.gd" id="2_6fy38"]
 [ext_resource type="Texture2D" uid="uid://i7h3gcnbn2yy" path="res://menus/main/background.png" id="2_45qoi"]
+[ext_resource type="Script" uid="uid://bvgs1hyva5gds" path="res://menus/main/main_menu.gd" id="2_gma2u"]
 [ext_resource type="Texture2D" uid="uid://ciawrox1ewjo3" path="res://menus/main/logo.png" id="3_6fy38"]
-[ext_resource type="Script" uid="uid://iidas1panjvu" path="res://menus/main/start_button.gd" id="3_cp2es"]
-[ext_resource type="Script" uid="uid://db4kq5u8ecsod" path="res://menus/main/exit_button.gd" id="3_fu7sn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_45qoi"]
 bg_color = Color(0.3372549, 0.7019608, 0.9843137, 1)
@@ -27,6 +26,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_7vrkn")
+script = ExtResource("2_gma2u")
 
 [node name="Background" type="Control" parent="." node_paths=PackedStringArray("texture")]
 layout_mode = 1
@@ -100,23 +100,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"MainMenuButton"
 text = "Start"
-script = ExtResource("3_cp2es")
-
-[node name="ContinueButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(200, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"MainMenuButton"
-disabled = true
-text = "Continue"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"MainMenuButton"
-disabled = true
 text = "Settings"
 
 [node name="ExitButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
@@ -125,11 +114,11 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"MainMenuButton"
 text = "Exit"
-script = ExtResource("3_fu7sn")
 
 [node name="RightEmptySpace" type="Control" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" method="_on_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" method="_on_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

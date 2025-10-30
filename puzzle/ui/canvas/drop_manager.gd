@@ -3,6 +3,8 @@ extends Control
 
 signal block_dropped
 
+const DROP_SOUND := preload("res://audio/block_drop.mp3")
+
 var current_block: Block
 var drop_preview: Control
 var dp_container: Control
@@ -57,6 +59,8 @@ func _notification(what: int) -> void:
 			
 			# Handle drop event
 			current_block.visible = true
+			SfxPlayer.play(DROP_SOUND)
+			
 			if dp_container != null:
 				# Insert Block data
 				current_block.orphan()

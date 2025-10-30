@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://biwoa267t4wxt"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_n0cus"]
+[ext_resource type="Script" uid="uid://dtncwiuk3cpfp" path="res://menus/settings/settings.gd" id="2_jykqg"]
+
+[node name="Settings" type="PopupPanel"]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(330, 160)
+visible = true
+theme = ExtResource("1_n0cus")
+script = ExtResource("2_jykqg")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 330.0
+offset_bottom = 160.0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(300, 130)
+layout_mode = 2
+theme_override_constants/separation = 13
+alignment = 1
+
+[node name="MusicEnableRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MusicEnableRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music"
+horizontal_alignment = 1
+
+[node name="EnableButton" type="Button" parent="MarginContainer/VBoxContainer/MusicEnableRow"]
+custom_minimum_size = Vector2(0, 35.93)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MainMenuButton"
+text = "Enable"
+
+[node name="MusicVolumeRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MusicVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music Vol."
+horizontal_alignment = 1
+
+[node name="MusicVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/MusicVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.1
+value = 0.5
+
+[node name="SFXVolumeRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/SFXVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SFX Vol."
+horizontal_alignment = 1
+
+[node name="SFXVolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/SFXVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.1
+value = 0.8
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MusicEnableRow/EnableButton" to="." method="_on_enable_button_pressed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/SFXVolumeRow/SFXVolumeSlider" to="." method="_on_sfx_volume_slider_value_changed"]
