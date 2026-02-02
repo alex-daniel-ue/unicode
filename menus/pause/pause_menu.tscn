@@ -6,14 +6,14 @@
 [node name="PauseMenu" type="PopupPanel"]
 oversampling_override = 1.0
 initial_position = 2
-size = Vector2i(280, 244)
+size = Vector2i(280, 196)
 visible = true
 theme = ExtResource("1_8vgpe")
 script = ExtResource("2_n5dtg")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 offset_right = 280.0
-offset_bottom = 244.0
+offset_bottom = 196.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
@@ -24,7 +24,7 @@ layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="ReturnButton6" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -33,7 +33,8 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Resume"
 
-[node name="ReturnButton4" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(170, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -42,7 +43,7 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Settings"
 
-[node name="ReturnButton7" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="LevelSelectButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -51,7 +52,7 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Back to level select"
 
-[node name="ReturnButton5" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -60,7 +61,7 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Back to menu"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton6" to="." method="hide"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton4" to="." method="_on_return_button_4_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton7" to="." method="_on_return_button_7_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ReturnButton5" to="." method="_on_return_button_5_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="hide"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/SettingsButton" to="." method="_on_return_button_4_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelSelectButton" to="." method="_on_return_button_7_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_return_button_5_pressed"]

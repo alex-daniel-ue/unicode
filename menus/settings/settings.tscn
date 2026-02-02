@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://biwoa267t4wxt"]
+[gd_scene load_steps=2 format=3 uid="uid://biwoa267t4wxt"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_n0cus"]
-[ext_resource type="Script" uid="uid://dtncwiuk3cpfp" path="res://menus/settings/settings.gd" id="2_jykqg"]
 
 [node name="Settings" type="PopupPanel"]
 oversampling_override = 1.0
@@ -9,7 +8,6 @@ initial_position = 1
 size = Vector2i(330, 160)
 visible = true
 theme = ExtResource("1_n0cus")
-script = ExtResource("2_jykqg")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 offset_right = 330.0

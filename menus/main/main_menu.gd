@@ -1,11 +1,6 @@
 extends Control
 
 
-const MAIN_MENU_MUSIC := preload("res://audio/[OST] Super Mario Maker - Title Screen.mp3")
-
-func _ready() -> void:
-	MusicPlayer.play_track(MAIN_MENU_MUSIC)
-
 func _on_start_button_pressed() -> void:
 	Transition.cover()
 	await Transition.current_tween.finished

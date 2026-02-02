@@ -16,13 +16,16 @@ config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 config/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)
 
+[audio]
+
+buses/default_bus_layout=""
+
 [autoload]
 
 Debug="*res://global/debug.gd"
 Game="*res://game.gd"
 Core="*res://global/core.gd"
 Transition="*res://global/transition/transition.tscn"
-MusicPlayer="*res://global/audio/music_player.tscn"
 SfxPlayer="*res://global/audio/sfx_player.gd"
 Settings="*res://menus/settings/settings.tscn"
 
@@ -33,6 +36,7 @@ window/stretch/scale_mode="integer"
 [file_customization]
 
 folder_colors={
+"res://audio/": "blue",
 "res://menus/": "pink",
 "res://puzzle/": "yellow",
 "res://puzzle/blocks/": "purple",

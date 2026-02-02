@@ -2,7 +2,6 @@ extends Node
 
 
 const PUZZLE_SCENE := preload("res://puzzle/puzzle.tscn")
-const WORLD_SCENE := preload("res://world/rooms/computer_lab.tscn")
 
 var pending_level: PackedScene
 var completed_levels: PackedStringArray
@@ -27,13 +26,6 @@ func start_puzzle() -> void:
 	
 	await get_tree().scene_changed
 	pending_level = null
-
-func return_to_world() -> void:
-	Transition.cover()
-	await Transition.current_tween.finished
-	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
-	
-	get_tree().change_scene_to_packed(WORLD_SCENE)
 
 func save_to_disk() -> void:
 	pass
