@@ -61,6 +61,7 @@ func _process(_delta: float) -> void:
 		return
 	
 	var this_socket := get_preview_socket()
+	PuzzleCanvas.drag_preview.visible = this_socket == null
 	if this_socket != null:
 		if this_socket != dp_socket:
 			# Temporarily parent the drop_preview to the socket to visualize the drop

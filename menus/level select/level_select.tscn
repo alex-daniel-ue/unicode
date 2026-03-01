@@ -6,19 +6,19 @@
 [ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="2_bsw82"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_lhy6y"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soyww"]
 shader = ExtResource("1_soyww")
 shader_parameter/cell_size = 25.0
-shader_parameter/dot_size = 0.05
-shader_parameter/background_color = Color(0.015227, 0.0145274, 0.14699, 1)
-shader_parameter/dot_color = Color(0.0901598, 0.264478, 0.391381, 1)
+shader_parameter/dot_size = 0.0800000038
+shader_parameter/background_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
+shader_parameter/dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
 shader_parameter/resolution = Vector2(1152, 648)
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
 [node name="LevelSelect" type="ColorRect"]
-material = SubResource("ShaderMaterial_vifbn")
+material = SubResource("ShaderMaterial_soyww")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

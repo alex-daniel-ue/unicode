@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=24 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -7,10 +7,13 @@
 [ext_resource type="Script" uid="uid://bl501vpm8qns7" path="res://puzzle/ui/side panel/button_container.gd" id="4_8isiv"]
 [ext_resource type="PackedScene" uid="uid://c0d71dt2bes7j" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.tscn" id="5_vlyq7"]
 [ext_resource type="Script" uid="uid://coidfkqmv7bsy" path="res://puzzle/ui/side panel/side_panel_button.gd" id="6_82356"]
+[ext_resource type="Texture2D" uid="uid://cgbux3a3yqg6t" path="res://puzzle/ui/block/templates/socket/value/debug_texture.png" id="6_equ7n"]
 [ext_resource type="Texture2D" uid="uid://wb13cdfhb2uc" path="res://puzzle/ui/side panel/icons/pixelarticons--info-box.png" id="6_nnviu"]
+[ext_resource type="Texture2D" uid="uid://wnv53oda41m1" path="res://puzzle/ui/side panel/icons/pixelarticons--send.png" id="7_e1dgq"]
 [ext_resource type="Texture2D" uid="uid://b4d2i6g1qrdyj" path="res://puzzle/ui/side panel/icons/pixelarticons--briefcase-plus.png" id="8_dipl1"]
 [ext_resource type="Texture2D" uid="uid://dc1lr4umqons4" path="res://puzzle/ui/side panel/icons/pixelarticons--trash.png" id="9_vlyq7"]
 [ext_resource type="Texture2D" uid="uid://dh03u1532tml3" path="res://puzzle/ui/side panel/icons/pixelarticons--list.png" id="10_dipl1"]
+[ext_resource type="Texture2D" uid="uid://cws4u3e6hnyyw" path="res://puzzle/ui/side panel/icons/pixelarticons--robot.png" id="11_bvcr2"]
 [ext_resource type="Script" uid="uid://2rcrv74yaqd4" path="res://puzzle/ui/notification/notification_stack.gd" id="11_j1boe"]
 [ext_resource type="Texture2D" uid="uid://b64w4rorm4jdl" path="res://puzzle/ui/side panel/icons/pixelarticons--play.png" id="11_vlyq7"]
 [ext_resource type="Script" uid="uid://djagmtqt1y8sg" path="res://puzzle/ui/side panel/bottom buttons/trash/trash_button.gd" id="11_xr7vu"]
@@ -19,6 +22,17 @@
 [ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvcr2"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("6_equ7n")
+texture_margin_left = 24.0
+texture_margin_top = 24.0
+texture_margin_right = 24.0
+texture_margin_bottom = 24.0
 
 [node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notification_stack", "level_viewport", "level_complete_popup", "stars", "pause_menu", "run_button", "stop_button", "speed_button", "trash_button")]
 layout_mode = 3
@@ -68,12 +82,15 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="UserInterface/SideMenuLeft"]
+clip_contents = true
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanel"
 script = ExtResource("2_3gr0x")
 
 [node name="PuzzleInformation" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -103,6 +120,77 @@ autowrap_mode = 2
 visible = false
 layout_mode = 1
 
+[node name="AIAssistant" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_xv3xb")
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 0
+
+[node name="HTTPRequest" type="HTTPRequest" parent="UserInterface/SideMenuLeft/Panel/AIAssistant"]
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ChatStack" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChatBubble" type="HBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack"]
+layout_mode = 2
+alignment = 2
+
+[node name="BubbleTexture" type="PanelContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack/ChatBubble"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bvcr2")
+
+[node name="Label" type="Label" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack/ChatBubble/BubbleTexture"]
+layout_mode = 2
+theme_type_variation = &"ChatMessage"
+text = "asdasdasd"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="UserMessageField" type="TextEdit" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_xv3xb")
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+placeholder_text = "What do you need help with?"
+context_menu_enabled = false
+emoji_menu_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+virtual_keyboard_show_on_focus = false
+middle_mouse_paste_enabled = false
+empty_selection_clipboard_enabled = false
+wrap_mode = 1
+scroll_smooth = true
+scroll_v_scroll_speed = 40.0
+
+[node name="InfoMenuButton" type="Button" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+icon = ExtResource("7_e1dgq")
+icon_alignment = 1
+expand_icon = true
+
 [node name="ButtonContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft" node_paths=PackedStringArray("panel")]
 layout_mode = 2
 mouse_filter = 2
@@ -128,6 +216,16 @@ icon = ExtResource("8_dipl1")
 expand_icon = true
 script = ExtResource("6_82356")
 associated_contents = NodePath("../../Panel/PuzzleToolbox")
+
+[node name="AIAssistantMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+icon = ExtResource("11_bvcr2")
+expand_icon = true
+script = ExtResource("6_82356")
+associated_contents = NodePath("../../Panel/AIAssistant")
 
 [node name="ExpandSeparator" type="Control" parent="UserInterface/SideMenuLeft/ButtonContainer"]
 layout_mode = 2
@@ -231,7 +329,7 @@ script = ExtResource("16_tkwoe")
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
-theme_type_variation = &"SidePanelButton"
+theme_type_variation = &"PlayButton"
 icon = ExtResource("11_vlyq7")
 expand_icon = true
 
@@ -239,7 +337,7 @@ expand_icon = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
-theme_type_variation = &"SidePanelButton"
+theme_type_variation = &"StopButton"
 disabled = true
 icon = ExtResource("16_vm51y")
 expand_icon = true

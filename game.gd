@@ -1,8 +1,6 @@
 extends Node
 
 
-const PUZZLE_SCENE := preload("res://puzzle/puzzle.tscn")
-
 var pending_level: PackedScene
 var completed_levels: PackedStringArray
 var last_world_pos: Vector2
@@ -22,7 +20,7 @@ func start_puzzle() -> void:
 	await Transition.current_tween.finished
 	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
 	
-	get_tree().change_scene_to_packed(PUZZLE_SCENE)
+	get_tree().change_scene_to_packed(Core.PUZZLE_CANVAS)
 	
 	await get_tree().scene_changed
 	pending_level = null
@@ -35,7 +33,6 @@ func load_from_disk(path: String) -> void:
 
 func sleep(seconds: float) -> void:
 	if seconds <= 0:
-		await get_tree().process_frame
 		return
 	
 	await get_tree().create_timer(seconds).timeout

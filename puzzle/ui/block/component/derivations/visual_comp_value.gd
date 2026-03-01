@@ -25,9 +25,7 @@ func _ready() -> void:
 func reset() -> void:
 	update_type_color()
 
-## MILD FIXME: LineEdit.text_changed and OptionButton.item_selected both pass
-## one argument, necessitating _unused_arg. Find some way to unbind arguments?
-func update_type_color(_unused_arg: Variant = null) -> void:
+func update_type_color() -> void:
 	#region Explicit type conversion hack
 	@warning_ignore("confusable_local_usage", "shadowed_variable_base_class")
 	var base := base as ValueBlock
@@ -44,4 +42,4 @@ func update_type_color(_unused_arg: Variant = null) -> void:
 		target_color = BOOL_COLORS[value]
 		return
 	
-	target_color = TYPE_COLORS[type]
+	target_color = TYPE_COLORS.get(type, Color.WHITE)

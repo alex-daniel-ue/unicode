@@ -1,59 +1,42 @@
 extends CanvasLayer
 
 
-@export var transition_time := 0.4
+const SHADER_PARAM_PROGRESS := "shader_parameter/progress"
 
-@onready var top_left := $TopLeft as Polygon2D
-@onready var bottom_right := $BottomRight as Polygon2D
+@export var transition_time := 0.6
 
-var screen_size: Vector2
+@onready var screen := $DiamondScreen as ColorRect
+
 var current_tween: Tween
 
 
-func _ready() -> void:
-	get_viewport().size_changed.connect(_update_screen_size)
-	_update_screen_size()
-
-func _update_screen_size() -> void:
-	screen_size = get_viewport().get_visible_rect().size
-	_setup_polygons()
-
-func _setup_polygons() -> void:
-	top_left.polygon = PackedVector2Array([
-		Vector2.ZERO,
-		Vector2(screen_size.x, 0),
-		Vector2(0, screen_size.y)
-	])
-	
-	bottom_right.polygon = PackedVector2Array([
-		Vector2(screen_size.x, 0),
-		screen_size,
-		Vector2(0, screen_size.y)
-	])
-
-func _set_visible(to: bool) -> void:
-	top_left.visible = to
-	bottom_right.visible = to
-
 func cover() -> void:
-	_set_visible(true)
+	screen.visible = true
 	
 	current_tween = create_tween()
 	current_tween.set_parallel()
 	
-	current_tween.tween_property(top_left, "position", Vector2.ZERO, transition_time)\
-		.from(-screen_size / 2.).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	current_tween.tween_property(bottom_right, "position", Vector2.ZERO, transition_time)\
-		.from(screen_size / 2.).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	current_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 1, transition_time)
 
 func reveal() -> void:
 	current_tween = create_tween()
 	current_tween.set_parallel()
 	
-	current_tween.tween_property(top_left, "position", -screen_size / 2., transition_time)\
-		.from(Vector2.ZERO).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	current_tween.tween_property(bottom_right, "position", screen_size / 2., transition_time)\
-		.from(Vector2.ZERO).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	current_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 0, transition_time)
 	
 	await current_tween.finished
-	_set_visible(false)
+	screen.visible = false
+
+func change_scene(scene: Variant) -> void:
+	cover()
+	await current_tween.finished
+	get_tree().scene_changed.connect(reveal, CONNECT_ONE_SHOT)
+	
+	if scene is String:
+		get_tree().change_scene_to_file(scene)
+	elif scene is PackedScene:
+		get_tree().change_scene_to_packed(scene)
+	else:
+		push_error("Passed scene isn't String nor PackedScene! %s" % scene)

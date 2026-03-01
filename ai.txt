@@ -1,0 +1,6 @@
+
+
+1. Learn response format from ChatGPT
+2. Make chat bubble scene, put text stream animation inside
+3. Dynamically display chat bubbles, use VBoxContainer > NinePatchRect(s) > MarginContainer > Label
+4. Add submit 

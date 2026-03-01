@@ -9,9 +9,9 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
 shader = ExtResource("1_c3b4b")
 shader_parameter/cell_size = 25.0
-shader_parameter/dot_size = 0.05
-shader_parameter/background_color = Color(0.015227, 0.0145274, 0.14699, 1)
-shader_parameter/dot_color = Color(0.0901598, 0.264478, 0.391381, 1)
+shader_parameter/dot_size = 0.0800000038
+shader_parameter/background_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
+shader_parameter/dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
 shader_parameter/resolution = Vector2(1152, 648)
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01

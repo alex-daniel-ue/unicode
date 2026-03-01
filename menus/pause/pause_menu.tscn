@@ -33,16 +33,6 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Resume"
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(170, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("1_8vgpe")
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 18
-text = "Settings"
-
 [node name="LevelSelectButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 40)
 layout_mode = 2
@@ -62,6 +52,5 @@ theme_override_font_sizes/font_size = 18
 text = "Back to menu"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="hide"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/SettingsButton" to="." method="_on_return_button_4_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelSelectButton" to="." method="_on_return_button_7_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_return_button_5_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

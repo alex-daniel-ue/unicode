@@ -27,7 +27,6 @@ Game="*res://game.gd"
 Core="*res://global/core.gd"
 Transition="*res://global/transition/transition.tscn"
 SfxPlayer="*res://global/audio/sfx_player.gd"
-Settings="*res://menus/settings/settings.tscn"
 
 [display]
 
@@ -38,6 +37,7 @@ window/stretch/scale_mode="integer"
 folder_colors={
 "res://audio/": "blue",
 "res://menus/": "pink",
+"res://output niyo/": "gray",
 "res://puzzle/": "yellow",
 "res://puzzle/blocks/": "purple",
 "res://puzzle/functions/": "teal",

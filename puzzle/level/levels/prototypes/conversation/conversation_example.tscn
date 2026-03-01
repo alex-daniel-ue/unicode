@@ -81,7 +81,7 @@ scale = Vector2(0.25, -0.25)
 texture = ExtResource("6_dx3a6")
 
 [node name="RightSpeechBubble" type="Sprite2D" parent="FatherSprite"]
-position = Vector2(547.9999, -271.99994)
+position = Vector2(559.9999, -307.99994)
 scale = Vector2(0.396, 0.396)
 texture = ExtResource("8_g5n8s")
 metadata/_edit_group_ = true

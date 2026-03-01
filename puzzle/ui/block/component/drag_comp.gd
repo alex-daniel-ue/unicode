@@ -21,12 +21,17 @@ func generate_preview() -> Control:
 	drag_preview.position = -base.get_local_mouse_position()
 	
 	if base is NestedBlock:
-		var block_count := len(base.get_blocks())
+		var block_count := 0
+		for node in Core.get_children_recursive(base.mouth, true):
+			if node is Block and Block.IS_SOLID.call(node):
+				block_count += 1
+		
 		if block_count > 0:
 			var dummy := Block.construct(dummy_data.duplicate(true))
 			dummy.data.text %= [block_count, "s" if block_count != 1 else ""]
 			
 			drag_preview.mouth.add_child(dummy)
+
 	
 	return drag_preview_container
 
@@ -54,10 +59,13 @@ func is_copy_valid(event: InputEvent) -> bool:
 func copy() -> Block:
 	_set_block_owner(self)
 	
-	# Workaround found on Github issue #78060
-	# WARNING: Unforeseen consequences, especially owner logic
+	# Workaround for node duplication based on GitHub issue #78060
+	# WARNING: This packing/instantiating method may have unforeseen
+	# consequences, particularly regarding node ownership
 	var packed_scn := PackedScene.new()
-	Debug.log("Copy success (packed scene workaround)? %s" % [packed_scn.pack(base) == OK])
+	if packed_scn.pack(base) != OK:
+		Debug.log("Copy failed! (packed scene workaround)")
+	
 	var block := packed_scn.instantiate()
 	
 	block.name = "%s%d" % [base.name, block.get_instance_id()]
@@ -72,10 +80,13 @@ func copy() -> Block:
 	
 	return block
 
-# MEDIUM FIXME: Unnecessary?
+# MEDIUM FIXME: Verify if explicitly setting the node owner recursively is still
+# necessary.
 func _set_block_owner(node: Node) -> void:
-	for child in Core.get_children_recursive(node, true):
-		if child.owner == null:
-			child.owner = node
-			if child is Block:
-				_set_block_owner(child)
+	return
+	
+	#for child in Core.get_children_recursive(node, true):
+		#if child.owner == null:
+			#child.owner = node
+			#if child is Block:
+				#_set_block_owner(child)

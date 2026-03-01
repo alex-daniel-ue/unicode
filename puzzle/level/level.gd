@@ -7,41 +7,60 @@ signal completed
 @warning_ignore("unused_signal")
 signal failed(reason: String)
 
-@export var pan_speed := 1.0
 @export_multiline var instructions: String
 
 @export_group("Rating")
 @export var three_star_threshold := 0
 @export var two_star_threshold := 0
 
-var is_panning := false
-var pan_start: Vector2
-var visuals_origin: Vector2
+@export_group("Zoom")
+@export var zoom_speed := 1.15
+@export var min_zoom := 0.5
+@export var max_zoom := 3.0
 
-@onready var visuals: Node2D = $Visuals
+@onready var visuals: Node2D = get_node_or_null("Visuals")
+@onready var camera: Camera2D = get_node_or_null("Camera2D")
+
+var camera_start_position: Vector2
+var camera_start_zoom: Vector2
 
 
 func _ready() -> void:
+	if camera:
+		camera_start_position = camera.position
+		camera_start_zoom = camera.zoom
+		
 	clear_group(&"resettable")
 	for child in Core.get_children_recursive(self, true):
 		if child is Resettable:
 			child.base.add_to_group(&"resettable")
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pan"):
-		is_panning = true
-		pan_start = get_global_mouse_position()
-		visuals_origin = visuals.global_position
-		get_viewport().set_input_as_handled()
+	if not camera: return
 	
-	elif event.is_action_released("pan"):
-		is_panning = false
-		get_viewport().set_input_as_handled()
-	
-	elif event is InputEventMouseMotion and is_panning:
-		var mouse_offset = get_global_mouse_position() - pan_start
-		visuals.global_position = visuals_origin + mouse_offset
-		get_viewport().set_input_as_handled()
+	if event is InputEventMouseButton and event.pressed:
+		var zoom_in = event.button_index == MOUSE_BUTTON_WHEEL_UP
+		var zoom_out = event.button_index == MOUSE_BUTTON_WHEEL_DOWN
+		
+		if zoom_in or zoom_out:
+			var factor = zoom_speed if zoom_in else (1.0 / zoom_speed)
+			var new_zoom_val = clampf(camera.zoom.x * factor, min_zoom, max_zoom)
+			
+			if new_zoom_val != camera.zoom.x:
+				# Get offset from the center of the viewport
+				var screen_mouse_pos = get_viewport().get_mouse_position()
+				var center_pos = get_viewport().get_visible_rect().size / 2.0
+				var offset = screen_mouse_pos - center_pos
+				
+				# Get coordinates of the world currently right under the mouse
+				var world_before = camera.global_position + offset / camera.zoom.x
+				camera.zoom = Vector2(new_zoom_val, new_zoom_val)
+				var world_after = camera.global_position + offset / camera.zoom.x
+				
+				# Shift the camera to compensate for the change in world coordinates
+				camera.global_position += world_before - world_after
+				
+			get_viewport().set_input_as_handled()
 
 func get_blocks() -> Array[Block]:
 	var result: Array[Block]

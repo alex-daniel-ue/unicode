@@ -17,11 +17,12 @@ func set_complete(value: bool) -> void:
 		is_complete = value
 		completion_changed.emit()
 
-# MILD FIXME: Code smell. This function was made necessary because (1) you can't
-# 	assign a bound Callable as a setter, (2) you must have the exact function
-#	signature for the setter, (3) making the setter be an overloaded setter with
-#	default false `force` will result in an infinite loop, and (4) I don't want to
-#	add another variable for forcing completion.
+# MILD FIXME: Code smell. This dedicated function is necessary to bypass the
+# active/permanent  checks in the setter. Bypassing couldn't be done cleanly
+# because: (1) bound Callables cannot be assigned as setters, (2) setters
+# enforce a strict function signature, (3) adding a default 'force' argument to
+# the setter causes an infinite loop, and (4) adding an extra class variable
+# just for forcing completion feels clunky.
 func force_complete(value: bool) -> void:
 	var temp := permanent
 	permanent = false

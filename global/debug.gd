@@ -1,7 +1,12 @@
 extends Node
 
 
+var do_debug := true
+
+
 func log(message: Variant = "", separator := ' ') -> void:
+	if not do_debug: return
+	
 	if message is Array[Variant]:
 		for index in range(len(message)):
 			if message[index] is float:

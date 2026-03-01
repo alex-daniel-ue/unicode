@@ -1,14 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://bn27f2a7ek7cp"]
+[gd_scene load_steps=4 format=3 uid="uid://bn27f2a7ek7cp"]
 
 [ext_resource type="Script" uid="uid://2c8ga5ssa0c1" path="res://global/transition/transition.gd" id="1_o2xgr"]
+[ext_resource type="Shader" uid="uid://bifdf8wi5omnk" path="res://global/transition/diamond_screen_transition.gdshader" id="2_fg5tk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_btgkx"]
+shader = ExtResource("2_fg5tk")
+shader_parameter/progress = 0.0
+shader_parameter/diamondPixelSize = 32.0
 
 [node name="TransitionLayer" type="CanvasLayer"]
 script = ExtResource("1_o2xgr")
 
-[node name="TopLeft" type="Polygon2D" parent="."]
+[node name="DiamondScreen" type="ColorRect" parent="."]
 visible = false
-color = Color(0.040799998, 0.08567999, 0.12, 1)
-
-[node name="BottomRight" type="Polygon2D" parent="."]
-visible = false
-color = Color(0.040799998, 0.08567999, 0.12, 1)
+material = SubResource("ShaderMaterial_btgkx")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.039215688, 0.08627451, 0.12156863, 1)

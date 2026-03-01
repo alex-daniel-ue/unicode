@@ -1,12 +1,9 @@
 
 3. Make variable declaration and references change color during runtime, reflecting
 	their data type
-6. Scene transitions
-7. Puzzle environment zooming
 8. Sequenced goals/tests
 9. SubViewport fitting
-10. Either make level approach center or reset on play
 
-
-2. Level ideas
-4. Menus
+LowerLip of CapBlocks respond to current hover
+Preview block count goes deep use get_children_recursive is Block
+background shader moves with pan in puzzle scene

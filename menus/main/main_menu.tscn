@@ -101,14 +101,6 @@ size_flags_horizontal = 4
 theme_type_variation = &"MainMenuButton"
 text = "Start"
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(200, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"MainMenuButton"
-text = "Settings"
-
 [node name="ExitButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
@@ -119,7 +111,7 @@ text = "Exit"
 [node name="RightEmptySpace" type="Control" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.8
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

@@ -152,8 +152,9 @@ func _if(this: NestedBlock) -> Variant:
 
 ## text: else
 func _else(this: NestedBlock) -> ControlSignal:
-	# NOTE: If-else logic is handled inside _iterate_children, since that's
-	# dependent on factors outside this block.
+	# NOTE: The actual if-else branch evaluation is handled inside
+	# __iterate_children(), because it depends on the execution outcome of
+	# previous blocks in the chain.
 	return await __iterate_children(this)
 #endregion
 
@@ -210,8 +211,8 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			return outcome as ControlSignal
 		
 		if block is NestedBlock:
-			# Update original scope's existing variables with changed values
-			# inside child scope
+			# Update the parent scope with any variable changes that occurred
+			# inside the child block's scope.
 			for var_name in this.scope:
 				this.scope[var_name] = block.scope[var_name]
 			
@@ -220,7 +221,8 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 					assert(outcome is bool)
 					if_chain_succeeded = outcome as bool
 			
-			# Reset NestedBlock scope and depth
+			# Clean up the NestedBlock's scope and reset its depth for future
+			# executions
 			block.scope.clear()
 			block.depth = -1
 		

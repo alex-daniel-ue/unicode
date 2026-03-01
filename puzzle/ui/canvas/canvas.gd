@@ -10,17 +10,17 @@ var is_panning := false
 var drag_start_position: Vector2
 var node_start_position: Vector2
 
-var zoom_speed := 0.05
-var min_zoom := 0.5
-var max_zoom := 2.0
+var zoom_speed := 1.15
+var min_zoom := 0.25
+var max_zoom := 2.5
 
 @export var serializer: Node
 @export var drop_manager: Control
-#@onready var audio_stream_player := $AudioStreamPlayer as AudioStreamPlayer
 
-func _ready() -> void:
-	var viewport_size := get_viewport_rect().size
-	pivot_offset = -position + viewport_size / 2
+
+func _process(_delta: float) -> void:
+	if material is ShaderMaterial:
+		material.set_shader_parameter("offset", -position / scale)
 
 func _gui_input(event: InputEvent) -> void:
 	handle_panning(event)
@@ -58,22 +58,35 @@ func handle_panning(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and is_panning:
 		var current_global_mouse := get_global_mouse_position()
 		var offset := current_global_mouse - drag_start_position
-		position = node_start_position + offset / scale
-		pivot_offset = -position + get_viewport_rect().size / 2
+		position = node_start_position + offset
 
 func handle_zooming(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed):
 		return
 	
-	var zoom_amount := zoom_speed
-	if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-		zoom_amount *= -1
-	elif event.button_index != MOUSE_BUTTON_WHEEL_UP:
+	var zoom_in = event.button_index == MOUSE_BUTTON_WHEEL_UP
+	var zoom_out = event.button_index == MOUSE_BUTTON_WHEEL_DOWN
+	
+	if not (zoom_in or zoom_out):
 		return
 	
-	var new_scale := scale.x + zoom_amount
-	if min_zoom < new_scale and new_scale < max_zoom:
-		scale = Vector2(new_scale, new_scale)
+	var factor = zoom_speed if zoom_in else (1.0 / zoom_speed)
+	var new_scale = clampf(scale.x * factor, min_zoom, max_zoom)
+	
+	if new_scale == scale.x:
+		return
+	
+	var local_mouse = get_local_mouse_position()
+	
+	# Determine where the mouse is in global space before scaling
+	var global_mouse_before = get_global_transform() * local_mouse
+	scale = Vector2(new_scale, new_scale)
+	
+	# After scaling, determine where that same local point is in global space
+	var global_mouse_after = get_global_transform() * local_mouse
+	
+	# Shift the entire canvas so the local point remains exactly under the mouse
+	global_position += global_mouse_before - global_mouse_after
 
 func clear() -> void:
 	for child in get_children():

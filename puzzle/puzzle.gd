@@ -16,7 +16,6 @@ const SLOW_DELAY := 0.5
 const FAST_DELAY := 0.15
 const NOTIF_DURATION := 2.0
 
-const LEVEL_SELECT_SCENE := preload("res://menus/level select/level_select.tscn")
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 
 static var is_running := false
@@ -104,7 +103,10 @@ func run_program() -> void:
 		)
 		return
 	
-	level.visuals.position = Vector2.ZERO
+	if level.camera:
+		level.camera.position = level.camera_start_position
+		level.camera.zoom = level.camera_start_zoom
+	
 	level.reset_state()
 	set_running_state(true)
 	side_panels[0].show_menu(false)
@@ -160,12 +162,9 @@ func _on_level_completed() -> void:
 	
 	#region Put this entire section into its own .gd script, "level_complete_popup" probably
 	var blocks := 0
-	for node in canvas.get_children():
-		if node is Block:
-			var descendants = Core.get_children_recursive(node, false)
-			for descendant in descendants:
-				if descendant is Block and descendant.data.top_notch:
-					blocks += 1
+	for descendant in Core.get_children_recursive(canvas, true):
+		if descendant is Block and descendant.data.top_notch:
+			blocks += 1
 	
 	for child in stars.get_children():
 		child.queue_free()
@@ -215,4 +214,4 @@ func _on_return_button_pressed() -> void:
 	await Transition.current_tween.finished
 	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
 	
-	get_tree().change_scene_to_packed(LEVEL_SELECT_SCENE)
+	Transition.change_scene(Core.LEVEL_SELECT)

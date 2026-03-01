@@ -49,9 +49,7 @@ func _ready() -> void:
 	
 	if preview_type != PreviewType.NONE:
 		if preview_type == PreviewType.DRAG:
-			# MILD FIXME: Better on faster frame rates ;)
-			await get_tree().process_frame
-			drag.animate_preview()
+			drag.animate_preview.call_deferred()
 		return
 	
 	function.initialize()
@@ -69,7 +67,10 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	if not data.draggable or Puzzle.is_running:
 		return null
 	
-	set_drag_preview(drag.generate_preview())
+	var preview := drag.generate_preview()
+	set_drag_preview(preview)
+	Core.current_drag_preview = preview
+	
 	if data.toolbox:
 		return drag.copy()
 	
@@ -81,14 +82,13 @@ func get_parent_block() -> Block:
 	return Core.get_block(get_parent())
 
 func get_parent_matching(condition: Callable, include_self := true) -> Block:
-	if include_self and condition.call(self):
-		return self
+	var current := self if include_self else get_parent_block()
 	
-	var parent := get_parent_block()
-	while parent != null:
-		if condition.call(parent):
-			return parent
-		parent = parent.get_parent_block()
+	while current != null:
+		if condition.call(current):
+			return current
+		current = current.get_parent_block()
+	
 	return null
 
 func orphan() -> void:

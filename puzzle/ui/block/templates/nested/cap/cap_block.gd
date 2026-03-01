@@ -2,11 +2,12 @@ class_name CapBlock
 extends NestedBlock
 
 
-@export var upper_lip: Control
+var current_block: Block
+var preview: Control
 
-
-func within_mouth(global_pos: Vector2) -> bool:
-	return Rect2(mouth.global_position, mouth.size).has_point(global_pos)
-
-func _on_resized() -> void:
-	lower_lip.custom_minimum_size.x = upper_lip.size.x
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_DRAG_BEGIN:
+			visual.start_drag_feedback(Core.current_drag_preview.get_child(0))
+		NOTIFICATION_DRAG_END:
+			visual.stop_drag_feedback()

@@ -130,7 +130,7 @@ func _comparison(this: Block) -> Variant:
 			this.function.error("Cannot compare a string with a non-string value.")
 			return
 		if symbol not in ["==", "!="]:
-			this.function.error("Can only use '==' and '!=' on strings." % symbol)
+			this.function.error("Can only use '==' and '!=' on strings.")
 			return
 	
 	elif (type1 in [TYPE_INT, TYPE_FLOAT] and type2 not in [TYPE_INT, TYPE_FLOAT]) or \

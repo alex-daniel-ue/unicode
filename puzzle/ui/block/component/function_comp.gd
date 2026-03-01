@@ -7,15 +7,17 @@ signal errored(block: Block)
 
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
-## Function types are based on the existence of `func_script` and `func_method`
-## in a BlockData.
-## 1. STANDARD - When both are present. Creates a dummy Node and attaches
-##		`func_script`, where `_function` becomes Callable(`dummy_node`, `func_method`)
-## 2. ENTITY - When only method is present. Requires `object` to be set before
-##		initializing.
-## 3. LAMBDA - When none are present. Relies on earlier manual setting of
-##		_function, usually in overridden _ready methods of the main Block script.
-## There's no type for when only script is present, since that means nothing.
+## Determines the function type based on the presence of `func_script` and
+## `func_method` in the BlockData:
+## 1. STANDARD: Both script and method exist. A dummy Node is created, the
+##    script is attached to it, and `_function` is assigned to
+##    Callable(dummy_node, func_method).
+## 2. ENTITY: Only the method is present. The `object` property must be
+##    explicitly set before initialization.
+## 3. LAMBDA: Neither script nor method is present. Relies on manually assigning
+##    the `_function` Callable, typically done inside the overridden _ready()
+##    method of the specific Block script.
+## Note: Providing only a script without a method is invalid and has no designated type.
 
 var _function: Callable:
 	set = set_func

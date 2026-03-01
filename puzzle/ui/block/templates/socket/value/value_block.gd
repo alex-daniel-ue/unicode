@@ -45,16 +45,15 @@ func _ready() -> void:
 		var puzzle := $"/root/Puzzle" as Puzzle
 		puzzle.running_state_changed.connect(_on_puzzle_running_state_changed)
 	
-	var text_signals := [
-		line_edit.text_changed,
-		option_button.item_selected,
-		data.text_changed
-	]
+	line_edit.text_changed.connect(visual.update_type_color.unbind(1))
+	option_button.item_selected.connect(visual.update_type_color.unbind(1))
+	data.text_changed.connect(visual.update_type_color)
 	
-	for sig in text_signals:
-		sig.connect(visual.update_type_color)
-		if data.value.show_type:
-			sig.connect(type_label.update_type.call_deferred)
+	if data.value.show_type:
+		line_edit.text_changed.connect(type_label.update_type.unbind(1), CONNECT_DEFERRED)
+		option_button.item_selected.connect(type_label.update_type.unbind(1), CONNECT_DEFERRED)
+		data.text_changed.connect(type_label.update_type, CONNECT_DEFERRED)
+
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	return (

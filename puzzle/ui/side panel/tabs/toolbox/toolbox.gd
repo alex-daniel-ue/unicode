@@ -4,7 +4,7 @@ extends MarginContainer
 @export var _internal_category_order: PackedStringArray
 @export var category_container: VBoxContainer
 
-const category_scene := preload("res://puzzle/ui/side panel/tabs/toolbox/category.tscn")
+const CATEGORY_SCENE := preload("res://puzzle/ui/side panel/tabs/toolbox/category.tscn")
 var existing_categories: PackedStringArray
 
 
@@ -27,7 +27,7 @@ func add_block(block: Block) -> void:
 func add_category(category_name: String) -> VBoxContainer:
 	existing_categories.append(category_name)
 	
-	var new_category := category_scene.instantiate() as VBoxContainer
+	var new_category := CATEGORY_SCENE.instantiate() as VBoxContainer
 	new_category.category_name = category_name
 	
 	return new_category

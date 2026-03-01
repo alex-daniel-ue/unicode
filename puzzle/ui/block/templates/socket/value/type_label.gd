@@ -13,7 +13,7 @@ const type_names: Dictionary[Variant.Type, String] = {
 @export var base: ValueBlock
 
 
-func update_type(_unused_arg: Variant = null) -> void:
+func update_type() -> void:
 	var type := typeof(base.typecast(base.text.get_raw()))
 	visible = type != TYPE_NIL
 	text = type_names[type]

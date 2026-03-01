@@ -77,7 +77,7 @@ func union(other_set: Set) -> Set:
 	var result := Set.new()
 	for element in map.keys():
 		result.add(element)
-	for element in other_set.get_as_array():
+	for element in other_set.to_array():
 		result.add(element)
 	return result
 
@@ -95,7 +95,7 @@ func symmetric_difference(other_set: Set) -> Set:
 	for element in map.keys():
 		if not other_set.contains(element):
 			result.add(element)
-	for element in other_set.get_as_array():
+	for element in other_set.to_array():
 		if not contains(element):
 			result.add(element)
 	return result

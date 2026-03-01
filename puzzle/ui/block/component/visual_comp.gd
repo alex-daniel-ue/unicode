@@ -23,10 +23,6 @@ func _ready() -> void:
 	error_timer.one_shot = true
 	error_timer.timeout.connect(set_error.bind(false))
 	add_child(error_timer)
-	
-	# MEDIUM FIXME: vro🥀 what the helly
-	await get_tree().process_frame
-	base.queue_sort()
 
 func _update(delta: float) -> void:
 		var final_target := target_color

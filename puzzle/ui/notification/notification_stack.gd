@@ -3,15 +3,16 @@ extends VBoxContainer
 
 const MAXIMUM_NOTIFS := 5
 
-const notif_scene := preload("res://puzzle/ui/notification/notification.tscn")
+const NOTIFICATION := preload("res://puzzle/ui/notification/notification.tscn")
 
 
 func add(message: String, duration: float, type: Puzzle.NotificationType) -> void:
-	var length := get_child_count()
-	if length >= MAXIMUM_NOTIFS:
-		get_child(length-1).queue_free()
+	while get_child_count() >= MAXIMUM_NOTIFS:
+		var last_child = get_child(get_child_count() - 1)
+		remove_child(last_child)
+		last_child.queue_free()
 	
-	var notif := notif_scene.instantiate()
+	var notif := NOTIFICATION.instantiate()
 	
 	notif.duration = duration
 	notif.type = type

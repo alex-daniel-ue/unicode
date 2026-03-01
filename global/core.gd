@@ -2,23 +2,31 @@
 extends Node
 
 
+const MAIN_MENU := preload("res://menus/main/main_menu.tscn")
+const LEVEL_SELECT := preload("res://menus/level select/level_select.tscn")
+const PUZZLE_CANVAS := preload("res://puzzle/puzzle.tscn")
+
+static var current_drag_preview: Control
+
+
 func get_children_recursive(node: Node, exclude_self := false) -> Array[Node]:
 	if not node.is_inside_tree():
 		add_child(node)
 	
-	var result := _get_children(node)
-	if exclude_self:
+	var result: Array[Node]
+	_get_children(node, result)
+	
+	if exclude_self and result.size() > 0:
 		result.pop_front()
 	
 	if node.get_parent() == self:
 		remove_child(node)
 	return result
 
-func _get_children(node: Node, result: Array[Node] = []) -> Array[Node]:
+func _get_children(node: Node, result: Array[Node] = []) -> void:
 	result.push_back(node)
-	for child: Node in node.get_children():
-		result = _get_children(child, result)
-	return result
+	for child in node.get_children():
+		_get_children(child, result)
 
 func get_block(of_node: Node) -> Block:
 	if of_node == null:
@@ -28,17 +36,14 @@ func get_block(of_node: Node) -> Block:
 		push_error('Node "%s" isn\'t in SceneTree.' % of_node)
 		return null
 	
-	# Iterate through self + parents and find first Block node
+	# Iterate upward through the current node and its parents to find the first
+	# Block node
 	while of_node != null:
-		# MILD FIXME: Somewhat out of scope, checking if not SocketBlock
-		# should be part of drop_manager.gd logic
 		if of_node is Block:
-			if of_node is SocketBlock:
-				pass
 			return of_node
 		of_node = of_node.get_parent()
 	
-	# No Block parent anywhere in lineage
+	# Return null if no Block is found anywhere in the lineage
 	return null
 
 func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String:

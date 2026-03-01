@@ -43,7 +43,11 @@ func _notification(what: int) -> void:
 			drop_preview = Block.construct(current_block.data.duplicate(true))
 			drop_preview.name = "DropPreview_%s" % drop_preview.name
 			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
-			for child in Core._get_children(drop_preview):
+			
+			var children: Array[Node]
+			Core._get_children(drop_preview, children)
+			
+			for child in children:
 				if child is Block:
 					child.preview_type = Block.PreviewType.DROP
 			
@@ -52,9 +56,17 @@ func _notification(what: int) -> void:
 				if len(current_block.get_blocks()) > 0:
 					var dummy := PuzzleCanvas.drag_preview.mouth.get_child(0) as Block
 					drop_preview.mouth.add_child(dummy.duplicate(0))
+					
 		
 		NOTIFICATION_DRAG_END:
 			if current_block == null:
+				return
+			
+			if current_block.is_queued_for_deletion():
+				drop_preview.queue_free()
+				drop_preview = null
+				dp_container = null
+				current_block = null
 				return
 			
 			# Handle drop event
@@ -118,18 +130,18 @@ func get_preview_container() -> Container:
 	
 	var mouse_pos := get_global_mouse_position()
 	var control := get_viewport().gui_get_hovered_control()
-	var block := Core.get_block(control)
+	var hovered_block := Core.get_block(control)
 	
-	# Fail early when hovering over nothing or non-Block
-	# Toolbox Blocks can't be dropped onto
-	if block == null or not block is Block or block.data.toolbox:
+	# Fail early if not a block or if it's in the toolbox
+	if hovered_block == null or not hovered_block is Block or hovered_block.data.toolbox:
+		#Debug.log("drop_manager.gd/container: null/invalid Block or toolbox Block")
 		return null
 	
-	block = block.get_parent_matching(Block.IS_SOLID)
+	hovered_block = hovered_block.get_parent_matching(Block.IS_SOLID)
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
-	var parent_block := block.get_parent_block()
-	if block.preview_type == Block.PreviewType.DROP:
+	var parent_block := hovered_block.get_parent_block()
+	if hovered_block.preview_type == Block.PreviewType.DROP:
 		while parent_block.preview_type == Block.PreviewType.DROP:
 			parent_block = parent_block.get_parent_block()
 		return parent_block.mouth
@@ -138,78 +150,54 @@ func get_preview_container() -> Container:
 	while not (parent_block is NestedBlock or parent_block == null):
 		parent_block = parent_block.get_parent_block()
 	
-	if parent_block != null:
-		if block is StatementBlock:
-			# Mouse has to be inside mouth to be placed relative to Block
-			if not parent_block.within_mouth(mouse_pos):
-				return null
-			# Assumes the hovered Block has been placed inside parent_block
+	if hovered_block is StatementBlock:
+		# Assumes the hovered Block has been placed inside parent_block
+		if parent_block != null and parent_block.within_mouth(mouse_pos):
+			#Debug.log("drop_manager.gd/container: hovering over StatementBlock, picking its parent")
 			return parent_block.mouth
 		
-		elif block is NestedBlock:
-			var center_y := control.global_position.y + control.size.y * 0.5 * canvas.scale.y
-			var is_above := mouse_pos.y < center_y
-			if control.name == ("UpperLip" if is_above else "LowerLip"):
-				# Mouse has to be inside mouth to be placed relative to Block
-				if parent_block.within_mouth(mouse_pos):
-					return parent_block.mouth
-			
-			return block.mouth
-	
-	else: # Hovered Block has no viable parent Block
-		if block is StatementBlock:
-			return null
+		# Mouse has to be inside mouth to be placed relative to Block
+		#Debug.log("drop_manager.gd/container: hovering over StatementBlock, outside parent or no parent")
+		return null
 		
-		elif block is NestedBlock:
-			if block._can_drop_data(mouse_pos, current_block):
-				return block.mouth
+	elif hovered_block is NestedBlock:
+		var hovering_above_control := mouse_pos.y < control.global_position.y + control.size.y * 0.5 * canvas.scale.y
+		var is_outer_lip := control.name == (NestedBlock.UPPER_LIP_NAME if hovering_above_control else NestedBlock.LOWER_LIP_NAME)
+		var is_inner_lip := control.name == (NestedBlock.LOWER_LIP_NAME if hovering_above_control else NestedBlock.UPPER_LIP_NAME)
+		
+		if is_outer_lip and parent_block != null and parent_block.within_mouth(mouse_pos):
+			#Debug.log("drop_manager.gd/container: hovering over NestedBlock, picking its parent")
+			return parent_block.mouth
+		
+		elif is_inner_lip or hovered_block.within_mouth(mouse_pos) or (parent_block == null and hovered_block.is_ancestor_of(control)):
+			if hovered_block._can_drop_data(mouse_pos, current_block):
+				#Debug.log("drop_manager.gd/container: hovering over NestedBlock, picking it")
+				return hovered_block.mouth
+		
+		#Debug.log("drop_manager.gd/container: hovering over NestedBlock, can't drop in it")
+		return null
 	
-	push_error('Unhandled case for drop container! "%s" of Block "%s"' % [control, block])
+	push_error('Unhandled case for drop container! "%s" of Block "%s"' % [control, hovered_block])
 	return null
 
 func get_preview_idx(container: Container) -> int:
-	var end := container.get_child_count()
-	
 	var mouse_pos := get_global_mouse_position()
-	var control := get_viewport().gui_get_hovered_control()
-	var block := Core.get_block(control).get_parent_matching(Block.IS_SOLID)
-	
-	var center_y := block.global_position.y + block.size.y * 0.5 * canvas.scale.y
-	var is_above := mouse_pos.y < center_y
-	
-	# No change
-	if block.preview_type == Block.PreviewType.DROP:
-		return dp_idx
-	
-	# Guaranteed NestedBlock...?
-	var container_block := Core.get_block(container).get_parent_matching(Block.IS_SOLID) as NestedBlock
-	if not container_block.within_mouth(mouse_pos):
-		if is_above or not container_block.lower_lip:
-			return 0
-		return end
-	
 	var children := container.get_children()
-	if children.is_empty():
-		return 0
 	
-	# Emulate a while loop, but with mutable index/counter
-	var idx := -1
+	var target_idx := 0
+	
 	for child in children:
-		idx += 1
-		
-		if not child is Block:
+		# Skip non-blocks and the current drop preview so it doesn't skew index logic
+		if not child is Block or child.preview_type == Block.PreviewType.DROP:
 			continue
 		
-		# Don't count drop preview (? it works IDK)
-		if child.preview_type == Block.PreviewType.DROP:
-			idx -= 1
+		# Find the vertical halfway point of the block
+		var center_y: float = child.global_position.y + (child.size.y * canvas.scale.y) * 0.5
 		
-		var pos: float = child.global_position.y
-		var hgt: float = pos + child.size.y * canvas.scale.y
-		if pos <= mouse_pos.y and mouse_pos.y < hgt:
-			if not is_above:
-				idx += 1
-			return maxi(0, idx)
-	
-	push_error('Unhandled case for drop index! "%s" of Block "%s"' % [control, block])
-	return end
+		# If the mouse is above the block's center, we insert BEFORE this block
+		if mouse_pos.y < center_y:
+			return target_idx
+			
+		target_idx += 1
+		
+	return target_idx
