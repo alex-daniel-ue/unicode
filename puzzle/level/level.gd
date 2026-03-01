@@ -36,7 +36,8 @@ func _ready() -> void:
 			child.base.add_to_group(&"resettable")
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not camera: return
+	if not camera:
+		return
 	
 	if event is InputEventMouseButton and event.pressed:
 		var zoom_in = event.button_index == MOUSE_BUTTON_WHEEL_UP

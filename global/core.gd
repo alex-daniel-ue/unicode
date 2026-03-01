@@ -74,7 +74,7 @@ func get_type_string(variant: Variant) -> String:
 	
 	if variant is Object:
 		var obj: Object = variant
-		var script = obj.get_script()
+		var script: Variant = obj.get_script()
 		
 		if script and script.get_global_name() != &"":
 			return str(script.get_global_name())

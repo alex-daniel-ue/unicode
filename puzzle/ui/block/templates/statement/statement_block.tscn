@@ -58,6 +58,7 @@ alignment = 1
 
 [node name="Label" type="Label" parent="UpperLip/TextContainer"]
 layout_mode = 2
+theme_type_variation = &"BlockLabel"
 text = "1 block..."
 
 [node name="ComponentManager" type="Node" parent="."]

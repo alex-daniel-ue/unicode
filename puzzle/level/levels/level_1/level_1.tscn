@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://j7qvjmr5oje7"]
+[gd_scene load_steps=15 format=4 uid="uid://j7qvjmr5oje7"]
 
 [ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://puzzle/level/level.gd" id="1_1yusr"]
 [ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://puzzle/level/components/block_provider.gd" id="2_86e1e"]
@@ -6,25 +6,12 @@
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_lba1h"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://puzzle/level/goals/destination_goal.gd" id="4_lba1h"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="4_ufi1f"]
-[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="4_v6ip6"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="5_ufi1f"]
-[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="5_yrd6a"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://puzzle/level/tilesets/school_furniture.tres" id="6_a0vli"]
-[ext_resource type="Resource" uid="uid://bxjjm3ig67sq2" path="res://puzzle/blocks/control flow/elif.tres" id="6_ncr47"]
-[ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="7_hct6x"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="7_uyvrt"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://puzzle/level/objects/entities/robot/robot_character.tscn" id="8_8tqom"]
-[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="8_km14c"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://puzzle/level/components/resettable_comp.gd" id="9_h2m81"]
-[ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="9_scjmv"]
-[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="10_wh83c"]
-[ext_resource type="Resource" uid="uid://c4f1tp3s11tra" path="res://puzzle/blocks/generic/declare_var.tres" id="12_ekwd0"]
-[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="13_yrj3l"]
 [ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="14_3i17u"]
-[ext_resource type="Resource" uid="uid://ih285nrl3m6r" path="res://puzzle/blocks/generic/set_var.tres" id="15_sql4s"]
-[ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="16_ad7op"]
-[ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="17_gfj4x"]
-[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="18_3ddd3"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://puzzle/level/levels/red_flag.png" id="26_da2xb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dqsgw"]
@@ -32,7 +19,6 @@
 [node name="Level1" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_1yusr")
-pan_speed = 2.0
 instructions = "Get to the classroom door!
 
 Left-click to drag-and-drop blocks.
@@ -45,7 +31,7 @@ two_star_threshold = 4
 
 [node name="GenericBlockProvider" type="Node" parent="."]
 script = ExtResource("2_86e1e")
-block_data = Array[ExtResource("3_lba1h")]([ExtResource("4_v6ip6"), ExtResource("5_yrd6a"), ExtResource("6_ncr47"), ExtResource("7_hct6x"), ExtResource("8_km14c"), ExtResource("9_scjmv"), ExtResource("10_wh83c"), ExtResource("4_ufi1f"), ExtResource("12_ekwd0"), ExtResource("13_yrj3l"), ExtResource("14_3i17u"), ExtResource("15_sql4s"), ExtResource("16_ad7op"), ExtResource("17_gfj4x"), ExtResource("18_3ddd3")])
+block_data = Array[ExtResource("3_lba1h")]([ExtResource("4_ufi1f"), ExtResource("14_3i17u")])
 
 [node name="GoalManager" type="Node" parent="." node_paths=PackedStringArray("goals")]
 script = ExtResource("3_asouj")

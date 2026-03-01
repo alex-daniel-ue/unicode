@@ -1,9 +1,11 @@
-[gd_resource type="Theme" load_steps=23 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=25 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="1_xejr6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdcft"]
-bg_color = Color(0.8509804, 0.92156863, 1, 0.5019608)
+bg_color = Color(0.485, 0.4925, 0.5, 1)
+border_width_bottom = 4
+border_color = Color(0.37, 0.37, 0.37, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -12,7 +14,7 @@ corner_radius_bottom_left = 10
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oiocf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oiocf"]
-bg_color = Color(1, 0.9843137, 0.91764706, 1)
+bg_color = Color(0.94509804, 0.9607843, 0.9764706, 1)
 border_width_bottom = 4
 border_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
 corner_radius_top_left = 10
@@ -31,7 +33,7 @@ corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l74f8"]
 content_margin_top = 4.0
-bg_color = Color(0.8784314, 0.8784314, 0.8784314, 1)
+bg_color = Color(0.8862745, 0.9098039, 0.9411765, 1)
 border_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
@@ -44,7 +46,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.407843, 0, 1, 1)
+border_color = Color(0.20784314, 0.22352941, 0.3019608, 1)
 border_blend = true
 corner_radius_top_left = 16
 corner_radius_top_right = 16
@@ -57,12 +59,24 @@ shadow_size = 6
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hdcft"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xejr6"]
-bg_color = Color(0.09803922, 0.19607843, 0.7490196, 0.6156863)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.11764706, 0.13333334, 0.2, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2784314, 0.3137255, 0.47843137, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 corner_detail = 10
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02q3g"]
 bg_color = Color(0.11764706, 0.13333334, 0.2, 1)
@@ -75,6 +89,33 @@ shadow_size = 28
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xejr6"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l74f8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vm8ny"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.101960786, 0.101960786, 0.18039216, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.20784314, 0.22352941, 0.3019608, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8exu4"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.101960786, 0.101960786, 0.18039216, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_02q3g"]
 
@@ -103,7 +144,6 @@ BlockLabel/base_type = &"Label"
 BlockLabel/colors/font_color = Color(0, 0, 0, 1)
 BlockLabel/constants/line_spacing = 2
 BlockLabel/constants/outline_size = 0
-BlockLabel/constants/shadow_outline_size = 1
 BlockLabel/font_sizes/font_size = 16
 Button/fonts/font = ExtResource("1_xejr6")
 ChatMessage/base_type = &"Label"
@@ -156,6 +196,8 @@ StopButton/colors/icon_pressed_color = Color(0.8509804, 0.24705882, 0.24705882, 
 StopButton/styles/focus = SubResource("StyleBoxEmpty_l74f8")
 TextEdit/font_sizes/font_size = 20
 TextEdit/fonts/font = ExtResource("1_xejr6")
+TextEdit/styles/focus = SubResource("StyleBoxFlat_vm8ny")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_8exu4")
 ToolboxHeading/base_type = &"Label"
 ToolboxHeading/font_sizes/font_size = 32
 ToolboxSubheading/base_type = &"Label"

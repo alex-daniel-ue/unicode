@@ -64,26 +64,26 @@ func handle_zooming(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed):
 		return
 	
-	var zoom_in = event.button_index == MOUSE_BUTTON_WHEEL_UP
-	var zoom_out = event.button_index == MOUSE_BUTTON_WHEEL_DOWN
+	var btn_index := (event as InputEventMouseButton).button_index
+	var zoom_in := btn_index == MOUSE_BUTTON_WHEEL_UP
 	
-	if not (zoom_in or zoom_out):
+	if not (zoom_in or btn_index == MOUSE_BUTTON_WHEEL_DOWN):
 		return
 	
-	var factor = zoom_speed if zoom_in else (1.0 / zoom_speed)
-	var new_scale = clampf(scale.x * factor, min_zoom, max_zoom)
+	var factor := zoom_speed if zoom_in else (1.0 / zoom_speed)
+	var new_scale := clampf(scale.x * factor, min_zoom, max_zoom)
 	
 	if new_scale == scale.x:
 		return
 	
-	var local_mouse = get_local_mouse_position()
+	var local_mouse := get_local_mouse_position()
 	
 	# Determine where the mouse is in global space before scaling
-	var global_mouse_before = get_global_transform() * local_mouse
+	var global_mouse_before := get_global_transform() * local_mouse
 	scale = Vector2(new_scale, new_scale)
 	
 	# After scaling, determine where that same local point is in global space
-	var global_mouse_after = get_global_transform() * local_mouse
+	var global_mouse_after := get_global_transform() * local_mouse
 	
 	# Shift the entire canvas so the local point remains exactly under the mouse
 	global_position += global_mouse_before - global_mouse_after

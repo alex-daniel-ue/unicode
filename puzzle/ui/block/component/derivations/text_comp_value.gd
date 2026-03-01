@@ -6,33 +6,29 @@ func _ready() -> void:
 	super()
 
 func get_raw() -> String:
-	#region Explicit type conversion hack
-	@warning_ignore("confusable_local_usage", "shadowed_variable_base_class")
-	var base := base as ValueBlock
-	#endregion
+	# Explicit type conversion hack
+	var value := base as ValueBlock
 	
-	if base.data.value.enum_flag:
-		if base.option_button.item_count == 0:
+	if value.data.value.enum_flag:
+		if value.option_button.item_count == 0:
 			return ""
 		
-		var selected_id := base.option_button.get_selected_id()
-		return base.option_button.get_item_text(selected_id)
+		var selected_id := value.option_button.get_selected_id()
+		return value.option_button.get_item_text(selected_id)
 	
-	if base.data.value.editable_shown:
-		return base.line_edit.text
+	if value.data.value.editable_shown:
+		return value.line_edit.text
 	
 	return super()
 
 func format() -> void:
-	#region Explicit type conversion hack
-	@warning_ignore("confusable_local_usage", "shadowed_variable_base_class")
-	var base := base as ValueBlock
-	#endregion
+	# Explicit type conversion hack
+	var value := base as ValueBlock
 	
-	if base.data.value.editable_shown and not base.data.has_text_blocks():
-		if base.data.text.is_empty():
-			base.data.text = base.line_edit.placeholder_text
-		base.line_edit.placeholder_text = base.data.text
+	if value.data.value.editable_shown and not value.data.has_text_blocks():
+		if value.data.text.is_empty():
+			value.data.text = value.line_edit.placeholder_text
+		value.line_edit.placeholder_text = value.data.text
 		return
 	
 	super()

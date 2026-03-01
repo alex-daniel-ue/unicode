@@ -3,7 +3,3 @@
 	their data type
 8. Sequenced goals/tests
 9. SubViewport fitting
-
-LowerLip of CapBlocks respond to current hover
-Preview block count goes deep use get_children_recursive is Block
-background shader moves with pan in puzzle scene

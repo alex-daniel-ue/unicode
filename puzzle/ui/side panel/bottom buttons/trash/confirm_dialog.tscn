@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="4_q3q0t"]
 
 [node name="ConfirmDialog" type="PopupPanel"]
+oversampling_override = 1.0
 initial_position = 1
 size = Vector2i(398, 137)
 visible = true
@@ -13,10 +14,8 @@ theme = ExtResource("1_1yhrl")
 script = ExtResource("2_h7om3")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 394.0
-offset_bottom = 133.0
+offset_right = 398.0
+offset_bottom = 137.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 20
@@ -43,7 +42,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="OKButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-modulate = Color(0.33, 1, 0.33, 1)
+modulate = Color(0.2901961, 0.87058824, 0.5019608, 1)
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 icon = ExtResource("3_foaiq")
@@ -51,7 +50,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-modulate = Color(1, 0.33, 0.33, 1)
+modulate = Color(0.972549, 0.44313726, 0.44313726, 1)
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 icon = ExtResource("4_q3q0t")

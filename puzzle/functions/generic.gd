@@ -117,13 +117,13 @@ func _comparison(this: Block) -> Variant:
 	var args := await __resolve_operation_args(this)
 	if args.is_empty():
 		return
-
-	var value1 = args[0]
-	var symbol = args[1]
-	var value2 = args[2]
 	
-	var type1 = typeof(value1)
-	var type2 = typeof(value2)
+	var value1: Variant = args[0]
+	var symbol: Variant = args[1]
+	var value2: Variant = args[2]
+	
+	var type1 := typeof(value1)
+	var type2 := typeof(value2)
 	
 	if type1 == TYPE_STRING or type2 == TYPE_STRING:
 		if type1 != type2:
@@ -149,13 +149,14 @@ func _arithmetic(this: Block) -> Variant:
 	var args := await __resolve_operation_args(this)
 	if args.is_empty():
 		return
-
+	
+	# Variants
 	var value1 = args[0]
 	var symbol = args[1]
 	var value2 = args[2]
 
-	var type1 = typeof(value1)
-	var type2 = typeof(value2)
+	var type1 := typeof(value1)
+	var type2 := typeof(value2)
 	
 	if type1 == TYPE_STRING or type2 == TYPE_STRING:
 		if type1 != TYPE_STRING or type2 != TYPE_STRING:
@@ -187,7 +188,7 @@ func _execute_expression(this: Block, args: Array) -> Variant:
 		this.function.error("Parsing error: %s." % expression.get_error_text())
 		return
 	
-	var result = expression.execute([], null, false, true)
+	var result: Variant = expression.execute([], null, false, true)
 	if expression.has_execute_failed():
 		this.function.error("Execution error: %s." % expression.get_error_text())
 		return

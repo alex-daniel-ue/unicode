@@ -67,7 +67,7 @@ func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary]
 	var exceptions: PackedStringArray
 	
-	var handle_data_type = func(data_name: String) -> void:
+	var handle_data_type := func(data_name: String) -> void:
 		if get(data_name) == null:
 			set(data_name, _create_data_from_str(DATA_CLASSES[data_name]))
 		properties.append(_form_data_property(data_name))
