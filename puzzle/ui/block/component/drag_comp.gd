@@ -31,7 +31,6 @@ func generate_preview() -> Control:
 			dummy.data.text %= [block_count, "s" if block_count != 1 else ""]
 			
 			drag_preview.mouth.add_child(dummy)
-
 	
 	return drag_preview_container
 
@@ -44,7 +43,10 @@ func animate_preview() -> void:
 func handle_copying(event: InputEvent) -> void:
 	if is_copy_valid(event):
 		base.get_viewport().set_input_as_handled()
+		
 		var preview := generate_preview()
+		Core.current_drag_preview = preview
+		
 		base.force_drag(copy(), preview)
 
 func is_copy_valid(event: InputEvent) -> bool:

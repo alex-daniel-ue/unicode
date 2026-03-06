@@ -18,6 +18,11 @@ mono_crash.*.json
 .editorconfig
 *.tmp
 
+# Python collection script outputs
 .combined/
 
+# Exports
 *.exe
+
+# API keys
+ai/.env

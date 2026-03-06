@@ -45,7 +45,7 @@ def generate_file_tree(root_dir, ignore_dirs, ignore_extensions, script_dir):
 
 def collect_project_files(root_dir, output_dir):
     """
-    Recursively collects .gd, .tscn, and .tres files.
+    Recursively collects .gd, .tscn, .tres, and .py files.
     1. Generates a project file tree.
     2. Writes them to separate combined files in the output directory.
     3. Collates everything into one master file, tree first.
@@ -53,7 +53,7 @@ def collect_project_files(root_dir, output_dir):
     .uid/.import file extensions, and files in the script's own directory.
     """
 
-    ignore_dirs = ['addons', '.git', '.import', '.combined', '.godot']
+    ignore_dirs = ['addons', '.git', '.import', '.combined', '.godot', '.venv']
     ignore_extensions = {'.uid', '.import'}
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -62,6 +62,7 @@ def collect_project_files(root_dir, output_dir):
         '.gd':   ('combined_gd_scripts.txt', 'gdscript'),
         '.tscn': ('combined_tscn_scenes.txt', 'xml'),
         '.tres': ('combined_tres_rsrcs.txt', 'text'),
+        '.py':   ('combined_py_scripts.txt', 'python'),
     }
 
     # Configuration: Filenames

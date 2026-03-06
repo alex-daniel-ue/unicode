@@ -1,7 +1,9 @@
 extends Button
 
+
 var slow_down := preload("res://puzzle/ui/side panel/bottom buttons/speed/slow_down.png")
 var fast_forward := preload("res://puzzle/ui/side panel/bottom buttons/speed/fast_forward.png")
+
 
 func _ready() -> void:
 	_update_icon()

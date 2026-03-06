@@ -7,6 +7,7 @@ var dp_socket: SocketBlock
 var children: Array[Node]
 
 
+# Refer to drop_manager.gd, most of this is just copied
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:

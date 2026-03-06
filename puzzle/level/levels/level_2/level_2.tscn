@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://ggwb5oxm173d"]
+[gd_scene load_steps=29 format=4 uid="uid://ggwb5oxm173d"]
 
 [ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://puzzle/level/level.gd" id="1_sfmnp"]
 [ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://puzzle/level/components/block_provider.gd" id="2_xgp4r"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://puzzle/level/goal_manager.gd" id="19_ad463"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://puzzle/level/goals/destination_goal.gd" id="20_rciae"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="21_brd0a"]
+[ext_resource type="Script" uid="uid://bfk6051guh5k6" path="res://puzzle/level/components/camera.gd" id="21_shj6t"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://puzzle/level/tilesets/school_furniture.tres" id="22_lxy28"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="23_44r8y"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://puzzle/level/objects/entities/robot/robot_character.tscn" id="24_q0b3s"]
@@ -32,7 +33,6 @@
 [node name="Level2" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_sfmnp")
-pan_speed = 2.0
 instructions = "Get to the classroom door again!"
 three_star_threshold = 6
 two_star_threshold = 8
@@ -53,6 +53,8 @@ required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
 position = Vector2(112, 128)
 zoom = Vector2(1.905, 1.905)
 limit_enabled = false
+script = ExtResource("21_shj6t")
+level_bounds = Rect2(0, 0, 224, 256)
 
 [node name="Visuals" type="Node2D" parent="."]
 
@@ -94,7 +96,7 @@ position = Vector2(47.5, 143.5)
 script = ExtResource("25_b12yw")
 base = NodePath("..")
 initial_properties = Dictionary[StringName, Variant]({
-&"transform": Transform2D(1, 0, 0, 1, 79.5, 175.5)
+&"transform": Transform2D(1, 0, 0, 1, 47.5, 143.5)
 })
 
 [connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]

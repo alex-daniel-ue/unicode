@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dor2i7pvxafan" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.gd" id="1_osgvg"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_pe4tv"]
-[ext_resource type="PackedScene" uid="uid://bfu3kkn3xy7sr" path="res://puzzle/ui/side panel/tabs/toolbox/category.tscn" id="3_pntoy"]
+[ext_resource type="PackedScene" uid="uid://bfu3kkn3xy7sr" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_category.tscn" id="3_pntoy"]
 
-[node name="Toolbox" type="MarginContainer" node_paths=PackedStringArray("category_container")]
+[node name="Toolbox" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,7 +19,7 @@ theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 script = ExtResource("1_osgvg")
 _internal_category_order = PackedStringArray("Generic", "Selection", "Iterative", "Boolean", "Value")
-category_container = NodePath("ScrollContainer/CategoryContainer")
+category_scene = ExtResource("3_pntoy")
 metadata/_access_modifiers = {
 &"_internal_category_order": 2,
 &"category_container": 2

@@ -24,11 +24,11 @@ static var interpret_delay := SLOW_DELAY
 static var has_errored := false
 
 #region Exports
-@export var canvas: ColorRect
+@export var canvas: PuzzleCanvas
 @export var side_panels: Array[Panel]
 @export var information: Label
 @export var toolbox: MarginContainer
-@export var notification_stack: VBoxContainer
+@export var notification_stack: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
 @export var stars: HBoxContainer
@@ -81,6 +81,7 @@ func configure_level() -> void:
 
 func run_program() -> void:
 	#print(canvas.serializer.yaml_serialize())
+	
 	for block in errored_blocks:
 		if is_instance_valid(block):
 			block.visual.set_error(false)
@@ -103,9 +104,7 @@ func run_program() -> void:
 		)
 		return
 	
-	if level.camera:
-		level.camera.position = level.camera_start_position
-		level.camera.zoom = level.camera_start_zoom
+	level.camera.frame()
 	
 	level.reset_state()
 	set_running_state(true)
@@ -113,13 +112,13 @@ func run_program() -> void:
 	side_panels[1].show_menu(true)
 	
 	for panel in side_panels:
-		panel.keep = true
+		panel.keep_state = true
 	
 	await begin.function.run()
 	
 	set_running_state(false)
 	for panel in side_panels:
-		panel.keep = false
+		panel.keep_state = false
 
 func set_running_state(to: bool) -> void:
 	is_running = to

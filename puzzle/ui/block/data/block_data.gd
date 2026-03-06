@@ -30,6 +30,7 @@ const GROUPS := {
 
 @export var name := "Block"
 @export_file("*.tscn") var base_path: String
+@export_multiline var description := ""
 
 @export_group("Type")
 @export var type := Type.STATEMENT:

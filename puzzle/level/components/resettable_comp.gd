@@ -15,8 +15,9 @@ extends Node
 
 
 func _ready() -> void:
-	base = get_parent()
-	save_initial()
+	if Engine.is_editor_hint():
+		base = get_parent()
+		save_initial()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray

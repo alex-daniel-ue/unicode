@@ -10,6 +10,7 @@ script = ExtResource("1_djiio")
 script = ExtResource("2_7t5y5")
 name = "ExpressionReceptiveBlock"
 base_path = "uid://cuvgglg6xlr6p"
+description = null
 type = 2
 socket = SubResource("Resource_040pj")
 draggable = false

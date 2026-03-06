@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfu3kkn3xy7sr"]
 
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_efhf7"]
-[ext_resource type="Script" uid="uid://c18qpqrtsywdv" path="res://puzzle/ui/side panel/tabs/toolbox/category.gd" id="2_mmmcm"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_gc06a"]
+[ext_resource type="Script" uid="uid://c18qpqrtsywdv" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_category.gd" id="2_k8qgo"]
 
 [node name="Category" type="VBoxContainer" node_paths=PackedStringArray("label", "container")]
 anchors_preset = 15
@@ -11,9 +11,9 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme = ExtResource("1_efhf7")
+theme = ExtResource("1_gc06a")
 theme_override_constants/separation = 12
-script = ExtResource("2_mmmcm")
+script = ExtResource("2_k8qgo")
 label = NodePath("Heading")
 container = NodePath("HFlowContainer")
 metadata/_access_modifiers = {

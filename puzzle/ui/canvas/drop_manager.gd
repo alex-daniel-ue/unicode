@@ -56,7 +56,6 @@ func _notification(what: int) -> void:
 				if len(current_block.get_blocks()) > 0:
 					var dummy := PuzzleCanvas.drag_preview.mouth.get_child(0) as Block
 					drop_preview.mouth.add_child(dummy.duplicate(0))
-					
 		
 		NOTIFICATION_DRAG_END:
 			if current_block == null:
@@ -134,8 +133,8 @@ func get_preview_container() -> Container:
 	
 	# Fail early if not a block or if it's in the toolbox
 	if hovered_block == null or not hovered_block is Block or hovered_block.data.toolbox:
-		#Debug.log("drop_manager.gd/container: null/invalid Block or toolbox Block")
-		return null
+		# Null/invalid Block or toolbox Block
+		return null 
 	
 	hovered_block = hovered_block.get_parent_matching(Block.IS_SOLID)
 	
@@ -153,11 +152,11 @@ func get_preview_container() -> Container:
 	if hovered_block is StatementBlock:
 		# Assumes the hovered Block has been placed inside parent_block
 		if parent_block != null and parent_block.within_mouth(mouse_pos):
-			#Debug.log("drop_manager.gd/container: hovering over StatementBlock, picking its parent")
+			# Hovering over StatementBlock, picking its parent
 			return parent_block.mouth
 		
 		# Mouse has to be inside mouth to be placed relative to Block
-		#Debug.log("drop_manager.gd/container: hovering over StatementBlock, outside parent or no parent")
+		# Hovering over StatementBlock, outside parent or no parent
 		return null
 		
 	elif hovered_block is NestedBlock:
@@ -166,15 +165,15 @@ func get_preview_container() -> Container:
 		var is_inner_lip := control.name == (NestedBlock.LOWER_LIP_NAME if hovering_above_control else NestedBlock.UPPER_LIP_NAME)
 		
 		if is_outer_lip and parent_block != null and parent_block.within_mouth(mouse_pos):
-			#Debug.log("drop_manager.gd/container: hovering over NestedBlock, picking its parent")
+			# Hovering over NestedBlock, picking its parent
 			return parent_block.mouth
 		
 		elif is_inner_lip or hovered_block.within_mouth(mouse_pos) or (parent_block == null and hovered_block.is_ancestor_of(control)):
 			if hovered_block._can_drop_data(mouse_pos, current_block):
-				#Debug.log("drop_manager.gd/container: hovering over NestedBlock, picking it")
+				# Hovering over NestedBlock, picking itself
 				return hovered_block.mouth
 		
-		#Debug.log("drop_manager.gd/container: hovering over NestedBlock, can't drop in it")
+		# Hovering over NestedBlock, can't drop in it
 		return null
 	
 	push_error('Unhandled case for drop container! "%s" of Block "%s"' % [control, hovered_block])

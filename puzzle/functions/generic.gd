@@ -17,7 +17,7 @@ func _print(this: Block) -> void:
 		
 		value = parent_nested.scope[value]
 	
-	var output := "OUTPUT: %s" % str(value)
+	var output := "- %s" % str(value)
 	this.function.notif_pushed.emit(output, Puzzle.NotificationType.LOG)
 	
 	this.visual.highlight()

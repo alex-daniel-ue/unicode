@@ -17,14 +17,14 @@ func cover() -> void:
 	current_tween.set_parallel()
 	
 	current_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 1, transition_time)
+	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 1, transition_time).from(0)
 
 func reveal() -> void:
 	current_tween = create_tween()
 	current_tween.set_parallel()
 	
 	current_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 0, transition_time)
+	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 2, transition_time).from(1)
 	
 	await current_tween.finished
 	screen.visible = false

@@ -1,3 +1,4 @@
+class_name Serializer
 extends Node
 
 
@@ -16,7 +17,8 @@ func yaml_serialize() -> String:
 		return "# No 'begin' block found on canvas."
 	
 	for i in range(begin_blocks.size()):
-		if i > 0: yaml_documents.append("---")
+		if i > 0:
+			yaml_documents.append("---")
 		
 		var block_string := _serialize_block(begin_blocks[i])
 		yaml_documents.append(block_string)

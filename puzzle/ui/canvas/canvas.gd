@@ -14,13 +14,12 @@ var zoom_speed := 1.15
 var min_zoom := 0.25
 var max_zoom := 2.5
 
-@export var serializer: Node
-@export var drop_manager: Control
+@export var serializer: Serializer
 
 
 func _process(_delta: float) -> void:
-	if material is ShaderMaterial:
-		material.set_shader_parameter("offset", -position / scale)
+	# material is ShaderMaterial:
+	material.set_shader_parameter("offset", -position / scale)
 
 func _gui_input(event: InputEvent) -> void:
 	handle_panning(event)
@@ -78,14 +77,11 @@ func handle_zooming(event: InputEvent) -> void:
 	
 	var local_mouse := get_local_mouse_position()
 	
-	# Determine where the mouse is in global space before scaling
 	var global_mouse_before := get_global_transform() * local_mouse
 	scale = Vector2(new_scale, new_scale)
 	
-	# After scaling, determine where that same local point is in global space
 	var global_mouse_after := get_global_transform() * local_mouse
 	
-	# Shift the entire canvas so the local point remains exactly under the mouse
 	global_position += global_mouse_before - global_mouse_after
 
 func clear() -> void:

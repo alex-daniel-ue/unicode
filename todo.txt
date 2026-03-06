@@ -1,5 +1,30 @@
 
-3. Make variable declaration and references change color during runtime, reflecting
-	their data type
-8. Sequenced goals/tests
-9. SubViewport fitting
+- Sequenced goals/tests
+- SubViewport scene camera fitting
+	1. calculate bounding box (@tool on save scene or dynamic?)
+	2. change camera zoom according to
+	min(viewport_size.x / level_size.x, viewport_size.y / level_size.y)
+	camera.zoom = Vector2(zoom_factor, zoom_factor)
+
+
+
+separate puzzle.gd into components: notif, buttons, runner, level manager
+separate level complete popup into own scene + script + intended exposed functions
+description/documentation for every block, add to BlockData
+rework errors, record them, need to be sent to ai assistant
+catch bad requests: not yet run solution, empty message
+punish caught requests/spam: timeout for 1 minute
+replace direct puzzle dot notation with functions
+add class_name to most Puzzle children, ones used by others
+fix signals being called directly in Puzzle
+rename has_errored to interrupted, add function interrupt()
+proper temporary chat bubble in ai assistant for "thinking" or "couldn't connect to server" type messages
+overwrite bad or timed out requests
+replace toolbox v and > with actual icons
+ai assistant functions: get_level_image, get_history
+construct system prompt for general unicode knowledge
+optionally provide completed levels? revisit previous levels if confused?
+retheme ai assistant submit button
+move puzzle on run, centered on current block highlighted, panning overrides centering
+refactor EVERYTHING to inherited scenes, especially important for levels!
+try to reduce repeated code in block functions

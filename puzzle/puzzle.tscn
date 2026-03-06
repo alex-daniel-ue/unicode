@@ -7,9 +7,8 @@
 [ext_resource type="Script" uid="uid://bl501vpm8qns7" path="res://puzzle/ui/side panel/button_container.gd" id="4_8isiv"]
 [ext_resource type="PackedScene" uid="uid://c0d71dt2bes7j" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.tscn" id="5_vlyq7"]
 [ext_resource type="Script" uid="uid://coidfkqmv7bsy" path="res://puzzle/ui/side panel/side_panel_button.gd" id="6_82356"]
-[ext_resource type="PackedScene" uid="uid://c71q4icny10pb" path="res://puzzle/ui/side panel/tabs/ai assistant/chat_bubble.tscn" id="6_e1dgq"]
+[ext_resource type="PackedScene" uid="uid://conmg5k2eihou" path="res://puzzle/ui/side panel/tabs/ai assistant/ai_assistant.tscn" id="6_bvcr2"]
 [ext_resource type="Texture2D" uid="uid://wb13cdfhb2uc" path="res://puzzle/ui/side panel/icons/pixelarticons--info-box.png" id="6_nnviu"]
-[ext_resource type="Texture2D" uid="uid://wnv53oda41m1" path="res://puzzle/ui/side panel/icons/pixelarticons--send.png" id="7_e1dgq"]
 [ext_resource type="Texture2D" uid="uid://b4d2i6g1qrdyj" path="res://puzzle/ui/side panel/icons/pixelarticons--briefcase-plus.png" id="8_dipl1"]
 [ext_resource type="Texture2D" uid="uid://dc1lr4umqons4" path="res://puzzle/ui/side panel/icons/pixelarticons--trash.png" id="9_vlyq7"]
 [ext_resource type="Texture2D" uid="uid://dh03u1532tml3" path="res://puzzle/ui/side panel/icons/pixelarticons--list.png" id="10_dipl1"]
@@ -19,6 +18,7 @@
 [ext_resource type="Script" uid="uid://djagmtqt1y8sg" path="res://puzzle/ui/side panel/bottom buttons/trash/trash_button.gd" id="11_xr7vu"]
 [ext_resource type="PackedScene" uid="uid://dobqbboxweqv8" path="res://puzzle/ui/side panel/bottom buttons/trash/confirm_dialog.tscn" id="12_sbp70"]
 [ext_resource type="Texture2D" uid="uid://83eu6oqlg0ta" path="res://puzzle/ui/side panel/bottom buttons/speed/fast_forward.png" id="15_35gji"]
+[ext_resource type="PackedScene" uid="uid://bsbw5by2bjcge" path="res://puzzle/ui/notification/notification.tscn" id="16_e1dgq"]
 [ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
@@ -65,7 +65,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="SideMenuLeft" type="HBoxContainer" parent="UserInterface" groups=["a"]]
+[node name="SideMenuLeft" type="HBoxContainer" parent="UserInterface"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
@@ -79,7 +79,6 @@ theme_type_variation = &"SidePanel"
 script = ExtResource("2_3gr0x")
 
 [node name="PuzzleInformation" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -109,77 +108,9 @@ autowrap_mode = 2
 visible = false
 layout_mode = 1
 
-[node name="AIAssistant" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
+[node name="AIAssistant" parent="UserInterface/SideMenuLeft/Panel" instance=ExtResource("6_bvcr2")]
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("2_xv3xb")
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 12
-
-[node name="HTTPRequest" type="HTTPRequest" parent="UserInterface/SideMenuLeft/Panel/AIAssistant"]
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant"]
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ChatStack" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ChatBubble" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack" instance=ExtResource("6_e1dgq")]
-layout_mode = 2
-text = "Hey! What's up?"
-
-[node name="ChatBubble2" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack" instance=ExtResource("6_e1dgq")]
-layout_mode = 2
-alignment = 0
-text = "Nothing good, honest, haha."
-left_aligned = true
-
-[node name="ChatBubble3" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/ChatStack" instance=ExtResource("6_e1dgq")]
-layout_mode = 2
-text = "What are you up to?"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="UserMessageField" type="TextEdit" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(0, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_xv3xb")
-text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-placeholder_text = "What do you need help with?"
-context_menu_enabled = false
-emoji_menu_enabled = false
-drag_and_drop_selection_enabled = false
-virtual_keyboard_enabled = false
-virtual_keyboard_show_on_focus = false
-middle_mouse_paste_enabled = false
-empty_selection_clipboard_enabled = false
-wrap_mode = 1
-scroll_smooth = true
-scroll_v_scroll_speed = 40.0
-
-[node name="SubmitButton" type="Button" parent="UserInterface/SideMenuLeft/Panel/AIAssistant/ScrollContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-theme = ExtResource("2_xv3xb")
-theme_type_variation = &"SidePanelButton"
-icon = ExtResource("7_e1dgq")
-icon_alignment = 1
-expand_icon = true
 
 [node name="ButtonContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft" node_paths=PackedStringArray("panel")]
 layout_mode = 2
@@ -235,7 +166,6 @@ script = ExtResource("11_xr7vu")
 confirm_dialog = NodePath("ConfirmDialog")
 
 [node name="ConfirmDialog" parent="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" instance=ExtResource("12_sbp70")]
-oversampling_override = 1.0
 visible = false
 
 [node name="MiddleSpace" type="Control" parent="UserInterface"]
@@ -259,6 +189,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 2
 script = ExtResource("11_j1boe")
+notif_scene = ExtResource("16_e1dgq")
 
 [node name="Label" type="Label" parent="UserInterface/MiddleSpace"]
 layout_mode = 1
@@ -363,12 +294,14 @@ render_target_update_mode = 4
 [node name="LevelCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
 initial_position = 1
-size = Vector2i(344, 218)
+size = Vector2i(392, 218)
 theme = ExtResource("2_xv3xb")
 
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
-offset_right = 344.0
-offset_bottom = 218.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 376.0
+offset_bottom = 202.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30

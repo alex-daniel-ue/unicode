@@ -1,21 +1,22 @@
+class_name SidePanel
 extends Panel
 
 
 const VIEWPORT_RATIO := 1. / 3.5
 
 var is_open := false
-var keep := false
+var keep_state := false
 
 var expand_size: float
 var shown_content: Control
 
 
 func _ready() -> void:
-	_update_expand_size()
 	get_viewport().size_changed.connect(_update_expand_size)
+	_update_expand_size()
 
 func show_menu(to_open: bool) -> void:
-	if keep:
+	if keep_state:
 		return
 	
 	is_open = to_open

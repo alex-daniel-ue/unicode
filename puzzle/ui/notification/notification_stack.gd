@@ -1,21 +1,19 @@
+class_name NotificationStack
 extends VBoxContainer
 
 
-const MAXIMUM_NOTIFS := 5
+const MAXIMUM := 5
 
-const NOTIFICATION := preload("res://puzzle/ui/notification/notification.tscn")
+@export var notif_scene: PackedScene
 
 
-func add(message: String, duration: float, type: Puzzle.NotificationType) -> void:
-	while get_child_count() >= MAXIMUM_NOTIFS:
+func push(message: String, type: Notification.Type, duration: float) -> void:
+	while get_child_count() >= MAXIMUM:
 		var last_child := get_child(get_child_count() - 1)
 		remove_child(last_child)
 		last_child.queue_free()
 	
-	var notif := NOTIFICATION.instantiate()
-	
-	notif.duration = duration
-	notif.type = type
+	var notif := notif_scene.instantiate().with(type, duration) as Notification
 	notif.label.text = message
 	
 	add_child(notif)

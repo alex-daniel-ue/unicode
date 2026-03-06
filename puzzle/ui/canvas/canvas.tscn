@@ -17,7 +17,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Canvas" type="ColorRect" node_paths=PackedStringArray("serializer", "drop_manager")]
+[node name="Canvas" type="ColorRect" node_paths=PackedStringArray("serializer")]
 material = SubResource("ShaderMaterial_vifbn")
 offset_left = -5000.0
 offset_top = -5000.0
@@ -27,7 +27,6 @@ focus_mode = 1
 color = Color(1, 1, 1, 0)
 script = ExtResource("1_uoc13")
 serializer = NodePath("Serializer")
-drop_manager = NodePath("DropManager")
 metadata/_access_modifiers = {
 &"drop_manager": 2
 }

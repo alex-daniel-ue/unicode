@@ -1,11 +1,13 @@
+class_name Toolbox
 extends MarginContainer
 
 
 @export var _internal_category_order: PackedStringArray
-@export var category_container: VBoxContainer
+@export var category_scene: PackedScene
 
-const CATEGORY_SCENE := preload("res://puzzle/ui/side panel/tabs/toolbox/category.tscn")
 var existing_categories: PackedStringArray
+
+@onready var category_container := $ScrollContainer/CategoryContainer as VBoxContainer
 
 
 func add_block(block: Block) -> void:
@@ -27,7 +29,7 @@ func add_block(block: Block) -> void:
 func add_category(category_name: String) -> VBoxContainer:
 	existing_categories.append(category_name)
 	
-	var new_category := CATEGORY_SCENE.instantiate() as VBoxContainer
+	var new_category := category_scene.instantiate() as ToolboxCategory
 	new_category.category_name = category_name
 	
 	return new_category
