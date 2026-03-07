@@ -25,10 +25,10 @@ static var has_errored := false
 
 #region Exports
 @export var canvas: PuzzleCanvas
-@export var side_panels: Array[Panel]
+@export var side_panels: Array[SidePanel]
 @export var information: Label
-@export var toolbox: MarginContainer
-@export var notification_stack: NotificationStack
+@export var toolbox: Toolbox
+@export var notification: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
 @export var stars: HBoxContainer
@@ -80,7 +80,7 @@ func configure_level() -> void:
 	Game.pending_level = null
 
 func run_program() -> void:
-	#print(canvas.serializer.yaml_serialize())
+	print(canvas.serializer.yaml_serialize())
 	
 	for block in errored_blocks:
 		if is_instance_valid(block):
@@ -88,20 +88,12 @@ func run_program() -> void:
 	errored_blocks.clear()
 	
 	if is_running:
-		notification_stack.add(
-			"Program is already running.",
-			NOTIF_DURATION,
-			NotificationType.ERROR
-		)
+		notification.push("Program is already running.", Notification.Type.ERROR)
 		return
 	
 	var begin := _get_begin()
 	if begin == null:
-		notification_stack.add(
-			"No begin block on Canvas.",
-			NOTIF_DURATION,
-			NotificationType.ERROR
-		)
+		notification.push("No begin block on Canvas.", Notification.Type.ERROR)
 		return
 	
 	level.camera.frame()
@@ -150,8 +142,8 @@ func _on_block_errored(block: Block) -> void:
 	if not errored_blocks.has(block):
 		errored_blocks.append(block)
 
-func _on_notif_pushed(message: String, type: NotificationType) -> void:
-	notification_stack.add(message, 2., type)
+func _on_notif_pushed(message: String, type: Notification.Type) -> void:
+	notification.push(message, type)
 
 func _on_level_completed() -> void:
 	has_errored = true
@@ -193,16 +185,12 @@ func _on_level_completed() -> void:
 
 func _on_level_failed() -> void:
 	has_errored = true
-	_on_notif_pushed("Level failed!", NotificationType.ERROR)
+	notification.push("Level failed!", Notification.Type.ERROR)
 
 func _on_stop_button_pressed() -> void:
 	if is_running:
 		has_errored = true
-		notification_stack.add(
-			"Program terminated.",
-			NOTIF_DURATION,
-			NotificationType.ERROR
-		)
+		notification.push("Program terminated.", Notification.Type.ERROR)
 
 func _on_speed_button_pressed() -> void:
 	interpret_delay = SLOW_DELAY if is_fast else FAST_DELAY

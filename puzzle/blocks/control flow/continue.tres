@@ -6,8 +6,7 @@
 [resource]
 script = ExtResource("1_qj0o7")
 name = "ContinueBlock"
-base_path = "uid://5ilfnnt1k22"
-description = null
+base_path = "uid://demtvw17w06g5"
 category = "Iterative"
 text = "continue"
 Function/script = ExtResource("1_j8ieb")

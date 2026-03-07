@@ -8,7 +8,7 @@
 [resource]
 script = ExtResource("1_ji57x")
 name = "DeclareAsBlock"
-base_path = "uid://5ilfnnt1k22"
+base_path = "uid://demtvw17w06g5"
 category = "Generic"
 text = "declare var {} as {}"
 text_blocks = Array[ExtResource("1_ji57x")]([ExtResource("3_kwrrs"), ExtResource("4_8ud6s")])

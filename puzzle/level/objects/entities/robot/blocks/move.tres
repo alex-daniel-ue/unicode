@@ -20,8 +20,7 @@ _socket_ref = SubResource("Resource_dsi4v")
 [sub_resource type="Resource" id="Resource_dsa6u"]
 script = ExtResource("2_8ids4")
 name = "ValueEditableEnumBlock"
-base_path = "uid://bq81wkp8sa2wb"
-description = null
+base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_dsi4v")
 value = SubResource("Resource_oi253")
@@ -36,8 +35,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("2_8ids4")
 name = "MoveBlock"
-base_path = "uid://5ilfnnt1k22"
-description = null
+base_path = "uid://demtvw17w06g5"
 category = "Robot"
 text = "move {}"
 text_blocks = Array[ExtResource("2_8ids4")]([SubResource("Resource_dsa6u")])

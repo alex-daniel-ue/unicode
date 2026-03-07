@@ -31,8 +31,7 @@ _socket_ref = SubResource("Resource_7u70j")
 [sub_resource type="Resource" id="Resource_epw5f"]
 script = ExtResource("4_epw5f")
 name = "ValueEditableEnumBlock"
-base_path = "uid://bq81wkp8sa2wb"
-description = null
+base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_7u70j")
 value = SubResource("Resource_14hxo")
@@ -47,8 +46,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("4_epw5f")
 name = "ArithmeticBlock"
-base_path = "uid://bq81wkp8sa2wb"
-description = null
+base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_i86qa")
 value = SubResource("Resource_r4xr0")

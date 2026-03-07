@@ -28,3 +28,4 @@ retheme ai assistant submit button
 move puzzle on run, centered on current block highlighted, panning overrides centering
 refactor EVERYTHING to inherited scenes, especially important for levels!
 try to reduce repeated code in block functions
+put ai assistant fields into godot, reduce server to absolute essentials

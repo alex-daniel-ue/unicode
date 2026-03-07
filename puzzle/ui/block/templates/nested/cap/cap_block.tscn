@@ -1,15 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://bn2314laa6f2u"]
+[gd_scene load_steps=7 format=3 uid="uid://5gy242cokjpa"]
 
 [ext_resource type="Script" uid="uid://nrgx8s4alnrc" path="res://puzzle/ui/block/templates/nested/cap/cap_block.gd" id="1_1vde0"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_fb5re"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="1_3hsbr"]
 [ext_resource type="Texture2D" uid="uid://di61alcg2gees" path="res://puzzle/ui/block/templates/nested/cap/cap_texture.png" id="3_h4y1w"]
-[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="4_17osp"]
 [ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_comp_cap.gd" id="6_17osp"]
-[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="6_vuud4"]
-[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="7_a6dfj"]
 [ext_resource type="Script" uid="uid://bq3nnugnoxpbo" path="res://puzzle/ui/block/component/derivations/visual_comp_cap.gd" id="8_12l2t"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_12l2t"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4giph"]
 content_margin_left = 16.0
 content_margin_top = 32.0
 content_margin_right = 12.0
@@ -21,80 +18,34 @@ texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 region_rect = Rect2(0, 0, 278, 125)
 
-[node name="CapBlock" type="VBoxContainer" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip", "text_container", "drag", "function", "text", "visual")]
-offset_right = 141.0
-offset_bottom = 79.0
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme = ExtResource("1_fb5re")
-theme_override_constants/separation = 0
+[node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_3hsbr")]
 script = ExtResource("1_1vde0")
 upper_lip = NodePath("UpperLip")
 mouth = NodePath("Mouth")
 lower_lip = NodePath("LowerLip")
-text_container = NodePath("UpperLip/TextContainer")
-drag = NodePath("DragComponent_Cap")
-function = NodePath("FunctionComponent")
-text = NodePath("TextComponent")
-visual = NodePath("VisualComponent_Cap")
-metadata/_access_modifiers = {
-&"_upper_lip": 2,
-&"_upper_lip_text": 2,
-&"data": 0,
-&"drag": 2,
-&"function": 2,
-&"lower_lip": 2,
-&"mouth": 2,
-&"text": 2,
-&"text_container": 2,
-&"visual": 2
-}
 
-[node name="UpperLip" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(141, 0)
-layout_mode = 2
+[node name="UpperLip" parent="." index="0"]
+custom_minimum_size = Vector2(141, 5)
 size_flags_horizontal = 0
+size_flags_vertical = 1
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxTexture_12l2t")
+theme_override_styles/panel = SubResource("StyleBoxTexture_4giph")
 
-[node name="TextContainer" type="VBoxContainer" parent="UpperLip"]
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-alignment = 1
-
-[node name="Mouth" type="VBoxContainer" parent="."]
+[node name="Mouth" type="VBoxContainer" parent="." index="1"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="LowerLip" type="ColorRect" parent="."]
+[node name="LowerLip" type="ColorRect" parent="." index="2"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 1
 color = Color(1, 0, 1, 0)
 
-[node name="ComponentManager" type="Node" parent="."]
-script = ExtResource("4_17osp")
-
-[node name="DragComponent_Cap" type="Node" parent="." node_paths=PackedStringArray("base")]
+[node name="DragComponent" parent="." index="4"]
 script = ExtResource("6_17osp")
-base = NodePath("..")
 
-[node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("7_a6dfj")
-base = NodePath("..")
-
-[node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("6_vuud4")
-base = NodePath("..")
-
-[node name="VisualComponent_Cap" type="Node" parent="." node_paths=PackedStringArray("lower_lip", "color_affected", "base")]
+[node name="VisualComponent" parent="." index="7" node_paths=PackedStringArray("lower_lip")]
 script = ExtResource("8_12l2t")
 lower_lip = NodePath("../LowerLip")
-color_affected = [NodePath("../UpperLip")]
-base = NodePath("..")
-
-[connection signal="resized" from="." to="." method="_on_resized"]
-[connection signal="child_order_changed" from="Mouth" to="." method="_on_mouth_child_order_changed"]

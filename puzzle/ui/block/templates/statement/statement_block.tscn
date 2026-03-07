@@ -1,58 +1,51 @@
-[gd_scene load_steps=10 format=3 uid="uid://5ilfnnt1k22"]
+[gd_scene load_steps=10 format=3 uid="uid://demtvw17w06g5"]
 
-[ext_resource type="Script" uid="uid://bsobouo2ukflv" path="res://puzzle/ui/block/templates/statement/statement_block.gd" id="1_6r6m2"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_hu32r"]
-[ext_resource type="Texture2D" uid="uid://xssk7re4jfpt" path="res://puzzle/ui/block/templates/block.png" id="1_ov5y0"]
-[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="4_ei7cr"]
-[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="5_wa70l"]
-[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="6_hu32r"]
-[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="8_tn0g5"]
-[ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="9_fae5d"]
+[ext_resource type="Script" uid="uid://bsobouo2ukflv" path="res://puzzle/ui/block/templates/statement/statement_block.gd" id="2_f3r2k"]
+[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="3_tn0g5"]
+[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="4_2w4d4"]
+[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="5_byfo3"]
+[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="6_6me5i"]
+[ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="7_fe3b7"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fae5d"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xejr6"]
+load_path = "res://.godot/imported/block.png-9423ec96076b628d1f365b7da9d413fd.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hu32r"]
 content_margin_left = 14.0
 content_margin_top = 12.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-texture = ExtResource("1_ov5y0")
+texture = SubResource("CompressedTexture2D_xejr6")
 texture_margin_left = 8.0
 texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 
-[node name="StatementBlock" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
-custom_minimum_size = Vector2(50, 50)
-offset_right = 24.0
-offset_bottom = 24.0
+[node name="Block" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
+offset_right = 94.0
+offset_bottom = 50.0
 size_flags_horizontal = 0
-size_flags_vertical = 4
+size_flags_vertical = 0
 theme = ExtResource("1_hu32r")
-theme_type_variation = &"Block"
-script = ExtResource("1_6r6m2")
+theme_override_constants/separation = 0
+script = ExtResource("2_f3r2k")
 text_container = NodePath("UpperLip/TextContainer")
 drag = NodePath("DragComponent")
 function = NodePath("FunctionComponent")
 text = NodePath("TextComponent")
 visual = NodePath("VisualComponent")
-metadata/_access_modifiers = {
-&"_upper_lip": 2,
-&"_upper_lip_text": 2,
-&"drag": 2,
-&"function": 2,
-&"text": 2,
-&"text_container": 2,
-&"visual": 2
-}
 
 [node name="UpperLip" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_fae5d")
+theme_override_styles/panel = SubResource("StyleBoxTexture_hu32r")
 
 [node name="TextContainer" type="VBoxContainer" parent="UpperLip"]
 layout_mode = 2
+size_flags_horizontal = 0
 mouse_filter = 2
 alignment = 1
 
@@ -62,21 +55,21 @@ theme_type_variation = &"BlockLabel"
 text = "1 block..."
 
 [node name="ComponentManager" type="Node" parent="."]
-script = ExtResource("4_ei7cr")
+script = ExtResource("3_tn0g5")
 
 [node name="DragComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("5_wa70l")
+script = ExtResource("4_2w4d4")
 base = NodePath("..")
 
 [node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("8_tn0g5")
+script = ExtResource("5_byfo3")
 base = NodePath("..")
 
 [node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("6_hu32r")
+script = ExtResource("6_6me5i")
 base = NodePath("..")
 
 [node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
-script = ExtResource("9_fae5d")
+script = ExtResource("7_fe3b7")
 color_affected = [NodePath("../UpperLip")]
 base = NodePath("..")

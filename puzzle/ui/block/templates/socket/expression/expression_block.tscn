@@ -1,76 +1,24 @@
-[gd_scene load_steps=10 format=3 uid="uid://cuvgglg6xlr6p"]
+[gd_scene load_steps=5 format=3 uid="uid://pj76penmyeli"]
 
-[ext_resource type="Texture2D" uid="uid://byl0ec0u44q3s" path="res://puzzle/ui/block/templates/socket/expression/expression_texture.png" id="1_8l24w"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_82gmi"]
-[ext_resource type="Script" uid="uid://d2eomgwrbistq" path="res://puzzle/ui/block/templates/socket/expression/expression_block.gd" id="1_nm1rc"]
-[ext_resource type="Script" uid="uid://c71gwiekns8f8" path="res://puzzle/ui/block/component/_comp_manager.gd" id="3_315uh"]
-[ext_resource type="Script" uid="uid://n0ybca626thm" path="res://puzzle/ui/block/component/text_comp.gd" id="5_82gmi"]
-[ext_resource type="Script" uid="uid://b8m5wijededst" path="res://puzzle/ui/block/component/drag_comp.gd" id="5_nm1rc"]
-[ext_resource type="Script" uid="uid://luvopkjmdtco" path="res://puzzle/ui/block/component/function_comp.gd" id="6_3br77"]
-[ext_resource type="Script" uid="uid://c405aww8buwmg" path="res://puzzle/ui/block/component/visual_comp.gd" id="9_5td25"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="1_8l24w"]
+[ext_resource type="Script" uid="uid://d2eomgwrbistq" path="res://puzzle/ui/block/templates/socket/expression/expression_block.gd" id="2_uxx3b"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bnqfj"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hdcft"]
+load_path = "res://.godot/imported/expression_texture.png-70902ac29e8c72514a6804e8055238ff.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8l24w"]
 content_margin_left = 28.0
 content_margin_top = 8.0
 content_margin_right = 28.0
 content_margin_bottom = 8.0
-texture = ExtResource("1_8l24w")
+texture = SubResource("CompressedTexture2D_hdcft")
 texture_margin_left = 32.0
 texture_margin_top = 8.0
 texture_margin_right = 32.0
 texture_margin_bottom = 8.0
 
-[node name="ExpressionBlock" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
-custom_minimum_size = Vector2(50, 50)
-offset_right = 64.0
-offset_bottom = 50.0
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme = ExtResource("1_82gmi")
-script = ExtResource("1_nm1rc")
-text_container = NodePath("UpperLip/TextContainer")
-drag = NodePath("DragComponent")
-function = NodePath("FunctionComponent")
-text = NodePath("TextComponent")
-visual = NodePath("VisualComponent")
-metadata/_access_modifiers = {
-&"_upper_lip": 2,
-&"_upper_lip_text": 2,
-&"drag": 2,
-&"function": 2,
-&"text": 2,
-&"text_container": 2,
-&"visual": 2
-}
+[node name="Block" instance=ExtResource("1_8l24w")]
+script = ExtResource("2_uxx3b")
 
-[node name="UpperLip" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_bnqfj")
-
-[node name="TextContainer" type="VBoxContainer" parent="UpperLip"]
-layout_mode = 2
-mouse_filter = 2
-alignment = 1
-
-[node name="ComponentManager" type="Node" parent="."]
-script = ExtResource("3_315uh")
-
-[node name="DragComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("5_nm1rc")
-base = NodePath("..")
-
-[node name="FunctionComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("6_3br77")
-base = NodePath("..")
-
-[node name="TextComponent" type="Node" parent="." node_paths=PackedStringArray("base")]
-script = ExtResource("5_82gmi")
-base = NodePath("..")
-
-[node name="VisualComponent" type="Node" parent="." node_paths=PackedStringArray("color_affected", "base")]
-script = ExtResource("9_5td25")
-color_affected = [NodePath("../UpperLip")]
-base = NodePath("..")
+[node name="UpperLip" parent="." index="0"]
+theme_override_styles/panel = SubResource("StyleBoxTexture_8l24w")

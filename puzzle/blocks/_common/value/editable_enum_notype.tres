@@ -17,7 +17,7 @@ _socket_ref = SubResource("Resource_5vdka")
 [resource]
 script = ExtResource("3_ceclv")
 name = "ValueEditableEnumBlock"
-base_path = "uid://bq81wkp8sa2wb"
+base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_5vdka")
 value = SubResource("Resource_mk5nd")

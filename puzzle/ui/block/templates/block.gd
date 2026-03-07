@@ -15,6 +15,7 @@ static var IS_NESTED := func(block: Block) -> bool:
 	return block is NestedBlock
 
 @export var data: BlockData
+@export_group("Children")
 @export var text_container: Container
 @export_group("Components")
 @export var drag: BlockDragComponent
@@ -42,7 +43,7 @@ func _ready() -> void:
 	
 	if has_node(^"/root/Puzzle"):
 		var puzzle := $"/root/Puzzle" as Puzzle
-		function.notif_pushed.connect(puzzle._on_notif_pushed)
+		function.notif_pushed.connect(puzzle.notification.push)
 		function.errored.connect(puzzle._on_block_errored)
 	
 	text.format()

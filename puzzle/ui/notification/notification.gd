@@ -43,7 +43,6 @@ func _ready() -> void:
 	
 	tween_out.finished.connect(queue_free)
 
-func with(_type: Type, _duration := duration) -> Notification:
+func with(_type: Type) -> Notification:
 	type = _type
-	duration = _duration
 	return self

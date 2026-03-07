@@ -11,7 +11,7 @@ receptive = false
 [resource]
 script = ExtResource("1_tchex")
 name = "BooleanBlock"
-base_path = "uid://cuvgglg6xlr6p"
+base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_rj3j8")
 category = "Boolean"

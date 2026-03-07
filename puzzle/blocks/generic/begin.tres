@@ -11,7 +11,7 @@ type = 7
 [resource]
 script = ExtResource("3_2eeqp")
 name = "BeginBlock"
-base_path = "uid://bn2314laa6f2u"
+base_path = "uid://5gy242cokjpa"
 type = 1
 nested = SubResource("Resource_x31hy")
 toolbox = false
