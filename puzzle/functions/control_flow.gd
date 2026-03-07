@@ -27,12 +27,12 @@ func _while(this: NestedBlock) -> void:
 	var loop_count := 0
 	while true:
 		this.visual.highlight()
-		await Game.sleep(Puzzle.interpret_delay)
+		await Game.sleep(Interpreter.interpret_delay)
 		
 		var condition: Variant = await this.function.evaluate_arg(0)
 		this.visual.reset()
 		
-		if Puzzle.has_errored:
+		if Interpreter.interrupted:
 			return
 		
 		var err_message := Core.validate_type(condition, [TYPE_BOOL])
@@ -44,7 +44,7 @@ func _while(this: NestedBlock) -> void:
 			break
 		
 		var outcome := await __iterate_children(this)
-		if Puzzle.has_errored:
+		if Interpreter.interrupted:
 			return
 		
 		match outcome:
@@ -54,14 +54,14 @@ func _while(this: NestedBlock) -> void:
 				pass
 		
 		loop_count += 1
-		if loop_count > Puzzle.MAX_LOOPS:
+		if loop_count > Interpreter.MAX_LOOPS:
 			this.function.error("Reached maximum amount of loops.")
 			return
 
 ## text: for var {variable}, from {int}\nuntil {int}, at step {int}
 func _for(this: NestedBlock) -> void:
 	var args := await this.function.evaluate_args(3)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return
 	
 	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
@@ -98,11 +98,11 @@ func _for(this: NestedBlock) -> void:
 		  (step < 0 and this.scope[var_name] >= to):
 		
 		this.visual.highlight()
-		await Game.sleep(Puzzle.interpret_delay)
+		await Game.sleep(Interpreter.interpret_delay)
 		this.visual.reset()
 		
 		var outcome := await __iterate_children(this)
-		if Puzzle.has_errored:
+		if Interpreter.interrupted:
 			return
 		
 		match outcome:
@@ -112,7 +112,7 @@ func _for(this: NestedBlock) -> void:
 				pass
 		
 		loop_count += 1
-		if loop_count > Puzzle.MAX_LOOPS:
+		if loop_count > Interpreter.MAX_LOOPS:
 			this.function.error("Reached maximum amount of loops.")
 			return
 		
@@ -128,12 +128,12 @@ func _for(this: NestedBlock) -> void:
 ## text: if {boolean}, elif {boolean} -> [bool, ControlSignal]
 func _if(this: NestedBlock) -> Variant:
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	
 	var condition: Variant = await this.function.evaluate_arg(0)
 	this.visual.reset()
 	
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return true  # Halt chain on error
 	
 	var err_message := Core.validate_type(condition, [TYPE_BOOL])
@@ -199,12 +199,12 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			
 			block.scope = this.scope.duplicate(true)
 			block.depth = this.depth + 1
-			if block.depth > Puzzle.MAX_DEPTH:
+			if block.depth > Interpreter.MAX_DEPTH:
 				this.function.error("Reached maximum depth of recursion.")
 				return ControlSignal.NONE
 		
 		var outcome: Variant = await block.function.run()
-		if Puzzle.has_errored:
+		if Interpreter.interrupted:
 			return ControlSignal.NONE
 		
 		if outcome is ControlSignal and outcome != ControlSignal.NONE:

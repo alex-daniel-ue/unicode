@@ -54,7 +54,7 @@ def collect_project_files(root_dir, output_dir):
     """
 
     ignore_dirs = ['addons', '.git', '.import', '.combined', '.godot', '.venv']
-    ignore_extensions = {'.uid', '.import'}
+    ignore_extensions = {'.uid', '.import', '.tmp'}
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Configuration: Extension -> (Output Filename, Markdown Language Identifier)

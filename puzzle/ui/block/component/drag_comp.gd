@@ -51,7 +51,7 @@ func handle_copying(event: InputEvent) -> void:
 
 func is_copy_valid(event: InputEvent) -> bool:
 	return bool(
-		not Puzzle.is_running and
+		not Interpreter.is_running and
 		event.is_action_pressed("copy") and
 		base.data.draggable and
 		not base.data.toolbox and

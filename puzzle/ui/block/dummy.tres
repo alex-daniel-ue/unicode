@@ -5,13 +5,9 @@
 [resource]
 script = ExtResource("1_ewwdl")
 name = "DummyBlock"
-base_path = "uid://5ilfnnt1k22"
-method = &""
-toolbox = true
-category = "Uncategorized"
+base_path = "uid://demtvw17w06g5"
 draggable = false
 placeable = false
-top_notch = true
 text = "%s block%s..."
-text_blocks = Array[ExtResource("1_ewwdl")]([])
+Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

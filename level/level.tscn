@@ -1,0 +1,24 @@
+[gd_scene load_steps=8 format=3 uid="uid://kyh2mtywp5j8"]
+
+[ext_resource type="Script" uid="uid://pb7eqcbh2yvh" path="res://level/level.gd" id="1_t2sn0"]
+[ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://level/components/block_provider.gd" id="2_gs6o6"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_tm2aw"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="4_d5hd8"]
+[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="5_h0i8e"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="6_uenn3"]
+[ext_resource type="Script" uid="uid://bfk6051guh5k6" path="res://level/components/camera.gd" id="8_0exh4"]
+
+[node name="Level" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_t2sn0")
+
+[node name="GenericBlockProvider" type="Node" parent="."]
+script = ExtResource("2_gs6o6")
+block_data = Array[ExtResource("3_tm2aw")]([ExtResource("4_d5hd8"), ExtResource("5_h0i8e")])
+
+[node name="GoalManager" type="Node" parent="."]
+script = ExtResource("6_uenn3")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_enabled = false
+script = ExtResource("8_0exh4")

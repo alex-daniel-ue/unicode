@@ -192,6 +192,7 @@ StopButton/colors/icon_hover_pressed_color = Color(0.8509804, 0.24705882, 0.2470
 StopButton/colors/icon_normal_color = Color(0.8509804, 0.24705882, 0.24705882, 1)
 StopButton/colors/icon_pressed_color = Color(0.8509804, 0.24705882, 0.24705882, 1)
 StopButton/styles/focus = SubResource("StyleBoxEmpty_l74f8")
+SubmitButton/base_type = &"Button"
 TextEdit/font_sizes/font_size = 20
 TextEdit/fonts/font = ExtResource("1_xejr6")
 TextEdit/styles/focus = SubResource("StyleBoxFlat_vm8ny")

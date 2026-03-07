@@ -39,6 +39,7 @@ visual = NodePath("VisualComponent")
 [node name="UpperLip" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_hu32r")

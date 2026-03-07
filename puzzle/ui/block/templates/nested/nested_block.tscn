@@ -35,7 +35,6 @@ region_rect = Rect2(0, 76, 100, 24)
 
 [node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_qfmcf")]
 custom_minimum_size = Vector2(100, 100)
-theme_override_constants/separation = 0
 script = ExtResource("2_uq7gt")
 upper_lip = NodePath("UpperLip")
 mouth = NodePath("Body/Mouth")
@@ -46,9 +45,6 @@ custom_minimum_size = Vector2(100, 50)
 mouse_filter = 1
 theme_type_variation = &"NestedBlock"
 theme_override_styles/panel = SubResource("StyleBoxTexture_qfmcf")
-
-[node name="TextContainer" parent="UpperLip" index="0"]
-size_flags_horizontal = 0
 
 [node name="Body" type="PanelContainer" parent="." index="1"]
 custom_minimum_size = Vector2(0, 25)

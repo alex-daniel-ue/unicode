@@ -41,9 +41,7 @@ func _ready() -> void:
 	if preview_type != PreviewType.NONE:
 		return
 	
-	if has_node(^"/root/Puzzle"):
-		var puzzle := $"/root/Puzzle" as Puzzle
-		puzzle.running_state_changed.connect(_on_puzzle_running_state_changed)
+	Interpreter.running_changed.connect(_on_running_changed)
 	
 	line_edit.text_changed.connect(visual.update_type_color.unbind(1))
 	option_button.item_selected.connect(visual.update_type_color.unbind(1))
@@ -68,12 +66,12 @@ func typecast(string: String) -> Variant:
 	
 	return super(string)
 
-func _on_puzzle_running_state_changed(is_running: bool) -> void:
+func _on_running_changed() -> void:
 	var should_be_disabled := (
 		not data.value.editable or
 		not data.value.editable_shown or
 		data.toolbox or
-		is_running
+		Interpreter.is_running
 	)
 	
 	line_edit.editable = not should_be_disabled

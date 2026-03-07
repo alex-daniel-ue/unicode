@@ -2,7 +2,7 @@ class_name BlockFunctionComponent
 extends BlockBaseComponent
 
 
-signal notif_pushed(message: String, type: Puzzle.NotificationType)
+signal notif_pushed(message: String, type: Notification.Type)
 signal errored(block: Block)
 
 const ERROR_SOUND := preload("res://audio/fail.mp3")
@@ -59,12 +59,12 @@ func evaluate_arg(at: int) -> Variant:
 	var block := visible_blocks[at] as Block
 	
 	block.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	
 	var value: Variant = await block.function.run()
 	block.visual.reset()
 	
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return null
 	
 	return value
@@ -77,12 +77,12 @@ func evaluate_args(arg_length := -1) -> Array:
 			continue
 		
 		block.visual.highlight()
-		await Game.sleep(Puzzle.interpret_delay)
+		await Game.sleep(Interpreter.interpret_delay)
 		
 		var value: Variant = await block.function.run()
 		block.visual.reset()
 		
-		if Puzzle.has_errored:
+		if Interpreter.interrupted:
 			return []
 		
 		evaluated.append(value)
@@ -96,7 +96,7 @@ func evaluate_args(arg_length := -1) -> Array:
 	return evaluated
 
 func error(message: String) -> void:
-	Puzzle.has_errored = true
+	Interpreter.interrupted = true
 	
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
@@ -104,7 +104,7 @@ func error(message: String) -> void:
 	SfxPlayer.play(ERROR_SOUND)
 	
 	errored.emit(base)
-	notif_pushed.emit(message, Puzzle.NotificationType.ERROR)
+	notif_pushed.emit(message, Notification.Type.ERROR)
 
 func set_func(new_func: Callable) -> void:
 	_function = new_func

@@ -26,7 +26,8 @@ Debug="*res://global/debug.gd"
 Game="*res://game.gd"
 Core="*res://global/core.gd"
 Transition="*res://global/transition/transition.tscn"
-SfxPlayer="*res://global/audio/sfx_player.gd"
+SfxPlayer="*res://global/sfx player/sfx_player.gd"
+Interpreter="*res://global/interpreter.gd"
 
 [display]
 
@@ -37,12 +38,11 @@ window/stretch/scale_mode="integer"
 folder_colors={
 "res://ai/": "orange",
 "res://audio/": "blue",
+"res://level/": "red",
 "res://menus/": "pink",
-"res://output niyo/": "gray",
 "res://puzzle/": "yellow",
 "res://puzzle/blocks/": "purple",
 "res://puzzle/functions/": "teal",
-"res://puzzle/level/": "red",
 "res://puzzle/ui/": "yellow",
 "res://world/": "green"
 }

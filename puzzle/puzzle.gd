@@ -2,55 +2,27 @@ class_name Puzzle
 extends Control
 
 
-signal running_state_changed(to: bool)
-
-enum NotificationType {
-	LOG,
-	ERROR,
-	SUCCESS
-}
-
-const MAX_DEPTH := 1000
-const MAX_LOOPS := 10000
-const SLOW_DELAY := 0.5
-const FAST_DELAY := 0.15
-const NOTIF_DURATION := 2.0
-
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 
-static var is_running := false
-static var is_fast := false
-static var interpret_delay := SLOW_DELAY
-static var has_errored := false
-
-#region Exports
+@export_group("Children")
 @export var canvas: PuzzleCanvas
 @export var side_panels: Array[SidePanel]
 @export var information: Label
 @export var toolbox: Toolbox
-@export var notification: NotificationStack
+@export var notif: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
-@export var stars: HBoxContainer
 @export var pause_menu: PopupPanel
-
-@export_group("Buttons")
-@export var run_button: Button
-@export var stop_button: Button
-@export var speed_button: Button
-@export var trash_button: Button
-#endregion
 
 # NOTE: Avoid refactoring this. This is perfectly fine.
 var errored_blocks: Array[Block]
-var level: Level
 
 
 func _ready() -> void:
 	side_panels[0].show_menu(true)
 	side_panels[1].show_menu(true)
 	
-	if Game.pending_level != null:
+	if Game.level != null:
 		configure_level()
 
 func _input(event: InputEvent) -> void:
@@ -60,24 +32,20 @@ func _input(event: InputEvent) -> void:
 		pause_menu.hide()
 
 func configure_level() -> void:
-	level = Game.pending_level.instantiate() as Level
-	level.completed.connect(_on_level_completed)
-	level.failed.connect(_on_level_failed)
-	information.text = level.instructions
+	Game.level.completed.connect(_on_level_completed)
+	Game.level.failed.connect(_on_level_failed)
+	information.text = Game.level.instructions
 	
 	for node in level_viewport.get_children():
 		node.queue_free()
-	level_viewport.add_child(level)
+	level_viewport.add_child(Game.level)
 	
-	for block in level.get_blocks():
+	for block in Game.level.get_blocks():
 		if block is CapBlock and block.is_type(NestedData.Type.BEGIN):
 			canvas.add_child(block)
 			block.position = canvas.size / 2.
-			continue
-		
-		toolbox.add_block(block)
-	
-	Game.pending_level = null
+		else:
+			toolbox.add_block(block)
 
 func run_program() -> void:
 	print(canvas.serializer.yaml_serialize())
@@ -87,19 +55,20 @@ func run_program() -> void:
 			block.visual.set_error(false)
 	errored_blocks.clear()
 	
-	if is_running:
-		notification.push("Program is already running.", Notification.Type.ERROR)
+	if Interpreter.is_running:
+		notif.push("Program is already running.", Notification.Type.ERROR)
 		return
 	
 	var begin := _get_begin()
 	if begin == null:
-		notification.push("No begin block on Canvas.", Notification.Type.ERROR)
+		notif.push("No begin block on Canvas.", Notification.Type.ERROR)
 		return
 	
-	level.camera.frame()
+	Game.level.camera.frame()
+	Game.level.reset_state()
 	
-	level.reset_state()
-	set_running_state(true)
+	Interpreter.is_running = true
+	
 	side_panels[0].show_menu(false)
 	side_panels[1].show_menu(true)
 	
@@ -108,23 +77,10 @@ func run_program() -> void:
 	
 	await begin.function.run()
 	
-	set_running_state(false)
+	Interpreter.is_running = false
+	
 	for panel in side_panels:
 		panel.keep_state = false
-
-func set_running_state(to: bool) -> void:
-	is_running = to
-	
-	run_button.disabled = to
-	trash_button.disabled = to
-	
-	stop_button.disabled = not to
-	speed_button.disabled = not to
-	
-	if not to:
-		has_errored = false
-	
-	running_state_changed.emit(is_running)
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
@@ -132,73 +88,19 @@ func _get_begin() -> CapBlock:
 			return child
 	return null
 
-func hide_side_menus() -> void:
-	for panel in side_panels:
-		if panel.has_method(&"show_menu"):
-			panel.show_menu(false)
-
 func _on_block_errored(block: Block) -> void:
-	has_errored = true
+	Interpreter.interrupted = true
 	if not errored_blocks.has(block):
 		errored_blocks.append(block)
 
 func _on_notif_pushed(message: String, type: Notification.Type) -> void:
-	notification.push(message, type)
+	notif.push(message, type)
 
 func _on_level_completed() -> void:
-	has_errored = true
-	
-	var star_count := 1
+	Interpreter.interrupted = true
 	SfxPlayer.play(COMPLETE_SOUND)
-	
-	#region Put this entire section into its own .gd script, "level_complete_popup" probably
-	var blocks := 0
-	for descendant in Core.get_children_recursive(canvas, true):
-		if descendant is Block and descendant.data.top_notch:
-			blocks += 1
-	
-	for child in stars.get_children():
-		child.queue_free()
-	
-	var FILLED_STAR := load("res://puzzle/ui/level complete popup/star_filled.png")
-	var EMPTY_STAR := load("res://puzzle/ui/level complete popup/star_empty.png")
-	
-	var star := TextureRect.new()
-	star.texture = FILLED_STAR
-	star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	star.custom_minimum_size = Vector2(50, 50)
-	stars.add_child(star)
-	
-	for threshold in [level.two_star_threshold, level.three_star_threshold]:
-		star = TextureRect.new()
-		star.texture = EMPTY_STAR
-		if blocks <= threshold:
-			star.texture = FILLED_STAR
-			star_count += 1
-		star.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		star.custom_minimum_size = Vector2(50, 50)
-		stars.add_child(star)
-	#endregion
-	
-	Game.update_level_stars(level.scene_file_path, star_count)
 	level_complete_popup.show()
 
 func _on_level_failed() -> void:
-	has_errored = true
-	notification.push("Level failed!", Notification.Type.ERROR)
-
-func _on_stop_button_pressed() -> void:
-	if is_running:
-		has_errored = true
-		notification.push("Program terminated.", Notification.Type.ERROR)
-
-func _on_speed_button_pressed() -> void:
-	interpret_delay = SLOW_DELAY if is_fast else FAST_DELAY
-	is_fast = not is_fast
-
-func _on_return_button_pressed() -> void:
-	Transition.cover()
-	await Transition.current_tween.finished
-	get_tree().scene_changed.connect(Transition.reveal, CONNECT_ONE_SHOT)
-	
-	Transition.change_scene(Core.LEVEL_SELECT)
+	Interpreter.interrupted = true
+	notif.push("Level failed!", Notification.Type.ERROR)

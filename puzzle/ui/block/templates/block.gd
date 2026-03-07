@@ -43,7 +43,7 @@ func _ready() -> void:
 	
 	if has_node(^"/root/Puzzle"):
 		var puzzle := $"/root/Puzzle" as Puzzle
-		function.notif_pushed.connect(puzzle.notification.push)
+		function.notif_pushed.connect(puzzle.notif.push)
 		function.errored.connect(puzzle._on_block_errored)
 	
 	text.format()
@@ -65,7 +65,7 @@ func _gui_input(event: InputEvent) -> void:
 	drag.handle_copying(event)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	if not data.draggable or Puzzle.is_running:
+	if not data.draggable or Interpreter.is_running:
 		return null
 	
 	var preview := drag.generate_preview()

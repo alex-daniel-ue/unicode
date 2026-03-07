@@ -4,7 +4,7 @@ extends Node
 ## text: print {value/variable}
 func _print(this: Block) -> void:
 	var args := await this.function.evaluate_args(1)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return
 	
 	var value: Variant = args[0]
@@ -18,16 +18,16 @@ func _print(this: Block) -> void:
 		value = parent_nested.scope[value]
 	
 	var output := "- %s" % str(value)
-	this.function.notif_pushed.emit(output, Puzzle.NotificationType.LOG)
+	this.function.notif_pushed.emit(output, Notification.Type.LOG)
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 
 ## text: declare {variable}
 func _declare_var(this: Block) -> void:
 	var args := await this.function.evaluate_args(1)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return
 	
 	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME])
@@ -48,13 +48,13 @@ func _declare_var(this: Block) -> void:
 	parent_nested.scope[var_name] = null
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 
 ## text: set {variable} to {value/variable}
 func _set_var(this: Block) -> void:
 	var args := await this.function.evaluate_args(2)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return
 	
 	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
@@ -75,13 +75,13 @@ func _set_var(this: Block) -> void:
 	parent_nested.scope[var_name] = value
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 
 ## text: initialize {variable} to {variable/value}
 func _initialize(this: Block) -> void:
 	var args := await this.function.evaluate_args(2)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return
 	
 	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
@@ -109,7 +109,7 @@ func _initialize(this: Block) -> void:
 	parent_nested.scope[var_name] = value
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 
 ## text: {value/variable} {symbol} {value/variable}
@@ -139,7 +139,7 @@ func _comparison(this: Block) -> Variant:
 			return
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 	
 	return _execute_expression(this, [value1, symbol, value2])
@@ -171,7 +171,7 @@ func _arithmetic(this: Block) -> Variant:
 		return
 	
 	this.visual.highlight()
-	await Game.sleep(Puzzle.interpret_delay)
+	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()
 	
 	return _execute_expression(this, [value1, symbol, value2])
@@ -199,7 +199,7 @@ func _execute_expression(this: Block, args: Array) -> Variant:
 #region Generic helper methods
 func __resolve_operation_args(this: Block) -> Array:
 	var args := await this.function.evaluate_args(3)
-	if Puzzle.has_errored:
+	if Interpreter.interrupted:
 		return []
 	
 	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock

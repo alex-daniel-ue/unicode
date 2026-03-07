@@ -12,4 +12,4 @@ func _on_pressed() -> void:
 	_update_icon.call_deferred()
 
 func _update_icon() -> void:
-	icon = slow_down if Puzzle.is_fast else fast_forward
+	icon = slow_down if Interpreter.is_fast else fast_forward

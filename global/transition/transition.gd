@@ -11,7 +11,11 @@ var current_tween: Tween
 
 
 func cover() -> void:
+	screen.mouse_filter = Control.MOUSE_FILTER_STOP
 	screen.visible = true
+	
+	if current_tween:
+		current_tween.kill()
 	
 	current_tween = create_tween()
 	current_tween.set_parallel()
@@ -20,6 +24,8 @@ func cover() -> void:
 	current_tween.tween_property(screen.material, SHADER_PARAM_PROGRESS, 1, transition_time).from(0)
 
 func reveal() -> void:
+	screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
 	current_tween = create_tween()
 	current_tween.set_parallel()
 	

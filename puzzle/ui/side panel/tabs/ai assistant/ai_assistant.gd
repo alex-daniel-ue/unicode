@@ -28,11 +28,11 @@ func _on_submit_pressed() -> void:
 	message_field.editable = false
 	
 	var canvas_yaml := puzzle.canvas.serializer.yaml_serialize()
-	var level_instructions := puzzle.level.instructions if is_instance_valid(puzzle.level) else ""
+	var level_instructions := Game.level.instructions if is_instance_valid(Game.level) else ""
 	
 	var base64_image := ""
 	if is_instance_valid(puzzle.level_viewport):
-		puzzle.level.camera.frame(Vector2.ZERO)
+		Game.level.camera.frame(Vector2.ZERO)
 		var img := puzzle.level_viewport.get_texture().get_image()
 		var png_buffer := img.save_png_to_buffer()
 		base64_image = Marshalls.raw_to_base64(png_buffer)
@@ -59,7 +59,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 		loading_bubble.queue_free()
 	
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
-		puzzle.notification_stack.add("Error connecting to AI server.", 2., Puzzle.NotificationType.ERROR)
+		puzzle.notif.push("Error connecting to AI server.", Notification.Type.ERROR)
 		return
 	
 	var response_json: Variant = JSON.parse_string(body.get_string_from_utf8())

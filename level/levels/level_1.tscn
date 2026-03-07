@@ -1,0 +1,79 @@
+[gd_scene load_steps=10 format=4 uid="uid://cm27s11d02y05"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_mict5"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="2_wxnxd"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="3_m1y7l"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="4_p8f7k"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="5_2a3m5"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="6_l3j2e"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="7_nnkkk"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_comp.gd" id="8_1rlyd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
+
+[node name="Level1" instance=ExtResource("1_mict5")]
+instructions = "Get to the classroom door!
+
+Left-click to drag-and-drop blocks.
+Grab and scroll to pan and zoom.
+Right-click to copy.
+
+Grab the environment to look around."
+
+[node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
+goals = [NodePath("DestinationGoal")]
+
+[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity")]
+script = ExtResource("2_wxnxd")
+required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+
+[node name="Camera2D" parent="." index="2"]
+position = Vector2(112, 128)
+zoom = Vector2(3.2070313, 3.2070313)
+level_bounds = Rect2(0, 0, 224, 256)
+
+[node name="Visuals" type="Node2D" parent="." index="3"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAABAAIAAAABAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAAAAAAAAAABAAYAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAABAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAA=")
+tile_set = ExtResource("3_m1y7l")
+
+[node name="Doodads" type="TileMapLayer" parent="Visuals" index="1"]
+
+[node name="Destination" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(176, 175)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination" index="0"]
+shape = SubResource("CircleShape2D_xoxp0")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/Destination" index="1"]
+position = Vector2(9.536743e-07, -9.536743e-07)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("4_p8f7k")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="3"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+tile_set = ExtResource("5_2a3m5")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQAAAAEAADAGAAQAAQADAAAAAAAGAAUAAQADAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
+tile_set = ExtResource("6_l3j2e")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("7_nnkkk")]
+position = Vector2(79.5, 175.5)
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
+script = ExtResource("8_1rlyd")
+base = NodePath("..")
+initial_properties = Dictionary[StringName, Variant]({
+&"transform": Transform2D(1, 0, 0, 1, 79.5, 175.5)
+})
+
+[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
+[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]

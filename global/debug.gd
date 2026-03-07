@@ -17,6 +17,7 @@ func log(message: Variant = "", separator := ' ') -> void:
 		message = "%.03f" % message
 	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000., str(message)])
 
+# Editor pauses on last line, lets me view all these methods, works as intended
 func view_callable(_function: Callable) -> void:
 	var _debug_function := {
 		"is_custom()": _function.is_custom(),
@@ -28,4 +29,3 @@ func view_callable(_function: Callable) -> void:
 		"get_method()": _function.get_method(),
 		"get_object()": _function.get_object(),
 	}
-	pass
