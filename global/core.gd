@@ -2,9 +2,9 @@
 extends Node
 
 
-const MAIN_MENU := preload("res://menus/main/main_menu.tscn")
-const LEVEL_SELECT := preload("res://menus/level select/level_select.tscn")
-const PUZZLE_CANVAS := preload("res://puzzle/puzzle.tscn")
+var MAIN_MENU := load("res://menus/main/main_menu.tscn")
+var LEVEL_SELECT := load("res://menus/level select/level_select.tscn")
+var PUZZLE_CANVAS := load("res://puzzle/puzzle.tscn")
 
 static var current_drag_preview: Control
 

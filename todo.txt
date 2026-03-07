@@ -1,16 +1,14 @@
 
 sequenced goals/tests
-
+move puzzle on run, centered on current block highlighted, panning overrides centering, don't move on fast interpreting
 description/documentation for every block, add to BlockData
-rework errors, record them, need to be sent to ai assistant
-catch bad requests: not yet run solution, empty message
-punish caught requests/spam: timeout for 1 minute
-proper temporary chat bubble in ai assistant for "thinking" or "couldn't connect to server" type messages
-overwrite bad or timed out requests
-replace toolbox v and > with actual icons
-ai assistant functions: get_level_image, get_history
-optionally provide completed levels? revisit previous levels if confused?
-retheme ai assistant submit button
-move puzzle on run, centered on current block highlighted, panning overrides centering
 try to reduce repeated code in block functions
+missing hover, pressed colors for play and stop buttons
+
+rework errors, record them, need to be sent to ai assistant
+catch bad requests: not yet run solution
+punish caught requests/spam: timeout for 1 minute
+overwrite bad or timed out requests
+ai assistant functions: get_history
+optionally provide completed levels? revisit previous levels if confused?
 put ai assistant fields into godot, reduce server to absolute essentials

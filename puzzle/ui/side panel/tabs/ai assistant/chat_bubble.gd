@@ -6,12 +6,12 @@ extends HBoxContainer
 @export var panel: PanelContainer
 @export var label: Label
 
-var bubble_color := Color.WHITE:
+var bubble_color := Color("#334155"):
 	set(value):
 		bubble_color = value
 		panel.self_modulate = bubble_color
 
-var text_color := Color.BLACK:
+var text_color := Color.WHITE:
 	set(value):
 		text_color = value
 		label.add_theme_color_override("font_color", text_color)
@@ -21,20 +21,25 @@ var text: String = "":
 		text = value
 		_update_bubble()
 
-var left_aligned := true:
+var right_aligned := false:
 	set(value):
-		left_aligned = value
+		right_aligned = value
 		_update_alignment()
 
 var max_width_ratio := 0.85
+var is_temporary := false
 
 
 func _ready() -> void:
 	_update_alignment()
 	_update_bubble()
 
+func set_colors(bubble: Color, txt: Color) -> void:
+	bubble_color = bubble
+	text_color = txt
+
 func _update_alignment() -> void:
-	alignment = BoxContainer.ALIGNMENT_BEGIN if left_aligned else BoxContainer.ALIGNMENT_END
+	alignment = BoxContainer.ALIGNMENT_END if right_aligned else BoxContainer.ALIGNMENT_BEGIN
 
 func _update_bubble() -> void:
 	label.text = text
