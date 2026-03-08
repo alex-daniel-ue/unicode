@@ -4,6 +4,8 @@ extends Control
 
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 
+@export var print_yaml := false
+
 @export_group("Children")
 @export var canvas: PuzzleCanvas
 @export var side_panels: Array[SidePanel]
@@ -13,9 +15,6 @@ const COMPLETE_SOUND := preload("res://audio/success.mp3")
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
 @export var pause_menu: PopupPanel
-
-# NOTE: Avoid refactoring this. This is perfectly fine.
-var errored_blocks: Array[Block]
 
 
 func _ready() -> void:
@@ -48,12 +47,13 @@ func configure_level() -> void:
 			toolbox.add_block(block)
 
 func run_program() -> void:
-	print(canvas.serializer.yaml_serialize())
+	if print_yaml:
+		print(canvas.serializer.yaml_serialize())
 	
-	for block in errored_blocks:
-		if is_instance_valid(block):
-			block.visual.set_error(false)
-	errored_blocks.clear()
+	for err in Interpreter.active_errors:
+		if is_instance_valid(err.block):
+			err.block.visual.set_error(false)
+	Interpreter.clear_state()
 	
 	if Interpreter.is_running:
 		notif.push("Program is already running.", Notification.Type.ERROR)
@@ -68,33 +68,19 @@ func run_program() -> void:
 	Game.level.reset_state()
 	
 	Interpreter.is_running = true
-	
-	side_panels[0].show_menu(false)
 	side_panels[1].show_menu(true)
-	
-	for panel in side_panels:
-		panel.keep_state = true
+	side_panels[1].keep_state = true
 	
 	await begin.function.run()
 	
 	Interpreter.is_running = false
-	
-	for panel in side_panels:
-		panel.keep_state = false
+	side_panels[1].keep_state = false
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():
 		if child is CapBlock and child.is_type(NestedData.Type.BEGIN):
 			return child
 	return null
-
-func _on_block_errored(block: Block) -> void:
-	Interpreter.interrupted = true
-	if not errored_blocks.has(block):
-		errored_blocks.append(block)
-
-func _on_notif_pushed(message: String, type: Notification.Type) -> void:
-	notif.push(message, type)
 
 func _on_level_completed() -> void:
 	Interpreter.interrupted = true

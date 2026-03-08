@@ -20,6 +20,8 @@ func _print(this: Block) -> void:
 	var output := "- %s" % str(value)
 	this.function.notif_pushed.emit(output, Notification.Type.LOG)
 	
+	Interpreter.output_log.append(output)
+	
 	this.visual.highlight()
 	await Game.sleep(Interpreter.interpret_delay)
 	this.visual.reset()

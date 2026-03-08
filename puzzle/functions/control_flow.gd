@@ -197,7 +197,7 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			if block.is_type(NestedData.Type.ELSE) and if_chain_succeeded:
 				continue
 			
-			block.scope = this.scope.duplicate(true)
+			block.scope = this.scope
 			block.depth = this.depth + 1
 			if block.depth > Interpreter.MAX_DEPTH:
 				this.function.error("Reached maximum depth of recursion.")
@@ -211,11 +211,6 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			return outcome as ControlSignal
 		
 		if block is NestedBlock:
-			# Update the parent scope with any variable changes that occurred
-			# inside the child block's scope.
-			for var_name in this.scope:
-				this.scope[var_name] = block.scope[var_name]
-			
 			if block.is_type(NestedData.Type.IF):
 				if not if_chain_succeeded:
 					assert(outcome is bool)
@@ -223,7 +218,7 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			
 			# Clean up the NestedBlock's scope and reset its depth for future
 			# executions
-			block.scope.clear()
+			#block.scope.clear()
 			block.depth = -1
 		
 		previous_block = block

@@ -8,6 +8,7 @@ signal completed
 signal failed(reason: String)
 
 @export_multiline var instructions: String
+@export_multiline var intended_solution: String
 
 var zoom_speed := 1.15
 var min_zoom := 0.5

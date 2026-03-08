@@ -3,7 +3,7 @@ extends BlockVisualComponent
 
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color("#D8D8D8"),
-	TYPE_STRING_NAME : Color("#FDE047"),
+	TYPE_STRING_NAME : Color("eb9ef0ff"),
 	TYPE_STRING : Color("#FFBA8F"),
 	TYPE_INT : Color("#75BAFF"),
 	TYPE_FLOAT : Color("#ADADFF"),
@@ -26,7 +26,7 @@ func reset() -> void:
 	update_type_color()
 
 func update_type_color() -> void:
-	# Explicit type conversion hack
+	# Explicit type conversion
 	var value_base := base as ValueBlock
 	
 	if value_base.data.has_text_blocks():

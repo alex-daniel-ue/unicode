@@ -7,18 +7,33 @@
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="5_2a3m5"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="6_l3j2e"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="7_nnkkk"]
-[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_comp.gd" id="8_1rlyd"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="8_1rlyd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
 [node name="Level1" instance=ExtResource("1_mict5")]
-instructions = "Get to the classroom door!
+instructions = "Get to the classroom door.
 
 Left-click to drag-and-drop blocks.
 Grab and scroll to pan and zoom.
 Right-click to copy.
 
 Grab the environment to look around."
+intended_solution = "block: BeginBlock
+  text: \"begin code\"
+  children:
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\""
 
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]

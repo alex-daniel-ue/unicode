@@ -6,7 +6,7 @@ const COLOR_CHANGE_MULT := 10.0
 const ERROR_SPD_MULT := 4.0
 const ERROR_DURATION := 2.0
 
-@export var highlight_color := Color("#ffec8a")
+@export var highlight_color := Color("6ddced")
 @export var error_color := Color("ff8080")
 @export var color_affected: Array[Control]
 

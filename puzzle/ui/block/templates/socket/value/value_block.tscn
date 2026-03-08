@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://caogwuts3hwxd" path="res://puzzle/ui/block/templates/socket/value/value_block.gd" id="2_xhcyd"]
 [ext_resource type="Script" uid="uid://c1m7ivmnlop5l" path="res://puzzle/ui/block/templates/socket/value/type_label.gd" id="3_104fh"]
 [ext_resource type="Script" uid="uid://2mu0khv36s0v" path="res://puzzle/ui/block/templates/socket/value/line_edit.gd" id="4_awqdb"]
-[ext_resource type="Script" uid="uid://bmfm6vseh2n2g" path="res://puzzle/ui/block/component/derivations/text_comp_value.gd" id="5_xhcyd"]
-[ext_resource type="Script" uid="uid://px6s8s2ecxm7" path="res://puzzle/ui/block/component/derivations/visual_comp_value.gd" id="6_wbh7f"]
+[ext_resource type="Script" uid="uid://bmfm6vseh2n2g" path="res://puzzle/ui/block/component/derivations/text_component_value.gd" id="5_xhcyd"]
+[ext_resource type="Script" uid="uid://px6s8s2ecxm7" path="res://puzzle/ui/block/component/derivations/visual_component_value.gd" id="6_wbh7f"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_oiocf"]
 load_path = "res://.godot/imported/value_texture.png-579cfa19f219324c63dded00adffea02.ctex"

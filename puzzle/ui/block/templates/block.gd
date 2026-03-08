@@ -1,3 +1,4 @@
+@abstract
 class_name Block
 extends VBoxContainer
 
@@ -44,7 +45,6 @@ func _ready() -> void:
 	if has_node(^"/root/Puzzle"):
 		var puzzle := $"/root/Puzzle" as Puzzle
 		function.notif_pushed.connect(puzzle.notif.push)
-		function.errored.connect(puzzle._on_block_errored)
 	
 	text.format()
 	

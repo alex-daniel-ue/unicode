@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://nrgx8s4alnrc" path="res://puzzle/ui/block/templates/nested/cap/cap_block.gd" id="1_1vde0"]
 [ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="1_3hsbr"]
 [ext_resource type="Texture2D" uid="uid://di61alcg2gees" path="res://puzzle/ui/block/templates/nested/cap/cap_texture.png" id="3_h4y1w"]
-[ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_comp_cap.gd" id="6_17osp"]
-[ext_resource type="Script" uid="uid://bq3nnugnoxpbo" path="res://puzzle/ui/block/component/derivations/visual_comp_cap.gd" id="8_12l2t"]
+[ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_component_cap.gd" id="6_17osp"]
+[ext_resource type="Script" uid="uid://bq3nnugnoxpbo" path="res://puzzle/ui/block/component/derivations/visual_component_cap.gd" id="8_12l2t"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4giph"]
 content_margin_left = 16.0
@@ -39,6 +39,7 @@ theme_override_constants/separation = 0
 [node name="LowerLip" type="ColorRect" parent="." index="2"]
 layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 0
 mouse_filter = 1
 color = Color(1, 0, 1, 0)
 

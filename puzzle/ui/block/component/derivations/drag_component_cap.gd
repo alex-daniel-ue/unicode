@@ -5,7 +5,7 @@ func _ready() -> void:
 	assert(base is CapBlock)
 
 func is_copy_valid(event: InputEvent) -> bool:
-	# Explicit type conversion hack
+	# Explicit type conversion
 	var cap := base as CapBlock
 	
 	return (

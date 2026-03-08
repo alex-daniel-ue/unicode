@@ -1,11 +1,30 @@
-[gd_scene load_steps=5 format=3 uid="uid://conmg5k2eihou"]
+[gd_scene load_steps=9 format=3 uid="uid://conmg5k2eihou"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_rgus7"]
 [ext_resource type="Script" uid="uid://damydrm37ap1p" path="res://puzzle/ui/side panel/tabs/ai assistant/ai_assistant.gd" id="2_kmgf6"]
 [ext_resource type="Texture2D" uid="uid://wnv53oda41m1" path="res://puzzle/ui/side panel/icons/pixelarticons--send.png" id="2_sw5d0"]
 [ext_resource type="PackedScene" uid="uid://c71q4icny10pb" path="res://puzzle/ui/side panel/tabs/ai assistant/chat_bubble.tscn" id="3_kmgf6"]
+[ext_resource type="Script" uid="uid://chm2mpgr2ts7n" path="res://puzzle/ui/side panel/tabs/ai assistant/bubble_theme.gd" id="4_ujnjh"]
 
-[node name="AIAssistant" type="MarginContainer"]
+[sub_resource type="Resource" id="Resource_q1e47"]
+script = ExtResource("4_ujnjh")
+background = Color(0.21960784, 0.7411765, 0.972549, 1)
+font = Color(0.007843138, 0.023529412, 0.09019608, 1)
+metadata/_custom_type_script = "uid://chm2mpgr2ts7n"
+
+[sub_resource type="Resource" id="Resource_7mq5g"]
+script = ExtResource("4_ujnjh")
+background = Color(0.53333336, 0.07450981, 0.21568628, 1)
+font = Color(0.99215686, 0.6431373, 0.6862745, 1)
+metadata/_custom_type_script = "uid://chm2mpgr2ts7n"
+
+[sub_resource type="Resource" id="Resource_wf488"]
+script = ExtResource("4_ujnjh")
+background = Color(0.11764706, 0.16078432, 0.23137255, 1)
+font = Color(0.5803922, 0.6392157, 0.72156864, 1)
+metadata/_custom_type_script = "uid://chm2mpgr2ts7n"
+
+[node name="AIAssistant" type="MarginContainer" node_paths=PackedStringArray("chat_stack", "message_field", "submit_button", "http_request", "scroll")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,6 +37,14 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 12
 script = ExtResource("2_kmgf6")
 chat_bubble_scene = ExtResource("3_kmgf6")
+bubble_theme_ai = SubResource("Resource_q1e47")
+bubble_theme_error = SubResource("Resource_7mq5g")
+bubble_theme_thinking = SubResource("Resource_wf488")
+chat_stack = NodePath("VBoxContainer/ScrollContainer/VBoxContainer/ChatStack")
+message_field = NodePath("VBoxContainer/HBoxContainer/UserMessageField")
+submit_button = NodePath("VBoxContainer/HBoxContainer/SubmitButton")
+http_request = NodePath("HTTPRequest")
+scroll = NodePath("VBoxContainer/ScrollContainer")
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
@@ -31,7 +58,24 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="ChatStack" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"HeaderLarge"
+text = "AI Assistant"
+
+[node name="ChatStack" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -44,7 +88,7 @@ custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_rgus7")
-placeholder_text = "What do you need help with?"
+placeholder_text = "Type here..."
 context_menu_enabled = false
 emoji_menu_enabled = false
 drag_and_drop_selection_enabled = false

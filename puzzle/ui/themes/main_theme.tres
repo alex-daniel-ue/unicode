@@ -24,7 +24,7 @@ content_margin_right = 16.0
 content_margin_bottom = 12.0
 bg_color = Color(0.972549, 0.98039216, 0.9882353, 1)
 border_width_bottom = 4
-border_color = Color(0.79607844, 0.8352941, 0.88235295, 1)
+border_color = Color(0.616, 0.7348001, 0.88, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -102,8 +102,16 @@ shadow_color = Color(0, 0, 0, 0.25098)
 shadow_size = 28
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xejr6"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xrkic"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 bg_color = Color(0.11764706, 0.16078432, 0.23137255, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
@@ -111,8 +119,16 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eso8d"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oy6xc"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
@@ -121,23 +137,23 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l74f8"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eso8d"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.11764706, 0.16078432, 0.23137255, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av0oy"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
 bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eso8d"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.11764706, 0.16078432, 0.23137255, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -218,8 +234,9 @@ ChatMessage/colors/font_color = Color(0, 0, 0, 1)
 ChatMessage/constants/outline_size = 0
 ChatMessage/font_sizes/font_size = 18
 HeaderLarge/base_type = &"Label"
-HeaderLarge/font_sizes/font_size = 36
+HeaderLarge/font_sizes/font_size = 32
 HeaderMedium/base_type = &"Label"
+HeaderMedium/font_sizes/font_size = 24
 Label/constants/line_spacing = 5
 Label/constants/outline_size = 5
 Label/font_sizes/font_size = 22
@@ -250,10 +267,12 @@ PopupPanel/styles/panel = SubResource("StyleBoxFlat_xejr6")
 SidePanel/base_type = &"Panel"
 SidePanel/styles/panel = SubResource("StyleBoxFlat_02q3g")
 SidePanelButton/base_type = &"Button"
+SidePanelButton/colors/icon_disabled_color = Color(0.57600003, 0.6336, 0.72, 0.33333334)
 SidePanelButton/colors/icon_focus_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
 SidePanelButton/colors/icon_hover_color = Color(1, 1, 1, 1)
 SidePanelButton/colors/icon_normal_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
 SidePanelButton/colors/icon_pressed_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+SidePanelButton/styles/disabled = SubResource("StyleBoxEmpty_xejr6")
 SidePanelButton/styles/focus = SubResource("StyleBoxEmpty_xejr6")
 SidePanelButton/styles/hover = SubResource("StyleBoxFlat_xrkic")
 SidePanelButton/styles/normal = SubResource("StyleBoxEmpty_eso8d")
@@ -267,6 +286,7 @@ SubmitButton/colors/icon_focus_color = Color(0.21960784, 0.7411765, 0.972549, 1)
 SubmitButton/colors/icon_hover_color = Color(0.49019608, 0.827451, 0.9882353, 1)
 SubmitButton/colors/icon_normal_color = Color(0.21960784, 0.7411765, 0.972549, 1)
 SubmitButton/colors/icon_pressed_color = Color(0.007843138, 0.5176471, 0.78039217, 1)
+SubmitButton/styles/focus = SubResource("StyleBoxFlat_av0oy")
 SubmitButton/styles/hover = SubResource("StyleBoxFlat_eso8d")
 SubmitButton/styles/normal = SubResource("StyleBoxFlat_av0oy")
 SubmitButton/styles/pressed = SubResource("StyleBoxFlat_8cnbn")

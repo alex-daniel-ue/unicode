@@ -23,11 +23,39 @@
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="21_t2jpi"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="22_k7p4u"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="23_gytkn"]
-[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_comp.gd" id="24_34rw5"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="24_34rw5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3lsww"]
 
 [node name="Level" instance=ExtResource("1_yqlds")]
+instructions = "Get to the classroom door."
+intended_solution = "block: BeginBlock
+  text: \"begin code\"
+  children:
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"down\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"up\"
+    - block: MoveBlock
+      text: \"move {}\"
+      parameters:
+        - \"right\""
 
 [node name="GenericBlockProvider" parent="." index="0"]
 block_data = Array[ExtResource("2_1pnxm")]([ExtResource("3_qt577"), ExtResource("4_am250"), ExtResource("5_aipms"), ExtResource("6_uyv3j"), ExtResource("7_1b758"), ExtResource("8_2vycy"), ExtResource("9_l40t2"), ExtResource("10_6g7ov"), ExtResource("11_yat8e"), ExtResource("12_euory"), ExtResource("13_ds503"), ExtResource("14_3o22q"), ExtResource("15_24kc1"), ExtResource("16_g7few"), ExtResource("17_fl2a7")])

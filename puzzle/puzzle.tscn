@@ -32,6 +32,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_iy1cu")
+print_yaml = true
 canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
 information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/Label")
@@ -41,10 +42,10 @@ level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/S
 level_complete_popup = NodePath("LevelCompletePopup")
 pause_menu = NodePath("PauseMenu")
 
-[node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("idle_buttons", "running_buttons")]
+[node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("scripting_buttons", "running_buttons")]
 script = ExtResource("2_n8lp6")
-idle_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/PlayButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton")]
-running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton")]
+scripting_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/PlayButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton")]
+running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/DebugViewButton")]
 
 [node name="LevelCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
@@ -195,6 +196,12 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
+
+[node name="DebugViewButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer"]
+visible = false
+layout_mode = 2
+disabled = true
+text = "Debug"
 
 [node name="TrashButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("confirm_dialog")]
 custom_minimum_size = Vector2(50, 50)

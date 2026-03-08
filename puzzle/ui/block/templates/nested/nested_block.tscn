@@ -13,7 +13,7 @@ content_margin_top = 14.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
 texture = SubResource("CompressedTexture2D_l74f8")
-texture_margin_left = 24.0
+texture_margin_left = 28.0
 texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
@@ -33,7 +33,7 @@ texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 region_rect = Rect2(0, 76, 100, 24)
 
-[node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_qfmcf")]
+[node name="NestedBlock" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_qfmcf")]
 custom_minimum_size = Vector2(100, 100)
 script = ExtResource("2_uq7gt")
 upper_lip = NodePath("UpperLip")

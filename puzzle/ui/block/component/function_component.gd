@@ -3,7 +3,6 @@ extends BlockBaseComponent
 
 
 signal notif_pushed(message: String, type: Notification.Type)
-signal errored(block: Block)
 
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
@@ -98,12 +97,28 @@ func evaluate_args(arg_length := -1) -> Array:
 func error(message: String) -> void:
 	Interpreter.interrupted = true
 	
+	var current_scope: Dictionary[StringName, Variant]
+	var parent_nested := base.get_parent_matching(Block.IS_NESTED) as NestedBlock
+	if parent_nested != null:
+		current_scope = parent_nested.scope.duplicate()
+	
+	var trace: PackedStringArray
+	var current := base.get_parent_block()
+	while current != null:
+		trace.append(current.text.get_raw())
+		current = current.get_parent_block()
+	trace.reverse()
+	
+	var err := Interpreter.Error.new(message, base, trace, current_scope)
+	Interpreter.active_errors.append(err)
+	Interpreter.output_log.append(str(err))
+	
+	Interpreter.error_thrown.emit(err)
+	
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
 	
 	SfxPlayer.play(ERROR_SOUND)
-	
-	errored.emit(base)
 	notif_pushed.emit(message, Notification.Type.ERROR)
 
 func set_func(new_func: Callable) -> void:

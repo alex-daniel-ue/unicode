@@ -41,7 +41,7 @@ func _ready() -> void:
 	if preview_type != PreviewType.NONE:
 		return
 	
-	Interpreter.running_changed.connect(_on_running_changed)
+	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 	
 	line_edit.text_changed.connect(visual.update_type_color.unbind(1))
 	option_button.item_selected.connect(visual.update_type_color.unbind(1))
@@ -66,7 +66,7 @@ func typecast(string: String) -> Variant:
 	
 	return super(string)
 
-func _on_running_changed() -> void:
+func _on_interpreter_running_changed() -> void:
 	var should_be_disabled := (
 		not data.value.editable or
 		not data.value.editable_shown or

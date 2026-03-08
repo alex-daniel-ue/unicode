@@ -6,7 +6,7 @@ func _ready() -> void:
 	super()
 
 func get_raw() -> String:
-	# Explicit type conversion hack
+	# Explicit type conversion
 	var value := base as ValueBlock
 	
 	if value.data.value.enum_flag:
@@ -22,7 +22,7 @@ func get_raw() -> String:
 	return super()
 
 func format() -> void:
-	# Explicit type conversion hack
+	# Explicit type conversion
 	var value := base as ValueBlock
 	
 	if value.data.value.editable_shown and not value.data.has_text_blocks():

@@ -1,17 +1,17 @@
 extends Node
 
 
-@export var idle_buttons: Array[Button]
+@export var scripting_buttons: Array[Button]
 @export var running_buttons: Array[Button]
 
 @onready var puzzle := get_parent() as Puzzle
 
 
 func _ready() -> void:
-	Interpreter.running_changed.connect(_on_running_changed)
+	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 
-func _on_running_changed() -> void:
-	for btn: Button in idle_buttons:
+func _on_interpreter_running_changed() -> void:
+	for btn: Button in scripting_buttons:
 		btn.disabled = Interpreter.is_running
 	
 	for btn: Button in running_buttons:
