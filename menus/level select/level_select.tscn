@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://cdilcamcaiut0"]
+[gd_scene load_steps=8 format=3 uid="uid://cdilcamcaiut0"]
 
 [ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_lhy6y"]
 [ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="1_ofcge"]
 [ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_soyww"]
-[ext_resource type="FontFile" uid="uid://bwff4jg4mi7au" path="res://puzzle/ui/themes/fonts/04B_03__.TTF" id="2_bsw82"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_lhy6y"]
 [ext_resource type="PackedScene" uid="uid://cm27s11d02y05" path="res://level/levels/level_1.tscn" id="4_ox6ee"]
 [ext_resource type="PackedScene" uid="uid://djpyxhdtoosj" path="res://level/levels/level_2.tscn" id="5_vfniy"]
@@ -41,10 +40,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 40
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
 
 [node name="HomeButton" type="Button" parent="MarginContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -58,9 +57,8 @@ expand_icon = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_fonts/font = ExtResource("2_bsw82")
-theme_override_font_sizes/font_size = 60
-text = "SEQUENCING - MOVEMENT"
+theme_type_variation = &"HeaderLarge"
+text = "Sequencing"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -75,20 +73,19 @@ theme_override_constants/separation = 44
 alignment = 1
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
-custom_minimum_size = Vector2(121.52, 79.285)
+custom_minimum_size = Vector2(100, 75)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
-text = "LEVEL 1"
+text = "1"
 
 [node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
-custom_minimum_size = Vector2(121.52, 79.285)
+custom_minimum_size = Vector2(100, 75)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
-text = "LEVEL 2
-"
+text = "2"
 
 [connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]

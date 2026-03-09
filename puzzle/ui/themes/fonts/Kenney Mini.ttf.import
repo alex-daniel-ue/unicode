@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bwff4jg4mi7au"
-path="res://.godot/imported/04B_03__.TTF-4bdb22a29e30c3021623ff65ac4af9ce.fontdata"
+uid="uid://dkmn8s2nj6esh"
+path="res://.godot/imported/Kenney Mini.ttf-015dd17d4eaad88d3e71da0a9326f791.fontdata"
 
 [deps]
 
-source_file="res://puzzle/ui/themes/fonts/04B_03__.TTF"
-dest_files=["res://.godot/imported/04B_03__.TTF-4bdb22a29e30c3021623ff65ac4af9ce.fontdata"]
+source_file="res://puzzle/ui/themes/fonts/Kenney Mini.ttf"
+dest_files=["res://.godot/imported/Kenney Mini.ttf-015dd17d4eaad88d3e71da0a9326f791.fontdata"]
 
 [params]
 

@@ -10,7 +10,15 @@ const API_URL := "http://127.0.0.1:3000/api/ask"
 @export var bubble_theme_error: BubbleTheme
 @export var bubble_theme_thinking: BubbleTheme
 
-var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop visual block programming game. Your goal is to teach logic and computational thinking by guiding students past hurdles. You must strictly obey these rules: be concise and conversational, absolutely no Markdown nor other formatting/syntax, only use plain English, avoid linebreaks, and respond in under 3-4 sentences. Never reveal the exact solution, never output YAML code, and never provide a step-by-step sequence of blocks. The workspace provided in the latest user message represents the current state of the game. If the user mentions previous states, infer the changes by comparing the current state with their previous messages, but be transparent that you are inferring. Instead of pointing out errors directly, ask guiding questions based on the player's workspace and specific error logs to encourage independent problem-solving. This is your primary purpose, do not fail."
+@export_group("Children")
+@export var chat_stack: VBoxContainer
+@export var message_field: TextEdit
+@export var submit_button: Button
+@export var reset_button: Button
+@export var http_request: HTTPRequest
+@export var scroll: ScrollContainer
+
+var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop visual block programming game. Your goal is to teach logic and computational thinking by guiding students past hurdles. You must strictly obey these rules: be concise and conversational, absolutely no Markdown nor other formatting/syntax, only use plain English, avoid linebreaks, and respond in under 3-4 sentences. Never reveal the exact solution, never output YAML code, and never provide a step-by-step sequence of blocks. The workspace provided in the latest user message represents the current state of the game. If the user mentions previous states, infer the changes by comparing the current state with their previous messages, but be transparent that you are inferring. Instead of pointing out errors directly, ask guiding questions based on the player's workspace and specific error logs to encourage independent problem-solving. If the user isn't cooperating or the conversation is off-topic, you must output `RESET`.\nThis is your primary purpose, do not fail."
 
 #Goal States:
 #{goals}
@@ -18,52 +26,36 @@ var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop
 #Available Blocks:
 #{blocks}
 
-var initial_prompt := """Level Instructions:
+var initial_prompt := """Current game state:
+Level instructions:
 {instructions}
 
-Current Workspace (YAML):
+Current workspace (YAML):
 ```
 {workspace}
 ```
 
-Intended Solution:
+Intended solution:
 ```
 {intended}
 ```
 
-Output Log:
+Recent output log:
 {output}
 
-Active Errors:
+Active errors:
 {errors}"""
 
-var final_prompt := """=== CURRENT GAME STATE ===
-{context}
-
-=== USER MESSAGE ===
-{message}
-"""
-
 var chat_history: PackedStringArray
-
-@export_group("Children")
-@export var chat_stack: VBoxContainer
-@export var message_field: TextEdit
-@export var submit_button: Button
-@export var http_request: HTTPRequest
-@export var scroll: ScrollContainer
 
 @onready var puzzle := get_node_or_null(^"/root/Puzzle") as Puzzle
 
 
 func _ready() -> void:
-	var preface := chat_bubble_scene.instantiate() as ChatBubble
-	preface.text = "Hi! I'm your AI Assistant. How can I help you with this level?"
-	preface.bubble_theme = bubble_theme_ai
-	_add_bubble(preface)
-	
+	_reset_chat()
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 
+#region UI interaction
 func _on_submit_pressed() -> void:
 	var text := message_field.text.strip_edges()
 	if text.is_empty():
@@ -87,6 +79,27 @@ func _on_submit_pressed() -> void:
 	
 	_send_api_request(text)
 
+func _reset_chat() -> void:
+	http_request.cancel_request()
+	
+	submit_button.disabled = false
+	message_field.editable = true
+	
+	reset_button.disabled = true
+	
+	for child in chat_stack.get_children():
+		child.queue_free()
+	
+	var preface := chat_bubble_scene.instantiate() as ChatBubble
+	preface.text = "Hi! I'm your AI Assistant. How can I help you with this level?"
+	preface.bubble_theme = bubble_theme_ai
+	_add_bubble(preface)
+
+func _on_interpreter_running_changed() -> void:
+	submit_button.disabled = Interpreter.is_running
+#endregion
+
+#region API payload, prompt generation
 func _send_api_request(msg: String) -> void:
 	var canvas_yaml := puzzle.canvas.serializer.yaml_serialize()
 	
@@ -114,14 +127,20 @@ func _send_api_request(msg: String) -> void:
 	
 	var contents := _get_conversation_history()
 	
-	var final_part := [{text = final_prompt.format({
-		context = dynamic_context,
-		message = msg
-	})}]
+	contents.append({
+		role = "user",
+		parts = [{text = "\n" + dynamic_context}]
+	})
+	contents.append({
+		role = "model",
+		parts = [{text = "Got it. Send your message next."}]
+	})
+	
+	var last_parts: Array[Dictionary] = [{text = msg}]
 	
 	var base64_image := _get_viewport_base64_image()
 	if not base64_image.is_empty():
-		final_part.append({
+		last_parts.append({
 			inline_data = {
 				mime_type = "image/png",
 				data = base64_image
@@ -130,7 +149,7 @@ func _send_api_request(msg: String) -> void:
 	
 	contents.append({
 		role = "user",
-		parts = final_part
+		parts = last_parts
 	})
 	
 	var payload := {
@@ -140,8 +159,6 @@ func _send_api_request(msg: String) -> void:
 	
 	var headers := ["Content-Type: application/json"]
 	var json_payload := JSON.stringify(payload)
-	
-	#print(JSON.stringify(payload, '\t'))
 	
 	http_request.request(API_URL, headers, HTTPClient.METHOD_POST, json_payload)
 
@@ -180,8 +197,15 @@ func _get_conversation_history() -> Array[Dictionary]:
 		})
 	
 	return history
+#endregion
 
-func _on_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+func _on_request_completed(
+	result: int,
+	response_code: int,
+	_headers: PackedStringArray,
+	body: PackedByteArray
+) -> void:
+	
 	submit_button.disabled = false
 	message_field.editable = true
 	
@@ -192,40 +216,93 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 		var body_string := body.get_string_from_utf8()
 		response_json = JSON.parse_string(body_string)
 	
-	var has_reply := response_json != null \
-		and typeof(response_json) == TYPE_DICTIONARY \
-		and response_json.has("reply") as bool
-	
 	var err_msg := ""
 	if result != HTTPRequest.RESULT_SUCCESS:
 		err_msg = "Network error connecting to AI server."
 	elif response_code != 200:
 		err_msg = "Server returned error code: %d" % response_code
-		if has_reply:
-			err_msg = "Server error: " + str(response_json["reply"])
-	elif not has_reply:
-		err_msg = "Received an invalid response format from the server."
+		if typeof(response_json) == TYPE_DICTIONARY and response_json.has("error"):
+			err_msg = "Server error: " + str(response_json["error"])
 	
 	if not err_msg.is_empty():
 		puzzle.notif.push(err_msg, Notification.Type.ERROR)
+		_flag_latest_user_message()
+		return
+	
+	if response_json.get("prompt_feedback", {}).has("block_reason"):
+		puzzle.notif.push("Prompt blocked by safety settings.", Notification.Type.ERROR)
+		_flag_latest_user_message()
+		return
+	
+	var candidates: Array = response_json.get("candidates", [])
+	if candidates.is_empty():
+		puzzle.notif.push(
+			"Received an invalid response format from the server.",
+			Notification.Type.ERROR
+		)
+		_flag_latest_user_message()
+		return
+	
+	var candidate: Dictionary = candidates[0]
+	
+	if candidate.get("finish_reason", "") == "SAFETY":
+		var details: PackedStringArray
+		for rating in candidate.get("safety_ratings", []):
+			var prob: String = rating.get("probability", "")
+			if prob != "NEGLIGIBLE" and not prob.is_empty():
+				details.append(rating.get("category", "").trim_prefix("HARM_CATEGORY_").capitalize())
 		
-		# Find latest user message and flag as error, flag temporary
-		for idx in range(chat_stack.get_child_count()-1, 0, -1):
-			var bubble := chat_stack.get_child(idx) as ChatBubble
-			if bubble.right_aligned:
-				bubble.is_temporary = true
-				bubble.bubble_theme = bubble_theme_error
-				break
-		
+		_flag_latest_user_message()
+		puzzle.notif.push(
+			"Message flagged for safety. (%s)" % ", ".join(details),
+			Notification.Type.ERROR
+		)
+		return
+	
+	# Valid response
+	var content: Dictionary = candidate.get("content", {})
+	var parts: Array = content.get("parts", [])
+	
+	var reply_text := ""
+	if not parts.is_empty():
+		reply_text = parts[0].get("text", "")
+	
+	if reply_text.is_empty():
+		puzzle.notif.push("Received empty response.", Notification.Type.ERROR)
+		_flag_latest_user_message()
+		return
+	
+	if reply_text.strip_edges() == "RESET":
+		puzzle.notif.push(
+			"The conversation was deemed off-topic and was reset.",
+			Notification.Type.ERROR
+		)
+		_reset_chat()
 		return
 	
 	var reply_bubble := chat_bubble_scene.instantiate() as ChatBubble
-	reply_bubble.text = response_json["reply"]
+	reply_bubble.text = reply_text
 	reply_bubble.bubble_theme = bubble_theme_ai
 	_add_bubble(reply_bubble)
 
+#region UI helper methods
+func _flag_latest_user_message() -> void:
+	for idx in range(chat_stack.get_child_count() - 1, -1, -1):
+		var bubble := chat_stack.get_child(idx) as ChatBubble
+		if bubble.right_aligned:
+			# Stays temporarily on the screen as red text, deleted on next submission
+			bubble.is_temporary = true
+			bubble.bubble_theme = bubble_theme_error
+			break
+
 func _add_bubble(bubble: ChatBubble) -> void:
 	_clear_temporary()
+	
+	for node in chat_stack.get_children():
+		if not node.is_queued_for_deletion():
+			reset_button.disabled = false
+			break
+	
 	chat_stack.add_child(bubble)
 	
 	var bottom := int(scroll.get_v_scroll_bar().max_value)
@@ -235,6 +312,4 @@ func _clear_temporary() -> void:
 	for node in chat_stack.get_children():
 		if node is ChatBubble and (node as ChatBubble).is_temporary:
 			node.queue_free()
-
-func _on_interpreter_running_changed() -> void:
-	submit_button.disabled = Interpreter.is_running
+#endregion

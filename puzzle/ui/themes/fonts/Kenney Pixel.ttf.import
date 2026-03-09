@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b577360x3tqkc"
-path="res://.godot/imported/retro_computer_personal_use.ttf-c95f2644aa10abd0c831b81eadf32a84.fontdata"
+uid="uid://cypqhhpk8l6ck"
+path="res://.godot/imported/Kenney Pixel.ttf-a4e0d1a695a02fde7cf7c268ea049be1.fontdata"
 
 [deps]
 
-source_file="res://puzzle/ui/themes/fonts/retro_computer_personal_use.ttf"
-dest_files=["res://.godot/imported/retro_computer_personal_use.ttf-c95f2644aa10abd0c831b81eadf32a84.fontdata"]
+source_file="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf"
+dest_files=["res://.godot/imported/Kenney Pixel.ttf-a4e0d1a695a02fde7cf7c268ea049be1.fontdata"]
 
 [params]
 

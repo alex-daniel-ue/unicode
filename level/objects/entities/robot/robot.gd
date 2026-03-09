@@ -29,14 +29,14 @@ func move(from_this: Block) -> void:
 	
 	var direction := args[0] as String
 	if not DIR_TO_VEC.has(direction):
-		from_this.function.error("Direction must be up, down, left, or right.")
+		from_this.function.error("Robot: Direction must be up, down, left, or right.")
 		return
 	
 	from_this.visual.highlight()
 	
 	var velocity := DIR_TO_VEC[direction] * step_size
 	if test_move(global_transform, velocity):
-		from_this.function.error("I can't move %s!" % direction)
+		from_this.function.error("Robot: I can't move %s!" % direction)
 		return
 	
 	var tween := create_tween()

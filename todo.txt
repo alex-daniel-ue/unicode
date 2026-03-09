@@ -1,11 +1,18 @@
 
 sequenced goals/tests
-move puzzle on run, centered on current block highlighted, panning overrides centering, don't move on fast interpreting
-description/documentation for every block, add to BlockData
-try to reduce repeated code in block functions
-missing hover, pressed colors for play and stop buttons
-variable watcher/debug view, add button for left panel, how to format dict well?
 
-catch bad requests: not yet run solution
+move puzzle on run, centered on current block highlighted, panning overrides centering, don't move on fast interpreting
+description/documentation for every block, add to BlockData; like move {up,left,right,down}
+try to reduce repeated code in block functions
+variable watcher/debug view, add button for left panel, how to format dict well?
+shift+enter on textedit to submit, detect when focus, get _input?
+add cant zoom or pan if bounds no longer intersect with camera view
+canvas infinite panning or limited but big
+begin block starts somewhere top left of middle 30% of screen
+
 punish inappropriate requests/spam: timeout for 1 minute
 optionally provide completed levels? revisit previous levels if confused?
+change chatbubble label to richtextlabel 4 selectable text
+add reset chat button
+respond to RESET output by ai
+value lineedit handle ctrl, tab, etc.

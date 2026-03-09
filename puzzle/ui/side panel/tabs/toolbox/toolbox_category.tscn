@@ -14,7 +14,7 @@ mouse_filter = 2
 theme = ExtResource("1_gc06a")
 theme_override_constants/separation = 12
 script = ExtResource("2_k8qgo")
-label = NodePath("Heading")
+label = NodePath("Header")
 container = NodePath("HFlowContainer")
 metadata/_access_modifiers = {
 &"category_name": 2,
@@ -23,10 +23,10 @@ metadata/_access_modifiers = {
 &"vbox_container": 2
 }
 
-[node name="Heading" type="Label" parent="."]
+[node name="Header" type="Label" parent="."]
 layout_mode = 2
 mouse_filter = 1
-theme_type_variation = &"ToolboxSubheading"
+theme_type_variation = &"HeaderSmall"
 text = "Undefined"
 horizontal_alignment = 1
 
@@ -37,4 +37,4 @@ theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 12
 alignment = 1
 
-[connection signal="gui_input" from="Heading" to="." method="_on_heading_gui_input"]
+[connection signal="gui_input" from="Header" to="." method="_on_heading_gui_input"]

@@ -69,7 +69,7 @@ required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
 
 [node name="Camera2D" parent="." index="2"]
 position = Vector2(112, 128)
-zoom = Vector2(1.7951388, 1.7951388)
+zoom = Vector2(2.565625, 2.565625)
 level_bounds = Rect2(0, 0, 224, 256)
 
 [node name="Visuals" type="Node2D" parent="." index="3"]

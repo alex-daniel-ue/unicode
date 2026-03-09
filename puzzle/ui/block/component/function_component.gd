@@ -113,8 +113,6 @@ func error(message: String) -> void:
 	Interpreter.active_errors.append(err)
 	Interpreter.output_log.append(str(err))
 	
-	Interpreter.error_thrown.emit(err)
-	
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
 	

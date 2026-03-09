@@ -35,7 +35,7 @@ script = ExtResource("1_iy1cu")
 print_yaml = true
 canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
-information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/Label")
+information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer/InformationLabel")
 toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
@@ -56,8 +56,8 @@ theme = ExtResource("2_xv3xb")
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 376.0
-offset_bottom = 202.0
+offset_right = 466.0
+offset_bottom = 211.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
@@ -122,7 +122,6 @@ theme_type_variation = &"SidePanel"
 script = ExtResource("2_3gr0x")
 
 [node name="PuzzleInformation" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -140,11 +139,22 @@ theme_override_constants/margin_bottom = 32
 [node name="ScrollContainer" type="ScrollContainer" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Instructions"
+horizontal_alignment = 1
+
+[node name="InformationLabel" type="Label" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme = ExtResource("2_xv3xb")
+theme_type_variation = &"LegibleLabel"
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
 autowrap_mode = 2
 
@@ -153,6 +163,7 @@ visible = false
 layout_mode = 1
 
 [node name="AIAssistant" parent="UserInterface/SideMenuLeft/Panel" instance=ExtResource("6_bvcr2")]
+visible = false
 layout_mode = 1
 
 [node name="ButtonContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft" node_paths=PackedStringArray("panel")]

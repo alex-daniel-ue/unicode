@@ -34,11 +34,11 @@ size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 18
 
-[node name="ToolboxHeading" type="Label" parent="ScrollContainer/CategoryContainer"]
+[node name="Header" type="Label" parent="ScrollContainer/CategoryContainer"]
 layout_mode = 2
 theme = ExtResource("1_pe4tv")
-theme_type_variation = &"ToolboxHeading"
-text = "Block Toolbox"
+theme_type_variation = &"HeaderMedium"
+text = "Toolbox"
 horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
