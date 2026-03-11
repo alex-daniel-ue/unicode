@@ -20,6 +20,7 @@ texture_margin_left = 7.0
 texture_margin_top = 7.0
 texture_margin_right = 7.0
 texture_margin_bottom = 7.0
+region_rect = Rect2(0, 0, 21, 21)
 
 [node name="Block" node_paths=PackedStringArray("editable_container", "type_label", "line_edit", "option_button") instance=ExtResource("1_m3p6b")]
 offset_right = 34.0

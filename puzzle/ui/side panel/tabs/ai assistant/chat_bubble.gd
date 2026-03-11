@@ -4,13 +4,13 @@ extends HBoxContainer
 
 @export_group("Children")
 @export var panel: PanelContainer
-@export var label: Label
+@export var label: RichTextLabel
 
 var bubble_theme := BubbleTheme.new():
 	set(value):
 		bubble_theme = value
 		panel.self_modulate = bubble_theme.background
-		label.add_theme_color_override("font_color", bubble_theme.font)
+		label.add_theme_color_override("default_color", bubble_theme.font)
 
 var text: String = "":
 	set(value):

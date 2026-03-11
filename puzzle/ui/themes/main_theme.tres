@@ -3,6 +3,8 @@
 [ext_resource type="FontFile" uid="uid://cypqhhpk8l6ck" path="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf" id="2_hdcft"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="2_oiocf"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8exu4"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdcft"]
 content_margin_left = 16.0
 content_margin_top = 12.0
@@ -57,6 +59,10 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v43nb"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.0077, 0.0077, 0.07, 1)
 border_width_left = 2
 border_width_top = 2
@@ -125,12 +131,6 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eso8d"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oy6xc"]
 content_margin_left = 4.0
@@ -237,13 +237,13 @@ default_font = ExtResource("2_oiocf")
 default_font_size = 16
 BlockLabel/base_type = &"Label"
 BlockLabel/colors/font_color = Color(0, 0, 0, 1)
-ChatMessage/base_type = &"Label"
-ChatMessage/colors/font_color = Color(0, 0, 0, 1)
-ChatMessage/colors/font_outline_color = Color(0, 0, 0, 0.49803922)
-ChatMessage/constants/line_spacing = 4
-ChatMessage/constants/outline_size = 1
-ChatMessage/font_sizes/font_size = 32
-ChatMessage/fonts/font = ExtResource("2_hdcft")
+ChatMessage/base_type = &"RichTextLabel"
+ChatMessage/colors/default_color = Color(0, 0, 0, 1)
+ChatMessage/colors/font_selected_color = Color(1, 1, 1, 1)
+ChatMessage/constants/line_separation = 4
+ChatMessage/font_sizes/normal_font_size = 32
+ChatMessage/fonts/normal_font = ExtResource("2_hdcft")
+ChatMessage/styles/focus = SubResource("StyleBoxEmpty_8exu4")
 HeaderLarge/base_type = &"Label"
 HeaderLarge/font_sizes/font_size = 48
 HeaderMedium/base_type = &"Label"
@@ -290,10 +290,8 @@ SidePanelButton/colors/icon_focus_color = Color(0.5803922, 0.6392157, 0.72156864
 SidePanelButton/colors/icon_hover_color = Color(1, 1, 1, 1)
 SidePanelButton/colors/icon_normal_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
 SidePanelButton/colors/icon_pressed_color = Color(0.21960784, 0.7411765, 0.972549, 1)
-SidePanelButton/styles/disabled = SubResource("StyleBoxEmpty_xejr6")
 SidePanelButton/styles/focus = SubResource("StyleBoxEmpty_xejr6")
 SidePanelButton/styles/hover = SubResource("StyleBoxFlat_xrkic")
-SidePanelButton/styles/normal = SubResource("StyleBoxEmpty_eso8d")
 SidePanelButton/styles/pressed = SubResource("StyleBoxFlat_oy6xc")
 StopButton/base_type = &"Button"
 StopButton/colors/icon_focus_color = Color(0.9372549, 0.26666668, 0.26666668, 1)
@@ -312,6 +310,7 @@ SubmitButton/styles/normal = SubResource("StyleBoxFlat_av0oy")
 SubmitButton/styles/pressed = SubResource("StyleBoxFlat_8cnbn")
 TextEdit/colors/font_color = Color(0.972549, 0.98039216, 0.9882353, 1)
 TextEdit/colors/font_placeholder_color = Color(0.39215687, 0.45490196, 0.54509807, 1)
+TextEdit/colors/selection_color = Color(1, 1, 1, 0.2)
 TextEdit/font_sizes/font_size = 32
 TextEdit/fonts/font = ExtResource("2_hdcft")
 TextEdit/styles/focus = SubResource("StyleBoxFlat_vm8ny")

@@ -22,15 +22,17 @@ buses/default_bus_layout=""
 
 [autoload]
 
+Core="*res://global/core.gd"
 Debug="*res://global/debug.gd"
 Game="*res://global/game.gd"
-Core="*res://global/core.gd"
-Transition="*res://global/transition/transition.tscn"
-SfxPlayer="*res://global/sfx player/sfx_player.gd"
 Interpreter="*res://global/interpreter.gd"
+SfxPlayer="*res://global/sfx player/sfx_player.gd"
+Transition="*res://global/transition/transition.tscn"
+Tutorial="*res://global/tutorial.gd"
 
 [display]
 
+window/stretch/aspect="expand"
 window/stretch/scale_mode="integer"
 
 [file_customization]

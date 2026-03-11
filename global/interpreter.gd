@@ -2,6 +2,7 @@ extends Node
 
 
 signal running_changed
+signal block_highlighted(block: Block)
 
 const MAX_DEPTH := 1000
 const MAX_LOOPS := 10000

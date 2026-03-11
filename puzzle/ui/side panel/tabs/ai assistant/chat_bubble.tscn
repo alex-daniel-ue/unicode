@@ -20,18 +20,21 @@ theme = ExtResource("1_x0ows")
 alignment = 2
 script = ExtResource("2_xuyyj")
 panel = NodePath("BubbleTexture")
-label = NodePath("BubbleTexture/Label")
+label = NodePath("BubbleTexture/RichTextLabel")
 
 [node name="BubbleTexture" type="PanelContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_bvcr2")
 
-[node name="Label" type="Label" parent="BubbleTexture"]
+[node name="RichTextLabel" type="RichTextLabel" parent="BubbleTexture"]
 custom_minimum_size = Vector2(-3.95, 0)
 layout_mode = 2
+focus_mode = 2
 theme_type_variation = &"ChatMessage"
 text = "placeholder"
-autowrap_mode = 3
+fit_content = true
+scroll_active = false
+selection_enabled = true
 
 [connection signal="resized" from="." to="." method="_update_bubble"]

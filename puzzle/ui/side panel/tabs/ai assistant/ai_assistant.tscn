@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://conmg5k2eihou"]
+[gd_scene load_steps=11 format=3 uid="uid://conmg5k2eihou"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_rgus7"]
 [ext_resource type="Script" uid="uid://damydrm37ap1p" path="res://puzzle/ui/side panel/tabs/ai assistant/ai_assistant.gd" id="2_kmgf6"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c71q4icny10pb" path="res://puzzle/ui/side panel/tabs/ai assistant/chat_bubble.tscn" id="3_kmgf6"]
 [ext_resource type="Script" uid="uid://chm2mpgr2ts7n" path="res://puzzle/ui/side panel/tabs/ai assistant/bubble_theme.gd" id="4_ujnjh"]
 [ext_resource type="Texture2D" uid="uid://bvwuhodvkfqsy" path="res://puzzle/ui/side panel/icons/pixelarticons--undo.png" id="5_q1e47"]
+[ext_resource type="Script" uid="uid://chc4oneoy4ywl" path="res://puzzle/ui/side panel/tabs/ai assistant/user_message_field.gd" id="6_7mq5g"]
 
 [sub_resource type="Resource" id="Resource_q1e47"]
 script = ExtResource("4_ujnjh")
@@ -98,6 +99,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 theme = ExtResource("1_rgus7")
 theme_type_variation = &"SidePanelButton"
+disabled = true
 icon = ExtResource("5_q1e47")
 expand_icon = true
 
@@ -135,6 +137,7 @@ empty_selection_clipboard_enabled = false
 wrap_mode = 1
 scroll_smooth = true
 scroll_v_scroll_speed = 40.0
+script = ExtResource("6_7mq5g")
 
 [node name="SubmitButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(40, 0)
@@ -147,4 +150,5 @@ expand_icon = true
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_request_completed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks/MarginContainer/ResetButton" to="." method="_reset_chat"]
+[connection signal="submitted" from="VBoxContainer/HBoxContainer/UserMessageField" to="." method="_on_submit_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SubmitButton" to="." method="_on_submit_pressed"]

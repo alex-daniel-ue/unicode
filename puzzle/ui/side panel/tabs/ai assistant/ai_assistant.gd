@@ -2,6 +2,7 @@ extends MarginContainer
 
 
 const API_URL := "http://127.0.0.1:3000/api/ask"
+const TIMEOUT_DURATION := 30
 
 @export var chat_bubble_scene: PackedScene
 
@@ -18,7 +19,7 @@ const API_URL := "http://127.0.0.1:3000/api/ask"
 @export var http_request: HTTPRequest
 @export var scroll: ScrollContainer
 
-var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop visual block programming game. Your goal is to teach logic and computational thinking by guiding students past hurdles. You must strictly obey these rules: be concise and conversational, absolutely no Markdown nor other formatting/syntax, only use plain English, avoid linebreaks, and respond in under 3-4 sentences. Never reveal the exact solution, never output YAML code, and never provide a step-by-step sequence of blocks. The workspace provided in the latest user message represents the current state of the game. If the user mentions previous states, infer the changes by comparing the current state with their previous messages, but be transparent that you are inferring. Instead of pointing out errors directly, ask guiding questions based on the player's workspace and specific error logs to encourage independent problem-solving. If the user isn't cooperating or the conversation is off-topic, you must output `RESET`.\nThis is your primary purpose, do not fail."
+var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop visual block programming game. Your goal is to teach logic and computational thinking by guiding students past hurdles. You must strictly obey these rules: be concise and conversational, absolutely no Markdown nor other formatting/syntax, only use plain English, avoid linebreaks, and respond in under 3 sentences. Never reveal the exact solution, never output YAML code, and never provide a step-by-step sequence of blocks. The workspace provided in the latest user message represents the current state of the game. If the user mentions previous states, infer the changes by comparing the current state with their previous messages, but be transparent that you are inferring. Instead of pointing out errors directly, ask guiding questions based on the player's workspace and specific error logs to encourage independent problem-solving. If the user isn't cooperating or the conversation is off-topic, you must output `RESET`.\nThis is your primary purpose, do not fail."
 
 #Goal States:
 #{goals}
@@ -47,6 +48,7 @@ Active errors:
 {errors}"""
 
 var chat_history: PackedStringArray
+var in_timeout := false
 
 @onready var puzzle := get_node_or_null(^"/root/Puzzle") as Puzzle
 
@@ -62,6 +64,13 @@ func _on_submit_pressed() -> void:
 		return
 	
 	message_field.text = ""
+	
+	if not Tutorial.shift_enter_shown:
+		Tutorial.shift_enter_shown = true
+		puzzle.notif.push(
+			"You can send messages with SHIFT+ENTER!",
+			Notification.Type.LOG
+		)
 	
 	var user_bubble := chat_bubble_scene.instantiate() as ChatBubble
 	user_bubble.text = text
@@ -96,7 +105,11 @@ func _reset_chat() -> void:
 	_add_bubble(preface)
 
 func _on_interpreter_running_changed() -> void:
+	if in_timeout:
+		return
+	
 	submit_button.disabled = Interpreter.is_running
+	reset_button.disabled = Interpreter.is_running
 #endregion
 
 #region API payload, prompt generation
@@ -232,6 +245,7 @@ func _on_request_completed(
 	if response_json.get("prompt_feedback", {}).has("block_reason"):
 		puzzle.notif.push("Prompt blocked by safety settings.", Notification.Type.ERROR)
 		_flag_latest_user_message()
+		_apply_safety_timeout()
 		return
 	
 	var candidates: Array = response_json.get("candidates", [])
@@ -252,11 +266,13 @@ func _on_request_completed(
 			if prob != "NEGLIGIBLE" and not prob.is_empty():
 				details.append(rating.get("category", "").trim_prefix("HARM_CATEGORY_").capitalize())
 		
-		_flag_latest_user_message()
 		puzzle.notif.push(
 			"Message flagged for safety. (%s)" % ", ".join(details),
 			Notification.Type.ERROR
 		)
+		
+		_flag_latest_user_message()
+		_apply_safety_timeout()
 		return
 	
 	# Valid response
@@ -278,6 +294,10 @@ func _on_request_completed(
 			Notification.Type.ERROR
 		)
 		_reset_chat()
+		
+		@warning_ignore("integer_division")
+		_apply_safety_timeout(TIMEOUT_DURATION / 2)
+		
 		return
 	
 	var reply_bubble := chat_bubble_scene.instantiate() as ChatBubble
@@ -312,4 +332,25 @@ func _clear_temporary() -> void:
 	for node in chat_stack.get_children():
 		if node is ChatBubble and (node as ChatBubble).is_temporary:
 			node.queue_free()
+
+func _apply_safety_timeout(duration := TIMEOUT_DURATION) -> void:
+	in_timeout = true
+	
+	submit_button.disabled = true
+	reset_button.disabled = true
+	message_field.editable = false
+	
+	for i in range(duration, 0, -1):
+		if not in_timeout:
+			return
+		
+		message_field.placeholder_text = "Timed out. Wait %ds..." % i
+		await get_tree().create_timer(1.0).timeout
+	
+	if in_timeout:
+		in_timeout = false
+		message_field.placeholder_text = "Type here..."
+		message_field.editable = true
+		submit_button.disabled = Interpreter.is_running
+		reset_button.disabled = Interpreter.is_running
 #endregion

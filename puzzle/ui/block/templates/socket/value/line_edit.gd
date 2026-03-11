@@ -6,22 +6,23 @@ func _gui_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.is_pressed() or event.is_echo():
 		return
 	
-	var typed_char := char(event.unicode)
-	if typed_char in ["'", "\""]:
-		if has_selection():
-			wrap_selection(typed_char)
-			accept_event()
-			return
-	
-		if caret_column < text.length() and text[caret_column] == typed_char:
-			caret_column += 1
-			accept_event()
-			return
+	if event.unicode != 0:
+		var typed_char := char(event.unicode)
+		if typed_char in ["'", "\""]:
+			if has_selection():
+				wrap_selection(typed_char)
+				accept_event()
+				return
 		
-		if text.is_empty():
-			insert_quote_pair(typed_char)
-			accept_event()
-			return
+			if caret_column < text.length() and text[caret_column] == typed_char:
+				caret_column += 1
+				accept_event()
+				return
+			
+			if text.is_empty():
+				insert_quote_pair(typed_char)
+				accept_event()
+				return
 	
 	if event.keycode == KEY_BACKSPACE:
 		var can_delete_pair := caret_column > 0 and caret_column < text.length()

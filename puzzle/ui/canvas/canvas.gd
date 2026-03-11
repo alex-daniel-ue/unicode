@@ -14,8 +14,13 @@ var zoom_speed := 1.15
 var min_zoom := 0.25
 var max_zoom := 2.5
 
+var _focus_tween: Tween
+
 @export var serializer: Serializer
 
+
+func _ready() -> void:
+	Interpreter.block_highlighted.connect(_on_block_highlighted)
 
 func _process(_delta: float) -> void:
 	# material is ShaderMaterial:
@@ -95,3 +100,22 @@ func clear() -> void:
 		
 		for inner_block in child.get_blocks():
 			inner_block.queue_free()
+
+func _on_block_highlighted(block: Block) -> void:
+	if is_panning:
+		return
+	
+	if not Interpreter.is_running or Interpreter.is_fast:
+		return
+	
+	var screen_center := get_viewport_rect().size / 2.0
+	
+	var block_center_global := block.global_position + (block.size * scale) / 2.0
+	var offset := screen_center - block_center_global
+	
+	if _focus_tween:
+		_focus_tween.kill()
+	
+	_focus_tween = create_tween()
+	_focus_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_focus_tween.tween_property(self, "position", position + offset, 0.25)

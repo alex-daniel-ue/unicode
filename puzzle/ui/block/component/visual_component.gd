@@ -37,6 +37,7 @@ func _update(delta: float) -> void:
 
 func highlight() -> void:
 	target_color = highlight_color
+	Interpreter.block_highlighted.emit(base)
 
 func reset() -> void:
 	target_color = Color.WHITE
