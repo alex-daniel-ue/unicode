@@ -9,3 +9,98 @@ canvas infinite panning or limited but big
 notification should wrap when bigger than parent, reuse chat bubble logic, generalize?
 
 optionally provide completed levels? revisit previous levels if confused?
+
+add rotate block to robot, make move unidirectional
+
+func evaluate_typed_args(expected_types: Array[PackedInt32Array]) -> Array:
+	var args := await evaluate_args(expected_types.size())
+	if Interpreter.interrupted: 
+		return[]
+	
+	for i in range(args.size()):
+		var expected := expected_types[i]
+		if not expected.is_empty(): # Empty array means "any type"
+			var err := Core.validate_type(args[i], expected, i)
+			if not err.is_empty():
+				error(err)
+				return[]
+				
+	return args
+
+
+func unwrap(value: Variant) -> Variant:
+	if typeof(value) != TYPE_STRING_NAME:
+		return value
+		
+	var parent := base.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	if not parent.scope.has(value):
+		error("Variable '%s' doesn't exist in the current scope!" % value)
+		return null
+		
+	return parent.scope[value]
+
+func pulse() -> void:
+	highlight()
+	await Game.sleep(Interpreter.interpret_delay)
+	reset()
+
+func eval_args(types: Array[PackedInt32Array]) -> Array:
+	var evaluated: Array
+	var arg_count := types.size()
+	
+	for block in base.text.get_blocks():
+		if not block.visible: continue
+		
+		await block.visual.pulse()
+		if Interpreter.interrupted: return[]
+		
+		var value: Variant = await block.function.run()
+		if Interpreter.interrupted: return[]
+		
+		evaluated.append(value)
+		
+	if evaluated.size() < arg_count:
+		var plurality := " is" if arg_count == 1 else "s are"
+		error("%d argument%s required." % [arg_count, plurality])
+		return[]
+		
+	for i in range(arg_count):
+		if not types[i].is_empty():
+			var err := Core.validate_type(evaluated[i], types[i], i)
+			if not err.is_empty():
+				error(err)
+				return[]
+				
+	return evaluated
+
+## text: print {value/variable}
+func _print(this: Block) -> void:
+	# Passing [[]] means 1 argument, any type allowed
+	var args := await this.function.eval_args([[]])
+	if Interpreter.interrupted: return
+	
+	var value := this.function.unwrap(args[0])
+	if Interpreter.interrupted: return
+	
+	var output := "- %s" % str(value)
+	this.function.notif_pushed.emit(output, Notification.Type.LOG)
+	Interpreter.output_log.append(output)
+	
+	await this.visual.pulse()
+
+
+## text: set {variable} to {value/variable}
+func _set_var(this: Block) -> void:
+	# Requires 1 StringName, and 1 of Any type
+	var args := await this.function.eval_args([[TYPE_STRING_NAME],[]])
+	if Interpreter.interrupted: return
+	
+	var var_name := args[0] as StringName
+	
+	var value := this.function.unwrap(args[1])
+	if Interpreter.interrupted: return
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	parent_nested.scope[var_name] = value
+	
+	await this.visual.pulse()

@@ -114,3 +114,6 @@ base = NodePath("..")
 initial_properties = Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 47.5, 143.5)
 })
+
+[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
+[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]
