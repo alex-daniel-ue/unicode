@@ -183,7 +183,7 @@ func _get_available_blocks_doc() -> String:
 		return "N/A"
 	
 	var block_definitions: PackedStringArray
-	var seen_blocks: Dictionary # Used as Set
+	var seen_blocks: Dictionary  # Used as Set
 	
 	for block in Game.level.get_blocks():
 		if block.data.toolbox and not seen_blocks.has(block.data.name):
@@ -220,7 +220,7 @@ func _get_conversation_history() -> Array[Dictionary]:
 			if not bubble.is_temporary:
 				valid_bubbles.append(bubble)
 	
-	valid_bubbles.pop_back() # Remove current user message
+	valid_bubbles.pop_back()  # Remove current user message
 	
 	for bubble in valid_bubbles:
 		history.append({

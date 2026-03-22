@@ -49,7 +49,7 @@ func with(_type: Type) -> Notification:
 
 func calculate_duration(text: String) -> float:
 	const BASE_TIME := 1.2
-	const CHARS_PER_SEC := 20.0 # ~250 WPM
+	const CHARS_PER_SEC := 20.0  # ~250 WPM
 	
 	var read_time := text.length() / CHARS_PER_SEC
 	var final_duration := BASE_TIME + read_time

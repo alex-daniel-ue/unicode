@@ -39,6 +39,11 @@ func highlight() -> void:
 	target_color = highlight_color
 	Interpreter.block_highlighted.emit(base)
 
+func pulse() -> void:
+	highlight()
+	await Game.sleep(Interpreter.interpret_delay)
+	reset()
+
 func reset() -> void:
 	target_color = Color.WHITE
 
