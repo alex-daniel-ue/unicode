@@ -12,6 +12,7 @@ name = "ExpressionReceptiveBlock"
 base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_040pj")
+syntax = null
 draggable = false
 placeable = false
 top_notch = false

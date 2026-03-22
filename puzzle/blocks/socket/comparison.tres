@@ -29,6 +29,7 @@ base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_auqoj")
 value = SubResource("Resource_n18n1")
+syntax = null
 draggable = false
 placeable = false
 top_notch = false
@@ -44,6 +45,8 @@ base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_nxeil")
 category = "Boolean"
+syntax = "{a: variant} {op: string} {b: variant}"
+description = "Compares two values using operators like ==, !=, >, <. Returns a Boolean."
 placeable = false
 top_notch = false
 text = "{} {} {}"

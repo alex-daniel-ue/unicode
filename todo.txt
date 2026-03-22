@@ -1,7 +1,7 @@
 
 sequenced goals/tests
 
-description/documentation for every block, add to BlockData; like move {up,left,right,down}
+add notification when timed out finishes
 try to reduce repeated code in block functions
 variable watcher/debug view, add button for left panel, how to format dict well?
 add cant zoom or pan if bounds no longer intersect with camera view
@@ -10,7 +10,17 @@ notification should wrap when bigger than parent, reuse chat bubble logic, gener
 
 optionally provide completed levels? revisit previous levels if confused?
 
-add rotate block to robot, make move unidirectional
+add robot.rotate block
+make robot.move unidirectional, only move forward
+
+array block:
+declare var as "[]"
+and array valueblock
+
+get index, set index for string, array
+
+make conversation prototype
+
 
 func evaluate_typed_args(expected_types: Array[PackedInt32Array]) -> Array:
 	var args := await evaluate_args(expected_types.size())
@@ -36,7 +46,7 @@ func unwrap(value: Variant) -> Variant:
 	if not parent.scope.has(value):
 		error("Variable '%s' doesn't exist in the current scope!" % value)
 		return null
-		
+	
 	return parent.scope[value]
 
 func pulse() -> void:
