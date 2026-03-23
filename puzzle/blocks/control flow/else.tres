@@ -11,6 +11,7 @@ type = 2
 [resource]
 script = ExtResource("1_ycgc5")
 name = "ElseBlock"
+color = null
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
 nested = SubResource("Resource_jncwb")

@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_ji57x")
 name = "DeclareAsBlock"
+color = null
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "declare var {name: string} as {value: variant}"

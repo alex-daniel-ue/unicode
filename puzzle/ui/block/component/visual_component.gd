@@ -19,6 +19,7 @@ var erroring := false:
 
 
 func _ready() -> void:
+	target_color = base.data.color
 	error_timer = Timer.new()
 	error_timer.one_shot = true
 	error_timer.timeout.connect(set_error.bind(false))
@@ -45,7 +46,7 @@ func pulse() -> void:
 	reset()
 
 func reset() -> void:
-	target_color = Color.WHITE
+	target_color = base.data.color 
 
 func set_error(to: bool) -> void:
 	erroring = to

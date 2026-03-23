@@ -14,6 +14,7 @@ _socket_ref = SubResource("Resource_hb0ia")
 [resource]
 script = ExtResource("3_7oon8")
 name = "ReceptiveEditableLineBlock"
+color = null
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_hb0ia")

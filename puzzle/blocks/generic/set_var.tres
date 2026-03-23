@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_248as")
 name = "SetBlock"
+color = null
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "set var {name: string} to {value: variant}"

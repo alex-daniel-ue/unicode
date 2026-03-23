@@ -13,6 +13,7 @@ type = 5
 [resource]
 script = ExtResource("1_rp0sv")
 name = "ForBlock (Integer)"
+color = null
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
 nested = SubResource("Resource_igej2")
