@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://wag2d6rl7ja6"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_b737o"]
+[ext_resource type="Script" uid="uid://csjw2llid2pph" path="res://puzzle/functions/generic.gd" id="1_jwhlw"]
+[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value/editable_line_notype.tres" id="3_syoas"]
+
+[resource]
+script = ExtResource("1_b737o")
+name = "IncrementBlock"
+base_path = "uid://demtvw17w06g5"
+category = "Generic"
+syntax = "increment {variable: string}"
+description = "Adds 1 to the value of the specified variable. The variable must contain a number."
+text = "increment {}"
+text_blocks = Array[ExtResource("1_b737o")]([ExtResource("3_syoas")])
+Function/script = ExtResource("1_jwhlw")
+Function/method = &"_increment"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

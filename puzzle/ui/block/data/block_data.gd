@@ -29,6 +29,7 @@ const GROUPS := {
 }
 
 @export var name := "Block"
+@export var color := Color.WHITE
 @export_file("*.tscn") var base_path: String
 
 @export_group("Type")

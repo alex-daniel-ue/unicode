@@ -30,7 +30,7 @@ func update_type_color() -> void:
 	var value_base := base as ValueBlock
 	
 	if value_base.data.has_text_blocks():
-		target_color = Color.WHITE
+		target_color = base.data.color
 		return
 	
 	var value: Variant = value_base.typecast(value_base.text.get_raw())
@@ -40,4 +40,4 @@ func update_type_color() -> void:
 		target_color = BOOL_COLORS[value]
 		return
 	
-	target_color = TYPE_COLORS.get(type, Color.WHITE)
+	target_color = TYPE_COLORS.get(type, base.data.color)

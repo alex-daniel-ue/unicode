@@ -25,6 +25,7 @@ _socket_ref = SubResource("Resource_auqoj")
 [sub_resource type="Resource" id="Resource_mtaw4"]
 script = ExtResource("3_n18n1")
 name = "ValueEditableEnumBlock"
+color = null
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_auqoj")
@@ -40,6 +41,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("3_n18n1")
 name = "ComparisonBlock"
+color = null
 base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_nxeil")

@@ -9,7 +9,7 @@ func _print(this: Block) -> void:
 	var value: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return
 	
-	var output := "- %s" % str(value)
+	var output := "OUTPUT: %s" % str(value)
 	this.function.notif_pushed.emit(output, Notification.Type.LOG)
 	Interpreter.output_log.append(output)
 	
@@ -48,6 +48,33 @@ func _set_var(this: Block) -> void:
 	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
 	parent_nested.scope[var_name] = value
 	
+	await this.visual.pulse()
+
+## text: increment {variable}
+func _increment(this: Block) -> void:
+	__crement(this, 1)
+
+## text: decrement {variable}
+func _decrement(this: Block) -> void:
+	__crement(this, -1)
+
+func __crement(this: Block, value: int) -> void:
+	var args := await this.function.eval_args([this.function.Argument.STRING_NAME])
+	if Interpreter.interrupted: return
+	
+	var var_name := args[0] as StringName
+	
+	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	if not parent_nested.scope.has(var_name):
+		this.function.error("Variable '%s' doesn't exist!" % var_name)
+		return
+	
+	var current_value: Variant = parent_nested.scope[var_name]
+	if typeof(current_value) not in [TYPE_INT, TYPE_FLOAT]:
+		this.function.error("Cannot increment '%s': value is not a number." % var_name)
+		return
+	
+	parent_nested.scope[var_name] = current_value + value
 	await this.visual.pulse()
 
 ## text: initialize {variable} to {variable/value}

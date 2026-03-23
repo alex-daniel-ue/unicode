@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://djpyxhdtoosj"]
+[gd_scene load_steps=28 format=4 uid="uid://djpyxhdtoosj"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_yqlds"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_1pnxm"]
@@ -18,6 +18,8 @@
 [ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="16_g7few"]
 [ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="17_fl2a7"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="18_lufox"]
+[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="18_tt37c"]
+[ext_resource type="Resource" uid="uid://c6s5fbjvbbspi" path="res://puzzle/blocks/generic/decrement.tres" id="19_rpmfv"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="19_wxs5c"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="20_4sxj1"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="21_t2jpi"]
@@ -58,7 +60,7 @@ intended_solution = "block: BeginBlock
         - \"right\""
 
 [node name="GenericBlockProvider" parent="." index="0"]
-block_data = Array[ExtResource("2_1pnxm")]([ExtResource("3_qt577"), ExtResource("4_am250"), ExtResource("5_aipms"), ExtResource("6_uyv3j"), ExtResource("7_1b758"), ExtResource("8_2vycy"), ExtResource("9_l40t2"), ExtResource("10_6g7ov"), ExtResource("11_yat8e"), ExtResource("12_euory"), ExtResource("13_ds503"), ExtResource("14_3o22q"), ExtResource("15_24kc1"), ExtResource("16_g7few"), ExtResource("17_fl2a7")])
+block_data = Array[ExtResource("2_1pnxm")]([ExtResource("3_qt577"), ExtResource("4_am250"), ExtResource("5_aipms"), ExtResource("6_uyv3j"), ExtResource("7_1b758"), ExtResource("8_2vycy"), ExtResource("9_l40t2"), ExtResource("10_6g7ov"), ExtResource("11_yat8e"), ExtResource("12_euory"), ExtResource("13_ds503"), ExtResource("14_3o22q"), ExtResource("15_24kc1"), ExtResource("16_g7few"), ExtResource("17_fl2a7"), ExtResource("18_tt37c"), ExtResource("19_rpmfv")])
 
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]

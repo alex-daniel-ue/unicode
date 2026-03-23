@@ -7,6 +7,7 @@
 [resource]
 script = ExtResource("1_3syst")
 name = "DeclareBlock"
+color = null
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "declare var {name: string}"
