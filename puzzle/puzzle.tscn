@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=25 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bsse2frnd4l02" path="res://puzzle/button_manager.gd" id="2_n8lp6"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_xv3xb"]
 [ext_resource type="Script" uid="uid://bl501vpm8qns7" path="res://puzzle/ui/side panel/button_container.gd" id="4_8isiv"]
+[ext_resource type="PackedScene" uid="uid://va5t6n30rsge" path="res://menus/tutorials/tutorial_menu.tscn" id="5_8e7ff"]
 [ext_resource type="PackedScene" uid="uid://c0d71dt2bes7j" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.tscn" id="5_vlyq7"]
 [ext_resource type="Script" uid="uid://coidfkqmv7bsy" path="res://puzzle/ui/side panel/side_panel_button.gd" id="6_82356"]
 [ext_resource type="PackedScene" uid="uid://conmg5k2eihou" path="res://puzzle/ui/side panel/tabs/ai assistant/ai_assistant.tscn" id="6_bvcr2"]
@@ -24,7 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notif", "level_viewport", "level_complete_popup", "pause_menu")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notif", "level_viewport", "level_complete_popup", "pause_menu", "tutorial_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,6 +42,7 @@ notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationSt
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
 level_complete_popup = NodePath("LevelCompletePopup")
 pause_menu = NodePath("PauseMenu")
+tutorial_menu = NodePath("PauseMenu/TutorialMenu")
 
 [node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("scripting_buttons", "running_buttons")]
 script = ExtResource("2_n8lp6")
@@ -87,6 +89,8 @@ text = "Back to level select"
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
 visible = false
+
+[node name="TutorialMenu" parent="PauseMenu" instance=ExtResource("5_8e7ff")]
 
 [node name="Canvas" parent="." instance=ExtResource("1_n7lcs")]
 layout_mode = 1

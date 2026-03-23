@@ -15,7 +15,7 @@ const COMPLETE_SOUND := preload("res://audio/success.mp3")
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
 @export var pause_menu: PopupPanel
-
+@export var tutorial_menu: PopupPanel
 
 func _ready() -> void:
 	side_panels[0].show_menu(true)
@@ -23,6 +23,8 @@ func _ready() -> void:
 	
 	if Game.level != null:
 		configure_level()
+		
+	pause_menu.tutorials_requested.connect(tutorial_menu.show)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):

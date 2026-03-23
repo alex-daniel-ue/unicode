@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TutorialTopic" load_steps=5 format=3 uid="uid://bgkdqln5k262q"]
+
+[ext_resource type="Script" uid="uid://hedm71c8kgyc" path="res://menus/tutorials/tutorial_topic.gd" id="1_3ac0t"]
+[ext_resource type="Script" uid="uid://bvvchnj2ifvqf" path="res://menus/tutorials/tutorial_slide.gd" id="2_1xfrd"]
+[ext_resource type="Texture2D" uid="uid://bkn7rw13xcbc4" path="res://menus/tutorials/data/Tutorial Images/HIERCHY.drawio (5).png" id="3_1xfrd"]
+
+[sub_resource type="Resource" id="Resource_3ac0t"]
+script = ExtResource("2_1xfrd")
+image = ExtResource("3_1xfrd")
+text = "Test tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial descriptionTest tutorial description"
+metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
+
+[resource]
+script = ExtResource("1_3ac0t")
+title = "test"
+slides = Array[ExtResource("2_1xfrd")]([SubResource("Resource_3ac0t")])
+metadata/_custom_type_script = "uid://hedm71c8kgyc"
