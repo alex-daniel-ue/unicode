@@ -48,10 +48,7 @@ func configure_level() -> void:
 		else:
 			toolbox.add_block(block)
 
-func run_program() -> void:
-	if print_yaml:
-		print(canvas.serializer.yaml_serialize())
-	
+func run_program() -> void:	
 	for err in Interpreter.active_errors:
 		if is_instance_valid(err.block):
 			err.block.visual.set_error(false)

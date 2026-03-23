@@ -44,6 +44,8 @@ base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_nxeil")
 category = "Boolean"
+syntax = "{a: variant} {op: string} {b: variant}"
+description = "Compares two values using operators like ==, !=, >, <. Returns a Boolean."
 placeable = false
 top_notch = false
 text = "{} {} {}"

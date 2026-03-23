@@ -18,13 +18,8 @@ var step_size := 32.0
 
 ## text: move {up/down/left/right}
 func move(from_this: Block) -> void:
-	var args: Array = await from_this.function.evaluate_args(1)
+	var args := await from_this.function.eval_args([from_this.function.Argument.STRING])
 	if Interpreter.interrupted:
-		return
-	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING], 0)
-	if not err_message.is_empty():
-		from_this.function.error(err_message)
 		return
 	
 	var direction := args[0] as String
@@ -32,7 +27,9 @@ func move(from_this: Block) -> void:
 		from_this.function.error("Robot: Direction must be up, down, left, or right.")
 		return
 	
-	from_this.visual.highlight()
+	await from_this.visual.pulse()
+	if Interpreter.interrupted:
+		return
 	
 	var velocity := DIR_TO_VEC[direction] * step_size
 	if test_move(global_transform, velocity):
@@ -44,4 +41,3 @@ func move(from_this: Block) -> void:
 	tween.tween_property(self, "position", position + velocity, move_duration)
 	
 	await tween.finished
-	from_this.visual.reset()

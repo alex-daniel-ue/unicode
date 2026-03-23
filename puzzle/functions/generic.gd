@@ -3,39 +3,23 @@ extends Node
 
 ## text: print {value/variable}
 func _print(this: Block) -> void:
-	var args := await this.function.evaluate_args(1)
-	if Interpreter.interrupted:
-		return
+	var args := await this.function.eval_args([this.function.Argument.VARIANT])
+	if Interpreter.interrupted: return
 	
-	var value: Variant = args[0]
-	if typeof(value) == TYPE_STRING_NAME:
-		var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
-		
-		if not parent_nested.scope.has(value):
-			this.function.error("Variable \"%s\" doesn't exist in the current scope!" % value)
-			return
-		
-		value = parent_nested.scope[value]
+	var value: Variant = this.function.unwrap(args[0])
+	if Interpreter.interrupted: return
 	
 	var output := "- %s" % str(value)
 	this.function.notif_pushed.emit(output, Notification.Type.LOG)
-	
 	Interpreter.output_log.append(output)
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
+
 
 ## text: declare {variable}
 func _declare_var(this: Block) -> void:
-	var args := await this.function.evaluate_args(1)
-	if Interpreter.interrupted:
-		return
-	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME])
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
+	var args := await this.function.eval_args([this.function.Argument.STRING_NAME])
+	if Interpreter.interrupted: return
 	
 	var var_name := args[0] as StringName
 	if not var_name.is_valid_ascii_identifier():
@@ -49,47 +33,27 @@ func _declare_var(this: Block) -> void:
 	
 	parent_nested.scope[var_name] = null
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
 
 ## text: set {variable} to {value/variable}
 func _set_var(this: Block) -> void:
-	var args := await this.function.evaluate_args(2)
-	if Interpreter.interrupted:
-		return
+	var args := await this.function.eval_args([this.function.Argument.STRING_NAME, this.function.Argument.VARIANT])
+	if Interpreter.interrupted: return
 	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
 	var var_name := args[0] as StringName
 	
+	var value: Variant = this.function.unwrap(args[1])
+	if Interpreter.interrupted: return
+	
 	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
-	
-	var value: Variant = args[1]
-	if value is StringName:
-		if not parent_nested.scope.has(value):
-			this.function.error("Variable '%s' doesn't exist in scope." % value)
-			return
-		value = parent_nested.scope[value]
-	
 	parent_nested.scope[var_name] = value
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
 
 ## text: initialize {variable} to {variable/value}
 func _initialize(this: Block) -> void:
-	var args := await this.function.evaluate_args(2)
-	if Interpreter.interrupted:
-		return
-	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
+	var args := await this.function.eval_args([this.function.Argument.STRING_NAME, this.function.Argument.VARIANT])
+	if Interpreter.interrupted: return
 	
 	var var_name := args[0] as StringName
 	if not var_name.is_valid_ascii_identifier():
@@ -101,24 +65,17 @@ func _initialize(this: Block) -> void:
 		this.function.error("Variable '%s' already exists in the current scope." % var_name)
 		return
 	
-	var value: Variant = args[1]
-	if value is StringName:
-		if not parent_nested.scope.has(value):
-			this.function.error("Variable '%s' doesn't exist in the current scope." % value)
-			return
-		value = parent_nested.scope[value]
+	var value: Variant = this.function.unwrap(args[1])
+	if Interpreter.interrupted: return
 	
 	parent_nested.scope[var_name] = value
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
 
 ## text: {value/variable} {symbol} {value/variable}
 func _comparison(this: Block) -> Variant:
 	var args := await __resolve_operation_args(this)
-	if args.is_empty():
-		return
+	if args.is_empty(): return
 	
 	var value1: Variant = args[0]
 	var symbol: Variant = args[1]
@@ -140,22 +97,18 @@ func _comparison(this: Block) -> Variant:
 			this.function.error("Cannot compare values of different types.")
 			return
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
 	
 	return _execute_expression(this, [value1, symbol, value2])
 
 ## text: {value/variable} {symbol} {value/variable}
 func _arithmetic(this: Block) -> Variant:
 	var args := await __resolve_operation_args(this)
-	if args.is_empty():
-		return
+	if args.is_empty(): return
 	
-	# Variants
-	var value1 = args[0]
-	var symbol = args[1]
-	var value2 = args[2]
+	var value1: Variant = args[0]
+	var symbol: Variant = args[1]
+	var value2: Variant = args[2]
 
 	var type1 := typeof(value1)
 	var type2 := typeof(value2)
@@ -172,9 +125,7 @@ func _arithmetic(this: Block) -> Variant:
 		this.function.error("Arithmetic operations can only be performed on numbers.")
 		return
 	
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	this.visual.reset()
+	await this.visual.pulse()
 	
 	return _execute_expression(this, [value1, symbol, value2])
 
@@ -200,18 +151,16 @@ func _execute_expression(this: Block, args: Array) -> Variant:
 
 #region Generic helper methods
 func __resolve_operation_args(this: Block) -> Array:
-	var args := await this.function.evaluate_args(3)
-	if Interpreter.interrupted:
-		return []
-	
-	var parent_nested := this.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	var args := await this.function.eval_args([
+		this.function.Argument.VARIANT,
+		this.function.Argument.VARIANT,
+		this.function.Argument.VARIANT
+	])
+	if Interpreter.interrupted: return []
 	
 	for i in [0, 2]:
-		if args[i] is StringName:
-			if not parent_nested.scope.has(args[i]):
-				this.function.error("Variable '%s' doesn't exist in the current scope!" % args[i])
-				return []
-			args[i] = parent_nested.scope[args[i]]
+		args[i] = this.function.unwrap(args[i])
+		if Interpreter.interrupted: return []
 	
 	return args
 #endregion

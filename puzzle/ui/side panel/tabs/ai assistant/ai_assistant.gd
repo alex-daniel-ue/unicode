@@ -23,13 +23,13 @@ var system_instructions := "You are the AI tutor for UniCode, a 2D drag-and-drop
 
 #Goal States:
 #{goals}
-#
-#Available Blocks:
-#{blocks}
 
 var initial_prompt := """Current game state:
 Level instructions:
 {instructions}
+
+Available Blocks:
+{blocks}
 
 Current workspace (YAML):
 ```
@@ -130,12 +130,15 @@ func _send_api_request(msg: String) -> void:
 	if not Interpreter.active_errors.is_empty():
 		errors = "\n\n".join(Interpreter.active_errors.map(str))
 	
+	var blocks_doc := _get_available_blocks_doc()
+	
 	var dynamic_context := initial_prompt.format({
 		instructions = level_instructions,
+		blocks = blocks_doc,
 		workspace = canvas_yaml,
 		intended = intended_solution,
 		output = output_log,
-		errors = errors
+		errors = errors,
 	})
 	
 	var contents := _get_conversation_history()
@@ -175,6 +178,22 @@ func _send_api_request(msg: String) -> void:
 	
 	http_request.request(API_URL, headers, HTTPClient.METHOD_POST, json_payload)
 
+func _get_available_blocks_doc() -> String:
+	if not is_instance_valid(Game.level):
+		return "N/A"
+	
+	var block_definitions: PackedStringArray
+	var seen_blocks: Dictionary  # Used as Set
+	
+	for block in Game.level.get_blocks():
+		if block.data.toolbox and not seen_blocks.has(block.data.name):
+			var s = block.data.syntax if not block.data.syntax.is_empty() else block.data.text
+			var d = block.data.description if not block.data.description.is_empty() else "No description."
+			block_definitions.append("- %s: %s" % [s, d])
+			seen_blocks[block.data.name] = true
+	
+	return "\n".join(block_definitions)
+
 func _get_viewport_base64_image() -> String:
 	if not (is_instance_valid(Game.level) and is_instance_valid(puzzle.level_viewport)):
 		return ""
@@ -201,7 +220,7 @@ func _get_conversation_history() -> Array[Dictionary]:
 			if not bubble.is_temporary:
 				valid_bubbles.append(bubble)
 	
-	valid_bubbles.pop_back() # Remove current user message
+	valid_bubbles.pop_back()  # Remove current user message
 	
 	for bubble in valid_bubbles:
 		history.append({

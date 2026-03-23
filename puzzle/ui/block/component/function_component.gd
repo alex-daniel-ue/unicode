@@ -48,50 +48,44 @@ func initialize() -> void:
 func is_initialized() -> bool:
 	return not _function.is_null()
 
-func evaluate_arg(at: int) -> Variant:
-	var visible_blocks: Array = base.text.get_blocks().filter(
-		func(_block: Block) -> bool:
-			return _block.visible
-	)
-	
-	assert(at < len(visible_blocks))
-	var block := visible_blocks[at] as Block
-	
-	block.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
-	
-	var value: Variant = await block.function.run()
-	block.visual.reset()
-	
-	if Interpreter.interrupted:
+func unwrap(value: Variant) -> Variant:
+	if typeof(value) != TYPE_STRING_NAME:
+		return value
+		
+	var parent := base.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
+	if not parent.scope.has(value):
+		error("Variable '%s' doesn't exist in the current scope!" % value)
 		return null
 	
-	return value
+	return parent.scope[value]
 
-func evaluate_args(arg_length := -1) -> Array:
+func eval_args(types: Array[PackedInt32Array]) -> Array:
 	var evaluated: Array
+	var arg_count := types.size()
 	
 	for block in base.text.get_blocks():
-		if not block.visible:
-			continue
+		if not block.visible: continue
 		
-		block.visual.highlight()
-		await Game.sleep(Interpreter.interpret_delay)
+		await block.visual.pulse()
+		if Interpreter.interrupted: return []
 		
 		var value: Variant = await block.function.run()
-		block.visual.reset()
-		
-		if Interpreter.interrupted:
-			return []
+		if Interpreter.interrupted: return []
 		
 		evaluated.append(value)
-	
-	if len(evaluated) < arg_length:
-		var plurality := ' is' if arg_length == 1 else 's are'
-		base.function.error("%d argument%s required." % [arg_length, plurality])
 		
-		return []
-	
+	if evaluated.size() < arg_count:
+		var plurality := " is" if arg_count == 1 else "s are"
+		error("%d argument%s required." % [arg_count, plurality])
+		return[]
+		
+	for i in range(arg_count):
+		if not types[i].is_empty():
+			var err := Core.validate_type(evaluated[i], types[i], i)
+			if not err.is_empty():
+				error(err)
+				return[]
+				
 	return evaluated
 
 func error(message: String) -> void:
@@ -121,3 +115,13 @@ func error(message: String) -> void:
 
 func set_func(new_func: Callable) -> void:
 	_function = new_func
+
+
+class Argument:
+	static var VARIANT := PackedInt32Array()
+	static var BOOL := PackedInt32Array([TYPE_BOOL])
+	static var INT := PackedInt32Array([TYPE_INT])
+	static var FLOAT := PackedInt32Array([TYPE_FLOAT])
+	static var STRING := PackedInt32Array([TYPE_STRING])
+	static var STRING_NAME := PackedInt32Array([TYPE_STRING_NAME])
+	static var NUMBER := PackedInt32Array([TYPE_INT, TYPE_FLOAT])

@@ -16,6 +16,9 @@ const ITERATIVE_BLOCKS := {
 
 
 func _begin(this: NestedBlock) -> void:
+	await this.visual.pulse()
+	if Interpreter.interrupted: return
+	
 	this.scope.clear()
 	this.depth = 0
 	
@@ -26,26 +29,17 @@ func _begin(this: NestedBlock) -> void:
 func _while(this: NestedBlock) -> void:
 	var loop_count := 0
 	while true:
-		this.visual.highlight()
-		await Game.sleep(Interpreter.interpret_delay)
+		await this.visual.pulse()
+		if Interpreter.interrupted: return
 		
-		var condition: Variant = await this.function.evaluate_arg(0)
-		this.visual.reset()
+		var args := await this.function.eval_args([this.function.Argument.BOOL])
+		if Interpreter.interrupted: return
 		
-		if Interpreter.interrupted:
-			return
-		
-		var err_message := Core.validate_type(condition, [TYPE_BOOL])
-		if not err_message.is_empty():
-			this.function.error(err_message)
-			return
-		
-		if not (condition as bool):
+		if not (args[0] as bool):
 			break
 		
 		var outcome := await __iterate_children(this)
-		if Interpreter.interrupted:
-			return
+		if Interpreter.interrupted: return
 		
 		match outcome:
 			ControlSignal.BREAK:
@@ -60,31 +54,16 @@ func _while(this: NestedBlock) -> void:
 
 ## text: for var {variable}, from {int}\nuntil {int}, at step {int}
 func _for(this: NestedBlock) -> void:
-	var args := await this.function.evaluate_args(3)
-	if Interpreter.interrupted:
-		return
+	var args := await this.function.eval_args([
+		this.function.Argument.STRING_NAME,
+		this.function.Argument.INT,
+		this.function.Argument.INT,
+		this.function.Argument.INT
+	])
+	if Interpreter.interrupted: return
 	
-	var err_message := Core.validate_type(args[0], [TYPE_STRING_NAME], 0)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
 	var var_name := args[0] as StringName
-	
-	err_message = Core.validate_type(args[1], [TYPE_INT], 1)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
-	
-	err_message = Core.validate_type(args[2], [TYPE_INT], 2)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
 	var to := args[2] as int
-	
-	err_message = Core.validate_type(args[3], [TYPE_INT], 3)
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return
 	var step := args[3] as int
 	
 	if step == 0:
@@ -97,13 +76,11 @@ func _for(this: NestedBlock) -> void:
 	while (step > 0 and this.scope[var_name] <= to) or \
 		  (step < 0 and this.scope[var_name] >= to):
 		
-		this.visual.highlight()
-		await Game.sleep(Interpreter.interpret_delay)
-		this.visual.reset()
+		await this.visual.pulse()
+		if Interpreter.interrupted: return
 		
 		var outcome := await __iterate_children(this)
-		if Interpreter.interrupted:
-			return
+		if Interpreter.interrupted: return
 		
 		match outcome:
 			ControlSignal.BREAK:
@@ -116,7 +93,7 @@ func _for(this: NestedBlock) -> void:
 			this.function.error("Reached maximum amount of loops.")
 			return
 		
-		err_message = Core.validate_type(this.scope[var_name], [TYPE_INT])
+		var err_message := Core.validate_type(this.scope[var_name], this.function.Argument.INT)
 		if not err_message.is_empty():
 			this.function.error("Loop variable was changed to non-integer.")
 			return
@@ -127,21 +104,13 @@ func _for(this: NestedBlock) -> void:
 #region Conditional
 ## text: if {boolean}, elif {boolean} -> [bool, ControlSignal]
 func _if(this: NestedBlock) -> Variant:
-	this.visual.highlight()
-	await Game.sleep(Interpreter.interpret_delay)
+	await this.visual.pulse()
+	if Interpreter.interrupted: return true
 	
-	var condition: Variant = await this.function.evaluate_arg(0)
-	this.visual.reset()
+	var args := await this.function.eval_args([this.function.Argument.BOOL])
+	if Interpreter.interrupted: return true  # Halt chain on error
 	
-	if Interpreter.interrupted:
-		return true  # Halt chain on error
-	
-	var err_message := Core.validate_type(condition, [TYPE_BOOL])
-	if not err_message.is_empty():
-		this.function.error(err_message)
-		return true  # Halt chain on error
-	
-	if condition as bool:
+	if args[0] as bool:
 		var outcome := await __iterate_children(this)
 		if outcome != ControlSignal.NONE:
 			return outcome
@@ -152,6 +121,9 @@ func _if(this: NestedBlock) -> Variant:
 
 ## text: else
 func _else(this: NestedBlock) -> ControlSignal:
+	await this.visual.pulse()
+	if Interpreter.interrupted: return ControlSignal.NONE
+	
 	# NOTE: The actual if-else branch evaluation is handled inside
 	# __iterate_children(), because it depends on the execution outcome of
 	# previous blocks in the chain.
@@ -161,6 +133,9 @@ func _else(this: NestedBlock) -> ControlSignal:
 #region Modifiers
 ## text: break
 func _break(this: StatementBlock) -> ControlSignal:
+	await this.visual.pulse()
+	if Interpreter.interrupted: return ControlSignal.NONE
+	
 	var is_iterative := func(block: Block) -> bool:
 		return block is NestedBlock and block.data.nested.type in ITERATIVE_BLOCKS
 	
@@ -172,6 +147,9 @@ func _break(this: StatementBlock) -> ControlSignal:
 
 ## text: continue
 func _continue(this: StatementBlock) -> ControlSignal:
+	await this.visual.pulse()
+	if Interpreter.interrupted: return ControlSignal.NONE
+	
 	var is_iterative := func(block: Block) -> bool:
 		return block is NestedBlock and block.data.nested.type in ITERATIVE_BLOCKS
 	

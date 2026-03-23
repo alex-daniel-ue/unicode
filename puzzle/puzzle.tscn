@@ -58,8 +58,8 @@ theme = ExtResource("2_xv3xb")
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 466.0
-offset_bottom = 211.0
+offset_right = 376.0
+offset_bottom = 202.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
