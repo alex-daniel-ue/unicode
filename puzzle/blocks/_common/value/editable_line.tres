@@ -19,7 +19,6 @@ base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_hb0ia")
 value = SubResource("Resource_1vt8s")
-syntax = null
 draggable = false
 placeable = false
 top_notch = false

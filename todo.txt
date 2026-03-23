@@ -6,6 +6,7 @@ variable watcher/debug view, add button for left panel, how to format dict well?
 add cant zoom or pan if bounds no longer intersect with camera view
 canvas infinite panning or limited but big
 notification should wrap when bigger than parent, reuse chat bubble logic, generalize?
+chat bubble word wrap bad!
 
 optionally provide completed levels? revisit previous levels if confused?
 

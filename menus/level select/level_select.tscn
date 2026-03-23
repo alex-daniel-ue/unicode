@@ -73,7 +73,7 @@ theme_override_constants/separation = 44
 alignment = 1
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
-custom_minimum_size = Vector2(100, 75)
+custom_minimum_size = Vector2(120, 85)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
@@ -81,11 +81,54 @@ theme_override_font_sizes/font_size = 25
 text = "1"
 
 [node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
-custom_minimum_size = Vector2(100, 75)
+custom_minimum_size = Vector2(120, 85)
 layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
 text = "2"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "3"
+
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/LevelRow"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "4"
+
+[node name="LevelRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 44
+alignment = 1
+
+[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "5"
+
+[node name="Button6" type="Button" parent="MarginContainer/VBoxContainer/LevelRow2"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "6"
 
 [connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]
