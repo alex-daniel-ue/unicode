@@ -87,6 +87,7 @@ tile_set = ExtResource("6_l3j2e")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("7_nnkkk")]
 position = Vector2(79.5, 175.5)
+facing_direction = Vector2(1, 0)
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("8_1rlyd")

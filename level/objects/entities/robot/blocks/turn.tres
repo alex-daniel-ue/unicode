@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=8 format=3 uid="uid://fg43dh67nibf"]
+
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="1_stgt1"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_usi8u"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="3_pjmkc"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="4_d43d8"]
+
+[sub_resource type="Resource" id="Resource_stgt1"]
+script = ExtResource("3_pjmkc")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_pjmkc"]
+script = ExtResource("4_d43d8")
+show_type = false
+enum_flag = true
+enum_as_string = true
+enum_values = PackedStringArray("left", "right")
+_socket_ref = SubResource("Resource_stgt1")
+
+[sub_resource type="Resource" id="Resource_d43d8"]
+script = ExtResource("1_usi8u")
+name = "ValueEditableEnumBlock"
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_stgt1")
+value = SubResource("Resource_pjmkc")
+draggable = false
+placeable = false
+top_notch = false
+Type/value = SubResource("Resource_pjmkc")
+Type/socket = SubResource("Resource_stgt1")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[resource]
+script = ExtResource("1_usi8u")
+name = "TurnBlock"
+color = Color(0.92156863, 0.80784315, 0.47843137, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Robot"
+syntax = "turn {direction: string}"
+description = "Rotates the robot 90 degrees to the left or right."
+text = "turn {}"
+text_blocks = Array[ExtResource("1_usi8u")]([SubResource("Resource_d43d8")])
+Function/entity_script = ExtResource("1_stgt1")
+Function/method = &"turn"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
