@@ -1,15 +1,31 @@
-[gd_scene load_steps=12 format=4 uid="uid://b7h4dgb6nwr7n"]
+[gd_scene load_steps=28 format=4 uid="uid://b7h4dgb6nwr7n"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_ikfux"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_5c6je"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_rtwab"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="4_ck4rf"]
+[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="4_qiwwv"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="5_nkfl2"]
+[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="5_qlitk"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="6_1lc6k"]
+[ext_resource type="Resource" uid="uid://bxjjm3ig67sq2" path="res://puzzle/blocks/control flow/elif.tres" id="6_6hsv1"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="7_2wfmw"]
+[ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="7_f8hoj"]
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="8_3qwuv"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="8_cjfyw"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="9_8nutl"]
+[ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="9_obqqs"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="10_3cdwo"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="10_siby8"]
+[ext_resource type="Resource" uid="uid://c4f1tp3s11tra" path="res://puzzle/blocks/generic/declare_var.tres" id="11_3n002"]
+[ext_resource type="Resource" uid="uid://c6s5fbjvbbspi" path="res://puzzle/blocks/generic/decrement.tres" id="12_cgkbj"]
+[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="13_g4g5b"]
+[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="14_g1pkm"]
+[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="15_d0be7"]
+[ext_resource type="Resource" uid="uid://ih285nrl3m6r" path="res://puzzle/blocks/generic/set_var.tres" id="16_t15s5"]
+[ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="17_y0fe6"]
+[ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="18_jh1fw"]
+[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="19_6tvd4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3lsww"]
 
@@ -49,7 +65,7 @@ intended_solution = "block: BeginBlock
 "
 
 [node name="GenericBlockProvider" parent="." index="0"]
-block_data = Array[ExtResource("2_5c6je")]([ExtResource("3_rtwab")])
+block_data = Array[ExtResource("2_5c6je")]([ExtResource("3_rtwab"), ExtResource("4_qiwwv"), ExtResource("5_qlitk"), ExtResource("6_6hsv1"), ExtResource("7_f8hoj"), ExtResource("8_3qwuv"), ExtResource("9_obqqs"), ExtResource("10_siby8"), ExtResource("11_3n002"), ExtResource("12_cgkbj"), ExtResource("13_g4g5b"), ExtResource("14_g1pkm"), ExtResource("15_d0be7"), ExtResource("16_t15s5"), ExtResource("17_y0fe6"), ExtResource("18_jh1fw"), ExtResource("19_6tvd4")])
 
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]
