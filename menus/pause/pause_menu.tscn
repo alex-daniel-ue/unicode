@@ -6,7 +6,7 @@
 [node name="PauseMenu" type="PopupPanel"]
 oversampling_override = 1.0
 initial_position = 2
-size = Vector2i(328, 244)
+size = Vector2i(328, 276)
 visible = true
 theme = ExtResource("1_8vgpe")
 script = ExtResource("2_n5dtg")
@@ -15,7 +15,7 @@ script = ExtResource("2_n5dtg")
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 304.0
-offset_bottom = 216.0
+offset_bottom = 248.0
 theme_override_constants/separation = 8
 alignment = 1
 
@@ -27,6 +27,15 @@ theme = ExtResource("1_8vgpe")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Resume"
+
+[node name="TutorialsButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_8vgpe")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 18
+text = "Tutorials"
 
 [node name="LevelSelectButton" type="Button" parent="VBoxContainer"]
 custom_minimum_size = Vector2(220, 40)
@@ -47,6 +56,8 @@ theme_override_font_sizes/font_size = 18
 text = "Back to menu"
 
 [connection signal="pressed" from="VBoxContainer/ResumeButton" to="." method="hide"]
+[connection signal="pressed" from="VBoxContainer/TutorialsButton" to="." method="hide"]
+[connection signal="pressed" from="VBoxContainer/TutorialsButton" to="." method="_on_tutorials_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/LevelSelectButton" to="." method="hide"]
 [connection signal="pressed" from="VBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/MainMenuButton" to="." method="hide"]
