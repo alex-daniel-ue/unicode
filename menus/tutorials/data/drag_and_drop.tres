@@ -1,24 +1,17 @@
-[gd_resource type="Resource" script_class="TutorialTopic" load_steps=7 format=3 uid="uid://htyk0b4wtsrc"]
+[gd_resource type="Resource" script_class="TutorialTopic" load_steps=5 format=3 uid="uid://htyk0b4wtsrc"]
 
 [ext_resource type="Script" uid="uid://hedm71c8kgyc" path="res://menus/tutorials/tutorial_topic.gd" id="1_btgaj"]
 [ext_resource type="Script" uid="uid://bvvchnj2ifvqf" path="res://menus/tutorials/tutorial_slide.gd" id="2_bdgc3"]
-[ext_resource type="Texture2D" uid="uid://0r2aw1nx3lve" path="res://menus/tutorials/data/images/drag and drop/drag.png" id="3_btgaj"]
-[ext_resource type="Texture2D" uid="uid://rkflg6gk1q4f" path="res://menus/tutorials/data/images/drag and drop/dropped.png" id="4_bdgc3"]
+[ext_resource type="SpriteFrames" uid="uid://cmq5sxnckcg7e" path="res://menus/tutorials/data/images/dragdrop.gif" id="3_mvh42"]
 
-[sub_resource type="Resource" id="Resource_53nft"]
+[sub_resource type="Resource" id="Resource_mvh42"]
 script = ExtResource("2_bdgc3")
-image = ExtResource("3_btgaj")
-text = "Drag the blocks from the Toolbox panel."
-metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
-
-[sub_resource type="Resource" id="Resource_2o2qg"]
-script = ExtResource("2_bdgc3")
-image = ExtResource("4_bdgc3")
-text = "Then drop it below the \"begin\" block to connect them."
+image = ExtResource("3_mvh42")
+text = "Drag then drop"
 metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
 
 [resource]
 script = ExtResource("1_btgaj")
 title = "Drag & Drop"
-slides = Array[ExtResource("2_bdgc3")]([SubResource("Resource_53nft"), SubResource("Resource_2o2qg")])
+slides = Array[ExtResource("2_bdgc3")]([SubResource("Resource_mvh42")])
 metadata/_custom_type_script = "uid://hedm71c8kgyc"

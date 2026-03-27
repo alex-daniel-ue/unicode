@@ -1,0 +1,15 @@
+[remap]
+
+importer="import_gif_to_sprite_frames"
+type="SpriteFrames"
+uid="uid://cmq5sxnckcg7e"
+path="res://.godot/imported/dragdrop.gif-2b598170104cda90ca727fb547a8dcdc.tres"
+
+[deps]
+
+source_file="res://menus/tutorials/data/images/dragdrop.gif"
+dest_files=["res://.godot/imported/dragdrop.gif-2b598170104cda90ca727fb547a8dcdc.tres"]
+
+[params]
+
+frames_per_second=5

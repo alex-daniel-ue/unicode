@@ -15,6 +15,7 @@ var current_topic: TutorialTopic
 var current_page := 0
 
 
+
 func _ready() -> void:
 	_populate_topic_list()
 
@@ -46,12 +47,30 @@ func _update_display() -> void:
 		return
 	
 	var slide: TutorialSlide = current_topic.slides[current_page]
+	image_rect.texture = null
 	
-	image_rect.texture = slide.image
+	if slide.image is SpriteFrames:
+		# Most GIF importers use "default", but some use "gif"
+		var anim_name = "default"
+		if not slide.image.has_animation(anim_name):
+			anim_name = slide.image.get_animation_names()[0]
+			
+		# Show the first frame immediately
+		image_rect.texture = slide.image.get_frame_texture(anim_name, 0)
+	
+		# --- GIF ANIMATION TRICK ---
+		# Create a one-time timer to loop the frames if it's a GIF
+		_animate_gif(slide.image, anim_name)
+		
+
+
+	
+	
+	
 	description_label.text = slide.text
 	page_label.text = "%d / %d" %[current_page + 1, current_topic.slides.size()]
 	
-	# Disable buttons if at the start or end of the slideshow
+  
 	back_button.disabled = (current_page == 0)
 	next_button.disabled = (current_page == current_topic.slides.size() - 1)
 
@@ -64,3 +83,20 @@ func _on_next_pressed() -> void:
 	if current_page < current_topic.slides.size() - 1:
 		current_page += 1
 		_update_display()
+
+
+func _on_tutorials_button_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _animate_gif(frames: SpriteFrames, anim: String) -> void:
+	var current_f = 0
+	var frame_count = frames.get_frame_count(anim)
+	var fps = frames.get_animation_speed(anim)
+	if fps <= 0: fps = 10 # Fallback speed
+	
+	# This loop will run as long as this specific slide is visible
+	while is_inside_tree() and current_topic.slides[current_page].image == frames:
+		image_rect.texture = frames.get_frame_texture(anim, current_f)
+		current_f = (current_f + 1) % frame_count
+		await get_tree().create_timer(1.0 / fps).timeout

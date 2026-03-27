@@ -1,5 +1,5 @@
 class_name TutorialSlide
 extends Resource
 
-@export var image: Texture2D
+@export var image: SpriteFrames
 @export_multiline var text: String
