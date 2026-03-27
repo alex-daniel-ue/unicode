@@ -115,6 +115,7 @@ facing_direction = Vector2(1, 0)
 script = ExtResource("24_34rw5")
 base = NodePath("..")
 initial_properties = Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
 &"transform": Transform2D(1, 0, 0, 1, 47.5, 143.5)
 })
 
