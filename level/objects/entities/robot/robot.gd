@@ -4,7 +4,6 @@ extends AnimatableBody2D
 @export var sprite: AnimatedSprite2D
 @export var collision_shape: CollisionShape2D
 
-# Added directionality with an automatic animation update
 @export var facing_direction := Vector2.DOWN:
 	set(value):
 		facing_direction = value
@@ -59,11 +58,7 @@ func turn(from_this: Block) -> void:
 	if Interpreter.interrupted:
 		return
 	
-	# Math to correctly rotate an orthogonal 2D direction vector by 90 degrees
 	if turn_dir == "left":
 		facing_direction = Vector2(facing_direction.y, -facing_direction.x)
 	else:
 		facing_direction = Vector2(-facing_direction.y, facing_direction.x)
-	
-	# Small visual pause for the rotation
-	await Game.sleep(0.15)
