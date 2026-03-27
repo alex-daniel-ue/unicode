@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_mvh42"]
 script = ExtResource("2_bdgc3")
 image = ExtResource("3_mvh42")
-text = "Drag then drop"
+text = "Drag the block from the toolbox tab located at the left of the canvas."
 metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
 
 [resource]

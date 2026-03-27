@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TutorialTopic" load_steps=5 format=3 uid="uid://klsoukhxayc6"]
+
+[ext_resource type="Script" uid="uid://hedm71c8kgyc" path="res://menus/tutorials/tutorial_topic.gd" id="1_tpm4u"]
+[ext_resource type="Script" uid="uid://bvvchnj2ifvqf" path="res://menus/tutorials/tutorial_slide.gd" id="2_ku5v0"]
+[ext_resource type="SpriteFrames" uid="uid://diea6p0ood6ko" path="res://menus/tutorials/data/images/trashall.gif" id="3_tpm4u"]
+
+[sub_resource type="Resource" id="Resource_mvh42"]
+script = ExtResource("2_ku5v0")
+image = ExtResource("3_tpm4u")
+text = "Press the trash icon on the side of the tools window then click the check button to proceed clearing the canvas."
+metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
+
+[resource]
+script = ExtResource("1_tpm4u")
+title = "Delete Block"
+slides = Array[ExtResource("2_ku5v0")]([SubResource("Resource_mvh42")])
+metadata/_custom_type_script = "uid://hedm71c8kgyc"
