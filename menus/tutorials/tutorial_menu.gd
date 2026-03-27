@@ -1,8 +1,10 @@
 extends PopupPanel
+
+
 @export var topic_list: VBoxContainer
 @export var topic_title: Label
 @export var image_rect: TextureRect
-@export var prev_button: Button
+@export var back_button: Button
 @export var next_button: Button
 @export var page_label: Label
 @export var description_label: Label
@@ -10,13 +12,10 @@ extends PopupPanel
 @export var tutorial_database: Array[TutorialTopic]
 
 var current_topic: TutorialTopic
-var current_page: int = 0
+var current_page := 0
+
 
 func _ready() -> void:
-	prev_button.pressed.connect(_on_prev_pressed)
-	next_button.pressed.connect(_on_next_pressed)
-	close_button.pressed.connect(hide)
-	
 	_populate_topic_list()
 
 func _populate_topic_list() -> void:
@@ -45,7 +44,7 @@ func load_topic(topic: TutorialTopic) -> void:
 func _update_display() -> void:
 	if current_topic == null or current_topic.slides.is_empty():
 		return
-		
+	
 	var slide: TutorialSlide = current_topic.slides[current_page]
 	
 	image_rect.texture = slide.image
@@ -53,7 +52,7 @@ func _update_display() -> void:
 	page_label.text = "%d / %d" %[current_page + 1, current_topic.slides.size()]
 	
 	# Disable buttons if at the start or end of the slideshow
-	prev_button.disabled = (current_page == 0)
+	back_button.disabled = (current_page == 0)
 	next_button.disabled = (current_page == current_topic.slides.size() - 1)
 
 func _on_prev_pressed() -> void:

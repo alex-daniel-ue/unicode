@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("2_c18da")
 name = "BreakBlock"
-color = Color(0.5803922, 0.6392157, 0.72156864, 1)
+color = Color(0.3744, 0.5184, 0.72, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Iterative"
 syntax = "break"

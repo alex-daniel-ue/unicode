@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bkn7rw13xcbc4"
-path="res://.godot/imported/HIERCHY.drawio (5).png-8a121b41fcb295a71195e3bde1aaa4d5.ctex"
+path="res://.godot/imported/test.png-646e63af19fe3c9f5ae89a02e2fab4de.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://menus/tutorials/data/Tutorial Images/HIERCHY.drawio (5).png"
-dest_files=["res://.godot/imported/HIERCHY.drawio (5).png-8a121b41fcb295a71195e3bde1aaa4d5.ctex"]
+source_file="res://menus/tutorials/data/images/test.png"
+dest_files=["res://.godot/imported/test.png-646e63af19fe3c9f5ae89a02e2fab4de.ctex"]
 
 [params]
 

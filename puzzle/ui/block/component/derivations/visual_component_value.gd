@@ -3,10 +3,10 @@ extends BlockVisualComponent
 
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color("#CBD5E1"),
-	TYPE_STRING_NAME : Color("#F472B6"),
-	TYPE_STRING : Color("#FDBA74"),
+	TYPE_STRING_NAME : Color("f57fbcff"),
+	TYPE_STRING : Color("fcc283ff"),
 	TYPE_INT : Color("#93C5FD"),
-	TYPE_FLOAT : Color("#C4B5FD"),
+	TYPE_FLOAT : Color("b19dfcff"),
 }
 
 const BOOL_COLORS: Dictionary[bool, Color] = {

@@ -122,14 +122,13 @@ size_flags_stretch_ratio = 0.8
 oversampling_override = 1.0
 initial_position = 1
 size = Vector2i(470, 159)
-visible = true
 content_scale_factor = 0.8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
-offset_left = 40.0
-offset_top = 36.0
-offset_right = 548.0
-offset_bottom = 155.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 563.5
+offset_bottom = 174.75
 theme_override_constants/separation = 16
 alignment = 1
 

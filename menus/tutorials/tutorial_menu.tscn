@@ -1,117 +1,132 @@
-[gd_scene load_steps=6 format=3 uid="uid://va5t6n30rsge"]
+[gd_scene load_steps=7 format=3 uid="uid://va5t6n30rsge"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_rydlq"]
 [ext_resource type="Script" uid="uid://bofxpvg5lrprd" path="res://menus/tutorials/tutorial_menu.gd" id="1_t68i3"]
 [ext_resource type="Script" uid="uid://hedm71c8kgyc" path="res://menus/tutorials/tutorial_topic.gd" id="2_otdg5"]
-[ext_resource type="Resource" uid="uid://htyk0b4wtsrc" path="res://menus/tutorials/data/Drag&Drop.tres" id="3_y67te"]
-[ext_resource type="Resource" uid="uid://bgkdqln5k262q" path="res://menus/tutorials/data/testing_tutorial.tres" id="4_y67te"]
+[ext_resource type="Resource" uid="uid://htyk0b4wtsrc" path="res://menus/tutorials/data/drag_and_drop.tres" id="3_y67te"]
 
-[node name="TutorialMenu" type="PopupPanel" node_paths=PackedStringArray("topic_list", "topic_title", "image_rect", "prev_button", "next_button", "page_label", "description_label", "close_button")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_otdg5"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.053100005, 0.059864998, 0.09, 0.22352941)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y67te"]
+
+[node name="TutorialMenu" type="PopupPanel" node_paths=PackedStringArray("topic_list", "topic_title", "image_rect", "back_button", "next_button", "page_label", "description_label", "close_button")]
 oversampling_override = 1.0
+initial_position = 1
 size = Vector2i(800, 550)
-visible = true
+theme = ExtResource("1_rydlq")
 script = ExtResource("1_t68i3")
-topic_list = NodePath("MarginContainer/VBoxContainer/HBoxContainer/Sidebar/ScrollContainer/TopicList")
-topic_title = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/TopicTitle")
-image_rect = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/ImageRect")
-prev_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls/PrevButton")
-next_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls/NextButton")
-page_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls/PageLabel")
-description_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/ContentArea/DescriptionScroll/DescriptionLabel")
-close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
-tutorial_database = Array[ExtResource("2_otdg5")]([ExtResource("3_y67te"), ExtResource("4_y67te")])
+topic_list = NodePath("VBoxContainer/HBoxContainer/Sidebar/ScrollContainer/TopicButtonList")
+topic_title = NodePath("VBoxContainer/HBoxContainer/ContentArea/TopicTitle")
+image_rect = NodePath("VBoxContainer/HBoxContainer/ContentArea/ImageRect")
+back_button = NodePath("VBoxContainer/HBoxContainer/ContentArea/ControlsContainer/BackButton")
+next_button = NodePath("VBoxContainer/HBoxContainer/ContentArea/ControlsContainer/NextButton")
+page_label = NodePath("VBoxContainer/HBoxContainer/ContentArea/ControlsContainer/PageLabel")
+description_label = NodePath("VBoxContainer/HBoxContainer/ContentArea/DescriptionScroll/DescriptionLabel")
+close_button = NodePath("VBoxContainer/CloseButton")
+tutorial_database = Array[ExtResource("2_otdg5")]([ExtResource("3_y67te")])
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 796.0
-offset_bottom = 546.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 776.0
+offset_bottom = 526.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-
-[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="CloseButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource("1_rydlq")
 text = "close"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Sidebar" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Sidebar" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/Sidebar"]
+[node name="TitleLabel" type="Label" parent="VBoxContainer/HBoxContainer/Sidebar"]
 layout_mode = 2
 theme = ExtResource("1_rydlq")
 theme_type_variation = &"HeaderMedium"
 text = "Tutorials"
+horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/Sidebar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/Sidebar"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TopicList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/Sidebar/ScrollContainer"]
+[node name="TopicButtonList" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Sidebar/ScrollContainer"]
 layout_mode = 2
 
-[node name="ContentArea" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ContentArea" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TopicTitle" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea"]
+[node name="TopicTitle" type="Label" parent="VBoxContainer/HBoxContainer/ContentArea"]
 layout_mode = 2
 theme = ExtResource("1_rydlq")
 theme_type_variation = &"HeaderMedium"
 text = "Topic Name"
 horizontal_alignment = 1
 
-[node name="ImageRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea"]
+[node name="ImageRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/ContentArea"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Controls" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea"]
+[node name="ControlsContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ContentArea"]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="PrevButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls"]
+[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer/ContentArea/ControlsContainer"]
 layout_mode = 2
 theme = ExtResource("1_rydlq")
 keep_pressed_outside = true
 text = "<"
 
-[node name="PageLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls"]
+[node name="PageLabel" type="Label" parent="VBoxContainer/HBoxContainer/ContentArea/ControlsContainer"]
 layout_mode = 2
 theme = ExtResource("1_rydlq")
 text = "1/3"
 
-[node name="NextButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea/Controls"]
+[node name="NextButton" type="Button" parent="VBoxContainer/HBoxContainer/ContentArea/ControlsContainer"]
 layout_mode = 2
 theme = ExtResource("1_rydlq")
 text = ">"
 
-[node name="DescriptionScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea"]
+[node name="DescriptionScroll" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/ContentArea"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_otdg5")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y67te")
 horizontal_scroll_mode = 0
 
-[node name="DescriptionLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/ContentArea/DescriptionScroll"]
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer/HBoxContainer/ContentArea/DescriptionScroll"]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 mouse_filter = 1
 theme = ExtResource("1_rydlq")
-text = "Tutorial Descriptions bla bla blaasdcs"
+theme_type_variation = &"LegibleLabel"
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 autowrap_mode = 3
+
+[connection signal="pressed" from="VBoxContainer/CloseButton" to="." method="hide"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ContentArea/ControlsContainer/BackButton" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ContentArea/ControlsContainer/NextButton" to="." method="_on_next_pressed"]

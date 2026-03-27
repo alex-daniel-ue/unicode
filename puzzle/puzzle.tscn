@@ -56,10 +56,10 @@ size = Vector2i(392, 218)
 theme = ExtResource("2_xv3xb")
 
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 376.0
-offset_bottom = 202.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 368.0
+offset_bottom = 194.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
@@ -88,6 +88,7 @@ theme_override_font_sizes/font_size = 18
 text = "Back to level select"
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
+size = Vector2i(328, 292)
 visible = false
 
 [node name="TutorialMenu" parent="PauseMenu" instance=ExtResource("5_8e7ff")]

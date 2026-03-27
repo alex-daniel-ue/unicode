@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("2_4vrd7")
 name = "PrintBlock"
-color = Color(0.91764706, 0.7019608, 0.03137255, 1)
+color = Color(0.92, 0.8096, 0.4784, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "print {message: variant}"
