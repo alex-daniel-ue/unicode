@@ -1,25 +1,10 @@
-[gd_scene load_steps=28 format=4 uid="uid://djpyxhdtoosj"]
+[gd_scene load_steps=13 format=4 uid="uid://bolvxb6qtyiqr"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_yqlds"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_1pnxm"]
-[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="3_qt577"]
-[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="4_am250"]
-[ext_resource type="Resource" uid="uid://bxjjm3ig67sq2" path="res://puzzle/blocks/control flow/elif.tres" id="5_aipms"]
-[ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="6_uyv3j"]
-[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="7_1b758"]
-[ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="8_2vycy"]
-[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="9_l40t2"]
+[ext_resource type="Texture2D" uid="uid://b36ecsgd36n11" path="res://world/assets/objects/whiteboard.png" id="9_8v2pr"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="10_6g7ov"]
-[ext_resource type="Resource" uid="uid://c4f1tp3s11tra" path="res://puzzle/blocks/generic/declare_var.tres" id="11_yat8e"]
-[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="12_euory"]
-[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="13_ds503"]
-[ext_resource type="Resource" uid="uid://ih285nrl3m6r" path="res://puzzle/blocks/generic/set_var.tres" id="14_3o22q"]
-[ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="15_24kc1"]
-[ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="16_g7few"]
-[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="17_fl2a7"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="18_lufox"]
-[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="18_tt37c"]
-[ext_resource type="Resource" uid="uid://c6s5fbjvbbspi" path="res://puzzle/blocks/generic/decrement.tres" id="19_rpmfv"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="19_wxs5c"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="20_4sxj1"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="21_t2jpi"]
@@ -27,40 +12,31 @@
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="23_gytkn"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="24_34rw5"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_3lsww"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
-[node name="Level" instance=ExtResource("1_yqlds")]
-instructions = "Get to the classroom door."
+[node name="Level2" instance=ExtResource("1_yqlds")]
+instructions = "The flag is much further away this time! While you can drag and drop separate blocks from the toolbox, there is a faster way.
+
+Right-Click any block already in your workspace to create a copy of it. Use this shortcut to quickly fill your program with blocks.
+
+If you make a mistake, you can drag unwanted blocks to the Trash icon or use the Clear Canvas button."
 intended_solution = "block: BeginBlock
   text: \"begin code\"
   children:
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\"
+      text: \"move forward\"
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"down\"
+      text: \"move forward\"
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\"
+      text: \"move forward\"
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\"
+      text: \"move forward\"
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"up\"
-    - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\""
+      text: \"move forward\"
+"
 
 [node name="GenericBlockProvider" parent="." index="0"]
-block_data = Array[ExtResource("2_1pnxm")]([ExtResource("3_qt577"), ExtResource("4_am250"), ExtResource("5_aipms"), ExtResource("6_uyv3j"), ExtResource("7_1b758"), ExtResource("8_2vycy"), ExtResource("9_l40t2"), ExtResource("10_6g7ov"), ExtResource("11_yat8e"), ExtResource("12_euory"), ExtResource("13_ds503"), ExtResource("14_3o22q"), ExtResource("15_24kc1"), ExtResource("16_g7few"), ExtResource("17_fl2a7"), ExtResource("18_tt37c"), ExtResource("19_rpmfv")])
+block_data = Array[ExtResource("2_1pnxm")]([ExtResource("10_6g7ov")])
 
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]
@@ -77,17 +53,18 @@ level_bounds = Rect2(0, 0, 224, 256)
 [node name="Visuals" type="Node2D" parent="." index="3"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
-tile_map_data = PackedByteArray("AAABAAIAAAABAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAAAAAAAAAABAAYAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAABAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAAGAAQAAAABAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAABAAAAAAABAAYAAAABAAAAAAACAAIAAAABAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAAAAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAABAAAAAAAEAAUAAAABAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAAAAAAAAAAFAAUAAAABAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAA=")
 tile_set = ExtResource("19_wxs5c")
 
 [node name="Doodads" type="TileMapLayer" parent="Visuals" index="1"]
 
 [node name="Destination" type="Area2D" parent="Visuals" index="2"]
-position = Vector2(176, 143)
+modulate = Color(1, 1, 1, 0.49411765)
+position = Vector2(112, 79)
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination" index="0"]
-shape = SubResource("CircleShape2D_3lsww")
+shape = SubResource("CircleShape2D_xoxp0")
 
 [node name="Flag" type="Sprite2D" parent="Visuals/Destination" index="1"]
 position = Vector2(9.536743e-07, -9.536743e-07)
@@ -99,24 +76,29 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAADAAQAAAAAAAAAAAADAAMAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
 tile_set = ExtResource("21_t2jpi")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQADAAAAAAAGAAQAAQADAAEAAAAGAAUAAQACAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQAAAAEAADAGAAQAAQADAAAAAAAGAAUAAQADAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
 tile_set = ExtResource("22_k7p4u")
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("23_gytkn")]
-position = Vector2(47.5, 143.5)
-facing_direction = Vector2(1, 0)
+[node name="Whiteboard" type="Sprite2D" parent="Visuals/YSorted" index="2"]
+position = Vector2(111.99999, 39)
+scale = Vector2(0.58, 0.58)
+texture = ExtResource("9_8v2pr")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="3" instance=ExtResource("23_gytkn")]
+position = Vector2(111.5, 207.5)
+facing_direction = Vector2(0, -1)
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("24_34rw5")
 base = NodePath("..")
 initial_properties = Dictionary[StringName, Variant]({
-&"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 47.5, 143.5)
+&"facing_direction": Vector2(0, -1),
+&"transform": Transform2D(1, 0, 0, 1, 111.5, 207.5)
 })
 
 [connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]

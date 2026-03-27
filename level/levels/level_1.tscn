@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=4 uid="uid://cm27s11d02y05"]
+[gd_scene load_steps=13 format=4 uid="uid://cm27s11d02y05"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_mict5"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_evbkj"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="2_wxnxd"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_lkp7l"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="3_m1y7l"]
+[ext_resource type="Texture2D" uid="uid://b36ecsgd36n11" path="res://world/assets/objects/whiteboard.png" id="4_lkp7l"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="4_p8f7k"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="5_2a3m5"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="6_l3j2e"]
@@ -14,28 +15,19 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
 [node name="Level1" instance=ExtResource("1_mict5")]
-instructions = "Get to the classroom door.
+instructions = "Welcome to UniCode! Your goal is to guide the robot to the red flag.
 
-Left-click to drag-and-drop blocks.
-Grab and scroll to pan and zoom.
-Right-click to copy.
+Programs always start from the \"begin code\" block. Open the Toolbox on the left, drag \"move forward\" blocks into the workspace, and snap it directly underneath the \"begin code\" block.
 
-Grab the environment to look around."
+When you're ready, press the Play button on the right to run your code!"
 intended_solution = "block: BeginBlock
   text: \"begin code\"
   children:
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\"
+      text: \"move forward\"
     - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\"
-    - block: MoveBlock
-      text: \"move {}\"
-      parameters:
-        - \"right\""
+      text: \"move forward\"
+"
 
 [node name="GenericBlockProvider" parent="." index="0"]
 block_data = Array[ExtResource("2_evbkj")]([ExtResource("3_lkp7l")])
@@ -49,7 +41,7 @@ required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
 
 [node name="Camera2D" parent="." index="2"]
 position = Vector2(112, 128)
-zoom = Vector2(3.2070313, 3.2070313)
+zoom = Vector2(2.565625, 2.565625)
 level_bounds = Rect2(0, 0, 224, 256)
 
 [node name="Visuals" type="Node2D" parent="." index="3"]
@@ -61,7 +53,7 @@ tile_set = ExtResource("3_m1y7l")
 [node name="Doodads" type="TileMapLayer" parent="Visuals" index="1"]
 
 [node name="Destination" type="Area2D" parent="Visuals" index="2"]
-position = Vector2(176, 175)
+position = Vector2(144, 175)
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination" index="0"]
@@ -85,7 +77,12 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQAAAAEAADAGAAQAAQADAAAAAAAGAAUAAQADAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
 tile_set = ExtResource("6_l3j2e")
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("7_nnkkk")]
+[node name="Whiteboard" type="Sprite2D" parent="Visuals/YSorted" index="2"]
+position = Vector2(111.99999, 39)
+scale = Vector2(0.58, 0.58)
+texture = ExtResource("4_lkp7l")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="3" instance=ExtResource("7_nnkkk")]
 position = Vector2(79.5, 175.5)
 facing_direction = Vector2(1, 0)
 

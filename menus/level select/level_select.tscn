@@ -1,11 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://cdilcamcaiut0"]
+[gd_scene load_steps=11 format=3 uid="uid://cdilcamcaiut0"]
 
 [ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_lhy6y"]
 [ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="1_ofcge"]
 [ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_soyww"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_lhy6y"]
 [ext_resource type="PackedScene" uid="uid://cm27s11d02y05" path="res://level/levels/level_1.tscn" id="4_ox6ee"]
-[ext_resource type="PackedScene" uid="uid://djpyxhdtoosj" path="res://level/levels/level_2.tscn" id="5_vfniy"]
+[ext_resource type="PackedScene" uid="uid://bolvxb6qtyiqr" path="res://level/levels/level_2.tscn" id="5_vfniy"]
+[ext_resource type="PackedScene" uid="uid://8j8tijmeo6mj" path="res://level/levels/level_3.tscn" id="6_vfniy"]
+[ext_resource type="PackedScene" uid="uid://djpyxhdtoosj" path="res://level/levels/level_4.tscn" id="7_nr7m0"]
+[ext_resource type="PackedScene" uid="uid://b7h4dgb6nwr7n" path="res://level/levels/level_5.tscn" id="8_nr7m0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_soyww"]
 shader = ExtResource("1_soyww")
@@ -30,7 +33,10 @@ color = Color(1, 1, 1, 0)
 script = ExtResource("1_lhy6y")
 button_level_configuration = {
 NodePath("MarginContainer/GridContainer/Button"): ExtResource("4_ox6ee"),
-NodePath("MarginContainer/GridContainer/Button2"): ExtResource("5_vfniy")
+NodePath("MarginContainer/GridContainer/Button2"): ExtResource("5_vfniy"),
+NodePath("MarginContainer/GridContainer/Button3"): ExtResource("6_vfniy"),
+NodePath("MarginContainer/GridContainer/Button4"): ExtResource("7_nr7m0"),
+NodePath("MarginContainer/GridContainer/Button5"): ExtResource("8_nr7m0")
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -90,7 +96,6 @@ layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
-disabled = true
 text = "3"
 
 [node name="Button4" type="Button" parent="MarginContainer/GridContainer"]
@@ -99,7 +104,6 @@ layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
-disabled = true
 text = "4"
 
 [node name="Button5" type="Button" parent="MarginContainer/GridContainer"]
@@ -108,7 +112,6 @@ layout_mode = 2
 theme = ExtResource("3_lhy6y")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
-disabled = true
 text = "5"
 
 [node name="Button6" type="Button" parent="MarginContainer/GridContainer"]
@@ -119,5 +122,43 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 25
 disabled = true
 text = "6"
+
+[node name="Button7" type="Button" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "7"
+
+[node name="Button8" type="Button" parent="MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(120, 85)
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 25
+disabled = true
+text = "8"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="PrevButton" type="Button" parent="MarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+text = "<"
+
+[node name="EmptySpace" type="Control" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_group_ = true
+
+[node name="NextButton" type="Button" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+text = ">"
 
 [connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]

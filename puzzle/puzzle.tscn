@@ -52,14 +52,14 @@ running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/Stop
 [node name="LevelCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
 initial_position = 1
-size = Vector2i(392, 218)
+size = Vector2i(514, 259)
 theme = ExtResource("2_xv3xb")
 
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
 offset_left = 24.0
 offset_top = 24.0
-offset_right = 368.0
-offset_bottom = 194.0
+offset_right = 490.0
+offset_bottom = 235.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30

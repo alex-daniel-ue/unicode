@@ -1,0 +1,102 @@
+[gd_scene load_steps=12 format=4 uid="uid://djpyxhdtoosj"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_nfari"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_kmydm"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="10_mnq6v"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="20_syk1k"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="21_sfu7m"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="22_121gl"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="23_7n22g"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="24_ohvf6"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="25_h8fq0"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="26_wl6wu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3lsww"]
+
+[node name="Level4" instance=ExtResource("1_nfari")]
+instructions = "The path to the flag is getting narrow! To navigate this obstacle course, you will need to combine multiple turns and movements in the correct order.
+
+If the robot hits a wall or a piece of furniture, the program will fail. If you get stuck, try using the AI Assistant tab on the left for a hint, or slow down the execution speed using the Speed button to see exactly where your logic goes wrong."
+intended_solution = "block: BeginBlock
+  text: \"begin code\"
+  children:
+    - block: TurnBlock
+      text: \"turn {}\"
+      parameters:
+        - \"right\"
+    - block: MoveBlock
+      text: \"move forward\"
+    - block: MoveBlock
+      text: \"move forward\"
+    - block: TurnBlock
+      text: \"turn {}\"
+      parameters:
+        - \"left\"
+    - block: MoveBlock
+      text: \"move forward\"
+    - block: MoveBlock
+      text: \"move forward\"
+"
+
+[node name="GenericBlockProvider" parent="." index="0"]
+block_data = Array[ExtResource("2_kmydm")]([ExtResource("10_mnq6v")])
+
+[node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
+goals = [NodePath("DestinationGoal")]
+
+[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity")]
+script = ExtResource("20_syk1k")
+required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+
+[node name="Camera2D" parent="." index="2"]
+position = Vector2(80, 96)
+zoom = Vector2(3.2070313, 3.2070313)
+level_bounds = Rect2(-64, 0, 288, 192)
+
+[node name="Visuals" type="Node2D" parent="." index="3"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAABAAQAAAABAAAAAAACAAQAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAD//wIAAAABAAAAAAD//wMAAAAAAAAAAAD//wQAAAABAAAAAAA=")
+tile_set = ExtResource("21_sfu7m")
+
+[node name="Doodads" type="TileMapLayer" parent="Visuals" index="1"]
+
+[node name="Destination" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(112, 79)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination" index="0"]
+shape = SubResource("CircleShape2D_3lsww")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/Destination" index="1"]
+position = Vector2(9.536743e-07, -9.536743e-07)
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("22_121gl")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="3"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAIAAAAAAAAAAAAEAAQAAAAAAAAAAAD//wQAAAAAAAAAAAD//wIAAAAAAAAAAAD//wMAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAA=")
+tile_set = ExtResource("23_7n22g")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAMAAQACAAAAADACAAMAAQACAAAAACABAAIAAQAAAAEAAAACAAIAAQAAAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAAAAEAAQABAAEAAAAAAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAACAAEAAQAAAAEAAAABAAEAAQAAAAEAAAACAAAAAQAAAAAAAAABAAAAAQAAAAAAABD//wEAAQABAAEAAAD//wAAAQABAAAAAAD+/wAAAQAAAAAAAAD+/wEAAQAAAAEAAAD+/wIAAQAAAAEAAAD+/wMAAQAAAAEAAAD+/wQAAQAAAAEAAAD+/wUAAQACAAAAADD//wUAAQAAAAEAAFAAAAUAAQAAAAEAAFABAAUAAQAAAAEAAFACAAUAAQAAAAEAAFADAAUAAQAAAAEAAFAEAAUAAQAAAAEAAFAFAAUAAQAAAAEAAFAGAAUAAQACAAAAACAGAAQAAQAAAAEAAAAGAAMAAQAAAAEAAAAGAAIAAQAAAAEAAAAGAAEAAQAAAAEAAAAGAAAAAQAAAAAAABA=")
+tile_set = ExtResource("24_ohvf6")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("25_h8fq0")]
+position = Vector2(47.5, 143.5)
+facing_direction = Vector2(0, -1)
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
+script = ExtResource("26_wl6wu")
+base = NodePath("..")
+initial_properties = Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(0, -1),
+&"transform": Transform2D(1, 0, 0, 1, 47.5, 143.5)
+})
+
+[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
+[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]
