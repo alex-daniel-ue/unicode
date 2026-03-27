@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=4 uid="uid://cm27s11d02y05"]
+[gd_scene load_steps=12 format=4 uid="uid://cm27s11d02y05"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_mict5"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_evbkj"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="2_wxnxd"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_lkp7l"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="3_m1y7l"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="4_p8f7k"]
 [ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="5_2a3m5"]
@@ -34,6 +36,9 @@ intended_solution = "block: BeginBlock
       text: \"move {}\"
       parameters:
         - \"right\""
+
+[node name="GenericBlockProvider" parent="." index="0"]
+block_data = Array[ExtResource("2_evbkj")]([ExtResource("3_lkp7l")])
 
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]
