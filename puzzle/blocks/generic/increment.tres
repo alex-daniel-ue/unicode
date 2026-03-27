@@ -7,6 +7,7 @@
 [resource]
 script = ExtResource("1_b737o")
 name = "IncrementBlock"
+color = Color(0.654902, 0.54509807, 0.98039216, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "increment {variable: string}"

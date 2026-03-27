@@ -12,7 +12,7 @@ type = 4
 [resource]
 script = ExtResource("3_oaum1")
 name = "WhileBlock"
-color = null
+color = Color(0.5803922, 0.6392157, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
 nested = SubResource("Resource_7frqf")

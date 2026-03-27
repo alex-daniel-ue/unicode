@@ -37,7 +37,7 @@ func _update(delta: float) -> void:
 			affected.self_modulate = affected.self_modulate.lerp(final_target, delta * COLOR_CHANGE_MULT)
 
 func highlight() -> void:
-	target_color = highlight_color
+	target_color = saturate(target_color)
 	Interpreter.block_highlighted.emit(base)
 
 func pulse() -> void:
@@ -46,7 +46,7 @@ func pulse() -> void:
 	reset()
 
 func reset() -> void:
-	target_color = base.data.color 
+	target_color = base.data.color
 
 func set_error(to: bool) -> void:
 	erroring = to
@@ -55,3 +55,12 @@ func set_error(to: bool) -> void:
 
 func start_error_timer() -> void:
 	error_timer.start(ERROR_DURATION)
+
+func saturate(color: Color) -> Color:
+	var col := color
+	if col.s < 0.1:
+		col.v = clamp(col.v + 0.2, 0.0, 1.0)
+	else:
+		col.s = clamp(col.s + 0.35, 0.0, 1.0)
+		col.v = clamp(col.v + 0.1, 0.0, 1.0)
+	return col

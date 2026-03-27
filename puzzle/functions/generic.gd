@@ -52,11 +52,11 @@ func _set_var(this: Block) -> void:
 
 ## text: increment {variable}
 func _increment(this: Block) -> void:
-	__crement(this, 1)
+	await __crement(this, 1)
 
 ## text: decrement {variable}
 func _decrement(this: Block) -> void:
-	__crement(this, -1)
+	await __crement(this, -1)
 
 func __crement(this: Block, value: int) -> void:
 	var args := await this.function.eval_args([this.function.Argument.STRING_NAME])

@@ -118,5 +118,43 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
+[node name="PopupPanel" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(470, 159)
+visible = true
+content_scale_factor = 0.8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 548.0
+offset_bottom = 155.0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Are you sure you want to quit?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="YesButton" type="Button" parent="PopupPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="PopupPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+text = "No"
+
 [connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="PopupPanel" method="show"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/HBoxContainer/YesButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/HBoxContainer/NoButton" to="PopupPanel" method="hide"]

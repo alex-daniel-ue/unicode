@@ -2,16 +2,16 @@ extends BlockVisualComponent
 
 
 const TYPE_COLORS: Dictionary[int, Color] = {
-	TYPE_NIL : Color("#D8D8D8"),
-	TYPE_STRING_NAME : Color("eb9ef0ff"),
-	TYPE_STRING : Color("#FFBA8F"),
-	TYPE_INT : Color("#75BAFF"),
-	TYPE_FLOAT : Color("#ADADFF"),
+	TYPE_NIL : Color("#CBD5E1"),
+	TYPE_STRING_NAME : Color("#F472B6"),
+	TYPE_STRING : Color("#FDBA74"),
+	TYPE_INT : Color("#93C5FD"),
+	TYPE_FLOAT : Color("#C4B5FD"),
 }
 
 const BOOL_COLORS: Dictionary[bool, Color] = {
-	true: Color("#4ADE80"),
-	false: Color("#F87171")
+	true: Color("#86EFAC"),
+	false: Color("#FCA5A5")
 }
 
 

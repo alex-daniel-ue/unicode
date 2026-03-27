@@ -20,7 +20,6 @@ _socket_ref = SubResource("Resource_dsi4v")
 [sub_resource type="Resource" id="Resource_dsa6u"]
 script = ExtResource("2_8ids4")
 name = "ValueEditableEnumBlock"
-color = null
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_dsi4v")
@@ -36,7 +35,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("2_8ids4")
 name = "MoveBlock"
-color = null
+color = Color(0.9843137, 0.57254905, 0.23529412, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Robot"
 syntax = "move {direction: string}"
