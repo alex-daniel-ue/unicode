@@ -4,13 +4,13 @@
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_evbkj"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="2_wxnxd"]
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_lkp7l"]
-[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="3_m1y7l"]
 [ext_resource type="Texture2D" uid="uid://b36ecsgd36n11" path="res://world/assets/objects/whiteboard.png" id="4_lkp7l"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="4_p8f7k"]
-[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="5_2a3m5"]
-[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="6_l3j2e"]
+[ext_resource type="TileSet" uid="uid://ttuqrx52n1oi" path="res://world/tilesets/tiles.tres" id="5_lkp7l"]
+[ext_resource type="TileSet" uid="uid://cl3p8m4jeamof" path="res://world/tilesets/chair.tres" id="7_hvbj8"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="7_nnkkk"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="8_1rlyd"]
+[ext_resource type="TileSet" uid="uid://1w8ax1i7em80" path="res://world/tilesets/walls.tres" id="9_c0s8q"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
@@ -47,8 +47,8 @@ level_bounds = Rect2(0, 0, 224, 256)
 [node name="Visuals" type="Node2D" parent="." index="3"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
-tile_map_data = PackedByteArray("AAABAAIAAAABAAAAAAABAAMAAAABAAAAAAABAAQAAAABAAAAAAABAAUAAAAAAAAAAAABAAYAAAABAAAAAAACAAIAAAAAAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAABAAAAAAACAAYAAAAAAAAAAAADAAIAAAAAAAAAAAADAAMAAAABAAAAAAADAAQAAAABAAAAAAADAAUAAAABAAAAAAADAAYAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAABAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAFAAQAAAABAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAABAAAAAAAGAAUAAQABAAEAAAA=")
-tile_set = ExtResource("3_m1y7l")
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAEAAAABAAMAAQAAAAIAAAABAAQAAQAAAAIAAAABAAUAAQAAAAIAAAACAAIAAQABAAEAAAACAAMAAQACAAIAAAACAAQAAQABAAEAAAACAAUAAQABAAEAAAACAAYAAQACAAMAAAADAAIAAQABAAEAAAADAAMAAQACAAEAAAADAAQAAQABAAEAAAADAAUAAQACAAIAAAADAAYAAQABAAMAAAAEAAIAAQABAAEAAAAEAAMAAQACAAEAAAAEAAQAAQABAAEAAAAEAAUAAQABAAEAAAAEAAYAAQACAAMAAAAFAAIAAQABAAEAAAAFAAMAAQABAAEAAAAFAAQAAQABAAEAAAAFAAUAAQABAAEAAAAFAAYAAQABAAMAAAAGAAUAAQABAAEAAAABAAYAAQAAAAMAAAA=")
+tile_set = ExtResource("5_lkp7l")
 
 [node name="Doodads" type="TileMapLayer" parent="Visuals" index="1"]
 
@@ -69,18 +69,19 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
-tile_set = ExtResource("5_2a3m5")
+tile_map_data = PackedByteArray("AAACAAMAAQAAAAAAAAAEAAMAAQACAAAAAAAFAAQAAQABAAAAAAAFAAMAAgAAAAAAAAAEAAQAAgAAAAAAAAACAAQAAgAAAAAAAAABAAMAAgAAAAAAAAABAAQAAQABAAAAAAA=")
+tile_set = ExtResource("7_hvbj8")
 
-[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAAAADABAAAAAQABAAAAAAABAAEAAQABAAEAAAABAAcAAQAAAAEAAFACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQAAAAEAAFADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQAAAAEAAFAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQAAAAEAAFAGAAAAAQAAAAAAABAGAAEAAQAAAAEAAAAGAAIAAQAAAAEAADAGAAMAAQAAAAEAADAGAAQAAQADAAAAAAAGAAUAAQADAAEAAAAGAAYAAQACAAEAAAAGAAcAAQACAAAAAFA=")
-tile_set = ExtResource("6_l3j2e")
-
-[node name="Whiteboard" type="Sprite2D" parent="Visuals/YSorted" index="2"]
+[node name="Whiteboard" type="Sprite2D" parent="Visuals/YSorted" index="1"]
+z_index = 1
 position = Vector2(111.99999, 39)
 scale = Vector2(0.58, 0.58)
 texture = ExtResource("4_lkp7l")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAAAAcAAQACAAEAABABAAAAAQADAAAAAAABAAEAAQADAAEAAAABAAcAAQABAAAAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAACAAcAAQABAAAAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAADAAcAAQABAAAAAAAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAAEAAcAAQABAAAAAAAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAFAAcAAQABAAAAAAAGAAAAAQAAAAAAABAGAAEAAQAAAAEAABAGAAIAAQAAAAEAABAGAAMAAQAAAAEAABAGAAQAAQAAAAEAABAGAAYAAQAAAAEAABAGAAcAAQACAAEAAAAGAAUAAQAAAAEAABA=")
+tile_set = ExtResource("9_c0s8q")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="3" instance=ExtResource("7_nnkkk")]
 position = Vector2(79.5, 175.5)

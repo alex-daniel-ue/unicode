@@ -74,9 +74,9 @@ texture = ExtResource("20_4sxj1")
 [node name="YSorted" type="Node2D" parent="Visuals" index="3"]
 y_sort_enabled = true
 
-[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+[node name="Furniture2" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAAQAAwAAAAAAAAACAAQAAwAAAAAAAAAEAAQAAwAAAAAAAAAFAAQAAwAAAAAAAAAFAAMAAwAAAAAAAAAEAAMAAwAAAAAAAAACAAMAAwAAAAAAAAABAAMAAwAAAAAAAAA=")
 tile_set = ExtResource("21_t2jpi")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
