@@ -50,6 +50,8 @@ const GROUPS := {
 @export var draggable := true
 @export var placeable := true
 @export var top_notch := true
+@export var trashable := true
+@export var copyable := true
 
 @export_group("Text", "text_")
 @export var text: String:

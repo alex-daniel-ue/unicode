@@ -90,16 +90,52 @@ func handle_zooming(event: InputEvent) -> void:
 	global_position += global_mouse_before - global_mouse_after
 
 func clear() -> void:
+	var begin := get_parent()._get_begin() as CapBlock
+	if begin == null:
+		return
+	
+	var inner_survivors := _collect_survivors(begin, false)
+	
+	var loose_survivors: Array[Block]
+	var loose_positions: PackedVector2Array
 	for child in get_children():
-		if not child is Block:
+		if child == begin or not (child is Block):
 			continue
-		
-		if not child is CapBlock:
+		for block in _collect_survivors(child as Block, true):
+			loose_survivors.append(block)
+			loose_positions.append((child as Block).position)
+	
+	# Orphan before freeing ancestors, so a survivor nested in a doomed block lives.
+	for block in inner_survivors:
+		block.orphan()
+	for block in loose_survivors:
+		block.orphan()
+	
+	for child in get_children():
+		if child is Block and child != begin:
 			child.queue_free()
+	for inner_block in begin.get_blocks():
+		inner_block.queue_free()
+	
+	for block in inner_survivors:
+		begin.mouth.add_child(block)
+	
+	for i in loose_survivors.size():
+		add_child(loose_survivors[i])
+		loose_survivors[i].position = loose_positions[i]
+
+func _collect_survivors(root: Block, include_root: bool) -> Array[Block]:
+	var is_kept := func(b: Block) -> bool: return not b.data.trashable
+	var found: Array[Block]
+	
+	for block in root.get_all_blocks(include_root):
+		if block.data.trashable or not Block.IS_SOLID.call(block):
 			continue
-		
-		for inner_block in child.get_blocks():
-			inner_block.queue_free()
+		if block.get_parent_matching(is_kept, false) != null:
+			continue
+		found.append(block)
+	
+	return found
 
 func _on_block_highlighted(block: Block) -> void:
 	if is_panning:

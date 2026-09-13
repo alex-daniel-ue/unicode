@@ -1,14 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://cdilcamcaiut0"]
+[gd_scene load_steps=10 format=3 uid="uid://cdilcamcaiut0"]
 
 [ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_lhy6y"]
 [ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="1_ofcge"]
 [ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="1_soyww"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_lhy6y"]
-[ext_resource type="PackedScene" uid="uid://cm27s11d02y05" path="res://level/levels/level_1.tscn" id="4_ox6ee"]
-[ext_resource type="PackedScene" uid="uid://bolvxb6qtyiqr" path="res://level/levels/level_2.tscn" id="5_vfniy"]
-[ext_resource type="PackedScene" uid="uid://8j8tijmeo6mj" path="res://level/levels/level_3.tscn" id="6_vfniy"]
+[ext_resource type="PackedScene" uid="uid://f6l1svd73s66" path="res://level/levels/sel_runner_three_rooms.tscn" id="5_nr7m0"]
 [ext_resource type="PackedScene" uid="uid://djpyxhdtoosj" path="res://level/levels/level_4.tscn" id="7_nr7m0"]
 [ext_resource type="PackedScene" uid="uid://b7h4dgb6nwr7n" path="res://level/levels/level_5.tscn" id="8_nr7m0"]
+[ext_resource type="PackedScene" uid="uid://2l2o3laaml6j" path="res://level/levels/it_3.tscn" id="8_w845f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_soyww"]
 shader = ExtResource("1_soyww")
@@ -32,11 +31,11 @@ theme = ExtResource("3_lhy6y")
 color = Color(1, 1, 1, 0)
 script = ExtResource("1_lhy6y")
 button_level_configuration = {
-NodePath("MarginContainer/GridContainer/Button"): ExtResource("4_ox6ee"),
-NodePath("MarginContainer/GridContainer/Button2"): ExtResource("5_vfniy"),
-NodePath("MarginContainer/GridContainer/Button3"): ExtResource("6_vfniy"),
+NodePath("MarginContainer/GridContainer/Button2"): ExtResource("5_nr7m0"),
+NodePath("MarginContainer/GridContainer/Button3"): ExtResource("5_nr7m0"),
 NodePath("MarginContainer/GridContainer/Button4"): ExtResource("7_nr7m0"),
-NodePath("MarginContainer/GridContainer/Button5"): ExtResource("8_nr7m0")
+NodePath("MarginContainer/GridContainer/Button5"): ExtResource("8_nr7m0"),
+NodePath("MarginContainer/GridContainer/Button"): ExtResource("8_w845f")
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

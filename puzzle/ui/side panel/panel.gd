@@ -42,6 +42,17 @@ func show_content(control: Control) -> void:
 	
 	shown_content = control
 
+## Opens the panel on `control`. Unlike show_content(), calling this on the
+## already-visible tab won't toggle the panel shut.
+func focus_content(control: Control) -> void:
+	if not is_open:
+		show_menu(true)
+	
+	for child in get_children():
+		child.visible = child == control
+	
+	shown_content = control
+
 func _update_expand_size() -> void:
 	expand_size = get_viewport_rect().size.x * VIEWPORT_RATIO
 	if is_open:

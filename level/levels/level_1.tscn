@@ -14,7 +14,7 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
-[node name="Level1" instance=ExtResource("1_mict5")]
+[node name="Level1" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_mict5")]
 instructions = "Welcome to UniCode! Your goal is to guide the robot to the red flag.
 
 Programs always start from the \"begin code\" block. Open the Toolbox on the left, drag \"move forward\" blocks into the workspace, and snap it directly underneath the \"begin code\" block.
@@ -28,21 +28,10 @@ intended_solution = "block: BeginBlock
     - block: MoveBlock
       text: \"move forward\"
 "
+room_goals = [NodePath("GoalManager")]
 
-[node name="GenericBlockProvider" parent="." index="0"]
+[node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("2_evbkj")]([ExtResource("3_lkp7l")])
-
-[node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
-goals = [NodePath("DestinationGoal")]
-
-[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity")]
-script = ExtResource("2_wxnxd")
-required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
-
-[node name="Camera2D" parent="." index="2"]
-position = Vector2(112, 128)
-zoom = Vector2(2.565625, 2.565625)
-level_bounds = Rect2(0, 0, 224, 256)
 
 [node name="Visuals" type="Node2D" parent="." index="3"]
 
@@ -89,10 +78,23 @@ facing_direction = Vector2(1, 0)
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("8_1rlyd")
 base = NodePath("..")
-initial_properties = Dictionary[StringName, Variant]({
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
 &"transform": Transform2D(1, 0, 0, 1, 79.5, 175.5)
-})
+})])
 
-[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
-[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]
+[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area")]
+script = ExtResource("2_wxnxd")
+required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../Visuals/Destination")
+permanent = false
+
+[node name="Camera2D" parent="." index="5"]
+position = Vector2(112, 128)
+zoom = Vector2(2.565625, 2.565625)
+level_bounds = Rect2(0, 0, 224, 256)
+
+[connection signal="completion_changed" from="GoalManager/DestinationGoal" to="GoalManager" method="_goal_completion_changed"]
+
+[editable path="LevelBlockPreset/BeginBlock"]

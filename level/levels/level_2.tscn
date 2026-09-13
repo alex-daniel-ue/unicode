@@ -14,7 +14,7 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
-[node name="Level2" instance=ExtResource("1_yqlds")]
+[node name="Level2" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_yqlds")]
 instructions = "The flag is much further away this time! While you can drag and drop separate blocks from the toolbox, there is a faster way.
 
 Right-Click any block already in your workspace to create a copy of it. Use this shortcut to quickly fill your program with blocks.
@@ -34,6 +34,7 @@ intended_solution = "block: BeginBlock
     - block: MoveBlock
       text: \"move forward\"
 "
+room_goals = [NodePath("GoalManager")]
 
 [node name="GenericBlockProvider" parent="." index="0"]
 block_data = Array[ExtResource("2_1pnxm")]([ExtResource("10_6g7ov")])
@@ -41,9 +42,10 @@ block_data = Array[ExtResource("2_1pnxm")]([ExtResource("10_6g7ov")])
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]
 
-[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity")]
+[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area")]
 script = ExtResource("18_lufox")
 required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../Visuals/Destination")
 
 [node name="Camera2D" parent="." index="2"]
 position = Vector2(112, 128)
@@ -96,10 +98,8 @@ facing_direction = Vector2(0, -1)
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("24_34rw5")
 base = NodePath("..")
-initial_properties = Dictionary[StringName, Variant]({
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(0, -1),
 &"transform": Transform2D(1, 0, 0, 1, 111.5, 207.5)
-})
-
-[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
-[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]
+})])

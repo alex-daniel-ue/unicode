@@ -3,52 +3,49 @@ class_name Resettable
 extends Node
 
 
-@warning_ignore("unused_private_class_variable")
-@export_tool_button("Save initial state") var _save_initial_btn := save_initial
+@export_tool_button("Save snapshot for room above") var _save_btn := save_snapshot
 
 @export var base: Node
-@export var initial_properties: Dictionary[StringName, Variant]:
-	set(value):
-		initial_properties = value
-		if Engine.is_editor_hint():
-			update_configuration_warnings()
+@export var editing_room := 0
+@export var tracked_properties: PackedStringArray
+@export var room_snapshots: Array[Dictionary]
 
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		base = get_parent()
-		save_initial()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray
-
-	for prop in initial_properties:
+	for prop in tracked_properties:
 		if not prop in base:
 			warnings.append("Base has no property named '%s'." % prop)
-			continue
-		
-		var base_type := Core.get_type_string(base.get(prop))
-		var val_type := Core.get_type_string(initial_properties[prop])
-		if base_type != val_type:
-			warnings.append("Property '%s' type mismatch, must be %s (%s)." % [prop, base_type, val_type])
-	
 	return warnings
 
-
-func save_initial() -> void:
-	for prop in initial_properties:
-		if prop in base:
-			initial_properties[prop] = base.get(prop)
-		else:
-			push_warning("Base has no property '%s', Cannot save." % prop)
+func save_snapshot() -> void:
+	while room_snapshots.size() <= editing_room:
+		room_snapshots.append({})
 	
+	var snap: Dictionary[StringName, Variant] = {}
+	for prop in tracked_properties:
+		if prop in base:
+			snap[prop] = base.get(prop)
+		else:
+			push_warning("Base has no property '%s', cannot save." % prop)
+	
+	room_snapshots[editing_room] = snap
 	notify_property_list_changed()
 	if Engine.is_editor_hint():
-		print("(%s) Initial state saved." % base.name)
+		print("(%s) Snapshot for room %d saved." % [base.name, editing_room])
 
-func reset() -> void:
-	for prop in initial_properties:
+func reset(room_index: int) -> void:
+	if room_index >= room_snapshots.size():
+		push_warning("(%s) No snapshot saved for room %d." % [base.name, room_index])
+		return
+	
+	var snap: Dictionary = room_snapshots[room_index]
+	for prop in snap:
 		if prop in base:
-			base.set(prop, initial_properties[prop])
+			base.set(prop, snap[prop])
 		elif not Engine.is_editor_hint():
 			push_warning("Base has no property '%s', cannot reset." % prop)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmxfefkbr2y3a"]
+[gd_scene load_steps=10 format=3 uid="uid://cmxfefkbr2y3a"]
 
 [ext_resource type="Script" uid="uid://dlbyi8gfflhff" path="res://level/components/block_provider.gd" id="1_2oojt"]
 [ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="1_odhmp"]
@@ -6,26 +6,37 @@
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_bwqil"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="5_5f2gm"]
 [ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="6_yuct4"]
+[ext_resource type="Resource" uid="uid://buc1h3ks738pt" path="res://level/objects/entities/robot/blocks/ahead_is.tres" id="7_yeoyj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bwqil"]
 size = Vector2(28, 28)
 
-[node name="RobotCharacter" type="AnimatableBody2D" node_paths=PackedStringArray("sprite", "collision_shape")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yuct4"]
+size = Vector2(28, 28)
+
+[node name="RobotCharacter" type="AnimatableBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "probe")]
 script = ExtResource("1_odhmp")
 sprite = NodePath("AnimatedSprite2D")
 collision_shape = NodePath("CollisionShape2D")
+probe = NodePath("ShapeCast2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-0.5, 0.5)
 scale = Vector2(0.1, 0.1)
 sprite_frames = ExtResource("1_ql3ht")
-animation = &"idle_left"
+animation = &"idle_backward"
 autoplay = "idle_backward"
-frame_progress = 0.7450088
+frame_progress = 0.99689585
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_bwqil")
 
 [node name="BlockProvider" type="Node" parent="."]
 script = ExtResource("1_2oojt")
-block_data = Array[ExtResource("4_bwqil")]([ExtResource("5_5f2gm"), ExtResource("6_yuct4")])
+block_data = Array[ExtResource("4_bwqil")]([ExtResource("5_5f2gm"), ExtResource("6_yuct4"), ExtResource("7_yeoyj")])
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+shape = SubResource("RectangleShape2D_yuct4")
+target_position = Vector2(0, 0)
+max_results = 4
+collide_with_areas = true

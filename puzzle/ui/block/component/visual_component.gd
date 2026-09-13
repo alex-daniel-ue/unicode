@@ -2,7 +2,8 @@ class_name BlockVisualComponent
 extends BlockBaseComponent
 
 
-const COLOR_CHANGE_MULT := 10.0
+const PULSE_DURATION := 0.4
+const COLOR_CHANGE_MULT := 20.0
 const ERROR_SPD_MULT := 4.0
 const ERROR_DURATION := 2.0
 
@@ -40,9 +41,9 @@ func highlight() -> void:
 	target_color = saturate(target_color)
 	Interpreter.block_highlighted.emit(base)
 
-func pulse() -> void:
+func pulse(duration := PULSE_DURATION) -> void:
 	highlight()
-	await Game.sleep(Interpreter.interpret_delay)
+	await Game.sleep(duration)
 	reset()
 
 func reset() -> void:

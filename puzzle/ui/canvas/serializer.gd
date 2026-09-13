@@ -6,24 +6,30 @@ extends Node
 
 
 func yaml_serialize() -> String:
-	var yaml_documents: PackedStringArray
-	var begin_blocks: Array[CapBlock]
+	var begin: CapBlock = null
+	var detached: Array[Block]
 	
 	for child in canvas.get_children():
-		if child is CapBlock and child.is_type(NestedData.Type.BEGIN):
-			begin_blocks.append(child)
+		if not (child is Block):
+			continue
+		if begin == null and child is CapBlock and (child as CapBlock).is_type(NestedData.Type.BEGIN):
+			begin = child as CapBlock
+			continue
+		detached.append(child as Block)
 	
-	if begin_blocks.is_empty():
-		return "# No 'begin' block found on canvas."
+	var lines: PackedStringArray
 	
-	for i in range(begin_blocks.size()):
-		if i > 0:
-			yaml_documents.append("---")
-		
-		var block_string := _serialize_block(begin_blocks[i])
-		yaml_documents.append(block_string)
+	if begin == null:
+		lines.append("# No 'begin' block found on canvas.")
+	else:
+		lines.append(_serialize_block(begin))
 	
-	return "\n".join(yaml_documents)
+	if not detached.is_empty():
+		lines.append("detached:  # loose on the canvas, not part of the program")
+		for block in detached:
+			lines.append(_serialize_list_item(block))
+	
+	return "\n".join(lines)
 
 
 func _serialize_block(block: Block) -> String:

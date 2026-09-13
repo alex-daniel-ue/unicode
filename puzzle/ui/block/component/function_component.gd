@@ -18,9 +18,9 @@ const ERROR_SOUND := preload("res://audio/fail.mp3")
 ##    method of the specific Block script.
 ## Note: Providing only a script without a method is invalid and has no designated type.
 
-var _function: Callable:
+@export var _function: Callable:
 	set = set_func
-var object: Node
+@export var object: Node
 
 
 func run() -> Variant:
@@ -51,13 +51,12 @@ func is_initialized() -> bool:
 func unwrap(value: Variant) -> Variant:
 	if typeof(value) != TYPE_STRING_NAME:
 		return value
-		
-	var parent := base.get_parent_matching(Block.IS_NESTED, false) as NestedBlock
-	if not parent.scope.has(value):
-		error("Variable '%s' doesn't exist in the current scope!" % value)
+	
+	if not Interpreter.has_var(value):
+		error("Variable '%s' doesn't exist." % value)
 		return null
 	
-	return parent.scope[value]
+	return Interpreter.read_var(value)
 
 func eval_args(types: Array[PackedInt32Array]) -> Array:
 	var evaluated: Array
@@ -66,7 +65,7 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 	for block in base.text.get_blocks():
 		if not block.visible: continue
 		
-		await block.visual.pulse()
+		await Interpreter.step(block)
 		if Interpreter.interrupted: return []
 		
 		var value: Variant = await block.function.run()
@@ -91,11 +90,7 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 func error(message: String) -> void:
 	Interpreter.interrupted = true
 	
-	var current_scope: Dictionary[StringName, Variant]
-	var parent_nested := base.get_parent_matching(Block.IS_NESTED) as NestedBlock
-	if parent_nested != null:
-		current_scope = parent_nested.scope.duplicate()
-	
+	var current_scope := Interpreter.flatten_scopes()
 	var trace: PackedStringArray
 	var current := base.get_parent_block()
 	while current != null:

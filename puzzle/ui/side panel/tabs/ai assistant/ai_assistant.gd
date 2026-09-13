@@ -54,6 +54,8 @@ var in_timeout := false
 
 
 func _ready() -> void:
+	http_request.timeout = 20.
+	
 	_reset_chat()
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 
@@ -119,7 +121,7 @@ func _send_api_request(msg: String) -> void:
 	var level_instructions := "N/A"
 	var intended_solution := "N/A"
 	if is_instance_valid(Game.level):
-		level_instructions = Game.level.instructions
+		level_instructions = Game.level.description.get_raw()
 		intended_solution = Game.level.intended_solution
 	
 	var output_log := "N/A"
@@ -154,7 +156,7 @@ func _send_api_request(msg: String) -> void:
 	
 	var last_parts: Array[Dictionary] = [{text = msg}]
 	
-	var base64_image := _get_viewport_base64_image()
+	var base64_image := await _get_viewport_base64_image()
 	if not base64_image.is_empty():
 		last_parts.append({
 			inline_data = {
@@ -175,6 +177,7 @@ func _send_api_request(msg: String) -> void:
 	
 	var headers := ["Content-Type: application/json"]
 	var json_payload := JSON.stringify(payload)
+	print(json_payload)
 	
 	http_request.request(API_URL, headers, HTTPClient.METHOD_POST, json_payload)
 
@@ -182,23 +185,51 @@ func _get_available_blocks_doc() -> String:
 	if not is_instance_valid(Game.level):
 		return "N/A"
 	
-	var block_definitions: PackedStringArray
-	var seen_blocks: Dictionary  # Used as Set
+	var sections: PackedStringArray
 	
-	for block in Game.level.get_blocks():
-		if block.data.toolbox and not seen_blocks.has(block.data.name):
-			var s = block.data.syntax if not block.data.syntax.is_empty() else block.data.text
-			var d = block.data.description if not block.data.description.is_empty() else "No description."
-			block_definitions.append("- %s: %s" % [s, d])
-			seen_blocks[block.data.name] = true
+	var toolbox_lines := _format_block_data(
+		Game.level.get_block_data(),
+		func(data: BlockData) -> bool: return data.toolbox
+	)
+	sections.append(
+		"\n".join(toolbox_lines) if not toolbox_lines.is_empty()
+		else "(none - everything this level needs is already on the canvas)"
+	)
 	
-	return "\n".join(block_definitions)
+	# Presets are filtered on syntax rather than on `toolbox`, because
+	# get_preset() sets toolbox = false on every block it hands over, and because
+	# the walk also turns up parameter sockets and the Begin block, none of which
+	# are authored vocabulary. Scaffolding has no syntax; real blocks do.
+	var preset_lines := _format_block_data(
+		Game.level.get_preset_block_data(),
+		func(data: BlockData) -> bool: return not data.syntax.is_empty()
+	)
+	if not preset_lines.is_empty():
+		sections.append(
+			"\nAlready on the canvas and locked "
+			+ "(the student cannot move, copy or delete these):\n"
+			+ "\n".join(preset_lines)
+		)
+	
+	return "\n".join(sections)
+
+func _format_block_data(all_data: Array[BlockData], include: Callable) -> PackedStringArray:
+	var lines: PackedStringArray
+	var seen: Dictionary
+	for data in all_data:
+		if seen.has(data.name) or not include.call(data):
+			continue
+		seen[data.name] = true
+		var s := data.syntax if not data.syntax.is_empty() else data.text
+		var d := data.description if not data.description.is_empty() else "No description."
+		lines.append("- %s: %s" % [s, d])
+	return lines
 
 func _get_viewport_base64_image() -> String:
 	if not (is_instance_valid(Game.level) and is_instance_valid(puzzle.level_viewport)):
 		return ""
 	
-	Game.level.camera.frame(Vector2.ZERO)
+	await RenderingServer.frame_post_draw
 	
 	var img := puzzle.level_viewport.get_texture().get_image()
 	if img == null or img.is_empty():
@@ -258,6 +289,11 @@ func _on_request_completed(
 	
 	if not err_msg.is_empty():
 		puzzle.notif.push(err_msg, Notification.Type.ERROR)
+		_flag_latest_user_message()
+		return
+	
+	if typeof(response_json) != TYPE_DICTIONARY:
+		puzzle.notif.push("Received an unreadable response from the server.", Notification.Type.ERROR)
 		_flag_latest_user_message()
 		return
 	

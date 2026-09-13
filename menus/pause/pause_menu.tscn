@@ -6,16 +6,16 @@
 [node name="PauseMenu" type="PopupPanel"]
 oversampling_override = 1.0
 initial_position = 2
-size = Vector2i(328, 276)
+size = Vector2i(328, 292)
 visible = true
 theme = ExtResource("1_8vgpe")
 script = ExtResource("2_n5dtg")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 24.0
-offset_top = 20.0
-offset_right = 304.0
-offset_bottom = 248.0
+offset_left = 32.0
+offset_top = 28.0
+offset_right = 296.0
+offset_bottom = 256.0
 theme_override_constants/separation = 8
 alignment = 1
 
@@ -29,6 +29,7 @@ theme_override_font_sizes/font_size = 18
 text = "Resume"
 
 [node name="TutorialsButton" type="Button" parent="VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(170, 40)
 layout_mode = 2
 size_flags_horizontal = 4

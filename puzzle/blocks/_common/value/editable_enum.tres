@@ -23,6 +23,7 @@ value = SubResource("Resource_mk5nd")
 draggable = false
 placeable = false
 top_notch = false
+copyable = false
 Type/value = SubResource("Resource_mk5nd")
 Type/socket = SubResource("Resource_5vdka")
 Function/method = &""

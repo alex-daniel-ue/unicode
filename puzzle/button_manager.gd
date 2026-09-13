@@ -18,9 +18,9 @@ func _on_interpreter_running_changed() -> void:
 		btn.disabled = not Interpreter.is_running
 
 func _on_stop_button_pressed() -> void:
-	if Interpreter.is_running:
+	if Interpreter.is_running:	
 		Interpreter.interrupted = true
-		puzzle.notif.push("Program terminated.", Notification.Type.ERROR)
+		Game.level.fail("Program terminated.")
 
 func _on_speed_button_pressed() -> void:
 	Interpreter.is_fast = not Interpreter.is_fast

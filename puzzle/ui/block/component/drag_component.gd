@@ -54,6 +54,7 @@ func is_copy_valid(event: InputEvent) -> bool:
 		not Interpreter.is_running and
 		event.is_action_pressed("copy") and
 		base.data.draggable and
+		base.data.copyable and
 		not base.data.toolbox and
 		not base.preview_type == Block.PreviewType.DROP
 	)
@@ -86,9 +87,8 @@ func copy() -> Block:
 # necessary.
 func _set_block_owner(node: Node) -> void:
 	return
-	
-	#for child in Core.get_children_recursive(node, true):
-		#if child.owner == null:
-			#child.owner = node
-			#if child is Block:
-				#_set_block_owner(child)
+	for child in Core.get_children_recursive(node, true):
+		if child.owner == null:
+			child.owner = node
+			if child is Block:
+				_set_block_owner(child)

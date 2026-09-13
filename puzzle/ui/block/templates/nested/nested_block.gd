@@ -5,9 +5,6 @@ extends Block
 const UPPER_LIP_NAME := &"UpperLip"
 const LOWER_LIP_NAME := &"LowerLip"
 
-var scope: Dictionary[StringName, Variant]
-var depth: int
-
 @export_group("Children")
 @export var upper_lip: Control
 @export var mouth: VBoxContainer
@@ -34,6 +31,13 @@ func within_mouth(global_pos: Vector2) -> bool:
 	var drop_zone := Rect2(m_rect.position, Vector2(clipped_width, m_rect.size.y))
 	
 	return drop_zone.has_point(global_pos)
+
+func get_all_blocks(include_self := false) -> Array[Block]:
+	var result := super(include_self)
+	for child in mouth.get_children():
+		if child is Block:
+			result.append_array(child.get_all_blocks(true))
+	return result
 
 func get_blocks() -> Array[Block]:
 	var arr: Array[Block]

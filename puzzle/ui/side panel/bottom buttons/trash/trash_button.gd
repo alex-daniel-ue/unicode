@@ -9,14 +9,10 @@ const TRASH_SOUND := preload("res://audio/block_trash.mp3")
 
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	# Avoid trashing the Begin block
-	return (
-		drop is Block and
-		not (drop is CapBlock and drop.is_type(NestedData.Type.BEGIN))
-	)
+	return drop is Block and drop.is_trashable()
 
 func _drop_data(_at_position: Vector2, drop: Variant) -> void:
-	# drop is Block, drop is not CapBlock.BEGIN
+	# drop is Block, drop is trashable
 	SfxPlayer.play(TRASH_SOUND)
 	drop.queue_free()
 

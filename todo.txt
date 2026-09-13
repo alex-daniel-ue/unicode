@@ -1,6 +1,4 @@
 
-sequenced goals/tests
-
 add notification when timed out finishes
 variable watcher/debug view, add button for left panel, how to format dict well?
 add cant zoom or pan if bounds no longer intersect with camera view

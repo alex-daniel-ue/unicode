@@ -18,6 +18,9 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	return result
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
+	if preview_type == Block.PreviewType.DROP:
+		return drop is SocketBlock
+	
 	var solid := get_parent_matching(_has_top_notch)
 	
 	return (

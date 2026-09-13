@@ -25,6 +25,7 @@ static var IS_NESTED := func(block: Block) -> bool:
 @export var visual: BlockVisualComponent
 
 var preview_type := PreviewType.NONE
+var display := false
 
 
 static func construct(from_data: BlockData) -> Block:
@@ -46,17 +47,18 @@ func _ready() -> void:
 		var puzzle := $"/root/Puzzle" as Puzzle
 		function.notif_pushed.connect(puzzle.notif.push)
 	
-	text.format()
+	if display: return
 	
 	if preview_type != PreviewType.NONE:
 		if preview_type == PreviewType.DRAG:
 			drag.animate_preview.call_deferred()
 		return
 	
+	text.format()
 	function.initialize()
 
 func _process(delta: float) -> void:
-	if preview_type != PreviewType.NONE:
+	if display or preview_type != PreviewType.NONE:
 		return
 	
 	visual._update(delta)
@@ -65,7 +67,7 @@ func _gui_input(event: InputEvent) -> void:
 	drag.handle_copying(event)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	if not data.draggable or Interpreter.is_running:
+	if display or not data.draggable or Interpreter.is_running:
 		return null
 	
 	var preview := drag.generate_preview()
@@ -78,6 +80,14 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	visual.set_error(false)
 	visible = false
 	return self
+
+func get_all_blocks(include_self := false) -> Array[Block]:
+	var result: Array[Block]
+	if include_self:
+		result.append(self)
+	for param in text.get_blocks():
+		result.append_array(param.get_all_blocks(true))
+	return result
 
 func get_parent_block() -> Block:
 	return Core.get_block(get_parent())
@@ -95,3 +105,11 @@ func get_parent_matching(condition: Callable, include_self := true) -> Block:
 func orphan() -> void:
 	if get_parent() != null:
 		get_parent().remove_child(self)
+
+func is_trashable() -> bool:
+	if not data.trashable:
+		return false
+	for block in get_all_blocks():
+		if not block.data.trashable:
+			return false
+	return true

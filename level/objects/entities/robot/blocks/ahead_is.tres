@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=9 format=3 uid="uid://buc1h3ks738pt"]
+
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_ec22i"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_cv6yg"]
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="4_3dh4b"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="5_p0h3y"]
+
+[sub_resource type="Resource" id="Resource_2xdt5"]
+script = ExtResource("2_ec22i")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_3dh4b"]
+script = ExtResource("2_ec22i")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_0gmrq"]
+script = ExtResource("5_p0h3y")
+show_type = false
+enum_flag = true
+enum_as_string = true
+enum_values = PackedStringArray("clear", "blocked", "door", "puddle")
+_socket_ref = SubResource("Resource_3dh4b")
+
+[sub_resource type="Resource" id="Resource_pygt3"]
+script = ExtResource("3_cv6yg")
+name = "ValueEditableEnumBlock"
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_3dh4b")
+value = SubResource("Resource_0gmrq")
+draggable = false
+placeable = false
+top_notch = false
+Type/value = SubResource("Resource_0gmrq")
+Type/socket = SubResource("Resource_3dh4b")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[resource]
+script = ExtResource("3_cv6yg")
+name = "AheadIsBlock"
+color = Color(0.2901961, 0.87058824, 0.5019608, 1)
+base_path = "uid://pj76penmyeli"
+type = 2
+socket = SubResource("Resource_2xdt5")
+category = "Robot"
+placeable = false
+top_notch = false
+text = "ahead is {}"
+text_blocks = Array[ExtResource("3_cv6yg")]([SubResource("Resource_pygt3")])
+Type/socket = SubResource("Resource_2xdt5")
+Function/entity_script = ExtResource("4_3dh4b")
+Function/method = &"ahead_is"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

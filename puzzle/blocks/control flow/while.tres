@@ -16,6 +16,7 @@ color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
 nested = SubResource("Resource_7frqf")
+toolbox = false
 category = "Iterative"
 syntax = "while {condition: boolean}"
 description = "A loop that repeatedly executes the blocks inside as long as the condition is true."

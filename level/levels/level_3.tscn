@@ -13,7 +13,7 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xoxp0"]
 
-[node name="Level3" instance=ExtResource("1_f8n4q")]
+[node name="Level3" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_f8n4q")]
 instructions = "Moving in a straight line won't work here. You need to change the robot's direction.
 
 Use the \"turn\" block to rotate the robot. Notice the dropdown menu inside the block? Click it to toggle between \"left\" and \"right.\"
@@ -35,6 +35,7 @@ intended_solution = "block: BeginBlock
     - block: MoveBlock
       text: \"move forward\"
 "
+room_goals = [NodePath("GoalManager")]
 
 [node name="GenericBlockProvider" parent="." index="0"]
 block_data = Array[ExtResource("2_2ah57")]([ExtResource("3_urmf5")])
@@ -42,9 +43,10 @@ block_data = Array[ExtResource("2_2ah57")]([ExtResource("3_urmf5")])
 [node name="GoalManager" parent="." index="1" node_paths=PackedStringArray("goals")]
 goals = [NodePath("DestinationGoal")]
 
-[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity")]
+[node name="DestinationGoal" type="Node" parent="GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area")]
 script = ExtResource("4_qrhm1")
 required_entity = NodePath("../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../Visuals/Destination")
 
 [node name="Camera2D" parent="." index="2"]
 position = Vector2(112, 96)
@@ -91,10 +93,8 @@ facing_direction = Vector2(1, 0)
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("11_xvtc6")
 base = NodePath("..")
-initial_properties = Dictionary[StringName, Variant]({
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
 &"transform": Transform2D(1, 0, 0, 1, 47.5, 111.5)
-})
-
-[connection signal="body_entered" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_entered"]
-[connection signal="body_exited" from="Visuals/Destination" to="GoalManager/DestinationGoal" method="_on_entity_exited"]
+})])

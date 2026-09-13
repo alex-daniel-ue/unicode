@@ -1,0 +1,190 @@
+[gd_scene load_steps=27 format=4 uid="uid://2l2o3laaml6j"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_jvhew"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="2_ctnse"]
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="3_gdc2x"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_j5fgg"]
+[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="5_ekprq"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="6_eo02o"]
+[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="7_5m41p"]
+[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="8_n5iwc"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="9_5barp"]
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="9_gdc2x"]
+[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="10_j5fgg"]
+[ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="10_wu3wr"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="11_4iv52"]
+[ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="11_eo02o"]
+[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_4grgo"]
+[ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="12_5m41p"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_51mks"]
+[ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="13_n5iwc"]
+[ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="14_5m41p"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="14_x2mmu"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="15_40kke"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="16_mh4mw"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="17_lxxb3"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="23_n5iwc"]
+
+[sub_resource type="Resource" id="Resource_u7bg7"]
+script = ExtResource("4_j5fgg")
+name = "MoveBlock"
+color = Color(0.92156863, 0.80784315, 0.47843137, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Robot"
+syntax = "move forward"
+description = "Moves the robot one tile forward in the direction it is currently facing. Fails if the robot hits a wall."
+text = "move forward"
+Function/entity_script = ExtResource("3_gdc2x")
+Function/method = &"move"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_room1"]
+
+[node name="ITThreeRepeatExactlyN" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_jvhew")]
+intended_solution = "block: BeginBlock
+  text: \"begin code\"
+  children:
+    - block: DeclareAsBlock
+      text: \"declare var {} as {}\"
+      parameters:
+        - \"i\"
+        - 0
+    - block: WhileBlock
+      text: \"while {}\"
+      parameters:
+        - block: ComparisonBlock
+          text: \"{} {} {}\"
+          parameters:
+            - \"i\"
+            - \"<\"
+            - 3
+      children:
+        - block: MoveBlock
+          text: \"move forward\"
+        - block: IncrementBlock
+          text: \"increment {}\"
+          parameters:
+            - \"i\"
+"
+room_goals = [NodePath("RoomGoals/GoalManager")]
+
+[node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("2_ctnse")]
+layout_mode = 2
+data = SubResource("Resource_u7bg7")
+
+[node name="FunctionComponent" parent="LevelBlockPreset/BeginBlock/Mouth/MoveBlock" index="3" node_paths=PackedStringArray("object")]
+object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
+
+[node name="Header" type="Label" parent="LevelDescription" index="0"]
+visible = false
+offset_top = 1190.0
+offset_right = 139.0
+offset_bottom = 1224.0
+theme_type_variation = &"HeaderMedium"
+text = "Instructions"
+horizontal_alignment = 1
+
+[node name="InformationLabel" type="Label" parent="LevelDescription" index="1"]
+visible = false
+offset_right = 139.0
+offset_bottom = 2415.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_type_variation = &"LegibleLabel"
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+autowrap_mode = 2
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("4_j5fgg")]([ExtResource("5_ekprq"), ExtResource("6_eo02o"), ExtResource("7_5m41p"), ExtResource("8_n5iwc"), ExtResource("9_gdc2x"), ExtResource("10_j5fgg"), ExtResource("11_eo02o"), ExtResource("12_5m41p"), ExtResource("13_n5iwc"), ExtResource("14_5m41p"), ExtResource("12_5m41p")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
+script = ExtResource("9_5barp")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination1")
+camera_focus = NodePath("../../../Visuals/Destination1")
+
+[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus")]
+script = ExtResource("10_wu3wr")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+is_complete = true
+permanent = false
+must_maintain = true
+camera_focus = NodePath("../../../Visuals/Hazard1")
+
+[node name="Visuals" type="Node2D" parent="." index="4"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAAAAAIAAAABAAAAAAAAAAMAAAABAAAAAAABAAIAAAABAAAAAAABAAMAAAABAAAAAAACAAIAAAABAAAAAAACAAMAAAABAAAAAAADAAIAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAEAAIAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAA=")
+tile_set = ExtResource("11_4iv52")
+
+[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(112, 112)
+monitorable = false
+script = ExtResource("12_4grgo")
+tag = &"door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("13_51mks")
+
+[node name="Hazard1" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(144, 112)
+monitorable = false
+script = ExtResource("12_4grgo")
+tag = &"puddle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Hazard1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="3"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAA=")
+tile_set = ExtResource("14_x2mmu")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQABAAAAAAAAAAEAAQABAAEAAAABAAAAAQABAAAAAAABAAEAAQABAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAD//wAAAQAAAAAAAAAEAAAAAQABAAAAAAD//wEAAQAAAAEAAAAEAAEAAQABAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAD//wQAAQACAAAAADAEAAQAAQAAAAEAAGAAAAQAAQAAAAEAAFABAAQAAQAAAAEAAFACAAQAAQAAAAEAAFADAAQAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAIAAQAAAAEAAAAGAAMAAQAAAAEAAAAGAAQAAQACAAAAAFAFAAQAAQAAAAEAAFAGAAEAAQAAAAEAADAGAAAAAQAAAAAAABA=")
+tile_set = ExtResource("15_40kke")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("16_mh4mw")]
+position = Vector2(16, 112)
+facing_direction = Vector2(1, 0)
+
+[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+animation = &"idle_right"
+frame_progress = 0.9486681
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("4_j5fgg")]([ExtResource("23_n5iwc")])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
+script = ExtResource("17_lxxb3")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 16, 112)
+})])
+
+[node name="ShapeCast2D" parent="Visuals/YSorted/RobotCharacter" index="4"]
+position = Vector2(32, 0)
+
+[node name="Camera2D" parent="." index="5"]
+position = Vector2(96, 80)
+zoom = Vector2(2.575893, 2.575893)
+level_bounds = Rect2(-32, 0, 256, 160)
+
+[connection signal="body_entered" from="Visuals/Hazard1" to="RoomGoals/GoalManager/HazardGoal" method="_on_entity_entered"]
+
+[editable path="LevelBlockPreset/BeginBlock"]
+[editable path="LevelBlockPreset/BeginBlock/Mouth/MoveBlock"]
+[editable path="Visuals/YSorted/RobotCharacter"]

@@ -14,7 +14,7 @@ script = ExtResource("4_d43d8")
 show_type = false
 enum_flag = true
 enum_as_string = true
-enum_values = PackedStringArray("left", "right")
+enum_values = PackedStringArray("left", "right", "back")
 _socket_ref = SubResource("Resource_stgt1")
 
 [sub_resource type="Resource" id="Resource_d43d8"]
@@ -39,7 +39,7 @@ color = Color(0.92156863, 0.80784315, 0.47843137, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Robot"
 syntax = "turn {direction: string}"
-description = "Rotates the robot 90 degrees to the left or right."
+description = "Rotates the robot 90 degrees to the left, right, or backwards."
 text = "turn {}"
 text_blocks = Array[ExtResource("1_usi8u")]([SubResource("Resource_d43d8")])
 Function/entity_script = ExtResource("1_stgt1")
