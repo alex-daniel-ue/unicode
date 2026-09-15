@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TutorialTopic" load_steps=5 format=3 uid="uid://htyk0b4wtsrc"]
+
+[ext_resource type="Script" uid="uid://hedm71c8kgyc" path="res://menus/tutorials/tutorial_topic.gd" id="1_btgaj"]
+[ext_resource type="Script" uid="uid://bvvchnj2ifvqf" path="res://menus/tutorials/tutorial_slide.gd" id="2_bdgc3"]
+[ext_resource type="SpriteFrames" uid="uid://cmq5sxnckcg7e" path="res://menus/tutorials/data/images/dragdrop.gif" id="3_mvh42"]
+
+[sub_resource type="Resource" id="Resource_mvh42"]
+script = ExtResource("2_bdgc3")
+image = ExtResource("3_mvh42")
+text = "Drag the block from the toolbox tab located at the left of the canvas."
+metadata/_custom_type_script = "uid://bvvchnj2ifvqf"
+
+[resource]
+script = ExtResource("1_btgaj")
+title = "Drag & Drop"
+slides = Array[ExtResource("2_bdgc3")]([SubResource("Resource_mvh42")])
+metadata/_custom_type_script = "uid://hedm71c8kgyc"

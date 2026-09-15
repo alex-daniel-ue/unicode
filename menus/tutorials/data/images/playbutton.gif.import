@@ -1,0 +1,15 @@
+[remap]
+
+importer="import_gif_to_sprite_frames"
+type="SpriteFrames"
+uid="uid://bp3ugtyptgjr7"
+path="res://.godot/imported/playbutton.gif-715cfe16a14b1f46adb91860fe0d465c.tres"
+
+[deps]
+
+source_file="res://menus/tutorials/data/images/playbutton.gif"
+dest_files=["res://.godot/imported/playbutton.gif-715cfe16a14b1f46adb91860fe0d465c.tres"]
+
+[params]
+
+frames_per_second=5

@@ -1,0 +1,15 @@
+[remap]
+
+importer="import_gif_to_sprite_frames"
+type="SpriteFrames"
+uid="uid://dbg2n11b6l8hy"
+path="res://.godot/imported/trashblock.gif-5493ef37a6e418cecd1c6f975fbff12c.tres"
+
+[deps]
+
+source_file="res://menus/tutorials/data/images/trashblock.gif"
+dest_files=["res://.godot/imported/trashblock.gif-5493ef37a6e418cecd1c6f975fbff12c.tres"]
+
+[params]
+
+frames_per_second=5
