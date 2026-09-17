@@ -68,13 +68,6 @@ intended_solution = "block: BeginBlock
 "
 room_goals = [NodePath("RoomGoals/GoalManager")]
 
-[node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("2_ctnse")]
-layout_mode = 2
-data = SubResource("Resource_u7bg7")
-
-[node name="FunctionComponent" parent="LevelBlockPreset/BeginBlock/Mouth/MoveBlock" index="3" node_paths=PackedStringArray("object")]
-object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
-
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
 visible = false
 offset_top = 1190.0
@@ -94,8 +87,15 @@ theme_type_variation = &"LegibleLabel"
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
 autowrap_mode = 2
 
+[node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("2_ctnse")]
+layout_mode = 2
+data = SubResource("Resource_u7bg7")
+
+[node name="FunctionComponent" parent="LevelBlockPreset/BeginBlock/Mouth/MoveBlock" index="3" node_paths=PackedStringArray("object")]
+object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
+
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_j5fgg")]([ExtResource("5_ekprq"), ExtResource("6_eo02o"), ExtResource("7_5m41p"), ExtResource("8_n5iwc"), ExtResource("9_gdc2x"), ExtResource("10_j5fgg"), ExtResource("11_eo02o"), ExtResource("12_5m41p"), ExtResource("13_n5iwc"), ExtResource("14_5m41p"), ExtResource("12_5m41p")])
+block_data = Array[ExtResource("4_j5fgg")]([ExtResource("5_ekprq"), ExtResource("6_eo02o"), ExtResource("7_5m41p"), ExtResource("8_n5iwc"), ExtResource("9_gdc2x"), ExtResource("10_j5fgg"), ExtResource("11_eo02o"), ExtResource("12_5m41p"), ExtResource("13_n5iwc"), ExtResource("14_5m41p")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
 focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
@@ -112,6 +112,7 @@ required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 is_complete = true
 permanent = false
 must_maintain = true
+fail_message = "You skipped past the Goal!"
 camera_focus = NodePath("../../../Visuals/Hazard1")
 
 [node name="Visuals" type="Node2D" parent="." index="4"]
@@ -161,7 +162,7 @@ facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
 animation = &"idle_right"
-frame_progress = 0.9486681
+frame_progress = 0.87979615
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("4_j5fgg")]([ExtResource("23_n5iwc")])

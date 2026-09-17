@@ -83,7 +83,7 @@ func _for(this: NestedBlock) -> void:
 	
 	var loop_count := 0
 	
-	while (step > 0 and Interpreter.read_var(var_name) <= to) or \
+	while (step >= 0 and Interpreter.read_var(var_name) <= to) or \
 		  (step < 0 and Interpreter.read_var(var_name) >= to):
 		
 		await Interpreter.step(this)

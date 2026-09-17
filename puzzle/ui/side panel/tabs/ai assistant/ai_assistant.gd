@@ -201,13 +201,12 @@ func _get_available_blocks_doc() -> String:
 	# the walk also turns up parameter sockets and the Begin block, none of which
 	# are authored vocabulary. Scaffolding has no syntax; real blocks do.
 	var preset_lines := _format_block_data(
-		Game.level.get_preset_block_data(),
+		Game.level.preset.preset_data,
 		func(data: BlockData) -> bool: return not data.syntax.is_empty()
 	)
 	if not preset_lines.is_empty():
 		sections.append(
-			"\nAlready on the canvas and locked "
-			+ "(the student cannot move, copy or delete these):\n"
+			"\nAlready on the canvas and locked (the student cannot move, copy or delete these):\n"
 			+ "\n".join(preset_lines)
 		)
 	

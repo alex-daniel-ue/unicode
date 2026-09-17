@@ -2,25 +2,25 @@
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_blockdata"]
-[ext_resource type="PackedScene" uid="uid://cbwa1bqy2sbq" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="3_nested"]
-[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="4_while"]
-[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="5_move"]
-[ext_resource type="Resource" uid="uid://i5c086gipnbi" path="res://puzzle/blocks/socket/and_or.tres" id="5_suseu"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="6_dest"]
 [ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="6_p26a8"]
-[ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="7_6crug"]
+[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="7_1jwn0"]
 [ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="7_hazard"]
 [ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="8_c6bnr"]
 [ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="8_check"]
 [ext_resource type="Resource" uid="uid://dxlx24lxeeq0q" path="res://puzzle/blocks/socket/not.tres" id="9_p26a8"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="9_sensed"]
 [ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="10_manager"]
+[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="11_p26a8"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="11_resettable"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="12_robot"]
 [ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="13_floor"]
 [ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="14_walls"]
-[ext_resource type="Resource" uid="uid://buc1h3ks738pt" path="res://level/objects/entities/robot/blocks/ahead_is.tres" id="15_bbffm"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="15_flag"]
+[ext_resource type="PackedScene" uid="uid://cbwa1bqy2sbq" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="20_nested"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="21_statement"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="22_while"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="23_move"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_prop"]
 
@@ -46,10 +46,6 @@ intended_solution = "block: BeginBlock
 "
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager2"), NodePath("RoomGoals/GoalManager3")]
 
-[node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_nested")]
-layout_mode = 2
-data = ExtResource("4_while")
-
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
 visible = false
 theme_type_variation = &"HeaderMedium"
@@ -63,33 +59,65 @@ theme_type_variation = &"LegibleLabel"
 text = "Three corridors, three different lengths, one program. The door is somewhere along the corridor and the corridor keeps going past it — so counting steps will only ever solve one room. Walk until the door is the next tile ahead of you, then take one more step onto it. Pick up the pen on the way, and stay out of the puddle."
 autowrap_mode = 2
 
+[node name="L1" type="Label" parent="LevelDescription" index="2"]
+visible = false
+size_flags_horizontal = 3
+theme_type_variation = &"LegibleLabel"
+text = "Three corridors. All different lengths."
+autowrap_mode = 2
+
+[node name="L2" type="Label" parent="LevelDescription" index="3"]
+visible = false
+size_flags_horizontal = 3
+theme_type_variation = &"LegibleLabel"
+text = "So counting steps only ever solves one of them."
+autowrap_mode = 2
+
+[node name="Shot" type="TextureRect" parent="LevelDescription" index="4"]
+visible = false
+custom_minimum_size = Vector2(0, 90)
+size_flags_horizontal = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="L3" type="Label" parent="LevelDescription" index="5"]
+visible = false
+size_flags_horizontal = 3
+theme_type_variation = &"LegibleLabel"
+text = "This one repeats for as long as the answer stays true:"
+autowrap_mode = 2
+
+[node name="WhileDemo" parent="LevelDescription" index="6" instance=ExtResource("20_nested")]
+visible = false
+data = ExtResource("22_while")
+
+[node name="L4" type="Label" parent="LevelDescription" index="7"]
+visible = false
+size_flags_horizontal = 3
+theme_type_variation = &"LegibleLabel"
+text = "Put this inside it."
+autowrap_mode = 2
+
+[node name="MoveDemo" parent="LevelDescription" index="8" instance=ExtResource("21_statement")]
+visible = false
+data = ExtResource("23_move")
+
+[node name="L5" type="Label" parent="LevelDescription" index="9"]
+visible = false
+size_flags_horizontal = 3
+theme_type_variation = &"LegibleLabel"
+text = "Stop when the door is the next tile ahead. Then take one more step onto it."
+autowrap_mode = 2
+
+[node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("20_nested")]
+layout_mode = 2
+data = ExtResource("22_while")
+
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("2_blockdata")]([ExtResource("5_suseu"), ExtResource("6_p26a8"), ExtResource("7_6crug"), ExtResource("8_c6bnr"), ExtResource("9_p26a8")])
+block_data = Array[ExtResource("2_blockdata")]([ExtResource("9_p26a8"), ExtResource("6_p26a8"), ExtResource("7_1jwn0"), ExtResource("8_c6bnr"), ExtResource("11_p26a8")])
 
 [node name="GoalManager" parent="RoomGoals" index="0"]
 bounds = Rect2(-32, 0, 352, 96)
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
-script = ExtResource("6_dest")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Door1")
-fail_message = "The robot didn't finish on the door."
-camera_focus = NodePath("../../../Visuals/Door1")
-
-[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus")]
-script = ExtResource("7_hazard")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-is_complete = true
-permanent = false
-must_maintain = true
-fail_message = "The robot stepped in the puddle."
-camera_focus = NodePath("../../../Visuals/Puddle1")
-
-[node name="CheckpointGoal" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus")]
-script = ExtResource("8_check")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot never drove over the pen."
-camera_focus = NodePath("../../../Visuals/Pen1")
 
 [node name="GoalManager2" type="Node" parent="RoomGoals" index="1"]
 script = ExtResource("10_manager")
@@ -149,45 +177,7 @@ camera_focus = NodePath("../../../Visuals/Pen3")
 tile_map_data = PackedByteArray("AAAAAAEAAAABAAAAAAABAAEAAAABAAAAAAACAAEAAAABAAAAAAADAAEAAAABAAAAAAAEAAEAAAABAAAAAAAFAAEAAAABAAAAAAAGAAEAAAABAAAAAAAHAAEAAAABAAAAAAAIAAEAAAABAAAAAAAAAAUAAAABAAAAAAABAAUAAAABAAAAAAACAAUAAAABAAAAAAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAABAAAAAAAGAAUAAAABAAAAAAAHAAUAAAABAAAAAAAIAAUAAAABAAAAAAAJAAUAAAABAAAAAAAKAAUAAAABAAAAAAAAAAkAAAABAAAAAAABAAkAAAABAAAAAAACAAkAAAABAAAAAAADAAkAAAABAAAAAAAEAAkAAAABAAAAAAAFAAkAAAABAAAAAAAGAAkAAAABAAAAAAA=")
 tile_set = ExtResource("13_floor")
 
-[node name="Door1" type="Area2D" parent="Visuals" index="1"]
-position = Vector2(144, 48)
-script = ExtResource("9_sensed")
-tag = &"door"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Door1" index="0"]
-shape = SubResource("CircleShape2D_prop")
-
-[node name="Sprite2D" type="Sprite2D" parent="Visuals/Door1" index="1"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("15_flag")
-
-[node name="Puddle1" type="Area2D" parent="Visuals" index="2"]
-modulate = Color(0.4, 0.6, 1, 0.8)
-position = Vector2(208, 48)
-script = ExtResource("9_sensed")
-tag = &"puddle"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Puddle1" index="0"]
-shape = SubResource("CircleShape2D_prop")
-
-[node name="Sprite2D" type="Sprite2D" parent="Visuals/Puddle1" index="1"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("15_flag")
-
-[node name="Pen1" type="Area2D" parent="Visuals" index="3"]
-modulate = Color(0.4, 1, 0.5, 0.9)
-position = Vector2(80, 48)
-script = ExtResource("9_sensed")
-tag = &"pen"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1" index="0"]
-shape = SubResource("CircleShape2D_prop")
-
-[node name="Sprite2D" type="Sprite2D" parent="Visuals/Pen1" index="1"]
-scale = Vector2(0.04, 0.04)
-texture = ExtResource("15_flag")
-
-[node name="Door2" type="Area2D" parent="Visuals" index="4"]
+[node name="Door2" type="Area2D" parent="Visuals" index="1"]
 position = Vector2(240, 176)
 script = ExtResource("9_sensed")
 tag = &"door"
@@ -199,7 +189,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.055, 0.055)
 texture = ExtResource("15_flag")
 
-[node name="Puddle2" type="Area2D" parent="Visuals" index="5"]
+[node name="Puddle2" type="Area2D" parent="Visuals" index="2"]
 modulate = Color(0.4, 0.6, 1, 0.8)
 position = Vector2(304, 176)
 script = ExtResource("9_sensed")
@@ -212,7 +202,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.055, 0.055)
 texture = ExtResource("15_flag")
 
-[node name="Pen2" type="Area2D" parent="Visuals" index="6"]
+[node name="Pen2" type="Area2D" parent="Visuals" index="3"]
 modulate = Color(0.4, 1, 0.5, 0.9)
 position = Vector2(112, 176)
 script = ExtResource("9_sensed")
@@ -225,7 +215,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.04, 0.04)
 texture = ExtResource("15_flag")
 
-[node name="Door3" type="Area2D" parent="Visuals" index="7"]
+[node name="Door3" type="Area2D" parent="Visuals" index="4"]
 position = Vector2(80, 304)
 script = ExtResource("9_sensed")
 tag = &"door"
@@ -237,7 +227,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.055, 0.055)
 texture = ExtResource("15_flag")
 
-[node name="Puddle3" type="Area2D" parent="Visuals" index="8"]
+[node name="Puddle3" type="Area2D" parent="Visuals" index="5"]
 modulate = Color(0.4, 0.6, 1, 0.8)
 position = Vector2(144, 304)
 script = ExtResource("9_sensed")
@@ -250,7 +240,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.055, 0.055)
 texture = ExtResource("15_flag")
 
-[node name="Pen3" type="Area2D" parent="Visuals" index="9"]
+[node name="Pen3" type="Area2D" parent="Visuals" index="6"]
 modulate = Color(0.4, 1, 0.5, 0.9)
 position = Vector2(48, 304)
 script = ExtResource("9_sensed")
@@ -263,7 +253,7 @@ shape = SubResource("CircleShape2D_prop")
 scale = Vector2(0.04, 0.04)
 texture = ExtResource("15_flag")
 
-[node name="YSorted" type="Node2D" parent="Visuals" index="10"]
+[node name="YSorted" type="Node2D" parent="Visuals" index="7"]
 y_sort_enabled = true
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
@@ -277,10 +267,7 @@ facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
 animation = &"idle_right"
-frame_progress = 0.91875005
-
-[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
-block_data = Array[ExtResource("2_blockdata")]([ExtResource("5_move"), ExtResource("15_bbffm")])
+frame_progress = 0.4932057
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("11_resettable")
@@ -305,8 +292,6 @@ position = Vector2(176, 176)
 zoom = Vector2(1.2403846, 1.2403846)
 level_bounds = Rect2(-32, 0, 416, 352)
 
-[connection signal="body_entered" from="Visuals/Puddle1" to="RoomGoals/GoalManager/HazardGoal" method="_on_entity_entered"]
-[connection signal="body_entered" from="Visuals/Pen1" to="RoomGoals/GoalManager/CheckpointGoal" method="_on_entity_entered"]
 [connection signal="body_entered" from="Visuals/Puddle2" to="RoomGoals/GoalManager2/HazardGoal" method="_on_entity_entered"]
 [connection signal="body_entered" from="Visuals/Pen2" to="RoomGoals/GoalManager2/CheckpointGoal" method="_on_entity_entered"]
 [connection signal="body_entered" from="Visuals/Puddle3" to="RoomGoals/GoalManager3/HazardGoal" method="_on_entity_entered"]

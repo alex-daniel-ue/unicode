@@ -22,7 +22,6 @@ value = SubResource("Resource_1vt8s")
 draggable = false
 placeable = false
 top_notch = false
-copyable = null
 text = "..."
 Type/value = SubResource("Resource_1vt8s")
 Type/socket = SubResource("Resource_hb0ia")

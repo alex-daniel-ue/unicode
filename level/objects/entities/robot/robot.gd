@@ -2,7 +2,7 @@
 extends AnimatableBody2D
 
 
-const TAGS: Array[StringName] = [&"clear", &"blocked", &"door", &"puddle"]
+const TAGS: Array[StringName] = [&"blocked", &"door", &"puddle"]
 
 @export var sprite: AnimatedSprite2D
 @export var collision_shape: CollisionShape2D
@@ -14,11 +14,14 @@ const TAGS: Array[StringName] = [&"clear", &"blocked", &"door", &"puddle"]
 		_update_animation()
 
 var move_duration := 0.2
+var move_tween: Tween
 var step_size := 32.0
 
 
 func _ready() -> void:
 	_update_animation()
+	Interpreter.running_changed.connect(_on_interpreter_running_changed)
+	
 	if not Engine.is_editor_hint():
 		if probe:
 			probe.enabled = false
@@ -36,7 +39,6 @@ func _update_animation() -> void:
 
 ## text: move forward
 func move(from_this: Block) -> void:
-	await Interpreter.step(from_this)
 	if Interpreter.interrupted:
 		return
 	
@@ -45,12 +47,36 @@ func move(from_this: Block) -> void:
 		from_this.function.error("Robot: I can't move forward.")
 		return
 	
-	var tween := create_tween()
-	tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-	tween.tween_property(self, "position", position + velocity, move_duration)
+	var target := position + velocity
 	
-	await tween.finished
-	tween.kill()
+	# Capped at the interpreter's pacing so the animation can't outlast the step
+	# that started it, and capped below move_duration so slow mode still leaves a
+	# still frame for reading the highlighted block instead of gliding for 0.7s.
+	var duration := minf(move_duration, Interpreter.current_delay)
+	
+	cancel_motion()
+	move_tween = create_tween()
+	move_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	move_tween.tween_property(self, "position", target, duration)
+	
+	# step() is the wait; the tween runs inside it rather than after it.
+	await Interpreter.step(from_this)
+	
+	# Invariant: when move() returns, the robot is exactly on the target tile.
+	cancel_motion()
+	position = target
+
+## Stops any in-flight movement. Without this a tween started before a Stop or a
+## hazard keeps writing `position` and overwrites whatever Resettable.reset()
+## put there, leaving the robot off-grid.
+func cancel_motion() -> void:
+	if move_tween != null:
+		move_tween.kill()
+		move_tween = null
+
+func _on_interpreter_running_changed() -> void:
+	if not Interpreter.is_running:
+		cancel_motion()
 
 ## text: turn {left/right/back}
 func turn(from_this: Block) -> void:
@@ -87,12 +113,6 @@ func ahead_is(from_this: Block) -> bool:
 	probe.force_shapecast_update()
 	
 	var hits := probe.get_collision_count()
-	if hits == 0:
-		return tag == &"clear"
-	
-	if tag == &"clear":
-		return false
-	
 	var blocked := false
 	for i in hits:
 		var collider := probe.get_collider(i)
@@ -102,7 +122,8 @@ func ahead_is(from_this: Block) -> bool:
 		if collider is SensedArea:
 			if (collider as SensedArea).tag == tag:
 				return true
-		else:
+		elif not (collider is Area2D):
 			blocked = true
+		
 	
 	return blocked if tag == &"blocked" else false

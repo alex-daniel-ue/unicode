@@ -37,6 +37,10 @@ func _update(delta: float) -> void:
 		for affected in color_affected:
 			affected.self_modulate = affected.self_modulate.lerp(final_target, delta * COLOR_CHANGE_MULT)
 
+func apply_immediately() -> void:
+	for affected in color_affected:
+		affected.self_modulate = target_color
+
 func highlight() -> void:
 	target_color = saturate(target_color)
 	Interpreter.block_highlighted.emit(base)

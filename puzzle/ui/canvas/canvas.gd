@@ -94,16 +94,22 @@ func clear() -> void:
 	if begin == null:
 		return
 	
-	var inner_survivors := _collect_survivors(begin, false)
+	var inner_survivors: Array[Block]
+	for block in begin.get_all_blocks():
+		if not block.data.trashable and Block.IS_SOLID.call(block):
+			inner_survivors.append(block)
 	
 	var loose_survivors: Array[Block]
 	var loose_positions: PackedVector2Array
 	for child in get_children():
 		if child == begin or not (child is Block):
 			continue
-		for block in _collect_survivors(child as Block, true):
-			loose_survivors.append(block)
-			loose_positions.append((child as Block).position)
+		
+		for block in (child as Block).get_all_blocks(true):
+			printt(block, block.data.trashable, Block.IS_SOLID.call(block))
+			if not block.data.trashable and Block.IS_SOLID.call(block):
+				loose_survivors.append(block)
+				loose_positions.append((child as Block).position)
 	
 	# Orphan before freeing ancestors, so a survivor nested in a doomed block lives.
 	for block in inner_survivors:
@@ -112,8 +118,9 @@ func clear() -> void:
 		block.orphan()
 	
 	for child in get_children():
-		if child is Block and child != begin:
-			child.queue_free()
+		if child is Block:
+			if child != begin:
+				child.queue_free()
 	for inner_block in begin.get_blocks():
 		inner_block.queue_free()
 	
@@ -123,19 +130,6 @@ func clear() -> void:
 	for i in loose_survivors.size():
 		add_child(loose_survivors[i])
 		loose_survivors[i].position = loose_positions[i]
-
-func _collect_survivors(root: Block, include_root: bool) -> Array[Block]:
-	var is_kept := func(b: Block) -> bool: return not b.data.trashable
-	var found: Array[Block]
-	
-	for block in root.get_all_blocks(include_root):
-		if block.data.trashable or not Block.IS_SOLID.call(block):
-			continue
-		if block.get_parent_matching(is_kept, false) != null:
-			continue
-		found.append(block)
-	
-	return found
 
 func _on_block_highlighted(block: Block) -> void:
 	if is_panning:

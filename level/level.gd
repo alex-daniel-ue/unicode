@@ -76,14 +76,6 @@ func get_block_data() -> Array[BlockData]:
 			result.append_array((node as BlockProvider).block_data)
 	return result
 
-func get_preset_block_data() -> Array[BlockData]:
-	var result: Array[BlockData]
-	if preset == null or not is_instance_valid(preset.root_block):
-		return result
-	for block in preset.root_block.get_all_blocks(true):
-		result.append(block.data)
-	return result
-
 func fail(reason: String) -> void:
 	if has_failed: return
 	has_failed = true
@@ -94,6 +86,9 @@ func run_rooms(begin: CapBlock) -> bool:
 	var room_count := maxi(room_goals.size(), 1)
 	
 	for room_index in range(room_count):
+		var label := room_label(room_index, room_count)
+		if room_count > 1:
+			Interpreter.output_log.append(label.strip_edges())
 		reset_state(room_index)
 		
 		var manager: GoalManager = null # Each manager serves as a "Room"
@@ -105,7 +100,7 @@ func run_rooms(begin: CapBlock) -> bool:
 		await begin.function.run()
 		
 		if Interpreter.interrupted:
-			fail(room_label(room_index, room_count) + "The program didn't finish.")
+			#fail(room_label(room_index, room_count) + "The program didn't finish.")
 			return false
 		
 		# Let the physics engine catch up before asking Area2Ds what's overlapping
@@ -138,4 +133,4 @@ func clear_group(group: StringName) -> void:
 		node.remove_from_group(group)
 
 func room_label(index: int, total: int) -> String:
-	return "Test %d of %d — " % [index + 1, total] if total > 1 else ""
+	return "Room %d of %d — " % [index + 1, total] if total > 1 else ""

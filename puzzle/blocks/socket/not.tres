@@ -11,7 +11,8 @@ receptive = false
 
 [resource]
 script = ExtResource("1_q1wna")
-color = Color(0.2901961, 0.87058824, 0.5019608, 1)
+name = "NotBlock"
+color = Color(0.5058824, 0.87058824, 0.6392157, 1)
 base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_j3o2i")

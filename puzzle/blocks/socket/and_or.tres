@@ -40,7 +40,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("4_blockdata")
 name = "AndOrBlock"
-color = Color(0.2901961, 0.87058824, 0.5019608, 1)
+color = Color(0.5058824, 0.87058824, 0.6392157, 1)
 base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_andor_socket")

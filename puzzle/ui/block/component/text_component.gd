@@ -20,7 +20,7 @@ func get_raw() -> String:
 	var children_text: Array[String]
 	for child in get_blocks():
 		children_text.append(child.text.get_raw())
-	return base.data.text.format(children_text, "{}")
+	return base.data.text.format(children_text, "{}").replace("\\n", " ")
 
 func format() -> void:
 	if base.data.text.is_empty():

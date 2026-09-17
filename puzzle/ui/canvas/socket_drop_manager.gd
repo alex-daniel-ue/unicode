@@ -1,10 +1,14 @@
 extends Control
 
 
+const REFUSED_TINT := Color(1.0, 0.45, 0.45, 1.0)
+
 var current_socket: SocketBlock
 var drop_preview: SocketBlock
 var dp_socket: SocketBlock
 var children: Array[Node]
+
+var drag_base_modulate := Color.WHITE
 
 
 # Refer to drop_manager.gd, most of this is just copied
@@ -18,6 +22,7 @@ func _notification(what: int) -> void:
 				return
 			
 			current_socket = drag_data
+			drag_base_modulate = PuzzleCanvas.drag_preview.modulate
 			
 			drop_preview = Block.construct(current_socket.data.duplicate(true))
 			drop_preview.name = "DropPreview_%s" % drop_preview.name
@@ -84,7 +89,14 @@ func _process(_delta: float) -> void:
 		return
 	
 	var this_socket := get_preview_socket()
+
 	PuzzleCanvas.drag_preview.visible = this_socket == null
+
+	var refusing := this_socket == null and _is_over_refusing_socket()
+	PuzzleCanvas.drag_preview.modulate = (
+		(drag_base_modulate * REFUSED_TINT) if refusing else drag_base_modulate
+	)
+	
 	if this_socket != null:
 		if this_socket != dp_socket:
 			# Temporarily parent the drop_preview to the socket to visualize the drop
@@ -118,11 +130,11 @@ func get_preview_socket() -> SocketBlock:
 	if dp_socket != null and is_instance_valid(drop_preview) and drop_preview.is_inside_tree():
 		if control == drop_preview or drop_preview.is_ancestor_of(control):
 			return dp_socket
-
+	
 	var block := Core.get_block(control)
 	
 	# Rule out the obvious
-	if block == null or not block is SocketBlock or block.data.toolbox:
+	if block == null or (not block is SocketBlock) or block.data.toolbox:
 		return null
 	
 	# Return the same when hovering drop previews or blocks inside drop previews
@@ -137,3 +149,17 @@ func get_preview_socket() -> SocketBlock:
 		return null
 	
 	return block as SocketBlock
+
+
+## True when the cursor is over a socket that could have taken a block but
+## refused this one. Empty canvas isn't a refusal and shouldn't look like one --
+## get_preview_socket() returns null for both cases, so it can't tell them apart.
+func _is_over_refusing_socket() -> bool:
+	var block := Core.get_block(get_viewport().gui_get_hovered_control())
+	
+	if block == null or not (block is SocketBlock):
+		return false
+	if block.data.socket == null or not block.data.socket.receptive:
+		return false
+	
+	return not block._can_drop_data(Vector2.ZERO, current_socket)

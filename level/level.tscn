@@ -16,6 +16,9 @@ script = ExtResource("1_t2sn0")
 preset = NodePath("LevelBlockPreset")
 description = NodePath("LevelDescription")
 
+[node name="LevelDescription" type="Node" parent="."]
+script = ExtResource("5_cw150")
+
 [node name="LevelBlockPreset" type="Node" parent="."]
 script = ExtResource("2_6gtgk")
 
@@ -26,9 +29,6 @@ offset_top = 29.0
 offset_right = 32.0
 offset_bottom = 93.0
 data = ExtResource("4_d5hd8")
-
-[node name="LevelDescription" type="Node" parent="."]
-script = ExtResource("5_cw150")
 
 [node name="GenericBlockProvider" type="Node" parent="."]
 script = ExtResource("2_gs6o6")

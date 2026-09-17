@@ -9,7 +9,7 @@ func _print(this: Block) -> void:
 	if Interpreter.interrupted: return
 	
 	var output := "OUTPUT: %s" % str(value)
-	this.function.notif_pushed.emit(output, Notification.Type.LOG)
+	Interpreter.output_logged.emit(output)
 	Interpreter.output_log.append(output)
 	
 	await Interpreter.step(this)

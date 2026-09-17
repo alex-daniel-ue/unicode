@@ -3,6 +3,7 @@ extends Control
 
 
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
+const ERROR_SOUND := preload("res://audio/fail.mp3")
 
 @export var print_yaml := false
 
@@ -22,6 +23,9 @@ func _ready() -> void:
 	
 	if Game.level != null:
 		configure_level()
+	
+	Interpreter.error_raised.connect(_on_interpreter_error)
+	Interpreter.output_logged.connect(_on_interpreter_output)
 
 ## Perfectly functional; toggled on each "pause" action. Tested.
 func _input(event: InputEvent) -> void:
@@ -76,7 +80,9 @@ func run_program() -> void:
 	side_panels[1].show_menu(true)
 	side_panels[1].keep_state = true
 	
-	await Game.level.run_rooms(begin)
+	var cleared := await Game.level.run_rooms(begin)
+	if not cleared:
+		_report_failure()
 	
 	Interpreter.is_running = false
 	side_panels[1].keep_state = false
@@ -97,6 +103,23 @@ func _on_level_failed(reason: String) -> void:
 	Interpreter.interrupted = true
 	notif.push(reason, Notification.Type.ERROR)
 
+func _report_failure() -> void:
+	if not Interpreter.active_errors.is_empty():
+		return
+	if Game.level.has_failed:
+		return
+	
+	const MESSAGE := "The program didn't finish."
+	Interpreter.output_log.append(MESSAGE)
+	notif.push(MESSAGE, Notification.Type.ERROR)
+
+func _on_interpreter_error(error: Interpreter.Error) -> void:
+	SfxPlayer.play(ERROR_SOUND)
+	notif.push(error.message, Notification.Type.ERROR)
+
+func _on_interpreter_output(line: String) -> void:
+	notif.push(line, Notification.Type.LOG)
+
 func _on_room_completed(index: int, total: int) -> void:
 	if total <= 1: return
-	notif.push("Test %d of %d solved." % [index + 1, total], Notification.Type.SUCCESS)
+	notif.push("Room %d of %d solved." % [index + 1, total], Notification.Type.SUCCESS)

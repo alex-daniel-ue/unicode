@@ -43,18 +43,16 @@ static func construct(from_data: BlockData) -> Block:
 func _ready() -> void:
 	assert(data != null)
 	
-	if has_node(^"/root/Puzzle"):
-		var puzzle := $"/root/Puzzle" as Puzzle
-		function.notif_pushed.connect(puzzle.notif.push)
-	
-	if display: return
+	text.format()
+	if display:
+		visual.apply_immediately()
+		return
 	
 	if preview_type != PreviewType.NONE:
 		if preview_type == PreviewType.DRAG:
 			drag.animate_preview.call_deferred()
 		return
 	
-	text.format()
 	function.initialize()
 
 func _process(delta: float) -> void:

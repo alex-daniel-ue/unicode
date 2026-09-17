@@ -52,13 +52,6 @@ func _ready() -> void:
 		option_button.item_selected.connect(type_label.update_type.unbind(1), CONNECT_DEFERRED)
 		data.text_changed.connect(type_label.update_type, CONNECT_DEFERRED)
 
-
-func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	return (
-		super(_at_position, drop) and
-		drop is ValueBlock
-	)
-
 func typecast(string: String) -> Variant:
 	if data.value.enum_as_string:
 		assert(data.value.editable_shown and data.value.enum_flag)

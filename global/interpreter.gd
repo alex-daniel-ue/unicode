@@ -5,6 +5,9 @@ signal running_changed
 signal block_highlighted(block: Block)
 signal scope_changed
 
+signal error_raised(error: Interpreter.Error)
+signal output_logged(line: String)
+
 const MAX_DEPTH := 1000
 const MAX_LOOPS := 10000
 const SLOW_DELAY := 0.7

@@ -2,10 +2,6 @@ class_name BlockFunctionComponent
 extends BlockBaseComponent
 
 
-signal notif_pushed(message: String, type: Notification.Type)
-
-const ERROR_SOUND := preload("res://audio/fail.mp3")
-
 ## Determines the function type based on the presence of `func_script` and
 ## `func_method` in the BlockData:
 ## 1. STANDARD: Both script and method exist. A dummy Node is created, the
@@ -105,8 +101,7 @@ func error(message: String) -> void:
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
 	
-	SfxPlayer.play(ERROR_SOUND)
-	notif_pushed.emit(message, Notification.Type.ERROR)
+	Interpreter.error_raised.emit(err)
 
 func set_func(new_func: Callable) -> void:
 	_function = new_func
