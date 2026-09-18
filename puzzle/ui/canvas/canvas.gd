@@ -89,47 +89,74 @@ func handle_zooming(event: InputEvent) -> void:
 	
 	global_position += global_mouse_before - global_mouse_after
 
+#region Trash All functionality
 func clear() -> void:
-	var begin := get_parent()._get_begin() as CapBlock
-	if begin == null:
-		return
-	
-	var inner_survivors: Array[Block]
-	for block in begin.get_all_blocks():
-		if not block.data.trashable and Block.IS_SOLID.call(block):
-			inner_survivors.append(block)
-	
-	var loose_survivors: Array[Block]
-	var loose_positions: PackedVector2Array
 	for child in get_children():
-		if child == begin or not (child is Block):
+		if not child is Block:
 			continue
 		
-		for block in (child as Block).get_all_blocks(true):
-			printt(block, block.data.trashable, Block.IS_SOLID.call(block))
-			if not block.data.trashable and Block.IS_SOLID.call(block):
-				loose_survivors.append(block)
-				loose_positions.append((child as Block).position)
+		var root := child as Block
+		if root.is_pinned():
+			_purge(root)
+			continue
+		
+		# A doomed loose stack has no surviving container, so its survivors stay loose.
+		var at := root.position
+		var rescued := _rescue_from(root)
+		_discard(root)
+		for survivor in rescued:
+			add_child(survivor)
+			survivor.size = Vector2.ZERO  # shrink back from the mouth's width
+			survivor.position = at
+			at.y += survivor.get_combined_minimum_size().y + 16.0
+			_purge(survivor)
+
+func _purge(block: Block) -> void:
+	for param in block.text.get_blocks():
+		if param.is_pinned():
+			_purge(param)
+		elif param is SocketBlock and (param as SocketBlock).has_overridden():
+			_discard(param)  # dropped in; a default slot has nothing behind it and stays
 	
-	# Orphan before freeing ancestors, so a survivor nested in a doomed block lives.
-	for block in inner_survivors:
-		block.orphan()
-	for block in loose_survivors:
-		block.orphan()
+	if not block is NestedBlock:
+		return
 	
-	for child in get_children():
-		if child is Block:
-			if child != begin:
-				child.queue_free()
-	for inner_block in begin.get_blocks():
-		inner_block.queue_free()
+	var mouth := (block as NestedBlock).mouth
+	for child in (block as NestedBlock).get_blocks():
+		if child.is_pinned():
+			_purge(child)
+			continue
+		
+		var index := child.get_index()
+		var rescued := _rescue_from(child)
+		_discard(child)
+		
+		for survivor in rescued:
+			mouth.add_child(survivor)
+			mouth.move_child(survivor, index)
+			index += 1
+			_purge(survivor)
+
+func _rescue_from(doomed: Block) -> Array[Block]:
+	var rescued: Array[Block] = []
+	if doomed is NestedBlock:
+		for child in (doomed as NestedBlock).get_blocks():
+			if child.is_pinned():
+				child.orphan()
+				rescued.append(child)
+			else:
+				rescued.append_array(_rescue_from(child))
 	
-	for block in inner_survivors:
-		begin.mouth.add_child(block)
-	
-	for i in loose_survivors.size():
-		add_child(loose_survivors[i])
-		loose_survivors[i].position = loose_positions[i]
+	return rescued
+
+func _discard(block: Block) -> void:
+	var socket := block as SocketBlock
+	if socket != null and socket.has_overridden():
+		socket.overridden_socket.visible = true  # the slot gets its default back
+		socket.overridden_socket = null
+	block.orphan()  # out of the tree now, so nothing reads it before the free lands
+	block.queue_free()
+#endregion
 
 func _on_block_highlighted(block: Block) -> void:
 	if is_panning:

@@ -17,6 +17,14 @@ const TYPE_NAMES := {
 	TYPE_STRING_NAME: "variable name",
 }
 
+const ALIGN := [HORIZONTAL_ALIGNMENT_LEFT, HORIZONTAL_ALIGNMENT_CENTER, HORIZONTAL_ALIGNMENT_CENTER]  # NEW
+
+const TONE_INFO := Color("#38BDF8")
+const TONE_ERROR := Color("#FB7185")
+const TONE_STOPPED := Color("#94A3B8")
+const TONE_DONE := Color("#34D399")
+
+
 @export var tree: Tree
 @export var status: Label
 @export var status_container: Container
@@ -25,6 +33,7 @@ const TYPE_NAMES := {
 @export var stale_color := Color(0.55, 0.55, 0.55)
 
 var _dirty := true
+var _status_style: StyleBoxFlat
 
 
 func _ready() -> void:
@@ -35,8 +44,16 @@ func _ready() -> void:
 	tree.set_column_expand_ratio(COL_VALUE, 4)
 	tree.set_column_expand_ratio(COL_TYPE, 3)
 	
+	for col in 3:
+		tree.set_column_title_alignment(col, ALIGN[col])
+	tree.set_column_clip_content(COL_VALUE, true)
+	
+	_status_style = status_container.get_theme_stylebox(&"panel").duplicate() as StyleBoxFlat
+	status_container.add_theme_stylebox_override(&"panel", _status_style)
+	
 	Interpreter.scope_changed.connect(_on_scope_changed)
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
+	Interpreter.paused_changed.connect(_on_scope_changed)
 	
 	_rebuild()
 
@@ -72,40 +89,44 @@ func _rebuild() -> void:
 	
 	var is_stale := not Interpreter.is_running
 	var errored := not Interpreter.frozen_scopes.is_empty()
-	
 	# Untyped on purpose: Array[Interpreter.Frame] is an inner class and the
 	# analyzer doesn't reliably accept it as a typed-array element.
-	var frames: Array = Interpreter.frozen_scopes if (is_stale and errored) \
-		else Interpreter.scopes
-	
-	if frames.is_empty():
-		_show_message("Variable watcher inactive. Press play to activate.")
-		return
+	var frames: Array = Interpreter.frozen_scopes if (is_stale and errored) else Interpreter.scopes
 	
 	var total := 0
 	for frame in frames:
 		total += frame.vars.size()
 	
-	if total == 0 and not is_stale:
-		_show_message("No variables yet.")
-		return
-	
-	tree.show()
-	if is_stale:
-		status.show()
-		if not Interpreter.active_errors.is_empty():
-			status.text = "Variables when the error happened."
-		elif errored:
-			status.text = "Variables when the program stopped."
+	if frames.is_empty():
+		_set_status("Press Play to watch your variables change.", TONE_INFO)
+	elif total == 0:
+		_set_status("Your last run didn't make any variables." if is_stale else "No variables yet.", TONE_INFO)
+	elif not is_stale:
+		if Interpreter.is_paused:
+			_set_status("Paused. These are the values right now.", TONE_INFO)
 		else:
-			status.text = "Variables at the end of your last run."
+			status_container.hide()
+	elif not Interpreter.active_errors.is_empty():
+		_set_status("These are the values when the error happened.", TONE_ERROR)
+	elif errored:
+		_set_status("These are the values when the program stopped.", TONE_STOPPED)
 	else:
-		status_container.hide()
+		_set_status("These are the values at the end of your last run.", TONE_DONE)
 	
+	tree.visible = total > 0
+	if total > 0:
+		_fill_tree(frames, is_stale)
+	tree.update_minimum_size()
+
+func _set_status(message: String, tone: Color) -> void:
+	status.text = message
+	_status_style.border_color = tone
+	status_container.show()
+
+
+func _fill_tree(frames: Array, is_stale: bool) -> void:
 	var text_color := stale_color if is_stale else frame_color
-	
-	var root := tree.create_item()
-	var parent_item := root
+	var parent_item := tree.create_item()
 	var frame_item: TreeItem = null
 	var previous_owner := 0
 	
@@ -115,15 +136,14 @@ func _rebuild() -> void:
 		if frame_item == null or frame.owner_id != previous_owner:
 			frame_item = tree.create_item(parent_item)
 			frame_item.set_text(COL_NAME, frame.label.replace("\n", " "))
+			frame_item.set_expand_right(COL_NAME, true)  # NEW: heading spans all three columns
 			for col in 3:
 				frame_item.set_selectable(col, false)
 				frame_item.set_custom_color(col, text_color)
-			parent_item = frame_item
-			previous_owner = frame.owner_id
-			
 			# Each frame nests inside the one before it, so the indentation in
 			# the tree is the scope nesting on the canvas.
 			parent_item = frame_item
+			previous_owner = frame.owner_id
 		
 		for var_name in frame.vars:
 			var value: Variant = frame.vars[var_name]
@@ -131,8 +151,9 @@ func _rebuild() -> void:
 			item.set_text(COL_NAME, str(var_name))
 			item.set_text(COL_VALUE, _display_value(value))
 			item.set_text(COL_TYPE, _display_type(value))
-			if is_stale:
-				for col in 3:
+			for col in 3:
+				item.set_text_alignment(col, ALIGN[col])  # NEW
+				if is_stale:
 					item.set_custom_color(col, stale_color)
 
 
@@ -147,7 +168,7 @@ func _display_value(value: Variant) -> String:
 		TYPE_NIL:
 			return "not set yet"
 		TYPE_BOOL:
-			return "true" if value else "false"
+			return "True" if value else "False"
 		TYPE_STRING, TYPE_STRING_NAME:
 			# Quoted so "5" and 5 don't look identical — that difference is
 			# exactly what comparison's type errors are about.

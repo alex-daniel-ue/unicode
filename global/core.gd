@@ -2,6 +2,13 @@
 extends Node
 
 
+const PYTHON_KEYWORDS: Array[String] = [
+	"False", "None", "True", "and", "as", "assert", "async", "await", "break",
+	"class", "continue", "def", "del", "elif", "else", "except", "finally", "for",
+	"from", "global", "if", "import", "in", "is", "lambda", "nonlocal", "not",
+	"or", "pass", "raise", "return", "try", "while", "with", "yield",
+]
+
 var MAIN_MENU := load("res://menus/main/main_menu.tscn")
 var LEVEL_SELECT := load("res://menus/level select/level_select.tscn")
 var PUZZLE_CANVAS := load("res://puzzle/puzzle.tscn")
@@ -65,7 +72,10 @@ func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String
 			message = "%s argument must be " % _to_ordinal(idx+1)
 		
 		return message + _format_array(required_types) + '.'
-		
+	
+	if types.size() == 1 and types[0] == TYPE_STRING_NAME and String(value) in PYTHON_KEYWORDS:
+		return "'%s' is a Python keyword, so it can't be a variable name." % value
+	
 	return ""
 
 func get_type_string(variant: Variant) -> String:

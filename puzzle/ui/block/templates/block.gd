@@ -107,7 +107,19 @@ func orphan() -> void:
 func is_trashable() -> bool:
 	if not data.trashable:
 		return false
+	
 	for block in get_all_blocks():
 		if not block.data.trashable:
 			return false
+	
 	return true
+
+func is_pinned() -> bool:
+	if not data.trashable:
+		return true
+	
+	for param in text.get_blocks():
+		if param.is_pinned():
+			return true
+	
+	return false

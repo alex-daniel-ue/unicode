@@ -137,6 +137,8 @@ func get_preview_container() -> Container:
 		return null 
 	
 	hovered_block = hovered_block.get_parent_matching(Block.IS_SOLID)
+	if hovered_block == null:
+		return null
 	
 	# When hovering over drop preview itself, return top-most preview Block's container
 	var parent_block := hovered_block.get_parent_block()

@@ -36,15 +36,10 @@ func _update_alignment() -> void:
 func _update_bubble() -> void:
 	label.text = text
 	
-	var max_label_width := size.x * max_width_ratio
+	var font := label.get_theme_font(&"normal_font")
+	var font_size := label.get_theme_font_size(&"normal_font_size")
+	var text_width := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	text_width += label.get_theme_stylebox(&"normal").get_minimum_size().x
 	
-	var stylebox := panel.get_theme_stylebox("panel")
-	max_label_width -= stylebox.get_margin(SIDE_LEFT) + stylebox.get_margin(SIDE_RIGHT)
-	
-	var font := label.get_theme_font("font")
-	var font_size := label.get_theme_font_size("font_size")
-	var single_line_size := font.get_multiline_string_size(
-		text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size
-	)
-	
-	label.custom_minimum_size.x = min(single_line_size.x, max_label_width)
+	var max_label_width := size.x * max_width_ratio - panel.get_theme_stylebox(&"panel").get_minimum_size().x
+	label.custom_minimum_size.x = clampf(ceilf(text_width) + 2.0, 0.0, maxf(max_label_width, 0.0))

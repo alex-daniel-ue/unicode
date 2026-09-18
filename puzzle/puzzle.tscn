@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=27 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
 [ext_resource type="Script" uid="uid://6rosxy60tqsx" path="res://puzzle/ui/side panel/panel.gd" id="2_3gr0x"]
 [ext_resource type="Script" uid="uid://bsse2frnd4l02" path="res://puzzle/button_manager.gd" id="2_n8lp6"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_xv3xb"]
+[ext_resource type="Texture2D" uid="uid://37qy1g0vxtoi" path="res://puzzle/ui/side panel/icons/pixelarticons--pause-solid.png" id="4_1wbjf"]
 [ext_resource type="Script" uid="uid://bl501vpm8qns7" path="res://puzzle/ui/side panel/button_container.gd" id="4_8isiv"]
 [ext_resource type="PackedScene" uid="uid://c0d71dt2bes7j" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox.tscn" id="5_vlyq7"]
 [ext_resource type="Script" uid="uid://coidfkqmv7bsy" path="res://puzzle/ui/side panel/side_panel_button.gd" id="6_82356"]
@@ -23,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://bsbw5by2bjcge" path="res://puzzle/ui/notification/notification.tscn" id="16_e1dgq"]
 [ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
+[ext_resource type="Texture2D" uid="uid://d3cm84lguffxf" path="res://puzzle/ui/side panel/icons/pixelarticons--eye.png" id="17_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 
 [node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notif", "level_viewport", "level_complete_popup", "pause_menu")]
@@ -43,10 +45,13 @@ level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/S
 level_complete_popup = NodePath("LevelCompletePopup")
 pause_menu = NodePath("PauseMenu")
 
-[node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("scripting_buttons", "running_buttons")]
+[node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("play_button", "scripting_buttons", "running_buttons")]
 script = ExtResource("2_n8lp6")
-scripting_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/PlayButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton")]
-running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/DebugViewButton")]
+play_button = NodePath("../UserInterface/SideMenuRight/ButtonContainer/PlayButton")
+play_icon = ExtResource("11_vlyq7")
+pause_icon = ExtResource("4_1wbjf")
+scripting_buttons = [NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton")]
+running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton")]
 
 [node name="LevelCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
@@ -134,9 +139,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_bottom = 12
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation"]
 layout_mode = 2
@@ -168,6 +173,7 @@ layout_mode = 1
 [node name="AIAssistant" parent="UserInterface/SideMenuLeft/Panel" instance=ExtResource("6_bvcr2")]
 visible = false
 layout_mode = 1
+theme_override_constants/margin_top = 12
 
 [node name="VariableWatcher" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel" node_paths=PackedStringArray("tree", "status", "status_container")]
 layout_mode = 1
@@ -180,32 +186,59 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("9_8e7ff")
-tree = NodePath("VBoxContainer/Tree")
-status = NodePath("VBoxContainer/StatusContainer/StatusLabel")
-status_container = NodePath("VBoxContainer/StatusContainer")
+tree = NodePath("ScrollContainer/VBoxContainer/ScopeTree")
+status = NodePath("ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer/StatusContainer/StatusLabel")
+status_container = NodePath("ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer/StatusContainer")
+frame_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
+stale_color = Color(0.39215687, 0.45490196, 0.54509807, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher"]
 layout_mode = 2
-theme_override_constants/separation = 0
+horizontal_scroll_mode = 0
 
-[node name="StatusContainer" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 8
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
-[node name="StatusLabel" type="Label" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/VBoxContainer/StatusContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"HeaderMedium"
+text = "Variables"
+horizontal_alignment = 1
+
+[node name="StatusContainer" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer/StatusContainer"]
+layout_mode = 2
+text = "These are your variables right now."
+horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Tree" type="Tree" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/VBoxContainer"]
+[node name="ScopeTree" type="Tree" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"WatcherTree"
 columns = 3
 column_titles_visible = true
+hide_folding = true
 hide_root = true
-select_mode = 1
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
 
 [node name="ButtonContainer" type="VBoxContainer" parent="UserInterface/SideMenuLeft" node_paths=PackedStringArray("panel")]
 layout_mode = 2
@@ -216,6 +249,7 @@ panel = NodePath("../Panel")
 [node name="InfoMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Level Information"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("6_nnviu")
@@ -226,6 +260,7 @@ associated_contents = NodePath("../../Panel/PuzzleInformation")
 [node name="ToolboxMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Block Toolbox"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("8_dipl1")
@@ -236,6 +271,7 @@ associated_contents = NodePath("../../Panel/PuzzleToolbox")
 [node name="AIAssistantMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "AI Assistant"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("11_bvcr2")
@@ -246,9 +282,10 @@ associated_contents = NodePath("../../Panel/AIAssistant")
 [node name="VariableWatcherMenuButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Variable Watcher"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
-icon = ExtResource("11_bvcr2")
+icon = ExtResource("17_a3a4o")
 expand_icon = true
 script = ExtResource("6_82356")
 associated_contents = NodePath("../../Panel/VariableWatcher")
@@ -259,15 +296,11 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="DebugViewButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer"]
-visible = false
-layout_mode = 2
-disabled = true
-text = "Debug"
-
 [node name="TrashButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("confirm_dialog")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Drag blocks onto to trash,
+or click to trash all."
 focus_mode = 0
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
@@ -361,7 +394,7 @@ script = ExtResource("16_tkwoe")
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
-theme_type_variation = &"PlayButton"
+theme_type_variation = &"SidePanelButton"
 icon = ExtResource("11_vlyq7")
 expand_icon = true
 
@@ -408,5 +441,5 @@ render_target_update_mode = 4
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="ButtonManager" method="_on_speed_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
-[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="." method="run_program"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/StopButton" to="ButtonManager" method="_on_stop_button_pressed"]

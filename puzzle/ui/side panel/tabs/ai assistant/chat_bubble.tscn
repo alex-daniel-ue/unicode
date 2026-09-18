@@ -35,6 +35,7 @@ theme_type_variation = &"ChatMessage"
 text = "placeholder"
 fit_content = true
 scroll_active = false
+autowrap_mode = 2
 selection_enabled = true
 
 [connection signal="resized" from="." to="." method="_update_bubble"]

@@ -18,6 +18,7 @@ func yaml_serialize() -> String:
 		detached.append(child as Block)
 	
 	var lines: PackedStringArray
+	lines.append("# locked: true marks blocks the level placed; the student can't delete them")
 	
 	if begin == null:
 		lines.append("# No 'begin' block found on canvas.")
@@ -38,6 +39,9 @@ func _serialize_block(block: Block) -> String:
 	lines.append("block: " + block.data.name)
 	lines.append("  text: " + _serialize_value(block.data.text))
 	
+	if not block.data.trashable and not block.data.syntax.is_empty():
+		lines.append("  locked: true")
+	
 	var param_blocks: Array[Block] = block.text.get_blocks()
 	if not param_blocks.is_empty():
 		lines.append("  parameters:")
@@ -54,8 +58,17 @@ func _serialize_block(block: Block) -> String:
 
 func _serialize_list_item(block: Block) -> String:
 	if block is ValueBlock and not block.data.has_text_blocks():
-		var raw_value := block.text.get_raw()
-		return "    - " + _serialize_value(raw_value)
+		var raw := block.text.get_raw()
+		if block.data.value.enum_flag:
+			return raw  # a dropdown choice: <, and, left, True
+		var value: Variant = block.typecast(raw)
+		match typeof(value):
+			TYPE_NIL:
+				return "null" if raw.strip_edges().is_empty() else '"%s"  # not a readable value' % raw.c_escape()
+			TYPE_STRING:
+				return '"%s"' % String(value).c_escape()
+			_:
+				return raw  # variable names, numbers, booleans
 	return ("- " + _serialize_block(block)).indent("    ")
 
 

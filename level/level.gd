@@ -79,6 +79,7 @@ func get_block_data() -> Array[BlockData]:
 func fail(reason: String) -> void:
 	if has_failed: return
 	has_failed = true
+	Interpreter.output_log.append("LEVEL FAILED: " + reason)
 	failed.emit(reason)
 
 func run_rooms(begin: CapBlock) -> bool:

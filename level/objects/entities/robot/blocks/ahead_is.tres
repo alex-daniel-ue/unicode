@@ -46,7 +46,6 @@ socket = SubResource("Resource_2xdt5")
 category = "Robot"
 syntax = "ahead is {what: blocked/door/puddle}"
 description = "Asks what is on the single tile directly in front of the robot. True only if that tile holds the thing you picked."
-placeable = false
 top_notch = false
 text = "ahead is {}"
 text_blocks = Array[ExtResource("3_cv6yg")]([SubResource("Resource_pygt3")])

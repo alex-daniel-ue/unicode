@@ -10,7 +10,7 @@ extends Camera2D
 
 @export var level_bounds: Rect2
 
-var padding := Vector2(32, 32)
+var padding := Vector2(8, 8)
 var room_padding := Vector2(48, 48)
 
 

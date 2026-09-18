@@ -58,9 +58,10 @@ func _notification(what: int) -> void:
 			
 			current_socket.visible = true
 			var dropped := dp_socket != null
+			var left_slot := dropped or current_socket.get_parent() is PuzzleCanvas
 			
 			if current_socket.has_overridden():
-				if dropped: 
+				if left_slot: 
 					current_socket.overridden_socket = null
 				else: 
 					current_socket.overridden_socket.visible = false
@@ -93,6 +94,9 @@ func _process(_delta: float) -> void:
 	PuzzleCanvas.drag_preview.visible = this_socket == null
 
 	var refusing := this_socket == null and _is_over_refusing_socket()
+	printt(this_socket, _is_over_refusing_socket())
+	if this_socket != null:
+		printt(this_socket.data.socket.receptive)
 	PuzzleCanvas.drag_preview.modulate = (
 		(drag_base_modulate * REFUSED_TINT) if refusing else drag_base_modulate
 	)

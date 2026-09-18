@@ -47,7 +47,6 @@ socket = SubResource("Resource_andor_socket")
 category = "Boolean"
 syntax = "{a: boolean} {op: and/or} {b: boolean}"
 description = "Combines two conditions. With 'and' the whole thing is true only when both sides are true. With 'or' it is true when at least one side is true."
-placeable = false
 top_notch = false
 text = "{} {} {}"
 text_blocks = Array[ExtResource("4_blockdata")]([ExtResource("5_operand"), SubResource("Resource_op_block"), ExtResource("5_operand")])

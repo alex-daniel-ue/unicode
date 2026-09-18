@@ -49,7 +49,9 @@ func unwrap(value: Variant) -> Variant:
 		return value
 	
 	if not Interpreter.has_var(value):
-		error("Variable '%s' doesn't exist." % value)
+		var var_name := str(value)
+		var hint := " Python spells it %s." % var_name.capitalize() if var_name in ["true", "false"] else ""
+		error("Variable '%s' doesn't exist.%s" % [value, hint])
 		return null
 	
 	return Interpreter.read_var(value)

@@ -36,7 +36,8 @@ func typecast(string: String) -> Variant:
 	## Empty string, boolean, integer, float, string, identifier, invalid
 	
 	if string.is_empty(): return null
-	if string in ["true", "false"]: return str_to_var(string)
+	if string == "True": return true
+	if string == "False": return false
 	if string.is_valid_int(): return string.to_int()
 	if string.is_valid_float(): return string.to_float()
 	

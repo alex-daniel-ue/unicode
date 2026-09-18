@@ -1,8 +1,9 @@
 extends MarginContainer
 
 
-const API_URL := "http://127.0.0.1:3000/api/ask"
-const TIMEOUT_DURATION := 30
+const API_URL := "http://127.0.0.1:3000/api/hint"
+const CLIENT_TOKEN := "must-match-UNICODE_CLIENT_TOKEN"
+const TIMEOUT_DURATION := 30.
 
 @export var chat_bubble_scene: PackedScene
 
@@ -116,70 +117,39 @@ func _on_interpreter_running_changed() -> void:
 
 #region API payload, prompt generation
 func _send_api_request(msg: String) -> void:
-	var canvas_yaml := puzzle.canvas.serializer.yaml_serialize()
-	
-	var level_instructions := "N/A"
-	var intended_solution := "N/A"
-	if is_instance_valid(Game.level):
-		level_instructions = Game.level.description.get_raw()
-		intended_solution = Game.level.intended_solution
-	
-	var output_log := "N/A"
-	if not Interpreter.output_log.is_empty():
-		output_log = "\n".join(Interpreter.output_log)
-	
-	var errors := "N/A"
-	if not Interpreter.active_errors.is_empty():
-		errors = "\n\n".join(Interpreter.active_errors.map(str))
-	
-	var blocks_doc := _get_available_blocks_doc()
-	
-	var dynamic_context := initial_prompt.format({
-		instructions = level_instructions,
-		blocks = blocks_doc,
-		workspace = canvas_yaml,
-		intended = intended_solution,
-		output = output_log,
-		errors = errors,
-	})
-	
-	var contents := _get_conversation_history()
-	
-	contents.append({
-		role = "user",
-		parts = [{text = "\n" + dynamic_context}]
-	})
-	contents.append({
-		role = "model",
-		parts = [{text = "Got it. Send your message next."}]
-	})
-	
-	var last_parts: Array[Dictionary] = [{text = msg}]
-	
-	var base64_image := await _get_viewport_base64_image()
-	if not base64_image.is_empty():
-		last_parts.append({
-			inline_data = {
-				mime_type = "image/png",
-				data = base64_image
-			}
-		})
-	
-	contents.append({
-		role = "user",
-		parts = last_parts
-	})
-	
+	var level: Level = Game.level if is_instance_valid(Game.level) else null
+	var image := await _get_viewport_base64_image()
+	var history: Array[Dictionary] = []
+	for child in chat_stack.get_children():
+		var bubble := child as ChatBubble
+		if bubble and not bubble.is_temporary and not bubble.is_queued_for_deletion():
+			history.append({role = "user" if bubble.right_aligned else "model", text = bubble.text})
+	history.pop_back()  # the current message travels in `message`
 	var payload := {
-		system_instruction = system_instructions,
-		contents = contents
+		session_id = Game.session_id,
+		level_id = level.scene_file_path.get_file().get_basename() if level else "",
+		message = msg,
+		history = history,
+		screenshot_jpeg_b64 = image,
+		context = {
+			instructions = level.description.get_raw() if level else "N/A",
+			blocks = _get_available_blocks_doc(),
+			workspace = puzzle.canvas.serializer.yaml_serialize(),
+			intended_solution = level.intended_solution if level else "N/A",
+			last_run = puzzle.describe_last_run(),                  # NEW
+			output_log = "\n".join(Interpreter.output_log.slice(-40)),
+			robot = _robot_state(),                                  # NEW
+		},
 	}
+	var headers := ["Content-Type: application/json", "X-UniCode-Token: " + CLIENT_TOKEN]
 	
-	var headers := ["Content-Type: application/json"]
-	var json_payload := JSON.stringify(payload)
-	print(json_payload)
+	if OS.is_debug_build():
+		var shown := payload.duplicate(true)
+		shown.screenshot_jpeg_b64 = "<%d base64 chars>" % str(payload.screenshot_jpeg_b64).length()
+		print("── hint request ──\n", JSON.stringify(shown, "  ", false))
 	
-	http_request.request(API_URL, headers, HTTPClient.METHOD_POST, json_payload)
+	if http_request.request(API_URL, headers, HTTPClient.METHOD_POST, JSON.stringify(payload)) != OK:
+		_on_hint_failed("Couldn't reach the hint helper.")
 
 func _get_available_blocks_doc() -> String:
 	if not is_instance_valid(Game.level):
@@ -206,7 +176,7 @@ func _get_available_blocks_doc() -> String:
 	)
 	if not preset_lines.is_empty():
 		sections.append(
-			"\nAlready on the canvas and locked (the student cannot move, copy or delete these):\n"
+			"\nAlready on the canvas and locked (the student cannot copy or delete these):\n"
 			+ "\n".join(preset_lines)
 		)
 	
@@ -234,8 +204,9 @@ func _get_viewport_base64_image() -> String:
 	if img == null or img.is_empty():
 		return ""
 	
-	var png_buffer := img.save_png_to_buffer()
-	return Marshalls.raw_to_base64(png_buffer)
+	if img.get_width() > 768:
+		img.resize(768, roundi(768.0 * img.get_height() / img.get_width()), Image.INTERPOLATE_BILINEAR)
+	return Marshalls.raw_to_base64(img.save_jpg_to_buffer(0.8))
 
 func _get_conversation_history() -> Array[Dictionary]:
 	var history: Array[Dictionary] = [{
@@ -261,103 +232,30 @@ func _get_conversation_history() -> Array[Dictionary]:
 	return history
 #endregion
 
-func _on_request_completed(
-	result: int,
-	response_code: int,
-	_headers: PackedStringArray,
-	body: PackedByteArray
-) -> void:
-	
+func _on_request_completed(result: int, _code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	submit_button.disabled = false
 	message_field.editable = true
-	
 	_clear_temporary()
 	
-	var response_json: Variant = null
-	if body.size() > 0:
-		var body_string := body.get_string_from_utf8()
-		response_json = JSON.parse_string(body_string)
+	var data: Variant = JSON.parse_string(body.get_string_from_utf8()) if body.size() > 0 else null
 	
-	var err_msg := ""
-	if result != HTTPRequest.RESULT_SUCCESS:
-		err_msg = "Network error connecting to AI server."
-	elif response_code != 200:
-		err_msg = "Server returned error code: %d" % response_code
-		if typeof(response_json) == TYPE_DICTIONARY and response_json.has("error"):
-			err_msg = "Server error: " + str(response_json["error"])
+	if OS.is_debug_build():
+		print("── hint response (HTTP %d) ──\n" % _code,
+			JSON.stringify(data, "  ", false) if data != null else body.get_string_from_utf8())
 	
-	if not err_msg.is_empty():
-		puzzle.notif.push(err_msg, Notification.Type.ERROR)
-		_flag_latest_user_message()
+	if result != HTTPRequest.RESULT_SUCCESS or typeof(data) != TYPE_DICTIONARY:
+		_on_hint_failed("Couldn't reach the hint helper. Check the internet connection.")
 		return
 	
-	if typeof(response_json) != TYPE_DICTIONARY:
-		puzzle.notif.push("Received an unreadable response from the server.", Notification.Type.ERROR)
-		_flag_latest_user_message()
-		return
-	
-	if response_json.get("prompt_feedback", {}).has("block_reason"):
-		puzzle.notif.push("Prompt blocked by safety settings.", Notification.Type.ERROR)
-		_flag_latest_user_message()
-		_apply_safety_timeout()
-		return
-	
-	var candidates: Array = response_json.get("candidates", [])
-	if candidates.is_empty():
-		puzzle.notif.push(
-			"Received an invalid response format from the server.",
-			Notification.Type.ERROR
-		)
-		_flag_latest_user_message()
-		return
-	
-	var candidate: Dictionary = candidates[0]
-	
-	if candidate.get("finish_reason", "") == "SAFETY":
-		var details: PackedStringArray
-		for rating in candidate.get("safety_ratings", []):
-			var prob: String = rating.get("probability", "")
-			if prob != "NEGLIGIBLE" and not prob.is_empty():
-				details.append(rating.get("category", "").trim_prefix("HARM_CATEGORY_").capitalize())
-		
-		puzzle.notif.push(
-			"Message flagged for safety. (%s)" % ", ".join(details),
-			Notification.Type.ERROR
-		)
-		
-		_flag_latest_user_message()
-		_apply_safety_timeout()
-		return
-	
-	# Valid response
-	var content: Dictionary = candidate.get("content", {})
-	var parts: Array = content.get("parts", [])
-	
-	var reply_text := ""
-	if not parts.is_empty():
-		reply_text = parts[0].get("text", "")
-	
-	if reply_text.is_empty():
-		puzzle.notif.push("Received empty response.", Notification.Type.ERROR)
-		_flag_latest_user_message()
-		return
-	
-	if reply_text.strip_edges() == "RESET":
-		puzzle.notif.push(
-			"The conversation was deemed off-topic and was reset.",
-			Notification.Type.ERROR
-		)
-		_reset_chat()
-		
-		@warning_ignore("integer_division")
-		_apply_safety_timeout(TIMEOUT_DURATION / 2)
-		
-		return
-	
-	var reply_bubble := chat_bubble_scene.instantiate() as ChatBubble
-	reply_bubble.text = reply_text
-	reply_bubble.bubble_theme = bubble_theme_ai
-	_add_bubble(reply_bubble)
+	var reply := str(data.get("reply", ""))
+	match str(data.get("status", "")):
+		"ok", "off_topic":
+			_add_ai_bubble(reply)
+		"blocked":
+			_on_hint_failed(reply)
+			_apply_safety_timeout(10)
+		_:
+			_on_hint_failed(reply if not reply.is_empty() else "The hint helper isn't available right now.")
 
 #region UI helper methods
 func _flag_latest_user_message() -> void:
@@ -381,6 +279,13 @@ func _add_bubble(bubble: ChatBubble) -> void:
 	
 	var bottom := int(scroll.get_v_scroll_bar().max_value)
 	scroll.set_deferred(&"scroll_vertical", bottom)
+
+func _add_ai_bubble(text: String, temporary := false) -> void:
+	var bubble := chat_bubble_scene.instantiate() as ChatBubble
+	bubble.text = text
+	bubble.bubble_theme = bubble_theme_ai
+	_add_bubble(bubble)
+	bubble.is_temporary = temporary  # after _add_bubble, which clears temporaries
 
 func _clear_temporary() -> void:
 	for node in chat_stack.get_children():
@@ -407,4 +312,15 @@ func _apply_safety_timeout(duration := TIMEOUT_DURATION) -> void:
 		message_field.editable = true
 		submit_button.disabled = Interpreter.is_running
 		reset_button.disabled = Interpreter.is_running
+
+func _on_hint_failed(text: String) -> void:
+	_add_ai_bubble(text, true)
+	_flag_latest_user_message()  # flag AFTER adding, or _add_bubble would delete the red message
+
+func _robot_state() -> String:
+	var robot := get_tree().get_first_node_in_group(&"robot") as Node2D  # robot.gd: add_to_group(&"robot") in _ready
+	if robot == null:
+		return "N/A"
+	var names := {Vector2.UP: "up", Vector2.DOWN: "down", Vector2.LEFT: "left", Vector2.RIGHT: "right"}
+	return "tile %s, facing %s" % [Vector2i((robot.position / 32.0).floor()), names.get(robot.get(&"facing_direction"), "?")]
 #endregion

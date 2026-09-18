@@ -231,9 +231,9 @@ func __resolve_bound(this: NestedBlock, raw: Variant, label: String) -> Variant:
 	if Interpreter.interrupted:
 		return null
 	
-	# 3.0 is a whole number even if arithmetic handed it back as a float.
-	if typeof(value) == TYPE_FLOAT and is_equal_approx(value, roundf(value)):
-		value = int(value)
+	if typeof(value) == TYPE_FLOAT:
+		this.function.error("The '%s' value has to be a whole number, but it's %s. Use // to divide without a decimal." % [label, value])
+		return null
 	
 	if typeof(value) != TYPE_INT:
 		this.function.error(

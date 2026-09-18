@@ -1,0 +1,120 @@
+[gd_scene load_steps=17 format=4 uid="uid://dbr4lbrsuluol"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_bdscript"]
+[ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="3_begin"]
+[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="4_init"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="5_while"]
+[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="6_incr"]
+[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="7_comp"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="9_destgoal"]
+[ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="9_ys6rt"]
+[ext_resource type="TileSet" uid="uid://lo4s6najnf6a" path="res://world/tilesets/school_floor.tres" id="10_floortiles"]
+[ext_resource type="TileSet" uid="uid://e3hts0qt8gr0" path="res://level/tilesets/school_furniture.tres" id="11_furntiles"]
+[ext_resource type="TileSet" uid="uid://cppoyl8fkowq1" path="res://world/tilesets/school_walls.tres" id="12_walltiles"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="13_robot"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="14_resettable"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="15_flagtex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_room1"]
+
+[node name="ITThreeRepeatExactlyN" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+instructions = "These three classrooms all look the same, but don't be fooled — count carefully! Use \"declare var ... as ...\", \"while\", and \"increment\" to build your own counting loop. Move forward exactly the right number of times to land on the marked desk. Your program has to work in all three rooms, so no shortcuts — build a loop that actually counts."
+intended_solution = "block: BeginBlock
+  text: \"begin code\"
+  children:
+    - block: DeclareAsBlock
+      text: \"declare var {} as {}\"
+      parameters:
+        - \"i\"
+        - 0
+    - block: WhileBlock
+      text: \"while {}\"
+      parameters:
+        - block: ComparisonBlock
+          text: \"{} {} {}\"
+          parameters:
+            - \"i\"
+            - \"<\"
+            - 3
+      children:
+        - block: MoveBlock
+          text: \"move forward\"
+        - block: IncrementBlock
+          text: \"increment {}\"
+          parameters:
+            - \"i\"
+"
+room_goals = [null]
+
+[node name="GoalManager#DestinationGoal" type="Node" parent="." index="0"]
+script = ExtResource("9_destgoal")
+permanent = false
+fail_message = "The flag wasn't reached!"
+
+[node name="GoalManager#HazardGoal" type="Node" parent="." index="1"]
+script = ExtResource("9_ys6rt")
+is_complete = true
+permanent = false
+must_maintain = true
+fail_message = "You overstepped!"
+
+[node name="GenericBlockProvider" parent="." index="4"]
+block_data = Array[ExtResource("2_bdscript")]([ExtResource("3_begin"), ExtResource("4_init"), ExtResource("5_while"), ExtResource("6_incr"), ExtResource("7_comp")])
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAAAAAIAAAABAAAAAAAAAAMAAAABAAAAAAABAAIAAAABAAAAAAABAAMAAAABAAAAAAACAAIAAAABAAAAAAACAAMAAAABAAAAAAADAAIAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAEAAIAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAA=")
+tile_set = ExtResource("10_floortiles")
+
+[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(112, 112)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("15_flagtex")
+
+[node name="Hazard1" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(144, 112)
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Hazard1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="3"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAA=")
+tile_set = ExtResource("11_furntiles")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQABAAAAAAAAAAEAAQABAAEAAAABAAAAAQABAAAAAAABAAEAAQABAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAD//wAAAQAAAAAAAAAEAAAAAQABAAAAAAD//wEAAQAAAAEAAAAEAAEAAQABAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAD//wQAAQACAAAAADAEAAQAAQAAAAEAAGAAAAQAAQAAAAEAAFABAAQAAQAAAAEAAFACAAQAAQAAAAEAAFADAAQAAQAAAAEAAFAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAIAAQAAAAEAAAAGAAMAAQAAAAEAAAAGAAQAAQACAAAAAFAFAAQAAQAAAAEAAFAGAAEAAQAAAAEAADAGAAAAAQAAAAAAABA=")
+tile_set = ExtResource("12_walltiles")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("13_robot")]
+position = Vector2(16, 112)
+facing_direction = Vector2(1, 0)
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
+script = ExtResource("14_resettable")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 16, 112)
+})])
+
+[node name="Camera2D" parent="." index="7"]
+position = Vector2(96, 80)
+zoom = Vector2(2.6651785, 2.6651785)
+level_bounds = Rect2(-32, 0, 256, 160)
+
+[editable path="LevelBlockPreset/BeginBlock"]

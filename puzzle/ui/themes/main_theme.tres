@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=34 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=40 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://cypqhhpk8l6ck" path="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf" id="2_hdcft"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="2_oiocf"]
@@ -232,6 +232,41 @@ corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mbw5q"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xrkic"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eso8d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oy6xc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vwxl1"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.25490198, 0.33333334, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k80pl"]
+bg_color = Color(0.11764706, 0.16078432, 0.23137255, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2ob8"]
+bg_color = Color(0.11764706, 0.16078432, 0.23137255, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+
 [resource]
 default_font = ExtResource("2_oiocf")
 default_font_size = 16
@@ -345,3 +380,20 @@ ValueOptionButton/styles/hover_mirrored = SubResource("StyleBoxEmpty_xweav")
 ValueOptionButton/styles/hover_pressed = SubResource("StyleBoxEmpty_08s51")
 ValueOptionButton/styles/normal = SubResource("StyleBoxEmpty_u47ie")
 ValueOptionButton/styles/pressed = SubResource("StyleBoxEmpty_mbw5q")
+WatcherTree/base_type = &"Tree"
+WatcherTree/colors/font_color = Color(0.972549, 0.98039216, 0.9882353, 1)
+WatcherTree/colors/font_selected_color = Color(0.972549, 0.98039216, 0.9882353, 1)
+WatcherTree/colors/relationship_line_color = Color(0.2, 0.25490198, 0.33333334, 1)
+WatcherTree/colors/title_button_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
+WatcherTree/constants/draw_relationship_lines = 1
+WatcherTree/constants/inner_item_margin_left = 8
+WatcherTree/constants/inner_item_margin_right = 8
+WatcherTree/constants/item_margin = 20
+WatcherTree/constants/relationship_line_width = 2
+WatcherTree/constants/v_separation = 6
+WatcherTree/styles/cursor = SubResource("StyleBoxEmpty_xrkic")
+WatcherTree/styles/cursor_unfocused = SubResource("StyleBoxEmpty_eso8d")
+WatcherTree/styles/focus = SubResource("StyleBoxEmpty_oy6xc")
+WatcherTree/styles/panel = SubResource("StyleBoxFlat_vwxl1")
+WatcherTree/styles/selected = SubResource("StyleBoxFlat_k80pl")
+WatcherTree/styles/selected_focus = SubResource("StyleBoxFlat_s2ob8")

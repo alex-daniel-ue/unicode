@@ -19,7 +19,6 @@ socket = SubResource("Resource_j3o2i")
 category = "Boolean"
 syntax = "not {value: boolean}"
 description = "Flips a true or false value to the opposite one. Put a condition inside it to ask whether that condition is NOT true."
-placeable = false
 top_notch = false
 text = "not {}"
 text_blocks = Array[ExtResource("1_q1wna")]([ExtResource("4_rbva5")])

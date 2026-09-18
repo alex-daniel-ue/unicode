@@ -15,6 +15,7 @@ size = Vector2(28, 28)
 size = Vector2(28, 28)
 
 [node name="RobotCharacter" type="AnimatableBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "probe")]
+sync_to_physics = false
 script = ExtResource("1_odhmp")
 sprite = NodePath("AnimatedSprite2D")
 collision_shape = NodePath("CollisionShape2D")
@@ -26,7 +27,7 @@ scale = Vector2(0.1, 0.1)
 sprite_frames = ExtResource("1_ql3ht")
 animation = &"idle_backward"
 autoplay = "idle_backward"
-frame_progress = 0.99689585
+frame_progress = 0.39521155
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_bwqil")

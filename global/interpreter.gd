@@ -2,6 +2,8 @@ extends Node
 
 
 signal running_changed
+signal paused_changed
+
 signal block_highlighted(block: Block)
 signal scope_changed
 
@@ -13,7 +15,7 @@ const MAX_LOOPS := 10000
 const SLOW_DELAY := 0.7
 const FAST_DELAY := 0.2
 
-const MIN_DELAY := 1./144
+const MIN_DELAY := 0.05
 const RAMP := 0.99
 var steps := 0
 
@@ -23,7 +25,15 @@ var is_running := false:
 		is_running = value
 		running_changed.emit()
 		if not is_running:
+			is_paused = false
 			interrupted = false
+
+var is_paused := false:
+	set(value):
+		if is_paused != value:
+			is_paused = value
+			paused_changed.emit()
+
 var interrupted := false:
 	set(value):
 		if value and not interrupted and scopes.size() > 1:
@@ -43,7 +53,7 @@ var frozen_scopes: Array[Frame]
 
 
 func step(block: Block) -> void:
-	block.visual.pulse()
+	block.visual.pulse(maxf(current_delay, BlockVisualComponent.PULSE_DURATION))
 	steps = (steps + 1) if is_fast else 0
 	await Game.sleep(current_delay)
 
@@ -125,6 +135,7 @@ class Frame:
 class Error:
 	var message: String
 	var block: Block
+	var block_text: String
 	var stack_trace: PackedStringArray
 	var scope: Dictionary[StringName, Variant]
 	
@@ -136,6 +147,7 @@ class Error:
 	) -> void:
 		message = msg
 		block = failing_block
+		block_text = failing_block.text.get_raw()
 		stack_trace = trace
 		scope = vars
 	
@@ -144,7 +156,7 @@ class Error:
 		Stack trace: {trace}
 		Stack variables: {vars}""".format({
 			msg = message,
-			raw_block = block.text.get_raw(),
+			raw_block = block_text,
 			trace = " > ".join(stack_trace),
 			vars = str(scope)
 		})

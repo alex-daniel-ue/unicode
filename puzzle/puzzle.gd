@@ -5,6 +5,9 @@ extends Control
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
+var _last_run_yaml := ""
+var _last_run_result := "The student hasn't pressed Play on this level yet."
+
 @export var print_yaml := false
 
 @export_group("Children")
@@ -31,8 +34,13 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		pause_menu.show()
+		Interpreter.is_paused = true
 	elif event.is_action_released("pause"):
 		pause_menu.hide()
+
+func _exit_tree() -> void:
+	Interpreter.is_running = false
+	Interpreter.clear_state()
 
 func configure_level() -> void:
 	Interpreter.clear_scopes()
@@ -60,8 +68,6 @@ func configure_level() -> void:
 	preset.visible = true
 
 func run_program() -> void:
-	print(canvas.serializer.yaml_serialize())
-	
 	for err in Interpreter.active_errors:
 		if is_instance_valid(err.block):
 			err.block.visual.set_error(false)
@@ -76,6 +82,8 @@ func run_program() -> void:
 		notif.push("No begin block on Canvas.", Notification.Type.ERROR)
 		return
 	
+	_last_run_yaml = canvas.serializer.yaml_serialize()
+	
 	Interpreter.is_running = true
 	side_panels[1].show_menu(true)
 	side_panels[1].keep_state = true
@@ -83,10 +91,19 @@ func run_program() -> void:
 	var cleared := await Game.level.run_rooms(begin)
 	if not cleared:
 		_report_failure()
+		_last_run_result = "Did not solve the level; the reason is in the output log."
+	else:
+		_last_run_result = "Solved every room."
 	
 	Interpreter.is_running = false
 	side_panels[1].keep_state = false
 	Game.level.camera.frame()
+
+func describe_last_run() -> String:
+	if _last_run_yaml.is_empty():
+		return _last_run_result
+	var changed := _last_run_yaml != canvas.serializer.yaml_serialize()
+	return _last_run_result + (" The blocks have changed since that run." if changed else " The blocks are unchanged since that run.")
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():

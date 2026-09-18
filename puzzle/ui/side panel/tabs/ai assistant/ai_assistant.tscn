@@ -50,6 +50,8 @@ http_request = NodePath("HTTPRequest")
 scroll = NodePath("VBoxContainer/ScrollContainer")
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
+use_threads = true
+timeout = 35.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -66,9 +68,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
