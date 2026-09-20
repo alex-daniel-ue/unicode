@@ -27,7 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://d3cm84lguffxf" path="res://puzzle/ui/side panel/icons/pixelarticons--eye.png" id="17_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "notif", "level_viewport", "level_complete_popup", "pause_menu")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete_popup", "pause_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,6 +40,7 @@ canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
 information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer")
 toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
+ai_assistant = NodePath("UserInterface/SideMenuLeft/Panel/AIAssistant")
 notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
 level_complete_popup = NodePath("LevelCompletePopup")

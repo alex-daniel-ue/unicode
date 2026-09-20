@@ -23,6 +23,7 @@ func _ready() -> void:
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 	
 	if not Engine.is_editor_hint():
+		add_to_group(&"robot")
 		if probe:
 			probe.enabled = false
 			probe.add_exception(self)

@@ -4,7 +4,7 @@ extends Node
 var do_debug := true
 
 
-func log(message: Variant = "", separator := ' ') -> void:
+func log(...message) -> void:
 	if not do_debug:
 		return
 	
@@ -12,7 +12,7 @@ func log(message: Variant = "", separator := ' ') -> void:
 		for index in range(len(message)):
 			if message[index] is float:
 				message[index] = "%.03f" % message[index]
-		message = separator.join(message)
+		message = ' '.join(message)
 	elif message is float:
 		message = "%.03f" % message
 	print_rich("%.03f: %s" % [Time.get_ticks_msec() / 1000., str(message)])

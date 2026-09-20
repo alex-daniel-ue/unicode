@@ -5,8 +5,11 @@ extends Control
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
-var _last_run_yaml := ""
-var _last_run_result := "The student hasn't pressed Play on this level yet."
+const NUDGE_AFTER := [3, 7]
+
+var failed_runs := 0
+var last_run_yaml := ""
+var last_run_result := "The student hasn't pressed Play on this level yet."
 
 @export var print_yaml := false
 
@@ -15,6 +18,7 @@ var _last_run_result := "The student hasn't pressed Play on this level yet."
 @export var side_panels: Array[SidePanel]
 @export var information: Container
 @export var toolbox: Toolbox
+@export var ai_assistant: AIAssistant
 @export var notif: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
@@ -82,28 +86,39 @@ func run_program() -> void:
 		notif.push("No begin block on Canvas.", Notification.Type.ERROR)
 		return
 	
-	_last_run_yaml = canvas.serializer.yaml_serialize()
+	last_run_yaml = canvas.serializer.yaml_serialize()
 	
 	Interpreter.is_running = true
 	side_panels[1].show_menu(true)
 	side_panels[1].keep_state = true
+
 	
 	var cleared := await Game.level.run_rooms(begin)
 	if not cleared:
 		_report_failure()
-		_last_run_result = "Did not solve the level; the reason is in the output log."
+		failed_runs += 1
+		if failed_runs in NUDGE_AFTER:
+			notif.push(
+				"Stuck? The assistant can look at your last run.",
+				Notification.Type.LOG,
+				func() -> void:
+					side_panels[0].focus_content(ai_assistant)
+					ai_assistant.prompt_for_question()
+			)
+		last_run_result = "Did not solve the level; the reason is in the output log."
 	else:
-		_last_run_result = "Solved every room."
+		failed_runs = 0
+		last_run_result = "Solved every room."
 	
 	Interpreter.is_running = false
 	side_panels[1].keep_state = false
 	Game.level.camera.frame()
 
 func describe_last_run() -> String:
-	if _last_run_yaml.is_empty():
-		return _last_run_result
-	var changed := _last_run_yaml != canvas.serializer.yaml_serialize()
-	return _last_run_result + (" The blocks have changed since that run." if changed else " The blocks are unchanged since that run.")
+	if last_run_yaml.is_empty():
+		return last_run_result
+	var changed := last_run_yaml != canvas.serializer.yaml_serialize()
+	return last_run_result + (" The blocks have changed since that run." if changed else " The blocks are unchanged since that run.")
 
 func _get_begin() -> CapBlock:
 	for child in canvas.get_children():

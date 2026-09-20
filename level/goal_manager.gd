@@ -33,7 +33,6 @@ func bake_bounds() -> void:
 	# Collect fresh rather than trusting _ready — in the editor it won't have run
 	# since the last goal was added.
 	collect_goals()
-	print(goals)
 	
 	var sources: Array[Node] = []
 	if focus_marker != null:

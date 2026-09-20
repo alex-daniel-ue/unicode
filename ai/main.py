@@ -2,6 +2,7 @@
 import base64, binascii, logging, os, secrets, threading, time
 from collections import defaultdict, deque
 from typing import Literal
+import difflib
 
 import flask
 from dotenv import load_dotenv
@@ -13,7 +14,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("unicode-ai")
 
-PROMPT_VERSION = "2026-09-17a"  # bump on ANY prompt change; report the frozen value in Chapter 3
+PROMPT_VERSION = "2026-09-18a"  # bump on ANY prompt change; report the frozen value in Chapter 3
 MODELS = [m.strip() for m in os.environ.get(
     "GEMINI_MODELS", "gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",") if m.strip()]
 CLIENT_TOKEN = os.environ.get("UNICODE_CLIENT_TOKEN", "")
@@ -31,7 +32,7 @@ Rules:
 1. Write plain English, at most 3 short sentences. No Markdown, lists, code, or YAML.
 2. Never reveal the intended solution, a full block sequence, or exact values to enter. Point the student at one thing to examine.
 3. Prefer a single guiding question grounded in what actually happened: the last run result, an error, or where the robot stopped.
-4. If LAST RUN says the blocks changed since that run, say you are going by the current blocks.
+4. If CHANGES SINCE THE LAST RUN lists edits, the output log and errors describe the old program. Say so when it matters, and suggest running again to test a fix.
 5. If the student asks for the answer, briefly decline and give a smaller nudge instead.
 6. If the student sounds frustrated, acknowledge it in a few words, then help.
 7. Refer to blocks by the names listed under BLOCKS AVAILABLE.
@@ -126,6 +127,7 @@ def _contents(data: dict, message: str) -> list[types.Content]:
         f"STUDENT'S CURRENT PROGRAM:\n{_field(ctx, 'workspace')}\n\n"
         f"INTENDED SOLUTION (reference only, never reveal):\n{_field(ctx, 'intended_solution')}\n\n"
         f"LAST RUN:\n{_field(ctx, 'last_run')}\n\n"
+        f"CHANGES SINCE THE LAST RUN (- removed, + added):\n{_changes_since_last_run(ctx)}\n\n"
         f"OUTPUT LOG (most recent last):\n{_field(ctx, 'output_log', tail=True)}\n\n"
         f"ROBOT:\n{_field(ctx, 'robot')}"
     )
@@ -146,6 +148,20 @@ def _interpret(response) -> tuple[str, str]:
     if hint is None or not hint.reply.strip():
         return "unavailable", FALLBACK
     return ("off_topic" if hint.verdict == "off_topic" else "ok"), hint.reply.strip()
+
+
+def _changes_since_last_run(ctx: dict) -> str:
+    before = str(ctx.get("last_run_program") or "")
+    now = str(ctx.get("workspace") or "")
+    if not before:
+        return "The student hasn't run this level yet."
+    if before == now:
+        return "None. The output log and errors match the current program."
+    diff = "\n".join(difflib.unified_diff(before.splitlines(), now.splitlines(),
+                                          fromfile="last run", tofile="now", n=1, lineterm=""))
+    if len(diff) > len(now):
+        return "Mostly rewritten since the last run, so the output log describes a different program."
+    return diff[:MAX_FIELD]
 
 
 @app.post("/api/hint")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcpf1d3v6khak"
-path="res://.godot/imported/school_tile_shadows.png-7aaa77486b38aa569ea5d99163d5349a.ctex"
+uid="uid://nnurlaxgyttp"
+path="res://.godot/imported/school_floor.png-a93f1e8ae4bc0ae664769aaf71c6d9d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/assets/tilesets/school_tile_shadows.png"
-dest_files=["res://.godot/imported/school_tile_shadows.png-7aaa77486b38aa569ea5d99163d5349a.ctex"]
+source_file="res://world/assets/tilesets/school_floor.png"
+dest_files=["res://.godot/imported/school_floor.png-a93f1e8ae4bc0ae664769aaf71c6d9d3.ctex"]
 
 [params]
 

@@ -7,7 +7,7 @@ const MAXIMUM := 5
 @export var notif_scene: PackedScene
 
 
-func push(message: String, type: Notification.Type) -> void:
+func push(message: String, type: Notification.Type, action := Callable()) -> void:
 	while get_child_count() >= MAXIMUM:
 		var last_child := get_child(get_child_count() - 1)
 		remove_child(last_child)
@@ -18,3 +18,6 @@ func push(message: String, type: Notification.Type) -> void:
 	
 	add_child(notif)
 	move_child(notif, 0)
+	
+	notif.label.text = message
+	notif.set_action(action)

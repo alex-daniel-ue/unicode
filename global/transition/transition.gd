@@ -3,7 +3,7 @@ extends CanvasLayer
 
 const SHADER_PARAM_PROGRESS := "shader_parameter/progress"
 
-@export var transition_time := 0.0 #0.6
+@export var transition_time := 0.6
 
 @onready var screen := $DiamondScreen as ColorRect
 

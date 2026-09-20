@@ -26,10 +26,12 @@ func _can_drop_data(_at_position: Vector2, block: Variant) -> bool:
 func within_mouth(global_pos: Vector2) -> bool:
 	var m_rect := mouth.get_global_rect()
 	var l_rect := lower_lip.get_global_rect()
-	
 	var clipped_width := l_rect.end.x - m_rect.position.x
-	var drop_zone := Rect2(m_rect.position, Vector2(clipped_width, m_rect.size.y))
 	
+	var begin := Vector2(l_rect.position.x, m_rect.position.y)
+	var end := Vector2(clipped_width, m_rect.position.y)
+	
+	var drop_zone := Rect2(begin, end)
 	return drop_zone.has_point(global_pos)
 
 func get_all_blocks(include_self := false) -> Array[Block]:

@@ -17,6 +17,7 @@ const _COLORS: Dictionary[Type, Color] = {
 @export var label: Label
 
 var type: Type
+var action: Callable
 
 
 func _ready() -> void:
@@ -43,15 +44,29 @@ func _ready() -> void:
 	
 	tween_out.finished.connect(queue_free)
 
+func _gui_input(event: InputEvent) -> void:
+	if not action.is_valid():
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		accept_event()
+		action.call()
+		queue_free()
+
 func with(_type: Type) -> Notification:
 	type = _type
 	return self
 
 func calculate_duration(text: String) -> float:
 	const BASE_TIME := 1.2
-	const CHARS_PER_SEC := 20.0  # ~250 WPM
+	const CHARS_PER_SEC := 14.0  # ~175 WPM
 	
 	var read_time := text.length() / CHARS_PER_SEC
 	var final_duration := BASE_TIME + read_time
 	
 	return clampf(final_duration, 2.0, 8.0)
+
+func set_action(callable: Callable) -> void:
+	action = callable
+	if action.is_valid():
+		mouse_filter = Control.MOUSE_FILTER_STOP  # only clickable ones eat canvas clicks
+		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND

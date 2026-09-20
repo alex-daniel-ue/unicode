@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dr3x31xftfv87"
-path="res://.godot/imported/school_wall_2.png-9f0663f09599f8fe6a51cfb00f8130c2.ctex"
+uid="uid://colrn0ci7f852"
+path="res://.godot/imported/school_walls.png-8a7fe32555ecaed1032f457c00718092.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://world/assets/tilesets/school_wall_2.png"
-dest_files=["res://.godot/imported/school_wall_2.png-9f0663f09599f8fe6a51cfb00f8130c2.ctex"]
+source_file="res://world/assets/tilesets/school_walls.png"
+dest_files=["res://.godot/imported/school_walls.png-8a7fe32555ecaed1032f457c00718092.ctex"]
 
 [params]
 

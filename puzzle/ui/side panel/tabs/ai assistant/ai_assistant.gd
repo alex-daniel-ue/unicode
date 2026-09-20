@@ -1,3 +1,4 @@
+class_name AIAssistant
 extends MarginContainer
 
 
@@ -136,9 +137,10 @@ func _send_api_request(msg: String) -> void:
 			blocks = _get_available_blocks_doc(),
 			workspace = puzzle.canvas.serializer.yaml_serialize(),
 			intended_solution = level.intended_solution if level else "N/A",
-			last_run = puzzle.describe_last_run(),                  # NEW
+			last_run = puzzle.describe_last_run(),
+			last_run_program = puzzle.last_run_yaml,
 			output_log = "\n".join(Interpreter.output_log.slice(-40)),
-			robot = _robot_state(),                                  # NEW
+			robot = _robot_state(),
 		},
 	}
 	var headers := ["Content-Type: application/json", "X-UniCode-Token: " + CLIENT_TOKEN]
@@ -256,6 +258,10 @@ func _on_request_completed(result: int, _code: int, _headers: PackedStringArray,
 			_apply_safety_timeout(10)
 		_:
 			_on_hint_failed(reply if not reply.is_empty() else "The hint helper isn't available right now.")
+
+func prompt_for_question() -> void:
+	message_field.placeholder_text = "What did you expect to happen, and what happened instead?"
+	message_field.grab_focus()
 
 #region UI helper methods
 func _flag_latest_user_message() -> void:
