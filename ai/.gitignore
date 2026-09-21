@@ -1,0 +1,6 @@
+.env
+.venv/
+venv/
+__pycache__/
+.vercel
+unicode_ai.cfg
