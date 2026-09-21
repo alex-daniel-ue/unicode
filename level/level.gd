@@ -90,33 +90,38 @@ func run_rooms(begin: CapBlock) -> bool:
 		var label := room_label(room_index, room_count)
 		if room_count > 1:
 			Interpreter.output_log.append(label.strip_edges())
-		reset_state(room_index)
 		
-		var manager: GoalManager = null # Each manager serves as a "Room"
-		if room_index < room_goals.size():
-			manager = room_goals[room_index]
-			manager.reset_goals()
-			camera.frame_rect(manager.bounds)
+		# Fail closed. With room_goals unwired, manager stays null, no goal is ever
+		# checked and the level accepts any program including an empty one — which
+		# is also the default state of a level freshly inherited from level.tscn.
+		var manager: GoalManager = room_goals[room_index] if room_index < room_goals.size() else null
+		if manager == null:
+			push_error("Level '%s': no GoalManager for room %d. Set Level.room_goals." % [name, room_index])
+			fail(label + "This level has no goals set up, so it can't be solved.")
+			return false
+		
+		# Goals first, then entities: resetting a goal emits completion_changed, and
+		# moving the robot queues area callbacks that should land against fresh goals.
+		manager.reset_goals()
+		reset_state(room_index)
+		camera.frame_rect(manager.bounds)
 		
 		await begin.function.run()
 		
 		if Interpreter.interrupted:
-			#fail(room_label(room_index, room_count) + "The program didn't finish.")
 			return false
 		
-		# Let the physics engine catch up before asking Area2Ds what's overlapping
 		# overlaps_body() reflects the last physics step, not the instant a move
-		# finished
+		# finished. One frame is not always enough to cover the step the final move
+		# landed in.
+		await get_tree().physics_frame
 		await get_tree().physics_frame
 		
-		if manager:
-			var failing_goal := manager.find_failing_goal()
-			if failing_goal:
-				var reason := failing_goal.fail_message
-				fail(room_label(room_index, room_count) + (
-					reason if not reason.is_empty() else "The room wasn't solved correctly."
-				))
-				return false
+		var failing_goal := manager.find_failing_goal()
+		if failing_goal:
+			var reason := failing_goal.fail_message
+			fail(label + (reason if not reason.is_empty() else "The room wasn't solved correctly."))
+			return false
 		
 		room_completed.emit(room_index, room_count)
 	

@@ -1,4 +1,5 @@
 @tool
+class_name Robot
 extends AnimatableBody2D
 
 
@@ -20,10 +21,10 @@ var step_size := 32.0
 
 func _ready() -> void:
 	_update_animation()
-	Interpreter.running_changed.connect(_on_interpreter_running_changed)
+	add_to_group(&"robot")
 	
 	if not Engine.is_editor_hint():
-		add_to_group(&"robot")
+		Interpreter.running_changed.connect(_on_interpreter_running_changed)
 		if probe:
 			probe.enabled = false
 			probe.add_exception(self)

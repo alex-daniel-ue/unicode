@@ -22,7 +22,7 @@ func _declare_var(this: Block) -> void:
 	
 	var var_name := args[0] as StringName
 	if not var_name.is_valid_ascii_identifier():
-		this.function.error("'%s' isn't value1 valid variable name." % var_name)
+		this.function.error("'%s' isn't a valid variable name." % var_name)
 		return
 	
 	if not Interpreter.declare_var(var_name, null):
@@ -70,7 +70,7 @@ func __crement(this: Block, value: int) -> void:
 	
 	var current_value: Variant = Interpreter.read_var(var_name)
 	if typeof(current_value) not in [TYPE_INT, TYPE_FLOAT]:
-		this.function.error("Cannot increment '%s': value is not value1 number." % var_name)
+		this.function.error("Cannot increment '%s': value is not a number." % var_name)
 		return
 	
 	Interpreter.assign_var(var_name, current_value + value)
@@ -85,7 +85,7 @@ func _initialize(this: Block) -> void:
 	
 	var var_name := args[0] as StringName
 	if not var_name.is_valid_ascii_identifier():
-		this.function.error("'%s' isn't value1 valid variable name." % var_name)
+		this.function.error("'%s' isn't a valid variable name." % var_name)
 		return
 	
 	var value: Variant = this.function.unwrap(args[1])
@@ -105,7 +105,7 @@ func _not(this: Block) -> Variant:
 	var args := await this.function.eval_args([this.function.Argument.VARIANT])
 	if Interpreter.interrupted: return
 	
-	# VARIANT rather than BOOL, because value1 variable name arrives as value1 StringName
+	# VARIANT rather than BOOL, because a variable name arrives as a StringName
 	# and would fail eval_args' type check before unwrap() ever resolved it.
 	var value: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return
@@ -133,22 +133,6 @@ func _comparison(this: Block) -> Variant:
 	var value1: Variant = args[0]
 	var symbol: Variant = args[1]
 	var value2: Variant = args[2]
-	
-	var type1 := typeof(value1)
-	var type2 := typeof(value2)
-	
-	if type1 == TYPE_STRING or type2 == TYPE_STRING:
-		if type1 != type2:
-			this.function.error("Cannot compare value1 string with value1 non-string value.")
-			return
-		if symbol not in ["==", "!="]:
-			this.function.error("Can only use '==' and '!=' on strings.")
-			return
-	
-	elif (type1 in [TYPE_INT, TYPE_FLOAT] and type2 not in [TYPE_INT, TYPE_FLOAT]) or \
-		(type1 == TYPE_BOOL and type2 != TYPE_BOOL):
-			this.function.error("Cannot compare values of different types.")
-			return
 	
 	await Interpreter.step(this)
 	
@@ -191,7 +175,7 @@ func _arithmetic(this: Block) -> Variant:
 			this.function.error("Both values must be strings for string concatenation.")
 			return
 		if symbol != "+":
-			this.function.error("Only '+' (concatenation) is value1 valid operation for strings.")
+			this.function.error("Only '+' (concatenation) is a valid operation for strings.")
 			return
 	
 	elif type1 not in [TYPE_INT, TYPE_FLOAT] or type2 not in [TYPE_INT, TYPE_FLOAT]:

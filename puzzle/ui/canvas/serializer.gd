@@ -5,6 +5,50 @@ extends Node
 @onready var canvas: ColorRect = get_parent()
 
 
+static func count_solid_blocks(yaml: String, skip_locked := true) -> int:
+	var lines := yaml.split("\n")
+	
+	# indent → is this section one whose items count
+	var sections: Array[Vector2i] = []   # x = key indent, y = 1 when it is `children:`
+	var total := 0
+	
+	for i in lines.size():
+		var line := lines[i]
+		var body := line.strip_edges(true, false)
+		if body.is_empty() or body.begins_with("#"):
+			continue
+		var indent := line.length() - body.length()
+		
+		while not sections.is_empty() and indent <= sections.back().x:
+			sections.pop_back()
+		
+		if body.begins_with("- block:"):
+			var counts: bool = not sections.is_empty() and sections.back().y == 1
+			if counts and not (skip_locked and _item_is_locked(lines, i, indent)):
+				total += 1
+			continue
+		
+		if body.begins_with("children:"):
+			sections.append(Vector2i(indent, 1))
+		elif body.begins_with("parameters:") or body.begins_with("detached:"):
+			sections.append(Vector2i(indent, 0))
+	
+	return total
+
+static func _item_is_locked(lines: PackedStringArray, item_index: int, item_indent: int) -> bool:
+	for i in range(item_index + 1, lines.size()):
+		var line := lines[i]
+		var body := line.strip_edges(true, false)
+		if body.is_empty():
+			continue
+		var indent := line.length() - body.length()
+		if indent <= item_indent:
+			return false
+		if indent == item_indent + 2 and body == "locked: true":
+			return true
+	return false
+
+
 func yaml_serialize() -> String:
 	var begin: CapBlock = null
 	var detached: Array[Block]
@@ -58,18 +102,22 @@ func _serialize_block(block: Block) -> String:
 
 func _serialize_list_item(block: Block) -> String:
 	if block is ValueBlock and not block.data.has_text_blocks():
-		var raw := block.text.get_raw()
-		if block.data.value.enum_flag:
-			return raw  # a dropdown choice: <, and, left, True
-		var value: Variant = block.typecast(raw)
-		match typeof(value):
-			TYPE_NIL:
-				return "null" if raw.strip_edges().is_empty() else '"%s"  # not a readable value' % raw.c_escape()
-			TYPE_STRING:
-				return '"%s"' % String(value).c_escape()
-			_:
-				return raw  # variable names, numbers, booleans
+		return ("- " + _serialize_scalar(block)).indent("    ")
 	return ("- " + _serialize_block(block)).indent("    ")
+ 
+ 
+func _serialize_scalar(block: Block) -> String:
+	var raw := block.text.get_raw()
+	if block.data.value.enum_flag:
+		return raw  # a dropdown choice: <, and, left, True
+	var value: Variant = block.typecast(raw)
+	match typeof(value):
+		TYPE_NIL:
+			return "null" if raw.strip_edges().is_empty() else '"%s"  # not a readable value' % raw.c_escape()
+		TYPE_STRING:
+			return '"%s"' % String(value).c_escape()
+		_:
+			return raw  # variable names, numbers, booleans
 
 
 func _serialize_value(value_str: String) -> String:

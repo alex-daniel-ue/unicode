@@ -20,7 +20,7 @@ extends BlockBaseComponent
 
 
 func run() -> Variant:
-	assert(_function != null)
+	assert(_function != null and not _function.is_null())
 	
 	var value: Variant = await _function.call()
 	return value

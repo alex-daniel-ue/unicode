@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://2l2o3laaml6j"]
+[gd_scene load_steps=27 format=4 uid="uid://2l2o3laaml6j"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_44kmb"]
 [ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="2_y2nf2"]
@@ -14,14 +14,13 @@
 [ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="12_i2otl"]
 [ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="13_bcnb2"]
 [ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="14_xbbit"]
+[ext_resource type="Resource" uid="uid://dxlx24lxeeq0q" path="res://puzzle/blocks/socket/not.tres" id="15_b6pcm"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="15_xe4we"]
 [ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="16_xp3eq"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="17_vft51"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="18_u5p48"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="19_p4fbe"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="20_cuco7"]
-[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="21_5f84l"]
-[ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="22_baaxq"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="23_u7k4g"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="24_u3i6q"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="25_7p3bf"]
@@ -96,7 +95,7 @@ data = SubResource("Resource_u7bg7")
 object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_uuttg")]([ExtResource("5_b0lvt"), ExtResource("6_deifc"), ExtResource("7_15s5g"), ExtResource("8_pdcv0"), ExtResource("9_h7wu1"), ExtResource("10_wgt82"), ExtResource("11_mofqk"), ExtResource("12_i2otl"), ExtResource("13_bcnb2"), ExtResource("14_xbbit")])
+block_data = Array[ExtResource("4_uuttg")]([ExtResource("5_b0lvt"), ExtResource("6_deifc"), ExtResource("7_15s5g"), ExtResource("8_pdcv0"), ExtResource("9_h7wu1"), ExtResource("10_wgt82"), ExtResource("11_mofqk"), ExtResource("12_i2otl"), ExtResource("13_bcnb2"), ExtResource("14_xbbit"), ExtResource("15_b6pcm")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
 bounds = Rect2(2, 97.92, 152, 28.160004)
@@ -142,10 +141,7 @@ facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
 animation = &"idle_right"
-frame_progress = 0.5506797
-
-[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
-block_data = Array[ExtResource("4_uuttg")]([ExtResource("21_5f84l"), ExtResource("22_baaxq")])
+frame_progress = 0.5263143
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("23_u7k4g")

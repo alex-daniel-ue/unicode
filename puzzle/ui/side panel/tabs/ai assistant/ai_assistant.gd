@@ -1,3 +1,4 @@
+class_name AIAssistant
 extends MarginContainer
 
 
@@ -148,7 +149,7 @@ func _send_hint_request(msg: String) -> void:
 			workspace = puzzle.canvas.serializer.yaml_serialize(),
 			intended_solution = level.intended_solution if level else "N/A",
 			last_run = puzzle.describe_last_run(),
-			last_run_program = puzzle.last_run_program(),  # the relay diffs this against workspace
+			last_run_program = puzzle.last_run_yaml,  # the relay diffs this against workspace
 			output_log = "\n".join(Interpreter.output_log.slice(-LOG_LINES)),
 			robot = _robot_state(),
 		},

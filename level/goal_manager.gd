@@ -54,6 +54,10 @@ func bake_bounds() -> void:
 		rect = source_rect if not found else rect.merge(source_rect)
 		found = true
 	
+	var robot := get_tree().get_first_node_in_group(&"robot")
+	if robot:
+		rect = rect.merge(robot.collision_shape.shape.get_rect())
+	
 	bounds = rect
 	update_configuration_warnings()
 	print("(%s) Room bounds baked: " % [name], bounds)

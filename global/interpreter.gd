@@ -15,7 +15,7 @@ const MAX_LOOPS := 10000
 const SLOW_DELAY := 0.7
 const FAST_DELAY := 0.2
 
-const MIN_DELAY := 0.05
+const MIN_DELAY := 0.02
 const RAMP := 0.99
 var steps := 0
 
