@@ -8,7 +8,7 @@ func _print(this: Block) -> void:
 	var value: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return
 	
-	var output := "OUTPUT: %s" % str(value)
+	var output := "OUTPUT: %s" % Core.to_python_literal(value)
 	Interpreter.output_logged.emit(output)
 	Interpreter.output_log.append(output)
 	
@@ -140,7 +140,7 @@ func _comparison(this: Block) -> Variant:
 	var kind_b := __kind(value2)
 	if kind_a != kind_b:
 		var hint := "Check for quotes around a number." if "text" in [kind_a, kind_b] else ""
-		this.function.error("Can't compare %s with %s.%s" % [kind_a, kind_b, hint])
+		this.function.error("Can't compare %s with %s. %s" % [kind_a, kind_b, hint])
 		return null
 	
 	if typeof(value1) == TYPE_BOOL:
@@ -221,7 +221,7 @@ func _logical(this: Block) -> Variant:
 		"and": return (value1 as bool) and (value2 as bool)
 		"or": return (value1 as bool) or (value2 as bool)
 	
-	this.function.error("'%s' isn't value1 logical operator." % symbol)
+	this.function.error("'%s' isn't a logical operator." % symbol)
 	return
 
 #region Generic helper methods

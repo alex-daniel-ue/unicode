@@ -40,7 +40,7 @@ func _notification(what: int) -> void:
 			
 			# Cannot merely duplicate, as preview_idx checks whether hovered
 			# Blocks are Block.PreviewType.DROP. Drop previews can be hovered.
-			drop_preview = Block.construct(current_block.data.duplicate(true))
+			drop_preview = Block.construct(current_block.data)
 			drop_preview.name = "DropPreview_%s" % drop_preview.name
 			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
 			

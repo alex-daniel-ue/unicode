@@ -81,10 +81,19 @@ func _serialize_block(block: Block) -> String:
 	var lines: PackedStringArray
 	
 	lines.append("block: " + block.data.name)
+	lines.append("  kind: " + _kind_of(block))
 	lines.append("  text: " + _serialize_value(block.data.text))
 	
-	if not block.data.trashable and not block.data.syntax.is_empty():
+	if not block.data.trashable:
 		lines.append("  locked: true")
+	
+	# What a slot will accept, stated on the slot itself. The assistant used to
+	# have to infer this from the block name, and the names collide: two
+	# different .tres files both serialise as "ReceptiveEditableLineBlock", one
+	# of which refuses drops entirely.
+	var accepts := _accepts_of(block)
+	if not accepts.is_empty():
+		lines.append("  accepts: " + accepts)
 	
 	var param_blocks: Array[Block] = block.text.get_blocks()
 	if not param_blocks.is_empty():
@@ -120,9 +129,46 @@ func _serialize_scalar(block: Block) -> String:
 			return raw  # variable names, numbers, booleans
 
 
+## statement / nested / expression / value, from BlockData.type.
+func _kind_of(block: Block) -> String:
+	match block.data.type:
+		BlockData.Type.STATEMENT:
+			return "statement"
+		BlockData.Type.NESTED:
+			return "nested"
+		BlockData.Type.SOCKET:
+			return "expression"
+		BlockData.Type.VALUE:
+			return "value"
+	return "unknown"
+
+
+## Derived, not a new exported flag, so there is nothing extra to keep in sync.
+func _accepts_of(block: Block) -> String:
+	if not (block is SocketBlock):
+		return ""
+	
+	var parts: PackedStringArray = []
+	
+	if block.data.socket != null and block.data.socket.receptive:
+		parts.append("a block can be dropped in")
+	
+	if block.data.value != null:
+		var value := block.data.value
+		if value.enum_flag:
+			parts.append("choose one of: " + ", ".join(value.enum_values))
+		elif value.editable and value.editable_shown:
+			parts.append("can be typed into")
+	
+	if parts.is_empty():
+		parts.append("nothing: this slot is fixed")
+	
+	return ", ".join(parts)
+
+
 func _serialize_value(value_str: String) -> String:
 	if value_str.is_empty(): return "null"
-	if value_str in ["true", "false"] or value_str.is_valid_int() or value_str.is_valid_float():
+	if value_str in ["True", "False"] or value_str.is_valid_int() or value_str.is_valid_float():
 		return value_str
 	
 	return '"' + value_str.replace('"', '\\"') + '"'

@@ -8,10 +8,11 @@ script = ExtResource("1_djiio")
 
 [resource]
 script = ExtResource("2_7t5y5")
-name = "ExpressionReceptiveBlock"
+name = "ExpressionSlot"
 base_path = "uid://pj76penmyeli"
 type = 2
 socket = SubResource("Resource_040pj")
+description = "An empty condition slot. It holds something that is True or False, so you can drop in a comparison block, an and/or block, a not block, or a sensor like \"ahead is\". It will not take a number or a piece of text."
 draggable = false
 placeable = false
 top_notch = false

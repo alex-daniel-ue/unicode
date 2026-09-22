@@ -34,7 +34,7 @@ static func construct(from_data: BlockData) -> Block:
 	var scene := load(from_data.base_path) as PackedScene
 	var block := scene.instantiate() as Block
 	
-	block.data = from_data.duplicate(true)
+	block.data = from_data.deep_copy()
 	block.name = block.data.name
 	block.text.format()
 	

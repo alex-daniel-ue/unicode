@@ -49,9 +49,6 @@ func _on_speed_button_pressed() -> void:
 func _on_return_button_pressed() -> void:
 	Transition.change_scene(Core.LEVEL_SELECT)
 
-func _on_copy_code_pressed() -> void:
-	ProgressCode.copy_code()
-
 func _on_frame_button_pressed() -> void:
 	Game.level.camera.frame()
 	puzzle.notif.push("Level reframed.", Notification.Type.LOG)

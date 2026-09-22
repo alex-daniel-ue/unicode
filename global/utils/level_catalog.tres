@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=12 format=3 uid="uid://dyc1t3vgb4y2h"]
+
+[ext_resource type="Script" uid="uid://bosuufgg1ovh8" path="res://global/utils/level_module.gd" id="1_5uqvf"]
+[ext_resource type="Script" uid="uid://copysdfiq2iil" path="res://global/utils/level_entry.gd" id="2_cp0gs"]
+[ext_resource type="Script" uid="uid://br03lngef16na" path="res://global/utils/level_catalog.gd" id="2_n0r71"]
+[ext_resource type="PackedScene" uid="uid://2l2o3laaml6j" path="res://level/levels/debug_level_1.tscn" id="3_8vj6e"]
+[ext_resource type="PackedScene" uid="uid://xhdv8mmxh803" path="res://level/levels/it_0b.tscn" id="4_7un1p"]
+
+[sub_resource type="Resource" id="Resource_fvjdf"]
+script = ExtResource("2_cp0gs")
+id = &"tutorial"
+title = "Tutorial"
+concept = "For students familiarizing with UniCode."
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_op7vh"]
+script = ExtResource("1_5uqvf")
+id = &"tutorial"
+display_name = "Tutorial"
+levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_fvjdf")])
+locked_notice = ""
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="Resource_8vj6e"]
+script = ExtResource("2_cp0gs")
+id = &"exactly three"
+title = "Exactly Three"
+concept = "for loop from while loop"
+scene = ExtResource("3_8vj6e")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_q75gs"]
+script = ExtResource("2_cp0gs")
+id = &"puddle"
+label = "2"
+title = "Puddle"
+concept = "Multiple rooms"
+scene = ExtResource("4_7un1p")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_7un1p"]
+script = ExtResource("1_5uqvf")
+id = &"iteration"
+display_name = "Iteration"
+levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_8vj6e"), SubResource("Resource_q75gs")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="Resource_r35se"]
+script = ExtResource("1_5uqvf")
+id = &"arrays"
+display_name = "Arrays"
+released = false
+locked_notice = "For next next week, around early October."
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[resource]
+script = ExtResource("2_n0r71")
+modules = Array[ExtResource("1_5uqvf")]([SubResource("Resource_op7vh"), SubResource("Resource_7un1p"), SubResource("Resource_r35se")])

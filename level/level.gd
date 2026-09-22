@@ -106,7 +106,13 @@ func run_rooms(begin: CapBlock) -> bool:
 		# Goals first, then entities: resetting a goal emits completion_changed, and
 		# moving the robot queues area callbacks that should land against fresh goals.
 		manager.reset_goals()
-		reset_state(room_index)
+		if not reset_state(room_index):
+			# Same reasoning as the room_goals guard above. A room that cannot
+			# put its entities back where they belong is not a room a student
+			# can fairly be asked to solve.
+			push_error("Level '%s': room %d is missing a Resettable snapshot." % [name, room_index + 1])
+			fail(label + "This room isn't set up correctly, so it can't be played.")
+			return false
 		camera.frame_rect(manager.bounds)
 		
 		await begin.function.run()
@@ -147,11 +153,15 @@ func calculate_stars(placed_block_count: int) -> int:
 		return 2
 	return 1
 
-func reset_state(room_index := 0) -> void:
+## False when any entity had no snapshot for this room.
+func reset_state(room_index := 0) -> bool:
+	var ok := true
 	for node in get_tree().get_nodes_in_group(&"resettable"):
 		for child in node.get_children():
 			if child is Resettable:
-				child.reset(room_index)
+				if not (child as Resettable).reset(room_index):
+					ok = false
+	return ok
 
 func clear_group(group: StringName) -> void:
 	for node in get_tree().get_nodes_in_group(group):

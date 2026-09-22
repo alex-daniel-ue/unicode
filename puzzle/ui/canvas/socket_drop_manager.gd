@@ -24,7 +24,7 @@ func _notification(what: int) -> void:
 			current_socket = drag_data
 			drag_base_modulate = PuzzleCanvas.drag_preview.modulate
 			
-			drop_preview = Block.construct(current_socket.data.duplicate(true))
+			drop_preview = Block.construct(current_socket.data)
 			drop_preview.name = "DropPreview_%s" % drop_preview.name
 			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
 			

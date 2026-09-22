@@ -79,6 +79,35 @@ func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String
 	
 	return ""
 
+## How a value is spelled for a student.
+##
+## The game teaches Python, so everything that shows a value has to agree:
+## booleans are True and False, an unset variable is None. GDScript's str()
+## gives "true" and "<null>", which is how `print` ended up contradicting the
+## watcher, the keyword check and every level text.
+##
+## Two forms, as in Python. The print form shows a string bare; the repr form
+## quotes it, which is how it appears inside a list.
+func to_python_literal(value: Variant) -> String:
+	if typeof(value) in [TYPE_STRING, TYPE_STRING_NAME]:
+		return String(value)
+	return to_python_repr(value)
+
+func to_python_repr(value: Variant) -> String:
+	match typeof(value):
+		TYPE_NIL:
+			return "None"
+		TYPE_BOOL:
+			return "True" if value else "False"
+		TYPE_STRING, TYPE_STRING_NAME:
+			return "'%s'" % String(value).c_escape()
+		TYPE_ARRAY:
+			var parts: PackedStringArray = []
+			for item: Variant in (value as Array):
+				parts.append(to_python_repr(item))
+			return "[" + ", ".join(parts) + "]"
+	return str(value)
+
 func get_type_string(variant: Variant) -> String:
 	if variant == null:
 		return "null"

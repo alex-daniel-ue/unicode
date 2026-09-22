@@ -114,7 +114,7 @@ tile_set = ExtResource("8_tiles")
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
 position = Vector2(144, 48)
 script = ExtResource("14_sensed_area")
-tag = &"door"
+tag = &"destination"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
 shape = SubResource("CircleShape2D_dest")
@@ -126,13 +126,10 @@ texture = ExtResource("15_flag")
 [node name="Destination2" type="Area2D" parent="Visuals" index="2"]
 position = Vector2(112, 176)
 script = ExtResource("14_sensed_area")
-tag = &"door"
+tag = &"undetectable"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination2" index="0"]
 shape = SubResource("CircleShape2D_dest")
-
-[node name="PlateSprite" type="Sprite2D" parent="Visuals/Destination2" index="1"]
-scale = Vector2(0.8, 0.8)
 
 [node name="Hazard2" type="Area2D" parent="Visuals" index="3"]
 position = Vector2(144, 176)
@@ -155,7 +152,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.6160471
+frame_progress = 0.09449486
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("2_block_data")]([ExtResource("11_move"), ExtResource("12_ahead_is")])

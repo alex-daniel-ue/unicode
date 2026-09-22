@@ -38,10 +38,14 @@ func save_snapshot() -> void:
 	if Engine.is_editor_hint():
 		print("(%s) Snapshot for room %d saved." % [base.name, editing_room])
 
-func reset(room_index: int) -> void:
+## False when this entity has no snapshot for the room about to run. It used to
+## warn and return, which left the entity wherever the previous room ended: a
+## room that is silently unsolvable, or silently already solved. The caller
+## fails the room instead.
+func reset(room_index: int) -> bool:
 	if room_index >= room_snapshots.size():
-		push_warning("(%s) No snapshot saved for room %d." % [base.name, room_index])
-		return
+		push_error("(%s) No snapshot saved for room %d." % [str(base.name) if base != null else "?", room_index])
+		return false
 	
 	var snap: Dictionary = room_snapshots[room_index]
 	for prop in snap:
@@ -49,3 +53,5 @@ func reset(room_index: int) -> void:
 			base.set(prop, snap[prop])
 		elif not Engine.is_editor_hint():
 			push_warning("Base has no property '%s', cannot reset." % prop)
+	
+	return true

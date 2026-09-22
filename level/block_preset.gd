@@ -15,7 +15,7 @@ func get_preset() -> Block:
 
 	preset_data.clear()
 	for block in root.get_all_blocks(true):
-		block.data = block.data.duplicate(true)
+		block.data = block.data.deep_copy()
 		block.data.toolbox = false
 		block.data.trashable = false
 		block.data.copyable = false

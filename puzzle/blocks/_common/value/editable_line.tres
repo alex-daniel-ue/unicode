@@ -14,11 +14,12 @@ _socket_ref = SubResource("Resource_hb0ia")
 
 [resource]
 script = ExtResource("3_mdkie")
-name = "ReceptiveEditableLineBlock"
+name = "TypedValueSlot"
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_hb0ia")
 value = SubResource("Resource_1vt8s")
+description = "A slot you type into. It takes a typed-in value only, so no block can be dropped into it."
 draggable = false
 placeable = false
 top_notch = false

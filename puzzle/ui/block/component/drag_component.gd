@@ -27,7 +27,7 @@ func generate_preview() -> Control:
 				block_count += 1
 		
 		if block_count > 0:
-			var dummy := Block.construct(dummy_data.duplicate(true))
+			var dummy := Block.construct(dummy_data)
 			dummy.data.text %= [block_count, "s" if block_count != 1 else ""]
 			
 			drag_preview.mouth.add_child(dummy)
@@ -72,7 +72,7 @@ func copy() -> Block:
 	var block := packed_scn.instantiate()
 	
 	block.name = "%s%d" % [base.name, block.get_instance_id()]
-	block.data = base.data.duplicate(true)
+	block.data = base.data.deep_copy()
 	
 	block.data.toolbox = false
 	for text_block in block.data.text_blocks:

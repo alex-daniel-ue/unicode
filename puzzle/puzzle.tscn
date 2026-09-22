@@ -28,7 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 [ext_resource type="Texture2D" uid="uid://dvh7ej8j7rh2y" path="res://puzzle/ui/side panel/icons/pixelarticons--frame.png" id="24_a3a4o"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete_popup", "level_complete_summary", "code_button", "pause_menu")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete_overlay", "level_complete_stars", "level_complete_blocks", "level_complete_summary", "code_button", "exit_button", "pause_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,9 +44,12 @@ toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 ai_assistant = NodePath("UserInterface/SideMenuLeft/Panel/AIAssistant")
 notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
-level_complete_popup = NodePath("LevelCompletePopup")
-level_complete_summary = NodePath("LevelCompletePopup/MarginContainer/VBoxContainer/SummaryLabel")
-code_button = NodePath("LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/CopyCodeButton")
+level_complete_overlay = NodePath("LevelCompletePopup")
+level_complete_stars = NodePath("LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/StarsLabel")
+level_complete_blocks = NodePath("LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/BlocksLabel")
+level_complete_summary = NodePath("LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/SummaryLabel")
+code_button = NodePath("LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/CodeButton")
+exit_button = NodePath("LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ExitButton")
 pause_menu = NodePath("PauseMenu")
 
 [node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("play_button", "scripting_buttons", "running_buttons")]
@@ -56,62 +59,6 @@ play_icon = ExtResource("11_vlyq7")
 pause_icon = ExtResource("4_1wbjf")
 scripting_buttons = [NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton")]
 running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton")]
-
-[node name="LevelCompletePopup" type="PopupPanel" parent="."]
-oversampling_override = 1.0
-initial_position = 1
-size = Vector2i(571, 330)
-theme = ExtResource("2_xv3xb")
-
-[node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 547.0
-offset_bottom = 306.0
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
-
-[node name="CompleteHeader" type="Label" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"HeaderLarge"
-text = "Level complete!"
-horizontal_alignment = 1
-vertical_alignment = 2
-
-[node name="SummaryLabel" type="Label" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_type_variation = &"LegibleLabel"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ReturnButton" type="Button" parent="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(220, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("2_xv3xb")
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 18
-text = "Back to level select"
-
-[node name="CopyCodeButton" type="Button" parent="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(220, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("2_xv3xb")
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 18
-text = "Copy Progress Code"
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
 visible = false
@@ -468,9 +415,92 @@ handle_input_locally = false
 size = Vector2i(2, 648)
 render_target_update_mode = 4
 
-[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/ReturnButton" to="ButtonManager" method="_on_return_button_pressed"]
-[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/ReturnButton" to="LevelCompletePopup" method="hide"]
-[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/CopyCodeButton" to="ButtonManager" method="_on_copy_code_pressed"]
+[node name="LevelCompletePopup" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_xv3xb")
+
+[node name="DimRect" type="ColorRect" parent="LevelCompletePopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.54901963)
+
+[node name="PanelContainer" type="PanelContainer" parent="LevelCompletePopup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -141.0
+offset_top = -142.0
+offset_right = 141.0
+offset_bottom = 142.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StarsLabel" type="Label" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+horizontal_alignment = 1
+
+[node name="BlocksLabel" type="Label" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+horizontal_alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CodeButton" type="Button" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(220, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 18
+text = "Copy progress code:\\n%s"
+
+[node name="ExitButton" type="Button" parent="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(220, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 18
+text = "Back to level select"
+
 [connection signal="pressed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" to="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" method="_on_pressed"]
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/FrameButton" to="ButtonManager" method="_on_frame_button_pressed"]
@@ -478,3 +508,6 @@ render_target_update_mode = 4
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/StopButton" to="ButtonManager" method="_on_stop_button_pressed"]
+[connection signal="pressed" from="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/CodeButton" to="ButtonManager" method="_on_copy_code_pressed"]
+[connection signal="pressed" from="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ExitButton" to="ButtonManager" method="_on_return_button_pressed"]
+[connection signal="pressed" from="LevelCompletePopup/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/ExitButton" to="LevelCompletePopup" method="hide"]

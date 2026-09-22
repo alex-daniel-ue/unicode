@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://xh8o04ijmf0n"]
+[gd_scene load_steps=19 format=4 uid="uid://b7ipieigrnfuy"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="2_block_data"]
@@ -16,7 +16,6 @@
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="14_sensed_area"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="15_flag"]
 [ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="16_puddle"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="17_theme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dest"]
 radius = 12.0
@@ -121,7 +120,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-animation = &"idle_right"
+frame_progress = 0.6920425
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("2_block_data")]([ExtResource("11_move"), ExtResource("12_ahead_is")])
@@ -130,21 +129,18 @@ block_data = Array[ExtResource("2_block_data")]([ExtResource("11_move"), ExtReso
 script = ExtResource("13_resettable")
 base = NodePath("..")
 tracked_properties = PackedStringArray("facing_direction", "transform")
-room_snapshots = Array[Dictionary]([
-    Dictionary[StringName, Variant]({
-        &"facing_direction": Vector2(1, 0),
-        &"transform": Transform2D(1, 0, 0, 1, 48, 48)
-    }), 
-    Dictionary[StringName, Variant]({
-        &"facing_direction": Vector2(1, 0),
-        &"transform": Transform2D(1, 0, 0, 1, 48, 176)
-    })
-])
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 48)
+}), Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 176)
+})])
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="2"]
 position = Vector2(144, 48)
 script = ExtResource("14_sensed_area")
-tag = &"door"
+tag = &"destination"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
 shape = SubResource("CircleShape2D_dest")
@@ -156,7 +152,7 @@ texture = ExtResource("15_flag")
 [node name="Destination2" type="Area2D" parent="Visuals" index="3"]
 position = Vector2(112, 176)
 script = ExtResource("14_sensed_area")
-tag = &"door"
+tag = &"destination"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination2" index="0"]
 shape = SubResource("CircleShape2D_dest")

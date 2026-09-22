@@ -24,16 +24,20 @@ var _paused_before_menu := false
 @export var ai_assistant: AIAssistant
 @export var notif: NotificationStack
 @export var level_viewport: SubViewport
-@export var level_complete_popup: PopupPanel
+@export var level_complete_overlay: Control
+@export var level_complete_stars: Label
+@export var level_complete_blocks: Label
 @export var level_complete_summary: Label
 @export var code_button: Button
+@export var exit_button: Button
 @export var pause_menu: PopupPanel
 
 func _ready() -> void:
 	side_panels[0].show_menu(true)
 	side_panels[1].show_menu(true)
 	
-	if Game.level != null:
+	if Game.level_scene != null:
+		Game.level = Game.level_scene.instantiate() as Level
 		configure_level()
 	
 	Interpreter.error_raised.connect(_on_interpreter_error)
@@ -149,16 +153,30 @@ func _on_level_completed() -> void:
 	SfxPlayer.play(COMPLETE_SOUND)
 	
 	var stars := Game.level.calculate_stars(current_run_placed_blocks)
-	var level_id := Game.level.scene_file_path.get_file().get_basename()
-	Progress.record_completion(level_id, stars)
+	Progress.record_completion(Game.level_id, stars)
 	
 	_show_level_complete(stars)
 
 func _show_level_complete(stars: int) -> void:
-	var stars_text := "★".repeat(stars) + "☆".repeat(3 - stars)
-	level_complete_summary.text = "%s\nUsed %d blocks." % [stars_text, current_run_placed_blocks]
-	code_button.text = "Copy to Clipboard:\n%s" % Progress.get_code()
-	level_complete_popup.popup_centered()
+	var par := Game.level.get_star_par()
+	
+	level_complete_summary.text = "You used %d blocks. ★★★ at %d, ★★ at %d." % [
+		current_run_placed_blocks, par, par + Game.level.star_slack
+	]
+	level_complete_stars.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+	
+	code_button.text = "Copy progress code:\n%s" % Progress.get_code()
+	
+	exit_button.disabled = true
+	level_complete_overlay.show()
+	
+	# Hold the exit for about two seconds, then enable it whether
+	# or not the summary has arrived.
+	get_tree().create_timer(2.0).timeout.connect(
+		func() -> void:
+			if is_instance_valid(exit_button):
+				exit_button.disabled = false
+	)
 
 func _on_level_failed(reason: String) -> void:
 	Interpreter.interrupted = true

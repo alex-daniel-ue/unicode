@@ -212,3 +212,26 @@ func get_func_type() -> FuncType:
 
 func has_text_blocks() -> bool:
 	return text.contains("{}")
+
+## A duplicate that actually copies the nested parameter blocks.
+##
+## Resource.duplicate(true) does not copy a sub-resource that came from a file.
+## Verified in 4.5.1 against if.tres: `nested` comes back as a new object,
+## because it is an inline SubResource, but every entry in `text_blocks` is
+## still the very same on-disk BlockData as the original. Writing a flag onto
+## one of those entries edits the shared .tres for the rest of the session, and
+## even a fresh load() then returns the mutated copy.
+##
+## Using this in Block.construct() as well as in BlockDragComponent.copy() is
+## what makes the whole class of bug unreachable, because after that no live
+## Block holds a reference to a file-backed BlockData at all.
+func deep_copy() -> BlockData:
+	var copy: BlockData = duplicate(true)
+
+	var copied: Array[BlockData] = []
+	for child: BlockData in text_blocks:
+		if child != null:
+			copied.append(child.deep_copy())
+	copy.text_blocks = copied
+
+	return copy

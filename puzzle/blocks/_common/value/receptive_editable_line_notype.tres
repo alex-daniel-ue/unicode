@@ -14,11 +14,12 @@ _socket_ref = SubResource("Resource_hb0ia")
 
 [resource]
 script = ExtResource("3_7aya6")
-name = "ReceptiveEditableLineBlock"
+name = "ValueSlot"
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_hb0ia")
 value = SubResource("Resource_1vt8s")
+description = "A value slot. Type a number, a word, or the name of a variable straight into it, or drop a block in that produces a value, such as an arithmetic block or another variable."
 draggable = false
 placeable = false
 top_notch = false

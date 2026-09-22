@@ -18,7 +18,7 @@ script = ExtResource("5_p0h3y")
 show_type = false
 enum_flag = true
 enum_as_string = true
-enum_values = PackedStringArray("blocked", "door", "puddle")
+enum_values = PackedStringArray("blocked", "destination", "puddle")
 _socket_ref = SubResource("Resource_3dh4b")
 
 [sub_resource type="Resource" id="Resource_pygt3"]

@@ -2,6 +2,8 @@ extends Node
 
 
 var level: Level
+var level_scene: PackedScene
+var level_id := &""
 var session_id := Crypto.new().generate_random_bytes(8).hex_encode()
 
 

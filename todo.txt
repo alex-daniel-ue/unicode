@@ -1,20 +1,3 @@
-
 add notification when timed out finishes
-variable watcher/debug view, add button for left panel, how to format dict well?
 add cant zoom or pan if bounds no longer intersect with camera view
-canvas infinite panning or limited but big
 notification should wrap when bigger than parent, reuse chat bubble logic, generalize?
-chat bubble word wrap bad!
-
-optionally provide completed levels? revisit previous levels if confused?
-
-add robot.rotate block
-make robot.move unidirectional, only move forward
-
-array block:
-declare var as "[]"
-and array valueblock
-
-get index, set index for string, array
-
-make conversation prototype

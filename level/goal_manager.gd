@@ -56,7 +56,7 @@ func bake_bounds() -> void:
 	
 	var robot := get_tree().get_first_node_in_group(&"robot")
 	if robot:
-		rect = rect.merge(robot.collision_shape.shape.get_rect())
+		rect = rect.merge(LevelCamera.node_bounds(robot))
 	
 	bounds = rect
 	update_configuration_warnings()

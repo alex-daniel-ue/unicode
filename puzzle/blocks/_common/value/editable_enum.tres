@@ -15,11 +15,12 @@ _socket_ref = SubResource("Resource_5vdka")
 
 [resource]
 script = ExtResource("1_8xhwh")
-name = "ValueEditableEnumBlock"
+name = "ChoiceSlot"
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
 socket = SubResource("Resource_5vdka")
 value = SubResource("Resource_mk5nd")
+description = "A dropdown. Pick one of the choices it offers; nothing can be typed in and no block can be dropped into it."
 draggable = false
 placeable = false
 top_notch = false

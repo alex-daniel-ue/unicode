@@ -1,23 +1,30 @@
-[gd_scene load_steps=27 format=4 uid="uid://2l2o3laaml6j"]
+[gd_scene load_steps=34 format=4 uid="uid://2l2o3laaml6j"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_44kmb"]
 [ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="2_y2nf2"]
 [ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="3_jjd46"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_uuttg"]
+[ext_resource type="Resource" uid="uid://dv3ixkouloiv6" path="res://puzzle/blocks/control flow/break.tres" id="5_15s5g"]
 [ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="5_b0lvt"]
 [ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="6_deifc"]
+[ext_resource type="Resource" uid="uid://cdcuf6t8s6ew0" path="res://puzzle/blocks/control flow/continue.tres" id="6_pdcv0"]
 [ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="7_15s5g"]
 [ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="8_pdcv0"]
 [ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="9_h7wu1"]
 [ext_resource type="Resource" uid="uid://bjtnr14xj3g7o" path="res://puzzle/blocks/generic/print.tres" id="10_wgt82"]
 [ext_resource type="Resource" uid="uid://bcxcs62s2dpcv" path="res://puzzle/blocks/control flow/if.tres" id="11_mofqk"]
+[ext_resource type="Resource" uid="uid://c4f1tp3s11tra" path="res://puzzle/blocks/generic/declare_var.tres" id="12_h7wu1"]
 [ext_resource type="Resource" uid="uid://d2m2q1m1gwxsg" path="res://puzzle/blocks/control flow/else.tres" id="12_i2otl"]
 [ext_resource type="Resource" uid="uid://dkqtd8xcp0c2" path="res://puzzle/blocks/socket/boolean.tres" id="13_bcnb2"]
+[ext_resource type="Resource" uid="uid://c6s5fbjvbbspi" path="res://puzzle/blocks/generic/decrement.tres" id="13_wgt82"]
 [ext_resource type="Resource" uid="uid://61khpoynry3m" path="res://puzzle/blocks/socket/arithmetic.tres" id="14_xbbit"]
 [ext_resource type="Resource" uid="uid://dxlx24lxeeq0q" path="res://puzzle/blocks/socket/not.tres" id="15_b6pcm"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="15_xe4we"]
+[ext_resource type="Resource" uid="uid://bxjjm3ig67sq2" path="res://puzzle/blocks/control flow/elif.tres" id="16_44kmb"]
 [ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="16_xp3eq"]
+[ext_resource type="Resource" uid="uid://ih285nrl3m6r" path="res://puzzle/blocks/generic/set_var.tres" id="17_mofqk"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="17_vft51"]
+[ext_resource type="Resource" uid="uid://i5c086gipnbi" path="res://puzzle/blocks/socket/and_or.tres" id="18_i2otl"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="18_u5p48"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="19_p4fbe"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="20_cuco7"]
@@ -95,19 +102,20 @@ data = SubResource("Resource_u7bg7")
 object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_uuttg")]([ExtResource("5_b0lvt"), ExtResource("6_deifc"), ExtResource("7_15s5g"), ExtResource("8_pdcv0"), ExtResource("9_h7wu1"), ExtResource("10_wgt82"), ExtResource("11_mofqk"), ExtResource("12_i2otl"), ExtResource("13_bcnb2"), ExtResource("14_xbbit"), ExtResource("15_b6pcm")])
+block_data = Array[ExtResource("4_uuttg")]([ExtResource("5_15s5g"), ExtResource("6_pdcv0"), ExtResource("16_44kmb"), ExtResource("12_i2otl"), ExtResource("9_h7wu1"), ExtResource("11_mofqk"), ExtResource("6_deifc"), ExtResource("12_h7wu1"), ExtResource("13_wgt82"), ExtResource("8_pdcv0"), ExtResource("5_b0lvt"), ExtResource("10_wgt82"), ExtResource("17_mofqk"), ExtResource("18_i2otl"), ExtResource("14_xbbit"), ExtResource("13_bcnb2"), ExtResource("7_15s5g"), ExtResource("15_b6pcm")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
-bounds = Rect2(2, 97.92, 152, 28.160004)
+bounds = Rect2(-14, -14, 168, 140.08)
 focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
 
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("15_xe4we")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/YSorted/Destination1")
 camera_focus = NodePath("../../../Visuals/YSorted/Destination1")
+detection_area = NodePath("../../../Visuals/YSorted/Destination1")
 
-[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus")]
+[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("16_xp3eq")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 is_complete = true
@@ -115,11 +123,12 @@ permanent = false
 must_maintain = true
 fail_message = "You skipped past the Goal!"
 camera_focus = NodePath("../../../Visuals/YSorted/Hazard1")
+detection_area = NodePath("../../../Visuals/YSorted/Hazard1")
 
 [node name="Visuals" type="Node2D" parent="." index="4"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
-tile_map_data = PackedByteArray("AAAAAAIAAQAAAAAAAAAAAAMAAQAAAAMAAAABAAIAAQABAAAAAAABAAMAAQABAAMAAAACAAIAAQACAAAAAAACAAMAAQACAAMAAAADAAIAAQABAAAAAAADAAMAAQABAAMAAAAEAAMAAQACAAMAAAAEAAIAAQACAAAAAAAFAAIAAQADAAAAAAAFAAMAAQADAAMAAAA=")
+tile_map_data = PackedByteArray("AAAAAAIAAQAAAAAAAAAAAAMAAQAAAAEAAAABAAIAAQABAAAAAAABAAMAAQABAAIAAAACAAIAAQACAAAAAAACAAMAAQACAAIAAAADAAIAAQABAAAAAAADAAMAAQABAAIAAAAEAAMAAQACAAIAAAAEAAIAAQACAAAAAAAFAAIAAQADAAAAAAAFAAMAAQADAAIAAAAAAAQAAQAAAAMAAAABAAQAAQACAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQADAAMAAAA=")
 tile_set = ExtResource("17_vft51")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="1"]
@@ -132,14 +141,14 @@ tile_set = ExtResource("18_u5p48")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAD//wEAAQAAAAEAAAAAAAEAAQADAAEAAAD//wAAAQAAAAAAAAAAAAAAAQADAAAAAAAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAAAAQAAAAAAABAGAAEAAQAAAAEAABABAAAAAQABAAAAAAABAAEAAQABAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAAGAAIAAQAAAAEAABAGAAMAAQAAAAEAABD//wQAAQACAAAAADAGAAQAAQACAAAAACAAAAQAAAAAAAEAAGABAAQAAAAAAAEAAGACAAQAAAAAAAEAAGADAAQAAAAAAAEAAGAEAAQAAAAAAAEAAGAFAAQAAAAAAAEAAGA=")
+tile_map_data = PackedByteArray("AAD//wEAAQAAAAEAAAAAAAEAAQADAAEAAAD//wAAAQAAAAAAAAAAAAAAAQADAAAAAAAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAAAAQAAAAAAABAGAAEAAQAAAAEAABABAAAAAQABAAAAAAABAAEAAQABAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAAGAAIAAQAAAAEAABAGAAMAAQAAAAEAABAAAAUAAAAAAAEAAGABAAUAAAAAAAEAAGACAAUAAAAAAAEAAGADAAUAAAAAAAEAAGAEAAUAAAAAAAEAAGAFAAUAAAAAAAEAAGD//wQAAQAAAAEAAAAGAAQAAQAAAAEAABD//wUAAQACAAAAADAGAAUAAQACAAAAACA=")
 tile_set = ExtResource("19_p4fbe")
 
 [node name="Destination1" type="Area2D" parent="Visuals/YSorted" index="2"]
 position = Vector2(112, 112)
 monitorable = false
 script = ExtResource("24_u3i6q")
-tag = &"door"
+tag = &"destination"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/YSorted/Destination1" index="0"]
 shape = SubResource("CircleShape2D_room1")
@@ -162,7 +171,7 @@ position = Vector2(16, 112)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.36334166
+frame_progress = 0.51440585
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("23_u7k4g")
@@ -179,7 +188,7 @@ position = Vector2(32, 0)
 [node name="Camera2D" parent="." index="5"]
 position = Vector2(96, 80)
 zoom = Vector2(4.3933825, 4.3933825)
-level_bounds = Rect2(-32, 0, 256, 160)
+level_bounds = Rect2(-32, 0, 256, 192)
 
 [connection signal="body_entered" from="Visuals/YSorted/Hazard1" to="RoomGoals/GoalManager/HazardGoal" method="_on_entity_entered"]
 

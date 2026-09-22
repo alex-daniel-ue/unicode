@@ -3,7 +3,7 @@ class_name Robot
 extends AnimatableBody2D
 
 
-const TAGS: Array[StringName] = [&"blocked", &"door", &"puddle"]
+const TAGS: Array[StringName] = [&"blocked", &"destination", &"puddle"]
 
 @export var sprite: AnimatedSprite2D
 @export var collision_shape: CollisionShape2D
