@@ -12,6 +12,8 @@ const RATE_LIMIT_TIMEOUT := 15
 const SHOT_WIDTH := 768
 const LOG_LINES := 40
 
+const ALLOW_WHILE_PAUSED := false
+
 @export var chat_bubble_scene: PackedScene
 
 @export_group("Bubble Themes")
@@ -118,8 +120,8 @@ func _refresh_busy_state() -> void:
 	if in_timeout:
 		return
 	
-	var running := Interpreter.is_running and not Interpreter.is_paused
-	var busy := running or _awaiting_reply
+	var is_executing: bool = Interpreter.is_running if not ALLOW_WHILE_PAUSED else (Interpreter.is_running and not Interpreter.is_paused)
+	var busy: bool = is_executing or _awaiting_reply
 	
 	submit_button.disabled = busy
 	message_field.editable = not busy

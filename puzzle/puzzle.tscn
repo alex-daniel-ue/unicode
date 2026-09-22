@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=28 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -26,8 +26,9 @@
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
 [ext_resource type="Texture2D" uid="uid://d3cm84lguffxf" path="res://puzzle/ui/side panel/icons/pixelarticons--eye.png" id="17_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
+[ext_resource type="Texture2D" uid="uid://dvh7ej8j7rh2y" path="res://puzzle/ui/side panel/icons/pixelarticons--frame.png" id="24_a3a4o"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete_popup", "pause_menu")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete_popup", "level_complete_summary", "code_button", "pause_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,6 +45,8 @@ ai_assistant = NodePath("UserInterface/SideMenuLeft/Panel/AIAssistant")
 notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
 level_complete_popup = NodePath("LevelCompletePopup")
+level_complete_summary = NodePath("LevelCompletePopup/MarginContainer/VBoxContainer/SummaryLabel")
+code_button = NodePath("LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/CopyCodeButton")
 pause_menu = NodePath("PauseMenu")
 
 [node name="ButtonManager" type="Node" parent="." node_paths=PackedStringArray("play_button", "scripting_buttons", "running_buttons")]
@@ -57,14 +60,14 @@ running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/Stop
 [node name="LevelCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
 initial_position = 1
-size = Vector2i(514, 259)
+size = Vector2i(571, 330)
 theme = ExtResource("2_xv3xb")
 
 [node name="MarginContainer" type="MarginContainer" parent="LevelCompletePopup"]
 offset_left = 24.0
 offset_top = 24.0
-offset_right = 490.0
-offset_bottom = 235.0
+offset_right = 547.0
+offset_bottom = 306.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
@@ -72,10 +75,10 @@ theme_override_constants/margin_bottom = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="Label" type="Label" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
+[node name="CompleteHeader" type="Label" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"HeaderLarge"
@@ -83,7 +86,16 @@ text = "Level complete!"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="ReturnButton" type="Button" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
+[node name="SummaryLabel" type="Label" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="LevelCompletePopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ReturnButton" type="Button" parent="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(220, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -91,6 +103,15 @@ theme = ExtResource("2_xv3xb")
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 18
 text = "Back to level select"
+
+[node name="CopyCodeButton" type="Button" parent="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(220, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 18
+text = "Copy Progress Code"
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
 visible = false
@@ -129,7 +150,6 @@ theme_type_variation = &"SidePanel"
 script = ExtResource("2_3gr0x")
 
 [node name="PuzzleInformation" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -177,6 +197,7 @@ layout_mode = 1
 theme_override_constants/margin_top = 12
 
 [node name="VariableWatcher" type="MarginContainer" parent="UserInterface/SideMenuLeft/Panel" node_paths=PackedStringArray("tree", "status", "status_container")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -225,6 +246,9 @@ layout_mode = 2
 
 [node name="StatusLabel" type="Label" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer/StatusContainer"]
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 16
 text = "These are your variables right now."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -350,7 +374,7 @@ offset_bottom = -29.554993
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("2_xv3xb")
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"HeaderMedium"
 text = "Workspace"
 
 [node name="SideMenuRight" type="HBoxContainer" parent="UserInterface"]
@@ -374,6 +398,14 @@ icon = ExtResource("10_dipl1")
 expand_icon = true
 script = ExtResource("6_82356")
 associated_contents = NodePath("../../Panel/PuzzleEnvironment")
+
+[node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+icon = ExtResource("24_a3a4o")
+expand_icon = true
 
 [node name="ExpandSeparator" type="Control" parent="UserInterface/SideMenuRight/ButtonContainer"]
 layout_mode = 2
@@ -436,10 +468,12 @@ handle_input_locally = false
 size = Vector2i(2, 648)
 render_target_update_mode = 4
 
-[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/ReturnButton" to="ButtonManager" method="_on_return_button_pressed"]
-[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/ReturnButton" to="LevelCompletePopup" method="hide"]
+[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/ReturnButton" to="ButtonManager" method="_on_return_button_pressed"]
+[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/ReturnButton" to="LevelCompletePopup" method="hide"]
+[connection signal="pressed" from="LevelCompletePopup/MarginContainer/VBoxContainer/HBoxContainer/CopyCodeButton" to="ButtonManager" method="_on_copy_code_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" to="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" method="_on_pressed"]
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/FrameButton" to="ButtonManager" method="_on_frame_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="ButtonManager" method="_on_speed_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]

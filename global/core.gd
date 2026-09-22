@@ -60,6 +60,7 @@ func validate_type(value: Variant, types: PackedInt32Array, idx := -1) -> String
 		TYPE_FLOAT: "a decimal",
 		TYPE_STRING: "a string",
 		TYPE_STRING_NAME: "a variable name",
+		TYPE_ARRAY: "a list",
 	}
 	
 	if typeof(value) not in types:

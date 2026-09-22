@@ -22,12 +22,12 @@ collision_shape = NodePath("CollisionShape2D")
 probe = NodePath("ShapeCast2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(-0.5, 0.5)
-scale = Vector2(0.1, 0.1)
+position = Vector2(-0.125, -0.28)
+scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("1_ql3ht")
-animation = &"idle_backward"
+animation = &"idle_right"
 autoplay = "idle_backward"
-frame_progress = 0.27976117
+frame_progress = 0.63197356
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_bwqil")
@@ -37,6 +37,7 @@ script = ExtResource("1_2oojt")
 block_data = Array[ExtResource("4_bwqil")]([ExtResource("5_5f2gm"), ExtResource("6_yuct4"), ExtResource("7_yeoyj")])
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_yuct4")
 target_position = Vector2(0, 0)
 max_results = 4

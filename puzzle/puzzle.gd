@@ -10,6 +10,9 @@ const NUDGE_AFTER := [3, 7]
 var failed_runs := 0
 var last_run_yaml := ""
 var last_run_result := "The student hasn't pressed Play on this level yet."
+var current_run_placed_blocks := 0
+
+var _paused_before_menu := false
 
 @export var print_yaml := false
 
@@ -22,6 +25,8 @@ var last_run_result := "The student hasn't pressed Play on this level yet."
 @export var notif: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete_popup: PopupPanel
+@export var level_complete_summary: Label
+@export var code_button: Button
 @export var pause_menu: PopupPanel
 
 func _ready() -> void:
@@ -33,14 +38,21 @@ func _ready() -> void:
 	
 	Interpreter.error_raised.connect(_on_interpreter_error)
 	Interpreter.output_logged.connect(_on_interpreter_output)
+	
+	pause_menu.visibility_changed.connect(_on_pause_menu_visibility_changed)
 
 ## Perfectly functional; toggled on each "pause" action. Tested.
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
-		pause_menu.show()
+		_paused_before_menu = Interpreter.is_paused
 		Interpreter.is_paused = true
+		pause_menu.show()
 	elif event.is_action_released("pause"):
 		pause_menu.hide()
+
+func _on_pause_menu_visibility_changed() -> void:
+	if not pause_menu.visible:
+		Interpreter.is_paused = _paused_before_menu
 
 func _exit_tree() -> void:
 	Interpreter.is_running = false
@@ -86,12 +98,18 @@ func run_program() -> void:
 		notif.push("No begin block on Canvas.", Notification.Type.ERROR)
 		return
 	
+	if begin.get_blocks().is_empty():
+		notif.push("Begin has no blocks under it.", Notification.Type.ERROR)
+		return
+	
 	last_run_yaml = canvas.serializer.yaml_serialize()
 	
 	Interpreter.is_running = true
 	side_panels[1].show_menu(true)
 	side_panels[1].keep_state = true
-
+	
+	var current_yaml := canvas.serializer.yaml_serialize()
+	current_run_placed_blocks = Serializer.count_solid_blocks(current_yaml, true)
 	
 	var cleared := await Game.level.run_rooms(begin)
 	if not cleared:
@@ -129,7 +147,18 @@ func _get_begin() -> CapBlock:
 func _on_level_completed() -> void:
 	Interpreter.interrupted = true
 	SfxPlayer.play(COMPLETE_SOUND)
-	level_complete_popup.show()
+	
+	var stars := Game.level.calculate_stars(current_run_placed_blocks)
+	var level_id := Game.level.scene_file_path.get_file().get_basename()
+	Progress.record_completion(level_id, stars)
+	
+	_show_level_complete(stars)
+
+func _show_level_complete(stars: int) -> void:
+	var stars_text := "★".repeat(stars) + "☆".repeat(3 - stars)
+	level_complete_summary.text = "%s\nUsed %d blocks." % [stars_text, current_run_placed_blocks]
+	code_button.text = "Copy to Clipboard:\n%s" % Progress.get_code()
+	level_complete_popup.popup_centered()
 
 func _on_level_failed(reason: String) -> void:
 	Interpreter.interrupted = true

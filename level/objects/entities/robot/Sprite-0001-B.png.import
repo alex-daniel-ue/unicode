@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cd3h3g4d5kbao"
-path="res://.godot/imported/robot_left.png-cdb6350657915ae5e02aae2ff795e9b0.ctex"
+uid="uid://c0agujs7w25j7"
+path="res://.godot/imported/Sprite-0001-B.png-4a2d413298bc2f9fe0cbb14ad84868dd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://level/objects/entities/robot/robot_left.png"
-dest_files=["res://.godot/imported/robot_left.png-cdb6350657915ae5e02aae2ff795e9b0.ctex"]
+source_file="res://level/objects/entities/robot/Sprite-0001-B.png"
+dest_files=["res://.godot/imported/Sprite-0001-B.png-4a2d413298bc2f9fe0cbb14ad84868dd.ctex"]
 
 [params]
 

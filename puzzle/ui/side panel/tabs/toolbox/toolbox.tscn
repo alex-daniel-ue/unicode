@@ -27,6 +27,7 @@ metadata/_access_modifiers = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2
+horizontal_scroll_mode = 0
 
 [node name="CategoryContainer" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2

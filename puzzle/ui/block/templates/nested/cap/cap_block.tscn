@@ -19,6 +19,8 @@ texture_margin_bottom = 8.0
 region_rect = Rect2(0, 0, 278, 125)
 
 [node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_3hsbr")]
+offset_right = 141.0
+offset_bottom = 64.0
 script = ExtResource("1_1vde0")
 upper_lip = NodePath("UpperLip")
 mouth = NodePath("Mouth")

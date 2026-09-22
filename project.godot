@@ -29,6 +29,7 @@ Interpreter="*res://global/interpreter.gd"
 SfxPlayer="*res://global/sfx player/sfx_player.gd"
 Transition="*res://global/transition/transition.tscn"
 Tutorial="*res://global/tutorial.gd"
+Progress="*res://global/progress.gd"
 
 [display]
 

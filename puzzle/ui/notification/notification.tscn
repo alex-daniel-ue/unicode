@@ -13,5 +13,6 @@ label = NodePath("Label")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
+theme = ExtResource("1_nhyce")
 theme_type_variation = &"NotificationLabel"
 text = "Something has gone wrong!"

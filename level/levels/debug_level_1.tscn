@@ -104,8 +104,8 @@ focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
 script = ExtResource("15_xe4we")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination1")
-camera_focus = NodePath("../../../Visuals/Destination1")
+destination_area = NodePath("../../../Visuals/YSorted/Destination1")
+camera_focus = NodePath("../../../Visuals/YSorted/Destination1")
 
 [node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus")]
 script = ExtResource("16_xp3eq")
@@ -114,7 +114,7 @@ is_complete = true
 permanent = false
 must_maintain = true
 fail_message = "You skipped past the Goal!"
-camera_focus = NodePath("../../../Visuals/Hazard1")
+camera_focus = NodePath("../../../Visuals/YSorted/Hazard1")
 
 [node name="Visuals" type="Node2D" parent="." index="4"]
 
@@ -135,13 +135,34 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAD//wEAAQAAAAEAAAAAAAEAAQADAAEAAAD//wAAAQAAAAAAAAAAAAAAAQADAAAAAAAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAAAAQAAAAAAABAGAAEAAQAAAAEAABABAAAAAQABAAAAAAABAAEAAQABAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAAEAAAAAQABAAAAAAAEAAEAAQABAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAAGAAIAAQAAAAEAABAGAAMAAQAAAAEAABD//wQAAQACAAAAADAGAAQAAQACAAAAACAAAAQAAAAAAAEAAGABAAQAAAAAAAEAAGACAAQAAAAAAAEAAGADAAQAAAAAAAEAAGAEAAQAAAAAAAEAAGAFAAQAAAAAAAEAAGA=")
 tile_set = ExtResource("19_p4fbe")
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("20_cuco7")]
+[node name="Destination1" type="Area2D" parent="Visuals/YSorted" index="2"]
+position = Vector2(112, 112)
+monitorable = false
+script = ExtResource("24_u3i6q")
+tag = &"door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/YSorted/Destination1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="Flag" type="Sprite2D" parent="Visuals/YSorted/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("25_7p3bf")
+
+[node name="Hazard1" type="Area2D" parent="Visuals/YSorted" index="3"]
+position = Vector2(144, 112)
+monitorable = false
+script = ExtResource("24_u3i6q")
+tag = &"puddle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/YSorted/Hazard1" index="0"]
+shape = SubResource("CircleShape2D_room1")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="4" instance=ExtResource("20_cuco7")]
 position = Vector2(16, 112)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-animation = &"idle_right"
-frame_progress = 0.5263143
+frame_progress = 0.36334166
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("23_u7k4g")
@@ -155,34 +176,12 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 [node name="ShapeCast2D" parent="Visuals/YSorted/RobotCharacter" index="4"]
 position = Vector2(32, 0)
 
-[node name="Destination1" type="Area2D" parent="Visuals" index="2"]
-position = Vector2(112, 112)
-monitorable = false
-script = ExtResource("24_u3i6q")
-tag = &"door"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
-shape = SubResource("CircleShape2D_room1")
-
-[node name="Flag" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("25_7p3bf")
-
-[node name="Hazard1" type="Area2D" parent="Visuals" index="3"]
-position = Vector2(144, 112)
-monitorable = false
-script = ExtResource("24_u3i6q")
-tag = &"puddle"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Hazard1" index="0"]
-shape = SubResource("CircleShape2D_room1")
-
 [node name="Camera2D" parent="." index="5"]
 position = Vector2(96, 80)
 zoom = Vector2(4.3933825, 4.3933825)
 level_bounds = Rect2(-32, 0, 256, 160)
 
-[connection signal="body_entered" from="Visuals/Hazard1" to="RoomGoals/GoalManager/HazardGoal" method="_on_entity_entered"]
+[connection signal="body_entered" from="Visuals/YSorted/Hazard1" to="RoomGoals/GoalManager/HazardGoal" method="_on_entity_entered"]
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="LevelBlockPreset/BeginBlock/Mouth/MoveBlock"]

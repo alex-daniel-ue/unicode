@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dagoksfww1jgg"
-path="res://.godot/imported/robot_front.png-3df6a8e73306ce294fc0ec369bcab5ba.ctex"
+uid="uid://dvh7ej8j7rh2y"
+path="res://.godot/imported/pixelarticons--frame.png-46a306442880eb5bcb1b1efe2836eeba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://level/objects/entities/robot/robot_front.png"
-dest_files=["res://.godot/imported/robot_front.png-3df6a8e73306ce294fc0ec369bcab5ba.ctex"]
+source_file="res://puzzle/ui/side panel/icons/pixelarticons--frame.png"
+dest_files=["res://.godot/imported/pixelarticons--frame.png-46a306442880eb5bcb1b1efe2836eeba.ctex"]
 
 [params]
 

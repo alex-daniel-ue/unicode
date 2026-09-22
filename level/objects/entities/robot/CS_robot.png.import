@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8yovhfwh8cb4"
-path="res://.godot/imported/robot_right.png-2e198407a3184d193d9989f43d319c5a.ctex"
+uid="uid://1aua2ql8733u"
+path="res://.godot/imported/CS_robot.png-8a6b53503b7bb4a0170c3c7a77737dd1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://level/objects/entities/robot/robot_right.png"
-dest_files=["res://.godot/imported/robot_right.png-2e198407a3184d193d9989f43d319c5a.ctex"]
+source_file="res://level/objects/entities/robot/CS_robot.png"
+dest_files=["res://.godot/imported/CS_robot.png-8a6b53503b7bb4a0170c3c7a77737dd1.ctex"]
 
 [params]
 

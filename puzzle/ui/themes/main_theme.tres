@@ -1,9 +1,30 @@
-[gd_resource type="Theme" load_steps=40 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=41 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://cypqhhpk8l6ck" path="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf" id="2_hdcft"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="2_oiocf"]
+[ext_resource type="FontFile" uid="uid://d0dw8vqho76cs" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf" id="3_oiocf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8exu4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xejr6"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.11764706, 0.13333334, 0.2, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2784314, 0.3137255, 0.47843137, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 10
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdcft"]
 content_margin_left = 16.0
@@ -86,26 +107,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xejr6"]
-content_margin_left = 24.0
-content_margin_top = 24.0
-content_margin_right = 24.0
-content_margin_bottom = 24.0
-bg_color = Color(0.11764706, 0.13333334, 0.2, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.2784314, 0.3137255, 0.47843137, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-corner_detail = 10
-shadow_color = Color(0, 0, 0, 0.4)
-shadow_size = 8
-shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02q3g"]
 bg_color = Color(0.11764706, 0.13333334, 0.2, 1)
@@ -272,29 +273,29 @@ default_font = ExtResource("2_oiocf")
 default_font_size = 16
 BlockLabel/base_type = &"Label"
 BlockLabel/colors/font_color = Color(0, 0, 0, 1)
+BlockLabel/font_sizes/font_size = 16
+BlockLabel/fonts/font = ExtResource("2_oiocf")
 ChatMessage/base_type = &"RichTextLabel"
 ChatMessage/colors/default_color = Color(0, 0, 0, 1)
 ChatMessage/colors/font_selected_color = Color(1, 1, 1, 1)
-ChatMessage/constants/line_separation = 4
-ChatMessage/font_sizes/normal_font_size = 32
-ChatMessage/fonts/normal_font = ExtResource("2_hdcft")
+ChatMessage/font_sizes/normal_font_size = 20
+ChatMessage/fonts/normal_font = ExtResource("3_oiocf")
 ChatMessage/styles/focus = SubResource("StyleBoxEmpty_8exu4")
+ConfirmationDialog/styles/panel = SubResource("StyleBoxFlat_xejr6")
 HeaderLarge/base_type = &"Label"
-HeaderLarge/font_sizes/font_size = 48
+HeaderLarge/font_sizes/font_size = 60
 HeaderMedium/base_type = &"Label"
-HeaderMedium/font_sizes/font_size = 32
+HeaderMedium/font_sizes/font_size = 48
 HeaderSmall/base_type = &"Label"
-HeaderSmall/font_sizes/font_size = 24
+HeaderSmall/font_sizes/font_size = 36
+Label/font_sizes/font_size = 24
+Label/fonts/font = ExtResource("2_hdcft")
 LegibleLabel/base_type = &"Label"
 LegibleLabel/colors/font_outline_color = Color(1, 1, 1, 0.49803922)
 LegibleLabel/constants/line_spacing = 4
 LegibleLabel/constants/outline_size = 1
-LegibleLabel/font_sizes/font_size = 32
-LegibleLabel/fonts/font = ExtResource("2_hdcft")
-LevelLabel/base_type = &"Label"
-LevelLabel/colors/font_color = Color(0, 0, 0, 1)
-LevelLabel/colors/font_outline_color = Color(0.99, 0.99, 0.99, 1)
-LevelLabel/constants/outline_size = 5
+LegibleLabel/font_sizes/font_size = 24
+LegibleLabel/fonts/font = ExtResource("3_oiocf")
 MainMenuButton/base_type = &"Button"
 MainMenuButton/colors/font_color = Color(0.05882353, 0.09019608, 0.16470589, 1)
 MainMenuButton/colors/font_disabled_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
@@ -308,6 +309,9 @@ MainMenuButton/styles/focus = SubResource("StyleBoxEmpty_oiocf")
 MainMenuButton/styles/hover = SubResource("StyleBoxFlat_oiocf")
 MainMenuButton/styles/normal = SubResource("StyleBoxFlat_2yahv")
 MainMenuButton/styles/pressed = SubResource("StyleBoxFlat_l74f8")
+NotificationLabel/base_type = &"Label"
+NotificationLabel/font_sizes/font_size = 20
+NotificationLabel/fonts/font = ExtResource("3_oiocf")
 NotificationPanel/base_type = &"PanelContainer"
 NotificationPanel/styles/panel = SubResource("StyleBoxFlat_v43nb")
 PlayButton/base_type = &"Button"
@@ -321,6 +325,10 @@ PopupMenu/constants/v_separation = 8
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_kbj81")
 PopupMenu/styles/panel = SubResource("StyleBoxFlat_xejr6")
 PopupPanel/styles/panel = SubResource("StyleBoxFlat_xejr6")
+RoomLabel/base_type = &"Label"
+RoomLabel/colors/font_color = Color(0, 0, 0, 1)
+RoomLabel/colors/font_outline_color = Color(0.99, 0.99, 0.99, 1)
+RoomLabel/constants/outline_size = 6
 SidePanel/base_type = &"Panel"
 SidePanel/styles/panel = SubResource("StyleBoxFlat_02q3g")
 SidePanelButton/base_type = &"Button"
@@ -350,11 +358,12 @@ SubmitButton/styles/pressed = SubResource("StyleBoxFlat_8cnbn")
 TextEdit/colors/font_color = Color(0.972549, 0.98039216, 0.9882353, 1)
 TextEdit/colors/font_placeholder_color = Color(0.39215687, 0.45490196, 0.54509807, 1)
 TextEdit/colors/selection_color = Color(1, 1, 1, 0.2)
-TextEdit/font_sizes/font_size = 32
-TextEdit/fonts/font = ExtResource("2_hdcft")
+TextEdit/font_sizes/font_size = 24
+TextEdit/fonts/font = ExtResource("3_oiocf")
 TextEdit/styles/focus = SubResource("StyleBoxFlat_vm8ny")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_8exu4")
 TextEdit/styles/read_only = SubResource("StyleBoxFlat_8exu4")
+TooltipLabel/fonts/font = ExtResource("3_oiocf")
 ValueLineEdit/base_type = &"LineEdit"
 ValueLineEdit/colors/caret_color = Color(0, 0, 0, 1)
 ValueLineEdit/colors/font_color = Color(0, 0, 0, 1)

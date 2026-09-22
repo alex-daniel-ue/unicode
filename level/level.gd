@@ -12,6 +12,9 @@ signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalMan
 @export_multiline var intended_solution: String
 @export var room_goals: Array[GoalManager]
 
+@export var star_slack := 1
+@export var star_par_override := 0
+
 @export_group("Exports")
 @export var rooms: Node
 @export var preset: LevelBlockPreset
@@ -127,6 +130,22 @@ func run_rooms(begin: CapBlock) -> bool:
 	
 	completed.emit()
 	return true
+
+func get_star_par() -> int:
+	if star_par_override > 0:
+		return star_par_override
+	if not intended_solution.is_empty():
+		var total_solid := Serializer.count_solid_blocks(intended_solution, true)
+		return maxi(1, total_solid)
+	return 1
+
+func calculate_stars(placed_block_count: int) -> int:
+	var par := get_star_par()
+	if placed_block_count <= par:
+		return 3
+	elif placed_block_count <= par + star_slack:
+		return 2
+	return 1
 
 func reset_state(room_index := 0) -> void:
 	for node in get_tree().get_nodes_in_group(&"resettable"):

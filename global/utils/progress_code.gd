@@ -13,7 +13,7 @@ extends RefCounted
 ## collected and nothing is stored on a server: the code is the whole record.
 
 const LEVELS := 20
-const STARS_PER_LEVEL := 2          # bits
+const STARS_PER_LEVEL := 2
 const PAYLOAD_CHARS := 8
 const VERSION_INDEX := 8
 const CHECK_INDEX := 9
@@ -81,6 +81,9 @@ static func _checksum(chars: PackedInt32Array) -> int:
 	for i in chars.size():
 		sum += (i + 1) * chars[i]
 	return sum % 31
+
+static func copy_code() -> void:
+	DisplayServer.clipboard_set(Progress.get_code())
 
 
 ## Characters to 5-bit values, or an empty array if anything is unreadable.

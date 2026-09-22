@@ -18,7 +18,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="LevelSelect" type="ColorRect" node_paths=PackedStringArray("button_level_configuration")]
+[node name="LevelSelect" type="ColorRect" node_paths=PackedStringArray("button_level_configuration", "sync_edit", "sync_popup")]
 material = SubResource("ShaderMaterial_soyww")
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,6 +32,8 @@ button_level_configuration = {
 NodePath("MarginContainer/GridContainer/Button"): ExtResource("8_w845f"),
 NodePath("MarginContainer/GridContainer/Button2"): ExtResource("5_ue5et")
 }
+sync_edit = NodePath("PopupPanel/MarginContainer/VBoxContainer/LineEdit")
+sync_popup = NodePath("PopupPanel")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -58,7 +60,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_type_variation = &"HeaderLarge"
-text = "Fundamentals"
+text = "Iteration"
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -151,11 +153,80 @@ text = "<"
 [node name="EmptySpace" type="Control" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-metadata/_edit_group_ = true
 
 [node name="NextButton" type="Button" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"MainMenuButton"
 text = ">"
 
+[node name="SyncProgressCode" type="Button" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Import Progress Code"
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(364, 261)
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupPanel"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 340.0
+offset_bottom = 237.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Sync Progress Code"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="PopupPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+placeholder_text = "#####-#####"
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 24
+
+[node name="OKButton" type="Button" parent="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Import"
+
+[node name="CancelButton" type="Button" parent="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_lhy6y")
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Cancel"
+
 [connection signal="pressed" from="MarginContainer/HomeButton" to="." method="_on_home_button_pressed"]
+[connection signal="pressed" from="MarginContainer/SyncProgressCode" to="PopupPanel" method="popup_centered"]
+[connection signal="pressed" from="MarginContainer/SyncProgressCode" to="PopupPanel/MarginContainer/VBoxContainer/LineEdit" method="select_all"]
+[connection signal="text_submitted" from="PopupPanel/MarginContainer/VBoxContainer/LineEdit" to="." method="_apply_code"]
+[connection signal="text_submitted" from="PopupPanel/MarginContainer/VBoxContainer/LineEdit" to="PopupPanel" method="hide"]
+[connection signal="text_submitted" from="PopupPanel/MarginContainer/VBoxContainer/LineEdit" to="PopupPanel/MarginContainer/VBoxContainer/LineEdit" method="clear"]
+[connection signal="pressed" from="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer/OKButton" to="." method="_apply_code"]
+[connection signal="pressed" from="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer/OKButton" to="PopupPanel" method="hide"]
+[connection signal="pressed" from="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer/OKButton" to="PopupPanel/MarginContainer/VBoxContainer/LineEdit" method="clear"]
+[connection signal="pressed" from="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="PopupPanel" method="hide"]
+[connection signal="pressed" from="PopupPanel/MarginContainer/VBoxContainer/HBoxContainer/CancelButton" to="PopupPanel/MarginContainer/VBoxContainer/LineEdit" method="clear"]
