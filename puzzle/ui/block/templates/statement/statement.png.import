@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://begwactcomqh3"
-path="res://.godot/imported/ValueBlock-hover(smaller).png-eb2dbaf1f5d1e386b33a9528375cff17.ctex"
+uid="uid://7w7n7um0xi3m"
+path="res://.godot/imported/statement.png-1474aa81653207b150908931c1662a62.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/value/ValueBlock-hover(smaller).png"
-dest_files=["res://.godot/imported/ValueBlock-hover(smaller).png-eb2dbaf1f5d1e386b33a9528375cff17.ctex"]
+source_file="res://puzzle/ui/block/templates/statement/statement.png"
+dest_files=["res://.godot/imported/statement.png-1474aa81653207b150908931c1662a62.ctex"]
 
 [params]
 
