@@ -64,7 +64,6 @@ The student has just watched their program run, so they already know what it did
 Write for the ANGLE you are given:
 - python: show how one idea from their program is written in real Python, as one short inline fragment such as while not ahead_is("blocked"): or for seat in range(1, row + 1): and say in a few words what carries over.
 - real_world: connect the idea their program relies on to something outside the game that works the same way, such as a game redrawing the screen in a loop, a phone checking for new messages, or a microwave counting down.
-- what_if: ask one curious question about a change to the level that their program would or would not survive, such as a longer hallway, an extra corner, or the flag somewhere else. Do not answer it.
 - tighter: their program works but is longer than it needs to be. Point at where the extra length is, such as the same blocks written out more than once, or a check whose answer never changes the outcome. Never say which blocks to use instead, and never show or describe the shorter program.
 
 Rules:
