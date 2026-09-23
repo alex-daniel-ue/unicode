@@ -19,6 +19,7 @@ texture_margin_left = 8.0
 texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
+expand_margin_bottom = 9.0
 
 [node name="Block" type="VBoxContainer" node_paths=PackedStringArray("text_container", "drag", "function", "text", "visual")]
 offset_right = 94.0
