@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://dfygahr6nf5cb"]
+[gd_scene load_steps=20 format=4 uid="uid://dfygahr6nf5cb"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
@@ -17,7 +17,6 @@
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="15_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="16_tiles_wall"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="17_4fimd"]
-[ext_resource type="PackedScene" uid="uid://pj76penmyeli" path="res://puzzle/ui/block/templates/socket/expression/expression_block.tscn" id="18_expression_block"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="19_s8vgt"]
 
 [sub_resource type="CircleShape2D" id="Circle_1"]
@@ -53,10 +52,8 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 [node name="LevelDescription" parent="." index="0"]
 title = "Until the wall"
 mission = "One program runs in all three rooms. Get the robot onto the flag in each one."
-rooms = PackedStringArray("A short hallway.", "A longer hallway.", "The longest hallway.")
 twist = "But the hallways are all different lengths, and the same program has to handle every one."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("4_while"), ExtResource("14_ahead_is"), ExtResource("5_not")])
-block_notes = PackedStringArray("It's already on the canvas; you decide what it checks. A while repeats the blocks inside it for as long as its condition is True.", "The robot's eyes. It checks the one tile in front: a wall (blocked), the flag (destination), or a puddle, and gives True or False.", "Flips True into False and False into True. It lets you ask the opposite question.")
 
 [node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_nested")]
 layout_mode = 2
@@ -163,7 +160,8 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.6577693
+animation = &"idle_right"
+frame_progress = 0.20091704
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("13_move"), ExtResource("14_ahead_is")])
@@ -233,4 +231,3 @@ text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
-

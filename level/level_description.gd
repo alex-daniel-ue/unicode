@@ -49,13 +49,50 @@ const EXAMPLE_TOOLTIP := "This is a picture of the block.\nDrag the real one fro
 var content: Array[Control]
 
 
+var _filled := false
+
+
 func _enter_tree() -> void:
 	_prepare(self, false)
 
+## Fills any brief field the scene left empty from LevelBriefs. The scene values
+## win when present; this only covers values the editor dropped from the file.
+func _fill_from_table() -> void:
+	if _filled:
+		return
+	_filled = true
+	var level := get_parent()
+	if level == null or level.scene_file_path.is_empty():
+		return
+	var t := LevelBriefs.for_scene(level.scene_file_path)
+	if t.is_empty():
+		return
+	var patched: PackedStringArray = []
+	if title.is_empty() and t.has("title"): title = t.title; patched.append("title")
+	if mission.is_empty() and t.has("mission"): mission = t.mission; patched.append("mission")
+	if twist.is_empty() and t.has("twist"): twist = t.twist; patched.append("twist")
+	if tip.is_empty() and t.has("tip"): tip = t.tip; patched.append("tip")
+	if rooms.is_empty() and t.has("rooms"): rooms = PackedStringArray(t.rooms); patched.append("rooms")
+	if blocks.is_empty() and t.has("blocks"):
+		for path in t.blocks:
+			blocks.append(load(path) as BlockData)
+		patched.append("blocks")
+	if block_notes.size() < blocks.size() and t.has("block_notes"):
+		block_notes = PackedStringArray(t.block_notes); patched.append("block_notes")
+	if block_values.is_empty() and t.has("block_values"):
+		block_values = PackedStringArray(t.block_values); patched.append("block_values")
+	if t.has("show_stars"):
+		show_stars = t.show_stars
+	if not patched.is_empty():
+		push_warning("Level '%s': brief fields missing from the scene, filled from LevelBriefs: %s"
+			% [level.name, ", ".join(patched)])
+
 func has_brief() -> bool:
+	_fill_from_table()
 	return not (title.is_empty() and mission.is_empty() and twist.is_empty() and blocks.is_empty())
 
 func take_content() -> Array[Control]:
+	_fill_from_table()
 	content.clear()
 	
 	if has_brief():
