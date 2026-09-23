@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://begwactcomqh3"
-path="res://.godot/imported/ValueBlock-hover(smaller).png-eb2dbaf1f5d1e386b33a9528375cff17.ctex"
+uid="uid://bxae1iqxevm4h"
+path="res://.godot/imported/Nigga(idk anu tawag d2).png-f47e837957bb1e17c7ecc90570b4c664.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/value/ValueBlock-hover(smaller).png"
-dest_files=["res://.godot/imported/ValueBlock-hover(smaller).png-eb2dbaf1f5d1e386b33a9528375cff17.ctex"]
+source_file="res://puzzle/ui/block/templates/Nigga(idk anu tawag d2).png"
+dest_files=["res://.godot/imported/Nigga(idk anu tawag d2).png-f47e837957bb1e17c7ecc90570b4c664.ctex"]
 
 [params]
 

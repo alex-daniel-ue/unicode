@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://nrgx8s4alnrc" path="res://puzzle/ui/block/templates/nested/cap/cap_block.gd" id="1_1vde0"]
 [ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="1_3hsbr"]
-[ext_resource type="Texture2D" uid="uid://di61alcg2gees" path="res://puzzle/ui/block/templates/nested/cap/cap_texture.png" id="3_h4y1w"]
+[ext_resource type="Texture2D" uid="uid://c41502381fng6" path="res://puzzle/ui/block/templates/nested/cap/begin.png" id="3_3hsbr"]
 [ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_component_cap.gd" id="6_17osp"]
 [ext_resource type="Script" uid="uid://bq3nnugnoxpbo" path="res://puzzle/ui/block/component/derivations/visual_component_cap.gd" id="8_12l2t"]
 
@@ -11,7 +11,7 @@ content_margin_left = 16.0
 content_margin_top = 32.0
 content_margin_right = 12.0
 content_margin_bottom = 12.0
-texture = ExtResource("3_h4y1w")
+texture = ExtResource("3_3hsbr")
 texture_margin_left = 129.0
 texture_margin_top = 25.0
 texture_margin_right = 8.0
