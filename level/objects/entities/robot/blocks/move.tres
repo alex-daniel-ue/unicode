@@ -13,5 +13,6 @@ syntax = "move forward"
 description = "Moves the robot one tile forward in the direction it is currently facing. Fails if the robot hits a wall."
 text = "move forward"
 Function/entity_script = ExtResource("1_8ids4")
+Function/entity_name = &"RobotCharacter"
 Function/method = &"move"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

@@ -34,6 +34,7 @@ placeable = false
 top_notch = false
 Type/value = SubResource("Resource_n18n1")
 Type/socket = SubResource("Resource_auqoj")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -52,5 +53,6 @@ text = "{} {} {}"
 text_blocks = Array[ExtResource("3_n18n1")]([ExtResource("3_8rxj7"), SubResource("Resource_mtaw4"), ExtResource("3_8rxj7")])
 Type/socket = SubResource("Resource_nxeil")
 Function/script = ExtResource("4_nxeil")
+Function/entity_name = &""
 Function/method = &"_comparison"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

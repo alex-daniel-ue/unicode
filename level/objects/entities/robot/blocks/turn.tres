@@ -29,6 +29,7 @@ placeable = false
 top_notch = false
 Type/value = SubResource("Resource_pjmkc")
 Type/socket = SubResource("Resource_stgt1")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -43,5 +44,6 @@ description = "Rotates the robot 90 degrees to the left, right, or backwards."
 text = "turn {}"
 text_blocks = Array[ExtResource("1_usi8u")]([SubResource("Resource_d43d8")])
 Function/entity_script = ExtResource("1_stgt1")
+Function/entity_name = &"RobotCharacter"
 Function/method = &"turn"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

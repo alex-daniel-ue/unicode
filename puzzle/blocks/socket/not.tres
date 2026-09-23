@@ -24,5 +24,6 @@ text = "not {}"
 text_blocks = Array[ExtResource("1_q1wna")]([ExtResource("4_rbva5")])
 Type/socket = SubResource("Resource_j3o2i")
 Function/script = ExtResource("1_xchmg")
+Function/entity_name = &""
 Function/method = &"_not"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

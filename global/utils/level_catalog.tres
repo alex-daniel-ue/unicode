@@ -1,75 +1,148 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=16 format=3 uid="uid://dyc1t3vgb4y2h"]
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=29 format=3 uid="uid://dyc1t3vgb4y2h"]
 
-[ext_resource type="Script" uid="uid://bosuufgg1ovh8" path="res://global/utils/level_module.gd" id="1_5uqvf"]
-[ext_resource type="Script" uid="uid://copysdfiq2iil" path="res://global/utils/level_entry.gd" id="2_cp0gs"]
-[ext_resource type="Script" uid="uid://br03lngef16na" path="res://global/utils/level_catalog.gd" id="2_n0r71"]
-[ext_resource type="PackedScene" uid="uid://2l2o3laaml6j" path="res://level/levels/debug_level_1.tscn" id="3_8vj6e"]
-[ext_resource type="PackedScene" uid="uid://xhdv8mmxh803" path="res://level/levels/it_0b.tscn" id="4_7un1p"]
-[ext_resource type="PackedScene" uid="uid://cjltfsx4hwic8" path="res://level/levels/it_0a.tscn" id="5_7un1p"]
-[ext_resource type="PackedScene" uid="uid://dfygahr6nf5cb" path="res://level/levels/it_1.tscn" id="6_fvjdf"]
+[ext_resource type="Script" path="res://global/utils/level_module.gd" id="1_level_module"]
+[ext_resource type="Script" path="res://global/utils/level_entry.gd" id="2_level_entry"]
+[ext_resource type="Script" path="res://global/utils/level_catalog.gd" id="3_level_catalog"]
+[ext_resource type="PackedScene" path="res://level/levels/tutorial_1.tscn" id="4_tutorial_1"]
+[ext_resource type="PackedScene" path="res://level/levels/it_0a.tscn" id="5_it_0a"]
+[ext_resource type="PackedScene" path="res://level/levels/it_0b.tscn" id="6_it_0b"]
+[ext_resource type="PackedScene" path="res://level/levels/it_1.tscn" id="7_it_1"]
+[ext_resource type="PackedScene" path="res://level/levels/it_2.tscn" id="8_it_2"]
+[ext_resource type="PackedScene" path="res://level/levels/it_3.tscn" id="9_it_3"]
+[ext_resource type="PackedScene" path="res://level/levels/it_4.tscn" id="10_it_4"]
+[ext_resource type="PackedScene" path="res://level/levels/it_5.tscn" id="11_it_5"]
+[ext_resource type="PackedScene" path="res://level/levels/it_6.tscn" id="12_it_6"]
+[ext_resource type="PackedScene" path="res://level/levels/it_7.tscn" id="13_it_7"]
+[ext_resource type="PackedScene" path="res://level/levels/it_8.tscn" id="14_it_8"]
 
-[sub_resource type="Resource" id="Resource_fvjdf"]
-script = ExtResource("2_cp0gs")
+[sub_resource type="Resource" id="Res_1"]
+script = ExtResource("2_level_entry")
 id = &"tutorial"
-title = "Tutorial"
-concept = "For students familiarizing with UniCode."
+label = "0"
+title = "First steps"
+concept = "How the screen works. Skippable."
+scene = ExtResource("4_tutorial_1")
 counts_for_progress = false
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
-[sub_resource type="Resource" id="Resource_op7vh"]
-script = ExtResource("1_5uqvf")
+[sub_resource type="Resource" id="Res_2"]
+script = ExtResource("1_level_module")
 id = &"tutorial"
 display_name = "Tutorial"
 subtitle = "How to play."
-levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_fvjdf")])
+levels = Array[ExtResource("2_level_entry")]([SubResource("Res_1")])
 locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
-[sub_resource type="Resource" id="Resource_q75gs"]
-script = ExtResource("2_cp0gs")
-id = &"a"
-scene = ExtResource("5_7un1p")
+[sub_resource type="Resource" id="Res_3"]
+script = ExtResource("2_level_entry")
+id = &"it-0a"
+label = "0a"
+title = "Read it first"
+concept = "Read a program, predict what it does, run it."
+scene = ExtResource("5_it_0a")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
-[sub_resource type="Resource" id="Resource_ry6sb"]
-script = ExtResource("2_cp0gs")
-id = &"b"
+[sub_resource type="Resource" id="Res_4"]
+script = ExtResource("2_level_entry")
+id = &"it-0b"
+label = "0b"
+title = "Rebuild it"
+concept = "A sensor and an if, from a blank canvas."
+scene = ExtResource("6_it_0b")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_5"]
+script = ExtResource("2_level_entry")
+id = &"it-1"
+label = "1"
+title = "Until the wall"
+concept = "while, driven by what the robot senses."
+scene = ExtResource("7_it_1")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_6"]
+script = ExtResource("2_level_entry")
+id = &"it-2"
 label = "2"
-scene = ExtResource("4_7un1p")
+title = "Until you see it"
+concept = "A loop that watches for the target."
+scene = ExtResource("8_it_2")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
-[sub_resource type="Resource" id="Resource_kobgr"]
-script = ExtResource("2_cp0gs")
-id = &"c"
+[sub_resource type="Resource" id="Res_7"]
+script = ExtResource("2_level_entry")
+id = &"it-3"
 label = "3"
-scene = ExtResource("6_fvjdf")
+title = "Around the bends"
+concept = "A decision inside a loop."
+scene = ExtResource("9_it_3")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
-[sub_resource type="Resource" id="Resource_4cimd"]
-script = ExtResource("2_cp0gs")
-id = &"d"
+[sub_resource type="Resource" id="Res_8"]
+script = ExtResource("2_level_entry")
+id = &"it-4"
 label = "4"
-scene = ExtResource("3_8vj6e")
+title = "Count the desks"
+concept = "A counter built by hand."
+scene = ExtResource("10_it_4")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
-[sub_resource type="Resource" id="Resource_7un1p"]
-script = ExtResource("1_5uqvf")
+[sub_resource type="Resource" id="Res_9"]
+script = ExtResource("2_level_entry")
+id = &"it-5"
+label = "5"
+title = "One block instead of three"
+concept = "for: the counter, packaged."
+scene = ExtResource("11_it_5")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_10"]
+script = ExtResource("2_level_entry")
+id = &"it-6"
+label = "6"
+title = "A pattern, not a step"
+concept = "A loop body worth more than one move."
+scene = ExtResource("12_it_6")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_11"]
+script = ExtResource("2_level_entry")
+id = &"it-7"
+label = "7"
+title = "Aisle by aisle"
+concept = "A loop inside a loop."
+scene = ExtResource("13_it_7")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_12"]
+script = ExtResource("2_level_entry")
+id = &"it-8"
+label = "8"
+title = "Every row is longer"
+concept = "The inner bound is the outer counter."
+scene = ExtResource("14_it_8")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_13"]
+script = ExtResource("1_level_module")
 id = &"iteration"
 display_name = "Iteration"
 subtitle = "Don't repeat yourself."
-levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_q75gs"), SubResource("Resource_ry6sb"), SubResource("Resource_kobgr"), SubResource("Resource_4cimd"), null, null, null, null, null, null])
+levels = Array[ExtResource("2_level_entry")]([SubResource("Res_3"), SubResource("Res_4"), SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12")])
+locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
-[sub_resource type="Resource" id="Resource_r35se"]
-script = ExtResource("1_5uqvf")
+[sub_resource type="Resource" id="Res_14"]
+script = ExtResource("1_level_module")
 id = &"arrays"
 display_name = "Arrays"
 subtitle = "Zero to hero."
-levels = Array[ExtResource("2_cp0gs")]([null, null, null, null, null, null, null, null, null])
+levels = Array[ExtResource("2_level_entry")]([])
 released = false
-locked_notice = "Stay tuned for next, next week."
+locked_notice = "Opens when your instructor covers this topic."
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [resource]
-script = ExtResource("2_n0r71")
-modules = Array[ExtResource("1_5uqvf")]([SubResource("Resource_op7vh"), SubResource("Resource_7un1p"), SubResource("Resource_r35se")])
+script = ExtResource("3_level_catalog")
+modules = Array[ExtResource("1_level_module")]([SubResource("Res_2"), SubResource("Res_13"), SubResource("Res_14")])

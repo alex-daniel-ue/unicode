@@ -1,0 +1,453 @@
+[gd_scene load_steps=37 format=4]
+
+[ext_resource type="PackedScene" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="Theme" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="3_statement"]
+[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/turn.tres" id="4_turn"]
+[ext_resource type="Script" path="res://puzzle/ui/block/data/nested_data.gd" id="5_nested_data"]
+[ext_resource type="Script" path="res://puzzle/ui/block/data/socket_data.gd" id="6_socket_data"]
+[ext_resource type="Script" path="res://puzzle/ui/block/data/value_data.gd" id="7_value_data"]
+[ext_resource type="Script" path="res://puzzle/ui/block/data/block_data.gd" id="8_block_data"]
+[ext_resource type="Script" path="res://puzzle/functions/control_flow.gd" id="9_control_flow"]
+[ext_resource type="PackedScene" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="10_nested"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_int.tres" id="11_for"]
+[ext_resource type="Script" path="res://level/goals/destination_goal.gd" id="12_dest_goal"]
+[ext_resource type="Script" path="res://level/goals/checkpoint_goal.gd" id="13_check_goal"]
+[ext_resource type="TileSet" path="res://world/tilesets/school_tiles.tres" id="14_tiles_floor"]
+[ext_resource type="Script" path="res://level/goals/sensed_area.gd" id="15_sensed"]
+[ext_resource type="Texture2D" path="res://level/objects/red_flag.png" id="16_tex_dest"]
+[ext_resource type="Texture2D" path="res://level/objects/flag.png" id="17_tex_pen"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/robot/robot_character.tscn" id="18_robot"]
+[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move.tres" id="19_move"]
+[ext_resource type="Script" path="res://level/components/resettable_component.gd" id="20_resettable"]
+[ext_resource type="TileSet" path="res://world/tilesets/school_walls.tres" id="21_tiles_wall"]
+
+[sub_resource type="Resource" id="Nest_1"]
+script = ExtResource("5_nested_data")
+type = 5
+
+[sub_resource type="Resource" id="Sock_2"]
+script = ExtResource("6_socket_data")
+receptive = false
+
+[sub_resource type="Resource" id="Val_3"]
+script = ExtResource("7_value_data")
+show_type = false
+_socket_ref = SubResource("Sock_2")
+
+[sub_resource type="Resource" id="BD_4"]
+script = ExtResource("8_block_data")
+name = "TypedValueSlotPlain"
+base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
+type = 3
+socket = SubResource("Sock_2")
+value = SubResource("Val_3")
+description = "A slot you type into. It takes a typed-in value only, so no block can be dropped into it."
+draggable = false
+placeable = false
+top_notch = false
+text = ""
+Type/value = SubResource("Val_3")
+Type/socket = SubResource("Sock_2")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="Resource" id="Sock_5"]
+script = ExtResource("6_socket_data")
+
+[sub_resource type="Resource" id="Val_6"]
+script = ExtResource("7_value_data")
+_socket_ref = SubResource("Sock_5")
+
+[sub_resource type="Resource" id="BD_7"]
+script = ExtResource("8_block_data")
+name = "ValueSlot"
+base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
+type = 3
+socket = SubResource("Sock_5")
+value = SubResource("Val_6")
+description = "A value slot. Type a number, a word, or the name of a variable straight into it, or drop a block in that produces a value."
+draggable = false
+placeable = false
+top_notch = false
+text = ""
+Type/value = SubResource("Val_6")
+Type/socket = SubResource("Sock_5")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="Resource" id="Sock_8"]
+script = ExtResource("6_socket_data")
+
+[sub_resource type="Resource" id="Val_9"]
+script = ExtResource("7_value_data")
+_socket_ref = SubResource("Sock_8")
+
+[sub_resource type="Resource" id="BD_10"]
+script = ExtResource("8_block_data")
+name = "ValueSlot"
+base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
+type = 3
+socket = SubResource("Sock_8")
+value = SubResource("Val_9")
+description = "A value slot. Type a number, a word, or the name of a variable straight into it, or drop a block in that produces a value."
+draggable = false
+placeable = false
+top_notch = false
+text = ""
+Type/value = SubResource("Val_9")
+Type/socket = SubResource("Sock_8")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="Resource" id="Sock_11"]
+script = ExtResource("6_socket_data")
+receptive = false
+
+[sub_resource type="Resource" id="Val_12"]
+script = ExtResource("7_value_data")
+_socket_ref = SubResource("Sock_11")
+
+[sub_resource type="Resource" id="BD_13"]
+script = ExtResource("8_block_data")
+name = "TypedValueSlot"
+base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
+type = 3
+socket = SubResource("Sock_11")
+value = SubResource("Val_12")
+description = "A slot you type into. It takes a typed-in value only, so no block can be dropped into it."
+draggable = false
+placeable = false
+top_notch = false
+text = "1"
+Type/value = SubResource("Val_12")
+Type/socket = SubResource("Sock_11")
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="Resource" id="BD_14"]
+script = ExtResource("8_block_data")
+name = "ForBlock (Integer)"
+color = Color(0.37254903, 0.5176471, 0.72156864, 1)
+base_path = "res://puzzle/ui/block/templates/nested/nested_block.tscn"
+type = 1
+nested = SubResource("Nest_1")
+category = "Iterative"
+syntax = "for var {name: variable}, from {start: int/variable} to {end: int/variable}, step {increment: int}"
+description = "Iterates from a start value to an end value (inclusive), adding the step value each time. Creates a local variable for the index."
+text = "for var {}, from {}\\nto {}, at step {}"
+text_blocks = Array[ExtResource("8_block_data")]([SubResource("BD_4"), SubResource("BD_7"), SubResource("BD_10"), SubResource("BD_13")])
+Type/nested = SubResource("Nest_1")
+Function/script = ExtResource("9_control_flow")
+Function/method = &"_for"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[sub_resource type="CircleShape2D" id="Circle_15"]
+radius = 12.0
+
+[node name="IT7AisleByAisle" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: ForBlock (Integer)\n      kind: nested\n      text: \"for var {}, from {}\\nto {}, at step {}\"\n      locked: true\n      parameters:\n        - a\n        - 1\n        - 3\n        - 1\n      children:\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - left\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 3\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - back\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 3\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - left\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 2\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n    - block: TurnBlock\n      kind: statement\n      text: \"turn {}\"\n      parameters:\n        - left\n    - block: MoveBlock\n      kind: statement\n      text: \"move forward\""
+room_goals = [NodePath("RoomGoals/GoalManager")]
+star_slack = 3
+
+[node name="Header" type="Label" parent="LevelDescription" index="0"]
+theme_type_variation = &"HeaderMedium"
+text = "Aisle by aisle"
+horizontal_alignment = 1
+
+[node name="Line1" type="Label" parent="LevelDescription" index="1"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Nine pens on the floor, three aisles, one door. Driving over a pen picks it up."
+autowrap_mode = 3
+
+[node name="Line2" type="Label" parent="LevelDescription" index="2"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Every aisle is identical: go up it, come back down, step across to the next one."
+autowrap_mode = 3
+
+[node name="Line3" type="Label" parent="LevelDescription" index="3"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "So there are two sizes of repetition here. The steps inside one aisle, and the aisles themselves. That's a loop inside a loop."
+autowrap_mode = 3
+
+[node name="Line4" type="Label" parent="LevelDescription" index="4"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "The outer for is placed and locked. Build one aisle inside it and let it repeat."
+autowrap_mode = 3
+
+[node name="Inert5" parent="LevelDescription" index="5" instance=ExtResource("3_statement")]
+offset_right = 140.0
+data = ExtResource("4_turn")
+
+[node name="Line6" type="Label" parent="LevelDescription" index="6"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "turn back is two left turns in one block."
+autowrap_mode = 3
+
+[node name="Line7" type="Label" parent="LevelDescription" index="7"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Careful with names. If you call both counters i, the inner one collides with the outer one and the game says so. Give them different names, and watch both in the Variables tab."
+autowrap_mode = 3
+
+[node name="Line8" type="Label" parent="LevelDescription" index="8"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "One last turn and step after the loop puts the robot on the door."
+autowrap_mode = 3
+
+[node name="Line9" type="Label" parent="LevelDescription" index="9"]
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "3 stars: 11 blocks."
+autowrap_mode = 3
+
+[node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("10_nested")]
+layout_mode = 2
+data = SubResource("BD_14")
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("8_block_data")]([ExtResource("11_for")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+bounds = Rect2(0, 0, 288, 192)
+focus_marker = NodePath("../../Visuals/Destination1")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("12_dest_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination1")
+fail_message = "The robot didn't finish on the door."
+camera_focus = NodePath("../../../Visuals/Destination1")
+detection_area = NodePath("../../../Visuals/Destination1")
+
+[node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_1")
+detection_area = NodePath("../../../Visuals/Pen1_1")
+
+[node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_2")
+detection_area = NodePath("../../../Visuals/Pen1_2")
+
+[node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_3")
+detection_area = NodePath("../../../Visuals/Pen1_3")
+
+[node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManager" index="4" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_4")
+detection_area = NodePath("../../../Visuals/Pen1_4")
+
+[node name="CheckpointGoal5" type="Node" parent="RoomGoals/GoalManager" index="5" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_5")
+detection_area = NodePath("../../../Visuals/Pen1_5")
+
+[node name="CheckpointGoal6" type="Node" parent="RoomGoals/GoalManager" index="6" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_6")
+detection_area = NodePath("../../../Visuals/Pen1_6")
+
+[node name="CheckpointGoal7" type="Node" parent="RoomGoals/GoalManager" index="7" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_7")
+detection_area = NodePath("../../../Visuals/Pen1_7")
+
+[node name="CheckpointGoal8" type="Node" parent="RoomGoals/GoalManager" index="8" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_8")
+detection_area = NodePath("../../../Visuals/Pen1_8")
+
+[node name="CheckpointGoal9" type="Node" parent="RoomGoals/GoalManager" index="9" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("13_check_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot missed at least one pen."
+camera_focus = NodePath("../../../Visuals/Pen1_9")
+detection_area = NodePath("../../../Visuals/Pen1_9")
+
+[node name="Camera2D" parent="." index="4"]
+position = Vector2(144, 96)
+level_bounds = Rect2(0, 0, 288, 192)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_set = ExtResource("14_tiles_floor")
+
+[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(240, 112)
+script = ExtResource("15_sensed")
+tag = &"destination"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("16_tex_dest")
+
+[node name="Pen1_1" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(48, 48)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_1" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_2" type="Area2D" parent="Visuals" index="3"]
+position = Vector2(112, 48)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_2" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_2" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_3" type="Area2D" parent="Visuals" index="4"]
+position = Vector2(176, 48)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_3" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_3" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_4" type="Area2D" parent="Visuals" index="5"]
+position = Vector2(48, 80)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_4" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_4" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_5" type="Area2D" parent="Visuals" index="6"]
+position = Vector2(112, 80)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_5" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_5" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_6" type="Area2D" parent="Visuals" index="7"]
+position = Vector2(176, 80)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_6" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_6" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_7" type="Area2D" parent="Visuals" index="8"]
+position = Vector2(48, 112)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_7" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_7" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_8" type="Area2D" parent="Visuals" index="9"]
+position = Vector2(112, 112)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_8" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_8" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="Pen1_9" type="Area2D" parent="Visuals" index="10"]
+position = Vector2(176, 112)
+script = ExtResource("15_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_9" index="0"]
+shape = SubResource("Circle_15")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_9" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("17_tex_pen")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="11"]
+y_sort_enabled = true
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("18_robot")]
+position = Vector2(48, 144)
+facing_direction = Vector2(1, 0)
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("8_block_data")]([ExtResource("19_move"), ExtResource("4_turn")])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
+script = ExtResource("20_resettable")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 144)
+})])
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_set = ExtResource("21_tiles_wall")
+
+[editable path="LevelBlockPreset/BeginBlock"]
+[editable path="Visuals/YSorted/RobotCharacter"]

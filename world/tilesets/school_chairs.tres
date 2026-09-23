@@ -1,6 +1,14 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://dwdeg5l2ik0ee"]
+[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://dwdeg5l2ik0ee"]
 
 [ext_resource type="Texture2D" uid="uid://m8bqtmdkfdt" path="res://world/assets/objects/chairs.png" id="1_iw38f"]
+[ext_resource type="Texture2D" uid="uid://qgtldqg6v4ar" path="res://world/assets/objects/fire_extingusher.png" id="1_plhwa"]
+[ext_resource type="Texture2D" uid="uid://csa5uhuw5bwuc" path="res://world/assets/objects/trash_bottle.png" id="3_8bkdo"]
+[ext_resource type="Texture2D" uid="uid://rne3005tq5h2" path="res://world/assets/objects/trash_paper.png" id="4_wgc4o"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ggymo"]
+texture = ExtResource("1_plhwa")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8e87c"]
 texture = ExtResource("1_iw38f")
@@ -12,8 +20,21 @@ texture_region_size = Vector2i(32, 48)
 2:0/0 = 0
 2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-12, -16, 12, -16, 12, 16, -12, 16)
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e0ij7"]
+texture = ExtResource("3_8bkdo")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3epn6"]
+texture = ExtResource("4_wgc4o")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
 [resource]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/1 = SubResource("TileSetAtlasSource_8e87c")
+sources/0 = SubResource("TileSetAtlasSource_ggymo")
+sources/2 = SubResource("TileSetAtlasSource_e0ij7")
+sources/3 = SubResource("TileSetAtlasSource_3epn6")

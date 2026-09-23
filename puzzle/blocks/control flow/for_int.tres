@@ -25,5 +25,6 @@ text = "for var {}, from {}\\nto {}, at step {}"
 text_blocks = Array[ExtResource("1_rp0sv")]([ExtResource("3_c75mr"), ExtResource("5_3865f"), ExtResource("5_3865f"), ExtResource("3_c74cp")])
 Type/nested = SubResource("Resource_igej2")
 Function/script = ExtResource("1_i0wp3")
+Function/entity_name = &""
 Function/method = &"_for"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

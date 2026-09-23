@@ -1,0 +1,214 @@
+[gd_scene load_steps=19 format=4 uid="uid://ch4cfogwpxysf"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="3_statement"]
+[ext_resource type="Resource" uid="uid://ip8pkjg88cjh" path="res://puzzle/blocks/generic/initialize.tres" id="4_initialize"]
+[ext_resource type="Resource" uid="uid://wag2d6rl7ja6" path="res://puzzle/blocks/generic/increment.tres" id="5_increment"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="6_move"]
+[ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="7_while"]
+[ext_resource type="Resource" uid="uid://dcmh8x3cov6db" path="res://puzzle/blocks/socket/comparison.tres" id="8_comparison"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="9_block_data"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="10_dest_goal"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="11_tiles_floor"]
+[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_sensed"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_tex_dest"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="14_robot"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="15_resettable"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="16_tiles_wall"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="17_llhp4"]
+
+[sub_resource type="CircleShape2D" id="Circle_1"]
+radius = 12.0
+
+[node name="IT4CountTheDesks" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare var {} as {}\"
+      parameters:
+        - i
+        - 0
+    - block: WhileBlock
+      kind: nested
+      text: \"while {}\"
+      parameters:
+        - block: ComparisonBlock
+          kind: expression
+          text: \"{} {} {}\"
+          parameters:
+            - i
+            - <
+            - 3
+      children:
+        - block: MoveBlock
+          kind: statement
+          text: \"move forward\"
+          locked: true
+        - block: IncrementBlock
+          kind: statement
+          text: \"increment {}\"
+          parameters:
+            - i"
+room_goals = [NodePath("RoomGoals/GoalManager")]
+
+[node name="Header" type="Label" parent="LevelDescription" index="0"]
+visible = false
+theme_type_variation = &"HeaderMedium"
+text = "Count the desks"
+horizontal_alignment = 1
+
+[node name="Line1" type="Label" parent="LevelDescription" index="1"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Three desks. Stop on the marked tile under the last one."
+autowrap_mode = 3
+
+[node name="Line2" type="Label" parent="LevelDescription" index="2"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "No sensor will find it: the desks are identical and the marked tile answers nothing. Counting is the only way."
+autowrap_mode = 3
+
+[node name="Line3" type="Label" parent="LevelDescription" index="3"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "There is exactly one move forward block in this level and you can't delete it or copy it. Wrap it in something that repeats."
+autowrap_mode = 3
+
+[node name="Inert4" parent="LevelDescription" index="4" instance=ExtResource("3_statement")]
+visible = false
+offset_right = 140.0
+data = ExtResource("4_initialize")
+
+[node name="Line5" type="Label" parent="LevelDescription" index="5"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Makes a variable and gives it a starting value."
+autowrap_mode = 3
+
+[node name="Inert6" parent="LevelDescription" index="6" instance=ExtResource("3_statement")]
+visible = false
+offset_right = 140.0
+data = ExtResource("5_increment")
+
+[node name="Line7" type="Label" parent="LevelDescription" index="7"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Adds one to a variable."
+autowrap_mode = 3
+
+[node name="Line8" type="Label" parent="LevelDescription" index="8"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Open the Variables tab before you press Play. Watching i climb next to the robot moving is the whole point of this level."
+autowrap_mode = 3
+
+[node name="Line9" type="Label" parent="LevelDescription" index="9"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "3 stars: 3 blocks."
+autowrap_mode = 3
+
+[node name="Line10" type="Label" parent="LevelDescription" index="10"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "The floor runs well past the marked tile, so overshooting fails just as surely as stopping short."
+autowrap_mode = 3
+
+[node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_statement")]
+layout_mode = 2
+data = ExtResource("6_move")
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("9_block_data")]([ExtResource("7_while"), ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+bounds = Rect2(0, 0, 512, 128)
+focus_marker = NodePath("../../Visuals/Plate1")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("10_dest_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Plate1")
+fail_message = "The robot didn't finish on the marked tile."
+camera_focus = NodePath("../../../Visuals/Plate1")
+detection_area = NodePath("../../../Visuals/Plate1")
+
+[node name="Camera2D" parent="." index="4"]
+position = Vector2(256, 64)
+level_bounds = Rect2(0, 0, 158.08, 94.08)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAABAAEAAQAAAAAAAAABAAIAAQAAAAEAAAACAAEAAQABAAAAAAACAAIAAQABAAEAAAADAAEAAQACAAAAAAADAAIAAQACAAEAAAAEAAEAAQACAAAAAAAEAAIAAQABAAEAAAAFAAEAAQABAAAAAAAFAAIAAQABAAIAAAABAAMAAQAAAAMAAAACAAMAAQABAAMAAAAEAAMAAQACAAMAAAAFAAMAAQABAAMAAAADAAMAAQACAAMAABAGAAIAAQACAAEAAAAGAAMAAQACAAMAAAAHAAIAAQABAAIAAAAHAAMAAQABAAMAAAAHAAEAAQABAAAAAAAGAAEAAQACAAAAAAA=")
+tile_set = ExtResource("11_tiles_floor")
+
+[node name="Plate1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(144, 80)
+script = ExtResource("12_sensed")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Plate1" index="0"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Plate1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("13_tex_dest")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="2"]
+y_sort_enabled = true
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("14_robot")]
+position = Vector2(48, 80)
+facing_direction = Vector2(1, 0)
+
+[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+frame_progress = 0.19678
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("9_block_data")]([])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
+script = ExtResource("15_resettable")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 80)
+})])
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAP//AQADAAAAAAABAAAAAQADAAEAAAACAP//AQABAAAAAAACAAAAAQABAAEAAAADAP//AQABAAAAAAADAAAAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAAFAP//AQABAAAAAAAFAAAAAQABAAEAAAAAAP//AQAAAAAAAAAAAAAAAQAAAAEAAAAGAP//AQABAAAAAAAGAAAAAQABAAEAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQACAAAAADABAAQAAAAAAAEAAGACAAQAAAAAAAEAAGADAAQAAAAAAAEAAGAEAAQAAAAAAAEAAGAFAAQAAAAAAAEAAGAHAP//AQABAAAAAAAHAAAAAQABAAEAAAAIAP//AQAAAAAAABAIAAAAAQAAAAEAABAIAAEAAQAAAAEAABAIAAIAAQAAAAEAABAIAAMAAQAAAAEAABAIAAQAAQACAAAAACAGAAQAAAAAAAEAAGAHAAQAAAAAAAEAAGA=")
+tile_set = ExtResource("16_tiles_wall")
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAADAAEAAQABAAAAAAAEAAEAAQACAAAAAAAFAAEAAQABAAAAAAAEAAMAAQABAAAAAAAGAAMAAQACAAAAAAAHAAAAAAAAAAAAAAAGAAIAAgAAAAAAABACAAMAAgAAAAAAAGAHAAEAAwAAAAAAAHA=")
+tile_set = ExtResource("17_llhp4")
+
+[editable path="LevelBlockPreset/BeginBlock"]
+[editable path="Visuals/YSorted/RobotCharacter"]

@@ -26,9 +26,12 @@ func format() -> void:
 	var value := base as ValueBlock
 	
 	if value.data.value.editable_shown and not value.data.has_text_blocks():
-		if value.data.text.is_empty():
-			value.data.text = value.line_edit.placeholder_text
-		value.line_edit.placeholder_text = value.data.text
+		# data.text is the VALUE, not the hint. It used to be written into
+		# placeholder_text, which is why a locked `for ... to 3` showed a grey 3 and
+		# then evaluated empty: get_raw() reads line_edit.text, and nothing ever put
+		# anything there. The grey "..." hint is the LineEdit's own placeholder_text,
+		# set once in value_block.tscn.
+		value.line_edit.text = value.data.text
 		return
 	
 	super()

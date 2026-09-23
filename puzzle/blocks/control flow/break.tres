@@ -13,5 +13,6 @@ syntax = "break"
 description = "Immediately terminates the current loop and jumps to the code following the loop."
 text = "break"
 Function/script = ExtResource("1_rcpm2")
+Function/entity_name = &""
 Function/method = &"_break"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

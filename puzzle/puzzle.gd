@@ -76,11 +76,18 @@ func configure_level() -> void:
 	for block in Game.level.get_blocks():
 		toolbox.add_block(block)
 	
-	# Block preset setup, for permanent, already-initialized Blocks in levels
+	# Block preset setup, for permanent, already-initialized Blocks in levels.
+	# level.tscn ships a hidden BeginBlock, so get_preset() only comes back null on a
+	# level whose LevelBlockPreset was emptied -- which reads at runtime as "Play does
+	# nothing" rather than as the authoring mistake it is.
 	var preset := Game.level.preset.get_preset()
-	preset.reparent(canvas)
-	preset.position = canvas.size / 2.
-	preset.visible = true
+	if preset == null:
+		push_error("Level '%s': LevelBlockPreset has no Block child. It needs the begin block." % Game.level.name)
+		notif.push("This level has no begin block, so it can't be played.", Notification.Type.ERROR)
+	else:
+		preset.reparent(canvas)
+		preset.position = canvas.size / 2.
+		preset.visible = true
 	
 	if Game.level.tutorial_overlay != null:
 		var overlay := Game.level.tutorial_overlay.instantiate() as TutorialOverlay

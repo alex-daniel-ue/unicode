@@ -1,0 +1,182 @@
+[gd_scene load_steps=17 format=4 uid="uid://vvhlgp1lv2mn"]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://cbwa1bqy2sbq" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="3_nested"]
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="4_for"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="5_block_data"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="6_dest_goal"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="7_tiles_floor"]
+[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="8_sensed"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="9_tex_dest"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="10_robot"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="11_move"]
+[ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="12_turn"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="13_resettable"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="14_tiles_wall"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="15_n2d5o"]
+
+[sub_resource type="CircleShape2D" id="Circle_1"]
+radius = 12.0
+
+[node name="IT5OneBlockInsteadOfThree" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: ForBlock (Integer)
+      kind: nested
+      text: \"for var {}, from {}\\nto {}, at step {}\"
+      parameters:
+        - i
+        - 1
+        - 3
+        - 1
+      children:
+        - block: MoveBlock
+          kind: statement
+          text: \"move forward\"
+    - block: TurnBlock
+      kind: statement
+      text: \"turn {}\"
+      parameters:
+        - left
+    - block: ForBlock (Integer)
+      kind: nested
+      text: \"for var {}, from {}\\nto {}, at step {}\"
+      parameters:
+        - i
+        - 1
+        - 4
+        - 1
+      children:
+        - block: MoveBlock
+          kind: statement
+          text: \"move forward\""
+room_goals = [NodePath("RoomGoals/GoalManager")]
+star_slack = 3
+
+[node name="Header" type="Label" parent="LevelDescription" index="0"]
+visible = false
+theme_type_variation = &"HeaderMedium"
+text = "One block instead of three"
+horizontal_alignment = 1
+
+[node name="Line1" type="Label" parent="LevelDescription" index="1"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Last level you built a counter by hand: a starting value, a question, and an increase. Here is all three in one block."
+autowrap_mode = 3
+
+[node name="Inert2" parent="LevelDescription" index="2" instance=ExtResource("3_nested")]
+visible = false
+offset_right = 140.0
+data = ExtResource("4_for")
+
+[node name="Line3" type="Label" parent="LevelDescription" index="3"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Give it a name, a first value, and a last value. It counts from the first to the last, INCLUDING the last, and runs everything inside once per number."
+autowrap_mode = 3
+
+[node name="Line4" type="Label" parent="LevelDescription" index="4"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "from 1 to 4 runs four times. In C that's for (int i = 1; i <= 4; i++), and in Python it's range(1, 5)."
+autowrap_mode = 3
+
+[node name="Line5" type="Label" parent="LevelDescription" index="5"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Two legs, one corner. Each leg is its own for. Reusing the name i for both is fine -- a counter leaves when its loop ends."
+autowrap_mode = 3
+
+[node name="Line6" type="Label" parent="LevelDescription" index="6"]
+visible = false
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "3 stars: 5 blocks."
+autowrap_mode = 3
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+bounds = Rect2(0, 0, 512, 224)
+focus_marker = NodePath("../../Visuals/Destination1")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("6_dest_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination1")
+fail_message = "The robot didn't finish on the door."
+camera_focus = NodePath("../../../Visuals/Destination1")
+detection_area = NodePath("../../../Visuals/Destination1")
+
+[node name="Camera2D" parent="." index="4"]
+position = Vector2(256, 112)
+level_bounds = Rect2(0, 0, 158.08, 190)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAABAAUAAQAAAAMAAAACAAUAAQABAAMAAAADAAUAAQABAAMAAAAEAAUAAQADAAMAAAAEAAQAAQADAAIAAAAEAAMAAQADAAEAAAAEAAIAAQADAAEAAAAEAAEAAQADAAAAAAADAAEAAQABAAAAAAADAAIAAQABAAEAAAADAAMAAQABAAEAAAADAAQAAQABAAEAAAA=")
+tile_set = ExtResource("7_tiles_floor")
+
+[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(144, 48)
+script = ExtResource("8_sensed")
+tag = &"destination"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("9_tex_dest")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="2"]
+y_sort_enabled = true
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("10_robot")]
+position = Vector2(48, 176)
+facing_direction = Vector2(1, 0)
+
+[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+frame_progress = 0.009505989
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("5_block_data")]([ExtResource("11_move"), ExtResource("12_turn")])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
+script = ExtResource("13_resettable")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 176)
+})])
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAMAAQADAAAAAAABAAQAAQADAAEAAAACAAMAAQABAAAAAAACAAQAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAADAP//AQADAAAAAAADAAAAAQADAAEAAAAFAP//AQAAAAAAABAFAAAAAQAAAAEAABAFAAEAAQAAAAEAABAFAAIAAQAAAAEAABAFAAMAAQAAAAEAABAFAAQAAQAAAAEAABAFAAUAAQAAAAEAABAAAAMAAQAAAAAAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQACAAAAADAFAAYAAQACAAAAACABAAYAAAAAAAEAAGACAAYAAAAAAAEAAGADAAYAAAAAAAEAAGAEAAYAAAAAAAEAAGACAP//AQAAAAAAAAACAAAAAQAAAAEAAAACAAIAAQAAAAEAAAACAAEAAQAAAAEAAAA=")
+tile_set = ExtResource("14_tiles_wall")
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals" index="3"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAAAADAAEAAQABAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAADAAIAAgAAAAAAAHA=")
+tile_set = ExtResource("15_n2d5o")
+
+[editable path="LevelBlockPreset/BeginBlock"]
+[editable path="Visuals/YSorted/RobotCharacter"]

@@ -1,0 +1,122 @@
+[gd_scene load_steps=15 format=4]
+
+[ext_resource type="PackedScene" path="res://puzzle/ui/tutorial/tutorial_overlay.tscn" id="1_overlay"]
+[ext_resource type="PackedScene" path="res://level/level.tscn" id="2_level"]
+[ext_resource type="Theme" path="res://puzzle/ui/themes/main_theme.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="4_statement"]
+[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move.tres" id="5_move"]
+[ext_resource type="Script" path="res://puzzle/ui/block/data/block_data.gd" id="6_block_data"]
+[ext_resource type="Script" path="res://level/goals/destination_goal.gd" id="7_dest_goal"]
+[ext_resource type="TileSet" path="res://world/tilesets/school_tiles.tres" id="8_tiles_floor"]
+[ext_resource type="Script" path="res://level/goals/sensed_area.gd" id="9_sensed"]
+[ext_resource type="Texture2D" path="res://level/objects/red_flag.png" id="10_tex_dest"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/robot/robot_character.tscn" id="11_robot"]
+[ext_resource type="Script" path="res://level/components/resettable_component.gd" id="12_resettable"]
+[ext_resource type="TileSet" path="res://world/tilesets/school_walls.tres" id="13_tiles_wall"]
+
+[sub_resource type="CircleShape2D" id="Circle_1"]
+radius = 12.0
+
+[node name="TutorialFirstSteps" node_paths=PackedStringArray("room_goals") instance=ExtResource("2_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: MoveBlock\n      kind: statement\n      text: \"move forward\""
+room_goals = [NodePath("RoomGoals/GoalManager")]
+star_slack = 1
+tutorial_overlay = ExtResource("1_overlay")
+
+[node name="Header" type="Label" parent="LevelDescription" index="0"]
+theme_type_variation = &"HeaderMedium"
+text = "First steps"
+horizontal_alignment = 1
+
+[node name="Line1" type="Label" parent="LevelDescription" index="1"]
+size_flags_horizontal = 3
+theme = ExtResource("3_theme")
+theme_type_variation = &"LegibleLabel"
+text = "This is the tour. It walks you through the screen, and you can skip it from Level select at any time."
+autowrap_mode = 3
+
+[node name="Line2" type="Label" parent="LevelDescription" index="2"]
+size_flags_horizontal = 3
+theme = ExtResource("3_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Everything you build goes under the begin block on the canvas."
+autowrap_mode = 3
+
+[node name="Inert3" parent="LevelDescription" index="3" instance=ExtResource("4_statement")]
+offset_right = 140.0
+data = ExtResource("5_move")
+
+[node name="Line4" type="Label" parent="LevelDescription" index="4"]
+size_flags_horizontal = 3
+theme = ExtResource("3_theme")
+theme_type_variation = &"LegibleLabel"
+text = "One move forward is the whole level. Drop it under begin and press Play."
+autowrap_mode = 3
+
+[node name="Line5" type="Label" parent="LevelDescription" index="5"]
+size_flags_horizontal = 3
+theme = ExtResource("3_theme")
+theme_type_variation = &"LegibleLabel"
+text = "3 stars: 1 block."
+autowrap_mode = 3
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("6_block_data")]([])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+bounds = Rect2(0, 0, 160, 96)
+focus_marker = NodePath("../../Visuals/Destination1")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("7_dest_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination1")
+fail_message = "The robot didn't finish on the door."
+camera_focus = NodePath("../../../Visuals/Destination1")
+detection_area = NodePath("../../../Visuals/Destination1")
+
+[node name="Camera2D" parent="." index="4"]
+position = Vector2(80, 48)
+level_bounds = Rect2(0, 0, 160, 96)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_set = ExtResource("8_tiles_floor")
+
+[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(80, 48)
+script = ExtResource("9_sensed")
+tag = &"destination"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+scale = Vector2(0.055, 0.055)
+texture = ExtResource("10_tex_dest")
+
+[node name="YSorted" type="Node2D" parent="Visuals" index="2"]
+y_sort_enabled = true
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("11_robot")]
+position = Vector2(48, 48)
+facing_direction = Vector2(1, 0)
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("6_block_data")]([ExtResource("5_move")])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
+script = ExtResource("12_resettable")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 48)
+})])
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+y_sort_enabled = true
+tile_set = ExtResource("13_tiles_wall")
+
+[editable path="Visuals/YSorted/RobotCharacter"]

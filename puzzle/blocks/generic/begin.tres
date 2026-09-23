@@ -23,5 +23,6 @@ copyable = false
 text = "begin code"
 Type/nested = SubResource("Resource_x31hy")
 Function/script = ExtResource("1_yhi3a")
+Function/entity_name = &""
 Function/method = &"_begin"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

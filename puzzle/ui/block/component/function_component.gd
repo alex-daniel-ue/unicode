@@ -112,35 +112,71 @@ func error(message: String) -> void:
 func set_func(new_func: Callable) -> void:
 	_function = new_func
 
-## Blocks handed out by a BlockProvider arrive already bound to their entity.
-## Blocks built from data do not: anything inside a pre-filled socket, because
-## text.format() constructs those at runtime where no scene path can reach them,
-## and any preset block authored without a FunctionComponent.object path. Bind
-## them to the node in the same level whose script this block's data names,
-## which is the object a BlockProvider would have used.
+## Blocks handed out by a BlockProvider arrive already bound to their entity, and a
+## preset block authored as a scene node can have `object` set by NodePath in the
+## inspector. Neither reaches a block that text.format() built from data -- anything
+## inside a socket pre-filled through BlockData -- so those resolve here.
+##
+## By name first, because a name is the honour-system handle: the author types
+## "RobotCharacter" into the block data, names the node that in the scene dock, and
+## the two agree or the level says so on startup. No group to remember to join, no
+## path to keep valid when a node moves.
+##
+## The script match is the fallback, and it is only right while the level holds
+## exactly one node of that script. It now errors on two rather than silently taking
+## the first, which is what made two robots or two lists unauthorable.
 func _find_entity() -> Node:
+	var root := _level_root()
+	if root == null:
+		return null
+	
+	var wanted_name := base.data.func_entity_name
+	if not wanted_name.is_empty():
+		var named := root.find_children(String(wanted_name), "", true, false)
+		if named.size() == 1:
+			return named[0]
+		if named.is_empty():
+			push_error(
+				"(%s) No node named '%s' in level '%s'. Rename the entity to match the block's Function/entity_name, or clear that field."
+				% [base.name, wanted_name, root.name]
+			)
+		else:
+			push_error(
+				"(%s) %d nodes named '%s' in level '%s'. Entity names have to be unique within a level."
+				% [base.name, named.size(), wanted_name, root.name]
+			)
+		return null
+	
 	var wanted := base.data.func_entity_script
 	if wanted == null:
 		return null
 	
-	var root: Node = base
-	while root != null and not (root is Level):
-		root = root.get_parent()
-	if root == null:
-		root = Game.level
-	if root == null:
-		return null
-	
+	var matches: Array[Node] = []
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
 		var node: Node = stack.pop_back()
 		var script := node.get_script() as Script
 		while script != null:
 			if script == wanted:
-				return node
+				matches.append(node)
+				break
 			script = script.get_base_script()
 		stack.append_array(node.get_children())
+	
+	if matches.size() == 1:
+		return matches[0]
+	if matches.size() > 1:
+		push_error(
+			"(%s) Level '%s' holds %d entities running this block's script, so the block can't tell which one it means. Set Function/entity_name on the block data."
+			% [base.name, root.name, matches.size()]
+		)
 	return null
+
+func _level_root() -> Node:
+	var root: Node = base
+	while root != null and not (root is Level):
+		root = root.get_parent()
+	return root if root != null else Game.level
 
 
 class Argument:

@@ -23,5 +23,6 @@ text = "elif {}"
 text_blocks = Array[ExtResource("1_naw0e")]([ExtResource("4_34tds")])
 Type/nested = SubResource("Resource_dnf4h")
 Function/script = ExtResource("1_34tds")
+Function/entity_name = &""
 Function/method = &"_if"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

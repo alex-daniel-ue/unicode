@@ -62,6 +62,12 @@ const GROUPS := {
 
 var func_script: GDScript
 var func_entity_script: GDScript
+## Which entity in the level this block talks to, by node name: "RobotCharacter",
+## "Lockers", "Shelf". Honour system, and deliberately so -- a name is the one
+## handle an author can see in the scene dock without opening anything. Empty
+## falls back to the script match, which is only right while a level holds
+## exactly one node of that script.
+var func_entity_name: StringName
 var func_method: StringName
 var func_type: FuncType:
 	get = get_func_type
@@ -109,6 +115,12 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint_string": &"GDScript",
 	})
 	
+	properties.append({
+		"name": GROUPS.FUNC + "entity_name",
+		"type": TYPE_STRING_NAME,
+		"usage": PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR,
+	})
+	
 	var script_for_methods := func_script
 	if script_for_methods == null:
 		script_for_methods = func_entity_script 
@@ -130,6 +142,8 @@ func _get(property: StringName) -> Variant:
 		return func_method
 	if property == GROUPS.FUNC + "entity_script":
 		return func_entity_script
+	if property == GROUPS.FUNC + "entity_name":
+		return func_entity_name
 	
 	if property.begins_with(GROUPS.TYPE):
 		return get(property.trim_prefix(GROUPS.TYPE))
@@ -148,6 +162,9 @@ func _set(property: StringName, val: Variant) -> bool:
 	if property == GROUPS.FUNC + "entity_script":
 		func_entity_script = val
 		notify_property_list_changed()
+		return true
+	if property == GROUPS.FUNC + "entity_name":
+		func_entity_name = val
 		return true
 	
 	if property.begins_with(GROUPS.TYPE):

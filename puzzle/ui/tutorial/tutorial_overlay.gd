@@ -71,7 +71,15 @@ func _on_assistant_replied(_text: String) -> void:
 
 func _on_event(kind: TutorialStep.Advance, block_name: StringName = &"") -> void:
 	var step := current_step()
-	if step == null or step.advance_on != kind:
+	if step == null:
+		return
+	# A Next button always advances, whatever the step is waiting for. A tour that
+	# can wedge is worse than one somebody skipped, and the assistant step would
+	# otherwise sit on a network round trip lab day may not deliver.
+	if kind == TutorialStep.Advance.NEXT_BUTTON and step.next_button != null:
+		_go_to(_index + 1)
+		return
+	if step.advance_on != kind:
 		return
 	if not step.only_block.is_empty() and String(block_name) != step.only_block:
 		return
@@ -91,7 +99,6 @@ func _go_to(index: int) -> void:
 		return
 
 	step.visible = true
-	mask.visible = step.dim or step.block_input
 	mask.dimmed = step.dim
 	mask.block_all = step.block_input
 	_update_holes()
@@ -115,6 +122,13 @@ func _update_holes() -> void:
 			var r := target.get_global_rect()
 			rects.append(Rect2(to_local * r.position, r.size))
 	mask.set_holes(rects)
+
+	# A step that names targets but resolves none would dim the whole screen and
+	# swallow every click, so one stale node path wedges the tour on exactly the
+	# steps that ask the student to do something. Drop the mask instead: no
+	# highlight, but the UI stays usable and the card still says what to do.
+	var lost := not step.targets.is_empty() and rects.is_empty()
+	mask.visible = (step.dim or step.block_input) and not lost
 
 
 func _resolve(path: String) -> Control:

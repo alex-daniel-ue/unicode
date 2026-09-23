@@ -31,6 +31,7 @@ top_notch = false
 copyable = false
 Type/value = SubResource("Resource_7ycbh")
 Type/socket = SubResource("Resource_5ng6o")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -48,5 +49,6 @@ top_notch = false
 text = "{}"
 text_blocks = Array[ExtResource("1_tchex")]([SubResource("Resource_kbqc7")])
 Type/socket = SubResource("Resource_rj3j8")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

@@ -23,5 +23,6 @@ text = "if {}"
 text_blocks = Array[ExtResource("1_xeeuv")]([ExtResource("4_42i3i")])
 Type/nested = SubResource("Resource_x2wyy")
 Function/script = ExtResource("1_42i3i")
+Function/entity_name = &""
 Function/method = &"_if"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

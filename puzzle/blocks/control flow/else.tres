@@ -21,5 +21,6 @@ description = "Executes the blocks inside only if the if block above it, and any
 text = "else"
 Type/nested = SubResource("Resource_jncwb")
 Function/script = ExtResource("1_stgik")
+Function/entity_name = &""
 Function/method = &"_else"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

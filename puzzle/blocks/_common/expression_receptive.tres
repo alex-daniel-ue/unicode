@@ -18,5 +18,6 @@ placeable = false
 top_notch = false
 text = "..."
 Type/socket = SubResource("Resource_040pj")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

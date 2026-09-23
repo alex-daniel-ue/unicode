@@ -13,5 +13,6 @@ syntax = "continue"
 description = "Skips the rest of the current loop iteration and moves to the next check/increment."
 text = "continue"
 Function/script = ExtResource("1_j8ieb")
+Function/entity_name = &""
 Function/method = &"_continue"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

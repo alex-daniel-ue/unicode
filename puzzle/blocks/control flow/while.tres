@@ -23,5 +23,6 @@ text = "while {}"
 text_blocks = Array[ExtResource("3_oaum1")]([ExtResource("4_hma5r")])
 Type/nested = SubResource("Resource_7frqf")
 Function/script = ExtResource("1_u3eyr")
+Function/entity_name = &""
 Function/method = &"_while"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

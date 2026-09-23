@@ -16,6 +16,22 @@ static var IS_NESTED := func(block: Block) -> bool:
 	return block is NestedBlock
 
 @export var data: BlockData
+
+## Blocks to plug into this block's own slots, authored as scene children instead
+## of as a chain of inline BlockData copies.
+##
+## text.format() tears text_container down and rebuilds it from data.text_blocks,
+## so a block parked directly in a slot in the .tscn is deleted before it ever
+## runs -- which is why a pre-filled socket used to be authorable only through
+## data. The blocks under here are parked outside that container instead, and
+## text.format() plugs them in after the rebuild, in child order, one per
+## receptive slot. Whatever format() does to the slots, the fills survive it.
+##
+## Point it at any plain Node, inside this block or beside it. Its Block children
+## are ordinary scene nodes, so a fill that calls the robot can have `object` set
+## by NodePath like any other authored block, and a fill can carry fills of its own.
+@export var preset_fills: Node
+
 @export_group("Children")
 @export var text_container: Container
 @export_group("Components")
