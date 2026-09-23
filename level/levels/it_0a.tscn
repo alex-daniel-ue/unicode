@@ -22,8 +22,12 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="20_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="21_sensed"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="22_tex_dest"]
+<<<<<<< Updated upstream
 [ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="23_tex_puddle"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="24_i1ewq"]
+=======
+[ext_resource type="Texture2D" uid="uid://dluqpu1nq07x" path="res://level/objects/danger.png" id="23_bk2i5"]
+>>>>>>> Stashed changes
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="24_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="25_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="26_tiles_wall"]
@@ -303,6 +307,7 @@ tile_set = ExtResource("20_tiles_floor")
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
 position = Vector2(144, 48)
+scale = Vector2(0.8, 0.8)
 script = ExtResource("21_sensed")
 tag = &"destination"
 
@@ -335,7 +340,8 @@ tag = &"puddle"
 shape = SubResource("Circle_10")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Hazard2" index="1"]
-texture = ExtResource("23_tex_puddle")
+modulate = Color(1, 1, 0.90588236, 1)
+texture = ExtResource("23_bk2i5")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="4"]
 y_sort_enabled = true
@@ -353,7 +359,12 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+<<<<<<< Updated upstream
 frame_progress = 0.6706057
+=======
+animation = &"idle_right"
+frame_progress = 0.19686718
+>>>>>>> Stashed changes
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("12_block_data")]([])
