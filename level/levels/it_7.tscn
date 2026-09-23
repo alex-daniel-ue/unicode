@@ -518,12 +518,17 @@ texture = ExtResource("17_tex_pen")
 [node name="YSorted" type="Node2D" parent="Visuals" index="11"]
 y_sort_enabled = true
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("18_robot")]
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAACAAIAAQACAAAAAAACAAMAAQABAAAAABAEAAMAAQABAAAAABAGAAEAAQABAAAAAAAAAAEAAQABAAAAAAAEAAIAAQACAAAAABAAAAMAAQAAAAAAABAAAAIAAQACAAAAAAAEAAEAAQAAAAAAAAAGAAIAAQAAAAAAABAGAAMAAQACAAAAABAFAAAAAAAAAAAAAAAHAAIAAQAAAAAAAAAFAAQAAwAAAAAAAFAHAAEAAgAAAAAAAEACAAQAAgAAAAAAADA=")
+tile_set = ExtResource("22_0wmcl")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("18_robot")]
 position = Vector2(48, 144)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.81610364
+frame_progress = 0.7047355
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("8_block_data")]([ExtResource("19_move"), ExtResource("4_turn")])
@@ -537,15 +542,10 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 48, 144)
 })])
 
-[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAAAP//AQADAAAAAAAAAAAAAQADAAEAAAABAP//AQABAAAAAAABAAAAAQABAAEAAAACAP//AQABAAAAAAACAAAAAQABAAEAAAADAP//AQABAAAAAAADAAAAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAAFAP//AQABAAAAAAAFAAAAAQABAAEAAAAGAP//AQABAAAAAAAGAAAAAQABAAEAAAAHAP//AQABAAAAAAAHAAAAAQABAAEAAAD/////AQAAAAAAAAD//wAAAQAAAAEAAAAIAP//AQAAAAAAABAIAAAAAQAAAAEAABD//wEAAQAAAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAD//wQAAQAAAAEAAAAIAAEAAQAAAAEAABAIAAIAAQAAAAEAABAIAAMAAQAAAAEAABAIAAQAAQAAAAEAABD//wUAAQACAAAAADAIAAUAAQACAAAAACAAAAUAAAAAAAEAAGABAAUAAAAAAAEAAGACAAUAAAAAAAEAAGADAAUAAAAAAAEAAGAEAAUAAAAAAAEAAGAFAAUAAAAAAAEAAGAGAAUAAAAAAAEAAGAHAAUAAAAAAAEAAGA=")
 tile_set = ExtResource("21_tiles_wall")
-
-[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAACAAIAAQACAAAAAAACAAMAAQABAAAAABAEAAMAAQABAAAAABAGAAEAAQABAAAAAAAAAAEAAQABAAAAAAAEAAIAAQACAAAAABAAAAMAAQAAAAAAABAAAAIAAQACAAAAAAAEAAEAAQAAAAAAAAAGAAIAAQAAAAAAABAGAAMAAQACAAAAABAFAAAAAAAAAAAAAAAHAAIAAQAAAAAAAAAFAAQAAwAAAAAAAFAHAAEAAgAAAAAAAEACAAQAAgAAAAAAADA=")
-tile_set = ExtResource("22_0wmcl")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]

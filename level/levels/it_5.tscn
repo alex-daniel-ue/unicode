@@ -150,12 +150,17 @@ texture = ExtResource("9_tex_dest")
 [node name="YSorted" type="Node2D" parent="Visuals" index="2"]
 y_sort_enabled = true
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("10_robot")]
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAAAADAAEAAQABAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAADAAIAAgAAAAAAAHA=")
+tile_set = ExtResource("15_n2d5o")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("10_robot")]
 position = Vector2(48, 176)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.18912269
+frame_progress = 0.67465556
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("11_move"), ExtResource("12_turn")])
@@ -169,15 +174,10 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 48, 176)
 })])
 
-[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAABAAMAAQADAAAAAAABAAQAAQADAAEAAAACAAMAAQABAAAAAAACAAQAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAADAP//AQADAAAAAAADAAAAAQADAAEAAAAFAP//AQAAAAAAABAFAAAAAQAAAAEAABAFAAEAAQAAAAEAABAFAAIAAQAAAAEAABAFAAMAAQAAAAEAABAFAAQAAQAAAAEAABAFAAUAAQAAAAEAABAAAAMAAQAAAAAAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQACAAAAADAFAAYAAQACAAAAACABAAYAAAAAAAEAAGACAAYAAAAAAAEAAGADAAYAAAAAAAEAAGAEAAYAAAAAAAEAAGACAP//AQAAAAAAAAACAAAAAQAAAAEAAAACAAIAAQAAAAEAAAACAAEAAQAAAAEAAAA=")
 tile_set = ExtResource("14_tiles_wall")
-
-[node name="Furniture" type="TileMapLayer" parent="Visuals" index="3"]
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAAAADAAEAAQABAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAADAAIAAgAAAAAAAHA=")
-tile_set = ExtResource("15_n2d5o")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
