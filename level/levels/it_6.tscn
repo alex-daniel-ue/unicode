@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://dgexfaubxv3sd"]
+[gd_scene load_steps=34 format=4 uid="uid://dgexfaubxv3sd"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
@@ -17,6 +17,7 @@
 [ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="15_turn"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="16_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="17_tiles_wall"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="18_m6c0l"]
 
 [sub_resource type="Resource" id="Nest_1"]
 script = ExtResource("3_nested_data")
@@ -237,7 +238,7 @@ layout_mode = 2
 data = SubResource("BD_14")
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
-bounds = Rect2(0, 0, 256, 256)
+bounds = Rect2(32, 65.92, 158.08, 158.08)
 focus_marker = NodePath("../../Visuals/Destination1")
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
@@ -250,11 +251,13 @@ detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="Camera2D" parent="." index="4"]
 position = Vector2(128, 128)
-level_bounds = Rect2(0, 0, 190.08, 222)
+zoom = Vector2(1.9007353, 1.9007353)
+level_bounds = Rect2(0, 0, 256, 256)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAABAAYAAQAAAAMAAAACAAYAAQABAAMAAAACAAUAAQABAAEAAAADAAUAAQABAAEAAAADAAQAAQACAAIAAAAEAAQAAQABAAEAAAAEAAMAAQABAAEAAAAFAAMAAQABAAEAAAAFAAIAAQACAAAAAAABAAUAAQAAAAEAAAACAAQAAQABAAIAAAADAAMAAQACAAEAAAAEAAIAAQABAAAAAAADAAYAAQADAAMAAAAEAAUAAQADAAMAAAAFAAQAAQACAAMAAAAGAAMAAQACAAMAAAAHAAIAAQACAAAAAAAGAAIAAQACAAAAAAABAAIAAQAAAAAAAAABAAMAAQAAAAEAAAABAAQAAQAAAAIAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAACAAMAAQABAAEAAAA=")
 tile_set = ExtResource("10_tiles_floor")
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
@@ -277,7 +280,7 @@ position = Vector2(48, 208)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.68638635
+frame_progress = 0.6857522
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("14_move"), ExtResource("15_turn")])
@@ -293,7 +296,13 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAEAAEAAQABAAEAAAAEAAAAAQABAAAAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAEAAAAEAAYAAAACAAAAABAFAAUAAAACAAAAABAGAAQAAAACAAAAABAFAAYAAAACAAAAACAGAAUAAAACAAAAACAHAAQAAAACAAAAACAEAAcAAAACAAAAACADAAcAAAAAAAEAAGACAAcAAAAAAAEAAGABAAcAAAAAAAEAAGAHAAMAAAAAAAEAACAHAAIAAAADAAEAAAAFAAAAAQABAAAAAAAFAAEAAQABAAEAAAAGAAAAAQABAAAAAAAGAAEAAQABAAEAAAAHAAAAAAAAAAAAABAHAAEAAAADAAAAAAAAAAcAAQACAAAAADABAAAAAQADAAAAAAABAAEAAQADAAEAAAAAAAAAAQAAAAAAAAAAAAEAAQAAAAEAAAACAAAAAQABAAAAAAACAAEAAQABAAEAAAADAAAAAQABAAAAAAADAAEAAQABAAEAAAAAAAIAAQAAAAEAAAA=")
 tile_set = ExtResource("17_tiles_wall")
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAUAAQAAAAAAAAADAAYAAQACAAAAAAAEAAUAAQABAAAAABACAAQAAQABAAAAAAADAAMAAQACAAAAAAACAAEAAAAAAAAAAAAEAAIAAQAAAAAAAAA=")
+tile_set = ExtResource("18_m6c0l")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]

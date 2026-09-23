@@ -128,7 +128,7 @@ detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_marker")]
 script = ExtResource("8_goal_mgr")
-bounds = Rect2(0, 128, 352, 96)
+bounds = Rect2(32, 160, 286.08002, 32)
 focus_marker = NodePath("../../Visuals/Destination2")
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
@@ -207,7 +207,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.09177235
+frame_progress = 0.3938163
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("13_move"), ExtResource("14_ahead_is")])

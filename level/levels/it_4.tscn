@@ -145,7 +145,7 @@ data = ExtResource("6_move")
 block_data = Array[ExtResource("9_block_data")]([ExtResource("7_while"), ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
-bounds = Rect2(0, 0, 512, 128)
+bounds = Rect2(32, 64, 126.08, 32)
 focus_marker = NodePath("../../Visuals/Plate1")
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
@@ -157,8 +157,9 @@ camera_focus = NodePath("../../../Visuals/Plate1")
 detection_area = NodePath("../../../Visuals/Plate1")
 
 [node name="Camera2D" parent="." index="4"]
-position = Vector2(256, 64)
-level_bounds = Rect2(0, 0, 158.08, 94.08)
+position = Vector2(144, 64)
+zoom = Vector2(3.9471154, 3.9471154)
+level_bounds = Rect2(0, -32, 288, 192)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
@@ -186,7 +187,7 @@ position = Vector2(48, 80)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.19678
+frame_progress = 0.024122601
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("9_block_data")]([])

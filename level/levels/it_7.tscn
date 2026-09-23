@@ -1,26 +1,27 @@
-[gd_scene load_steps=37 format=4]
+[gd_scene load_steps=38 format=4 uid="uid://dlevwf870j8pq"]
 
-[ext_resource type="PackedScene" path="res://level/level.tscn" id="1_level"]
-[ext_resource type="Theme" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
-[ext_resource type="PackedScene" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="3_statement"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/turn.tres" id="4_turn"]
-[ext_resource type="Script" path="res://puzzle/ui/block/data/nested_data.gd" id="5_nested_data"]
-[ext_resource type="Script" path="res://puzzle/ui/block/data/socket_data.gd" id="6_socket_data"]
-[ext_resource type="Script" path="res://puzzle/ui/block/data/value_data.gd" id="7_value_data"]
-[ext_resource type="Script" path="res://puzzle/ui/block/data/block_data.gd" id="8_block_data"]
-[ext_resource type="Script" path="res://puzzle/functions/control_flow.gd" id="9_control_flow"]
-[ext_resource type="PackedScene" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="10_nested"]
-[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_int.tres" id="11_for"]
-[ext_resource type="Script" path="res://level/goals/destination_goal.gd" id="12_dest_goal"]
-[ext_resource type="Script" path="res://level/goals/checkpoint_goal.gd" id="13_check_goal"]
-[ext_resource type="TileSet" path="res://world/tilesets/school_tiles.tres" id="14_tiles_floor"]
-[ext_resource type="Script" path="res://level/goals/sensed_area.gd" id="15_sensed"]
-[ext_resource type="Texture2D" path="res://level/objects/red_flag.png" id="16_tex_dest"]
-[ext_resource type="Texture2D" path="res://level/objects/flag.png" id="17_tex_pen"]
-[ext_resource type="PackedScene" path="res://level/objects/entities/robot/robot_character.tscn" id="18_robot"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move.tres" id="19_move"]
-[ext_resource type="Script" path="res://level/components/resettable_component.gd" id="20_resettable"]
-[ext_resource type="TileSet" path="res://world/tilesets/school_walls.tres" id="21_tiles_wall"]
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="3_statement"]
+[ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="4_turn"]
+[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="5_nested_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="6_socket_data"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="7_value_data"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="8_block_data"]
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="9_control_flow"]
+[ext_resource type="PackedScene" uid="uid://cbwa1bqy2sbq" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="10_nested"]
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="11_for"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="12_dest_goal"]
+[ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="13_check_goal"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="14_tiles_floor"]
+[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="15_sensed"]
+[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="16_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://bwhmko7mb5rj" path="res://level/objects/flag.png" id="17_tex_pen"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="18_robot"]
+[ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="19_move"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="20_resettable"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="21_tiles_wall"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="22_0wmcl"]
 
 [sub_resource type="Resource" id="Nest_1"]
 script = ExtResource("5_nested_data")
@@ -46,9 +47,9 @@ description = "A slot you type into. It takes a typed-in value only, so no block
 draggable = false
 placeable = false
 top_notch = false
-text = ""
 Type/value = SubResource("Val_3")
 Type/socket = SubResource("Sock_2")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -70,9 +71,9 @@ description = "A value slot. Type a number, a word, or the name of a variable st
 draggable = false
 placeable = false
 top_notch = false
-text = ""
 Type/value = SubResource("Val_6")
 Type/socket = SubResource("Sock_5")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -94,9 +95,9 @@ description = "A value slot. Type a number, a word, or the name of a variable st
 draggable = false
 placeable = false
 top_notch = false
-text = ""
 Type/value = SubResource("Val_9")
 Type/socket = SubResource("Sock_8")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -122,6 +123,7 @@ top_notch = false
 text = "1"
 Type/value = SubResource("Val_12")
 Type/socket = SubResource("Sock_11")
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -139,6 +141,7 @@ text = "for var {}, from {}\\nto {}, at step {}"
 text_blocks = Array[ExtResource("8_block_data")]([SubResource("BD_4"), SubResource("BD_7"), SubResource("BD_10"), SubResource("BD_13")])
 Type/nested = SubResource("Nest_1")
 Function/script = ExtResource("9_control_flow")
+Function/entity_name = &""
 Function/method = &"_for"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 
@@ -146,16 +149,92 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 radius = 12.0
 
 [node name="IT7AisleByAisle" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
-intended_solution = "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: ForBlock (Integer)\n      kind: nested\n      text: \"for var {}, from {}\\nto {}, at step {}\"\n      locked: true\n      parameters:\n        - a\n        - 1\n        - 3\n        - 1\n      children:\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - left\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 3\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - back\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 3\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n        - block: TurnBlock\n          kind: statement\n          text: \"turn {}\"\n          parameters:\n            - left\n        - block: ForBlock (Integer)\n          kind: nested\n          text: \"for var {}, from {}\\nto {}, at step {}\"\n          parameters:\n            - s\n            - 1\n            - 2\n            - 1\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"move forward\"\n    - block: TurnBlock\n      kind: statement\n      text: \"turn {}\"\n      parameters:\n        - left\n    - block: MoveBlock\n      kind: statement\n      text: \"move forward\""
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: ForBlock (Integer)
+      kind: nested
+      text: \"for var {}, from {}\\nto {}, at step {}\"
+      locked: true
+      parameters:
+        - a
+        - 1
+        - 3
+        - 1
+      children:
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          parameters:
+            - left
+        - block: ForBlock (Integer)
+          kind: nested
+          text: \"for var {}, from {}\\nto {}, at step {}\"
+          parameters:
+            - s
+            - 1
+            - 3
+            - 1
+          children:
+            - block: MoveBlock
+              kind: statement
+              text: \"move forward\"
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          parameters:
+            - back
+        - block: ForBlock (Integer)
+          kind: nested
+          text: \"for var {}, from {}\\nto {}, at step {}\"
+          parameters:
+            - s
+            - 1
+            - 3
+            - 1
+          children:
+            - block: MoveBlock
+              kind: statement
+              text: \"move forward\"
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          parameters:
+            - left
+        - block: ForBlock (Integer)
+          kind: nested
+          text: \"for var {}, from {}\\nto {}, at step {}\"
+          parameters:
+            - s
+            - 1
+            - 2
+            - 1
+          children:
+            - block: MoveBlock
+              kind: statement
+              text: \"move forward\"
+    - block: TurnBlock
+      kind: statement
+      text: \"turn {}\"
+      parameters:
+        - left
+    - block: MoveBlock
+      kind: statement
+      text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager")]
 star_slack = 3
 
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
+visible = false
 theme_type_variation = &"HeaderMedium"
 text = "Aisle by aisle"
 horizontal_alignment = 1
 
 [node name="Line1" type="Label" parent="LevelDescription" index="1"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -163,6 +242,7 @@ text = "Nine pens on the floor, three aisles, one door. Driving over a pen picks
 autowrap_mode = 3
 
 [node name="Line2" type="Label" parent="LevelDescription" index="2"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -170,6 +250,7 @@ text = "Every aisle is identical: go up it, come back down, step across to the n
 autowrap_mode = 3
 
 [node name="Line3" type="Label" parent="LevelDescription" index="3"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -177,6 +258,7 @@ text = "So there are two sizes of repetition here. The steps inside one aisle, a
 autowrap_mode = 3
 
 [node name="Line4" type="Label" parent="LevelDescription" index="4"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -184,10 +266,12 @@ text = "The outer for is placed and locked. Build one aisle inside it and let it
 autowrap_mode = 3
 
 [node name="Inert5" parent="LevelDescription" index="5" instance=ExtResource("3_statement")]
+visible = false
 offset_right = 140.0
 data = ExtResource("4_turn")
 
 [node name="Line6" type="Label" parent="LevelDescription" index="6"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -195,6 +279,7 @@ text = "turn back is two left turns in one block."
 autowrap_mode = 3
 
 [node name="Line7" type="Label" parent="LevelDescription" index="7"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -202,6 +287,7 @@ text = "Careful with names. If you call both counters i, the inner one collides 
 autowrap_mode = 3
 
 [node name="Line8" type="Label" parent="LevelDescription" index="8"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -209,6 +295,7 @@ text = "One last turn and step after the loop puts the robot on the door."
 autowrap_mode = 3
 
 [node name="Line9" type="Label" parent="LevelDescription" index="9"]
+visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
@@ -223,7 +310,7 @@ data = SubResource("BD_14")
 block_data = Array[ExtResource("8_block_data")]([ExtResource("11_for")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
-bounds = Rect2(0, 0, 288, 192)
+bounds = Rect2(32, 33.92, 222.08, 126.08)
 focus_marker = NodePath("../../Visuals/Destination1")
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
@@ -298,12 +385,14 @@ camera_focus = NodePath("../../../Visuals/Pen1_9")
 detection_area = NodePath("../../../Visuals/Pen1_9")
 
 [node name="Camera2D" parent="." index="4"]
-position = Vector2(144, 96)
-level_bounds = Rect2(0, 0, 288, 192)
+position = Vector2(128, 80)
+zoom = Vector2(2.1541667, 2.1541667)
+level_bounds = Rect2(-32, -32, 320, 224)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
+tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAEAAQABAAAAAAACAAEAAQACAAAAAAADAAEAAQABAAAAAAAEAAEAAQACAAAAAAAFAAEAAQABAAAAAAAGAAEAAQACAAAAAAAHAAEAAQADAAAAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAIAAAAAAAQAAQAAAAMAAAAHAAIAAQADAAEAAAAHAAMAAQADAAIAAAAHAAQAAQADAAMAAAABAAQAAQABAAMAAAACAAQAAQACAAMAAAADAAQAAQABAAMAAAAEAAQAAQACAAMAAAAFAAQAAQABAAMAAAAGAAQAAQACAAMAAAABAAIAAQABAAEAAAABAAMAAQABAAIAAAACAAMAAQACAAIAAAADAAIAAQABAAEAAAADAAMAAQABAAIAAAAEAAMAAQACAAIAAAAEAAIAAQACAAEAAAAFAAMAAQABAAIAAAAFAAIAAQABAAEAAAAGAAMAAQACAAIAAAACAAIAAQACAAEAAAAGAAIAAQACAAEAAAA=")
 tile_set = ExtResource("14_tiles_floor")
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
@@ -433,6 +522,9 @@ y_sort_enabled = true
 position = Vector2(48, 144)
 facing_direction = Vector2(1, 0)
 
+[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+frame_progress = 0.81610364
+
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("8_block_data")]([ExtResource("19_move"), ExtResource("4_turn")])
 
@@ -447,7 +539,13 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAP//AQADAAAAAAAAAAAAAQADAAEAAAABAP//AQABAAAAAAABAAAAAQABAAEAAAACAP//AQABAAAAAAACAAAAAQABAAEAAAADAP//AQABAAAAAAADAAAAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAAFAP//AQABAAAAAAAFAAAAAQABAAEAAAAGAP//AQABAAAAAAAGAAAAAQABAAEAAAAHAP//AQABAAAAAAAHAAAAAQABAAEAAAD/////AQAAAAAAAAD//wAAAQAAAAEAAAAIAP//AQAAAAAAABAIAAAAAQAAAAEAABD//wEAAQAAAAEAAAD//wIAAQAAAAEAAAD//wMAAQAAAAEAAAD//wQAAQAAAAEAAAAIAAEAAQAAAAEAABAIAAIAAQAAAAEAABAIAAMAAQAAAAEAABAIAAQAAQAAAAEAABD//wUAAQACAAAAADAIAAUAAQACAAAAACAAAAUAAAAAAAEAAGABAAUAAAAAAAEAAGACAAUAAAAAAAEAAGADAAUAAAAAAAEAAGAEAAUAAAAAAAEAAGAFAAUAAAAAAAEAAGAGAAUAAAAAAAEAAGAHAAUAAAAAAAEAAGA=")
 tile_set = ExtResource("21_tiles_wall")
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAACAAIAAQACAAAAAAACAAMAAQABAAAAABAEAAMAAQABAAAAABAGAAEAAQABAAAAAAAAAAEAAQABAAAAAAAEAAIAAQACAAAAABAAAAMAAQAAAAAAABAAAAIAAQACAAAAAAAEAAEAAQAAAAAAAAAGAAIAAQAAAAAAABAGAAMAAQACAAAAABAFAAAAAAAAAAAAAAAHAAIAAQAAAAAAAAAFAAQAAwAAAAAAAFAHAAEAAgAAAAAAAEACAAQAAgAAAAAAADA=")
+tile_set = ExtResource("22_0wmcl")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
