@@ -22,14 +22,16 @@ collision_shape = NodePath("CollisionShape2D")
 probe = NodePath("ShapeCast2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(-0.125, -0.28)
+z_index = 2
+position = Vector2(-0.125, -12)
 scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("1_ql3ht")
-animation = &"idle_right"
+animation = &"idle_backward"
 autoplay = "idle_backward"
-frame_progress = 0.63197356
+frame_progress = 0.45807016
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_bwqil")
 
 [node name="BlockProvider" type="Node" parent="."]

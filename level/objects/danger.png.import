@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7w44yvfm6lem"
-path="res://.godot/imported/BeginBlock.png-928a8a97956aed805c07df7b17a668ed.ctex"
+uid="uid://45yaet5go20t"
+path="res://.godot/imported/danger.png-af550f7c951ed6618ac506298f35e5f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/nested/cap/BeginBlock.png"
-dest_files=["res://.godot/imported/BeginBlock.png-928a8a97956aed805c07df7b17a668ed.ctex"]
+source_file="res://level/objects/danger.png"
+dest_files=["res://.godot/imported/danger.png-af550f7c951ed6618ac506298f35e5f6.ctex"]
 
 [params]
 
