@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://cjltfsx4hwic8"]
+[gd_scene load_steps=38 format=4 uid="uid://cjltfsx4hwic8"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="21_sensed"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="22_tex_dest"]
 [ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="23_tex_puddle"]
+[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="24_i1ewq"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="24_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="25_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="26_tiles_wall"]
@@ -176,78 +177,73 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Before you build, read."
+text = "The program on the canvas is already written. It runs once in each room."
 autowrap_mode = 3
 
-[node name="Inert2" parent="LevelDescription" index="2" instance=ExtResource("3_statement")]
+[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
 visible = false
-offset_right = 140.0
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Move" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_statement")]
+layout_mode = 2
 data = ExtResource("4_move")
+
+[node name="MoveSays" type="Label" parent="LevelDescription/Blocks" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Moves the robot one tile the way it's facing."
+autowrap_mode = 3
+
+[node name="AheadIs" parent="LevelDescription/Blocks" index="2" instance=ExtResource("5_expression")]
+layout_mode = 2
+data = ExtResource("6_ahead_is")
+
+[node name="AheadIsSays" type="Label" parent="LevelDescription/Blocks" index="3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Checks the one tile in front of the robot for a wall (blocked), the flag (destination), or a puddle. Gives True or False."
+autowrap_mode = 3
+
+[node name="Not" parent="LevelDescription/Blocks" index="4" instance=ExtResource("5_expression")]
+layout_mode = 2
+data = ExtResource("7_not")
+
+[node name="NotSays" type="Label" parent="LevelDescription/Blocks" index="5"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Turns True into False, and False into True."
+autowrap_mode = 3
+
+[node name="If" parent="LevelDescription/Blocks" index="6" instance=ExtResource("8_nested")]
+layout_mode = 2
+data = ExtResource("9_if")
+
+[node name="IfSays" type="Label" parent="LevelDescription/Blocks" index="7"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Runs the blocks inside it only when its condition is True."
+autowrap_mode = 3
 
 [node name="Line3" type="Label" parent="LevelDescription" index="3"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "The robot steps one tile the way it's facing."
+text = "In Room 2, does the robot end up in the puddle?"
 autowrap_mode = 3
 
-[node name="Inert4" parent="LevelDescription" index="4" instance=ExtResource("5_expression")]
-visible = false
-offset_right = 140.0
-data = ExtResource("6_ahead_is")
-
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The robot checks the one tile in front of it. The answer is True or False."
-autowrap_mode = 3
-
-[node name="Inert6" parent="LevelDescription" index="6" instance=ExtResource("5_expression")]
-visible = false
-offset_right = 140.0
-data = ExtResource("7_not")
-
-[node name="Line7" type="Label" parent="LevelDescription" index="7"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Flips the answer: True becomes False, False becomes True."
-autowrap_mode = 3
-
-[node name="Inert8" parent="LevelDescription" index="8" instance=ExtResource("8_nested")]
-visible = false
-offset_right = 140.0
-data = ExtResource("9_if")
-
-[node name="Line9" type="Label" parent="LevelDescription" index="9"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Runs the blocks inside it only when its question is True."
-autowrap_mode = 3
-
-[node name="Line10" type="Label" parent="LevelDescription" index="10"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The program on the canvas runs in both rooms. Go through it block by block."
-autowrap_mode = 3
-
-[node name="Line11" type="Label" parent="LevelDescription" index="11"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "In Room 2, does the robot step into the puddle?"
-autowrap_mode = 3
-
-[node name="PredictButton" type="Button" parent="LevelDescription" index="12"]
+[node name="PredictButton" type="Button" parent="LevelDescription" index="4"]
 visible = false
 size_flags_horizontal = 4
 theme = ExtResource("2_theme")
@@ -255,12 +251,12 @@ theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 20
 text = "Lock in my answer"
 
-[node name="Line13" type="Label" parent="LevelDescription" index="13"]
+[node name="Line5" type="Label" parent="LevelDescription" index="5"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Now press Play and check."
+text = "Then press Play to see."
 autowrap_mode = 3
 
 [node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_statement")]
@@ -287,7 +283,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("17_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -300,7 +296,7 @@ focus_marker = NodePath("../../Visuals/Plate2")
 script = ExtResource("17_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Plate2")
-fail_message = "The robot didn't finish on the marked tile."
+fail_message = "The robot didn't stop right before the puddle."
 camera_focus = NodePath("../../../Visuals/Plate2")
 detection_area = NodePath("../../../Visuals/Plate2")
 
@@ -364,12 +360,20 @@ texture = ExtResource("23_tex_puddle")
 [node name="YSorted" type="Node2D" parent="Visuals" index="4"]
 y_sort_enabled = true
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="0" instance=ExtResource("24_robot")]
+[node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted" index="0"]
+modulate = Color(1, 1, 1, 0.38039216)
+position = Vector2(48, 176)
+scale = Vector2(0.915, 0.915)
+sprite_frames = ExtResource("24_i1ewq")
+animation = &"idle_right"
+speed_scale = 0.0
+
+[node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("24_robot")]
 position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.89511013
+frame_progress = 0.7285532
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("12_block_data")]([])
@@ -386,7 +390,7 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 48, 176)
 })])
 
-[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAABAP//AQADAAAAAAABAAAAAQADAAEAAAACAP//AQABAAAAAAACAAAAAQABAAEAAAADAP//AQABAAAAAAADAAAAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAAFAP//AQABAAAAAAAFAAAAAQABAAEAAAAGAP//AQABAAAAAAAGAAAAAQABAAEAAAABAAMAAQADAAAAAAABAAQAAQADAAEAAAACAAMAAQABAAAAAAACAAQAAQABAAEAAAADAAMAAQABAAAAAAADAAQAAQABAAEAAAAEAAMAAQABAAAAAAAEAAQAAQABAAEAAAAFAAMAAQABAAAAAAAFAAQAAQABAAEAAAAGAAMAAQABAAAAAAAGAAQAAQABAAEAAAAHAP//AQAAAAAAABAAAP//AQAAAAAAAAAAAAAAAQAAAAEAAAAHAAAAAQAAAAEAABAAAAEAAQAAAAEAAAAHAAEAAQAAAAEAABAAAAIAAQACAAAAADAHAAIAAQACAAAAACABAAIAAAAAAAEAAHACAAIAAAAAAAEAAHADAAIAAAAAAAEAAHAEAAIAAAAAAAEAAHAFAAIAAAAAAAEAAHAGAAIAAAAAAAEAAHABAAYAAAAAAAEAAHACAAYAAAAAAAEAAHADAAYAAAAAAAEAAHAEAAYAAAAAAAEAAHAFAAYAAAAAAAEAAHAGAAYAAAAAAAEAAHAHAAYAAQACAAAAACAAAAYAAQACAAAAADAAAAUAAQAAAAEAAAAAAAQAAQAAAAEAAAAHAAUAAQAAAAEAABAHAAQAAQAAAAEAABAAAAMAAQAAAAAAAAAHAAMAAQAAAAAAABA=")
 tile_set = ExtResource("26_tiles_wall")

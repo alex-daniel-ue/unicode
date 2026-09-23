@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=29 format=3 uid="uid://dyc1t3vgb4y2h"]
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=33 format=3 uid="uid://dyc1t3vgb4y2h"]
 
 [ext_resource type="Script" path="res://global/utils/level_module.gd" id="1_level_module"]
 [ext_resource type="Script" path="res://global/utils/level_entry.gd" id="2_level_entry"]
@@ -14,43 +14,47 @@
 [ext_resource type="PackedScene" path="res://level/levels/it_6.tscn" id="12_it_6"]
 [ext_resource type="PackedScene" path="res://level/levels/it_7.tscn" id="13_it_7"]
 [ext_resource type="PackedScene" path="res://level/levels/it_8.tscn" id="14_it_8"]
+[ext_resource type="PackedScene" path="res://level/levels/it_9.tscn" id="15_it_9"]
+[ext_resource type="PackedScene" path="res://level/levels/it_10.tscn" id="16_it_10"]
 
 [sub_resource type="Resource" id="Res_1"]
 script = ExtResource("2_level_entry")
 id = &"tutorial"
-label = "0"
+label = "1"
 title = "First steps"
-concept = "How the screen works. Skippable."
+concept = "How the screen works."
 scene = ExtResource("4_tutorial_1")
 counts_for_progress = false
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
 [sub_resource type="Resource" id="Res_2"]
+script = ExtResource("2_level_entry")
+id = &"tutorial-2"
+label = "2"
+title = "Read it first"
+concept = "Read a program, predict what it does, run it."
+scene = ExtResource("5_it_0a")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_3"]
+script = ExtResource("2_level_entry")
+id = &"tutorial-3"
+label = "3"
+title = "Rebuild it"
+concept = "A sensor and an if, from a blank canvas."
+scene = ExtResource("6_it_0b")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_4"]
 script = ExtResource("1_level_module")
 id = &"tutorial"
 display_name = "Tutorial"
 subtitle = "How to play."
-levels = Array[ExtResource("2_level_entry")]([SubResource("Res_1")])
+levels = Array[ExtResource("2_level_entry")]([SubResource("Res_1"), SubResource("Res_2"), SubResource("Res_3")])
 locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
-
-[sub_resource type="Resource" id="Res_3"]
-script = ExtResource("2_level_entry")
-id = &"it-0a"
-label = "0a"
-title = "Read it first"
-concept = "Read a program, predict what it does, run it."
-scene = ExtResource("5_it_0a")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_4"]
-script = ExtResource("2_level_entry")
-id = &"it-0b"
-label = "0b"
-title = "Rebuild it"
-concept = "A sensor and an if, from a blank canvas."
-scene = ExtResource("6_it_0b")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
 
 [sub_resource type="Resource" id="Res_5"]
 script = ExtResource("2_level_entry")
@@ -125,15 +129,33 @@ scene = ExtResource("14_it_8")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
 [sub_resource type="Resource" id="Res_13"]
+script = ExtResource("2_level_entry")
+id = &"it-9"
+label = "9"
+title = "Two ways out"
+concept = "Leaving a loop early: break."
+scene = ExtResource("15_it_9")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_14"]
+script = ExtResource("2_level_entry")
+id = &"it-10"
+label = "10"
+title = "Back to the question"
+concept = "Skipping to the next pass: continue."
+scene = ExtResource("16_it_10")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_15"]
 script = ExtResource("1_level_module")
 id = &"iteration"
 display_name = "Iteration"
 subtitle = "Don't repeat yourself."
-levels = Array[ExtResource("2_level_entry")]([SubResource("Res_3"), SubResource("Res_4"), SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12")])
+levels = Array[ExtResource("2_level_entry")]([SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12"), SubResource("Res_13"), SubResource("Res_14")])
 locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
-[sub_resource type="Resource" id="Res_14"]
+[sub_resource type="Resource" id="Res_16"]
 script = ExtResource("1_level_module")
 id = &"arrays"
 display_name = "Arrays"
@@ -145,4 +167,4 @@ metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [resource]
 script = ExtResource("3_level_catalog")
-modules = Array[ExtResource("1_level_module")]([SubResource("Res_2"), SubResource("Res_13"), SubResource("Res_14")])
+modules = Array[ExtResource("1_level_module")]([SubResource("Res_4"), SubResource("Res_15"), SubResource("Res_16")])

@@ -335,6 +335,7 @@ panel = NodePath("../Panel")
 [node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Open/close panel"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("10_dipl1")
@@ -345,6 +346,7 @@ associated_contents = NodePath("../../Panel/PuzzleEnvironment")
 [node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Frame level"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("24_a3a4o")
@@ -359,6 +361,7 @@ metadata/_edit_lock_ = true
 [node name="SpeedButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+tooltip_text = "Speed up/slow down execution"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 disabled = true
@@ -412,6 +415,8 @@ size = Vector2i(2, 648)
 render_target_update_mode = 4
 
 [node name="LevelComplete" parent="." instance=ExtResource("28_88ajp")]
+visible = false
+z_index = 5
 layout_mode = 1
 
 [connection signal="pressed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" to="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" method="_on_pressed"]

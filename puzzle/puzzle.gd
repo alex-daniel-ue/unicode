@@ -165,7 +165,14 @@ func _on_level_completed() -> void:
 	_show_level_complete(stars)
 
 func _show_level_complete(stars: int) -> void:
-	level_complete.present(stars, current_run_placed_blocks, Game.level.get_star_par(), Game.level.star_slack)
+	var card := level_complete.present(
+		stars, current_run_placed_blocks, Game.level.get_star_par(), Game.level.star_slack, true
+	)
+	# The card is up before this returns; the summary fills in when it arrives.
+	# last_run_yaml is the program as it was when Play was pressed: the winner.
+	var summary := await ai_assistant.request_summary(last_run_yaml)
+	if is_instance_valid(level_complete):
+		level_complete.show_summary(summary, card)
 
 func _on_level_failed(reason: String) -> void:
 	Interpreter.interrupted = true

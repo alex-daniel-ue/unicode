@@ -13,14 +13,30 @@ signal finished
 
 @export var mask: TutorialMask
 @export var steps: Control
+## A plain Control above the mask that draws an outline around each target. It
+## carries no material, so it draws the same on every renderer: if the mask's
+## holes ever fail to cut, the targets are still ringed.
+@export var rings: Control
+@export var ring_color := Color(1.0, 0.82, 0.3, 1.0)
+@export var ring_width := 3
 
 var puzzle: Puzzle
 var _steps: Array[TutorialStep] = []
 var _index := -1
+var _ring_rects: Array[Rect2] = []
+var _ring_box := StyleBoxFlat.new()
 
 
 func attach(to: Puzzle) -> void:
 	puzzle = to
+
+	_ring_box.draw_center = false
+	_ring_box.border_color = ring_color
+	_ring_box.set_border_width_all(ring_width)
+	_ring_box.set_corner_radius_all(8)
+	if rings != null:
+		rings.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rings.draw.connect(_draw_rings)
 
 	for child in steps.get_children():
 		if child is TutorialStep:
@@ -130,6 +146,21 @@ func _update_holes() -> void:
 	var lost := not step.targets.is_empty() and rects.is_empty()
 	mask.visible = (step.dim or step.block_input) and not lost
 
+	var ringed: Array[Rect2] = []
+	if step.dim and not step.block_input:
+		for r in rects:
+			ringed.append(r.grow(mask.padding + ring_width))
+	if ringed != _ring_rects:
+		_ring_rects = ringed
+		if rings != null:
+			rings.queue_redraw()
+
+
+func _draw_rings() -> void:
+	# Rings share the mask's local space: both are full-rect children of the overlay.
+	for r in _ring_rects:
+		rings.draw_style_box(_ring_box, r)
+
 
 func _resolve(path: String) -> Control:
 	if path.begins_with("block:"):
@@ -144,6 +175,9 @@ func _resolve(path: String) -> Control:
 func _finish() -> void:
 	set_process(false)
 	mask.visible = false
+	_ring_rects.clear()
+	if rings != null:
+		rings.queue_redraw()
 	finished.emit()
 	queue_free()
 #endregion

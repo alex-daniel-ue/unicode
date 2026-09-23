@@ -1,12 +1,8 @@
-[gd_scene load_steps=34 format=4 uid="uid://dgexfaubxv3sd"]
+[gd_scene load_steps=17 format=4 uid="uid://dgexfaubxv3sd"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
-[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="3_nested_data"]
-[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="4_socket_data"]
-[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="5_value_data"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="6_block_data"]
-[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="7_control_flow"]
 [ext_resource type="PackedScene" uid="uid://cbwa1bqy2sbq" path="res://puzzle/ui/block/templates/nested/nested_block.tscn" id="8_nested"]
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="9_dest_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="10_tiles_floor"]
@@ -18,128 +14,7 @@
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="16_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="17_tiles_wall"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="18_m6c0l"]
-
-[sub_resource type="Resource" id="Nest_1"]
-script = ExtResource("3_nested_data")
-type = 5
-
-[sub_resource type="Resource" id="Sock_2"]
-script = ExtResource("4_socket_data")
-receptive = false
-
-[sub_resource type="Resource" id="Val_3"]
-script = ExtResource("5_value_data")
-show_type = false
-_socket_ref = SubResource("Sock_2")
-
-[sub_resource type="Resource" id="BD_4"]
-script = ExtResource("6_block_data")
-name = "TypedValueSlotPlain"
-base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
-type = 3
-socket = SubResource("Sock_2")
-value = SubResource("Val_3")
-description = "A slot you type into. It takes a typed-in value only, so no block can be dropped into it."
-draggable = false
-placeable = false
-top_notch = false
-Type/value = SubResource("Val_3")
-Type/socket = SubResource("Sock_2")
-Function/entity_name = &""
-Function/method = &""
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
-
-[sub_resource type="Resource" id="Sock_5"]
-script = ExtResource("4_socket_data")
-
-[sub_resource type="Resource" id="Val_6"]
-script = ExtResource("5_value_data")
-_socket_ref = SubResource("Sock_5")
-
-[sub_resource type="Resource" id="BD_7"]
-script = ExtResource("6_block_data")
-name = "ValueSlot"
-base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
-type = 3
-socket = SubResource("Sock_5")
-value = SubResource("Val_6")
-description = "A value slot. Type a number, a word, or the name of a variable straight into it, or drop a block in that produces a value."
-draggable = false
-placeable = false
-top_notch = false
-Type/value = SubResource("Val_6")
-Type/socket = SubResource("Sock_5")
-Function/entity_name = &""
-Function/method = &""
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
-
-[sub_resource type="Resource" id="Sock_8"]
-script = ExtResource("4_socket_data")
-
-[sub_resource type="Resource" id="Val_9"]
-script = ExtResource("5_value_data")
-_socket_ref = SubResource("Sock_8")
-
-[sub_resource type="Resource" id="BD_10"]
-script = ExtResource("6_block_data")
-name = "ValueSlot"
-base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
-type = 3
-socket = SubResource("Sock_8")
-value = SubResource("Val_9")
-description = "A value slot. Type a number, a word, or the name of a variable straight into it, or drop a block in that produces a value."
-draggable = false
-placeable = false
-top_notch = false
-Type/value = SubResource("Val_9")
-Type/socket = SubResource("Sock_8")
-Function/entity_name = &""
-Function/method = &""
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
-
-[sub_resource type="Resource" id="Sock_11"]
-script = ExtResource("4_socket_data")
-receptive = false
-
-[sub_resource type="Resource" id="Val_12"]
-script = ExtResource("5_value_data")
-_socket_ref = SubResource("Sock_11")
-
-[sub_resource type="Resource" id="BD_13"]
-script = ExtResource("6_block_data")
-name = "TypedValueSlot"
-base_path = "res://puzzle/ui/block/templates/socket/value/value_block.tscn"
-type = 3
-socket = SubResource("Sock_11")
-value = SubResource("Val_12")
-description = "A slot you type into. It takes a typed-in value only, so no block can be dropped into it."
-draggable = false
-placeable = false
-top_notch = false
-text = "1"
-Type/value = SubResource("Val_12")
-Type/socket = SubResource("Sock_11")
-Function/entity_name = &""
-Function/method = &""
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
-
-[sub_resource type="Resource" id="BD_14"]
-script = ExtResource("6_block_data")
-name = "ForBlock (Integer)"
-color = Color(0.37254903, 0.5176471, 0.72156864, 1)
-base_path = "res://puzzle/ui/block/templates/nested/nested_block.tscn"
-type = 1
-nested = SubResource("Nest_1")
-category = "Iterative"
-syntax = "for var {name: variable}, from {start: int/variable} to {end: int/variable}, step {increment: int}"
-description = "Iterates from a start value to an end value (inclusive), adding the step value each time. Creates a local variable for the index."
-text = "for var {}, from {}\\nto {}, at step {}"
-text_blocks = Array[ExtResource("6_block_data")]([SubResource("BD_4"), SubResource("BD_7"), SubResource("BD_10"), SubResource("BD_13")])
-Type/nested = SubResource("Nest_1")
-Function/script = ExtResource("7_control_flow")
-Function/entity_name = &""
-Function/method = &"_for"
-metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+[ext_resource type="Resource" uid="uid://pfgckt7vvvvp" path="res://puzzle/blocks/control flow/for_int.tres" id="19_for_int"]
 
 [sub_resource type="CircleShape2D" id="Circle_15"]
 radius = 12.0
@@ -161,6 +36,9 @@ block: BeginBlock
         - 4
         - 1
       children:
+        - block: MoveBlock
+          kind: statement
+          text: \"move forward\"
         - block: TurnBlock
           kind: statement
           text: \"turn {}\"
@@ -173,10 +51,7 @@ block: BeginBlock
           kind: statement
           text: \"turn {}\"
           parameters:
-            - right
-        - block: MoveBlock
-          kind: statement
-          text: \"move forward\""
+            - right"
 room_goals = [NodePath("RoomGoals/GoalManager")]
 
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
@@ -190,7 +65,7 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "A staircase. Up one, across one, up one, across one."
+text = "Finish on the flag."
 autowrap_mode = 3
 
 [node name="Line2" type="Label" parent="LevelDescription" index="2"]
@@ -198,34 +73,10 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "The body of a loop doesn't have to be a single step. It can be a whole little routine, as long as the routine is the same every time."
+text = "Everything inside a loop repeats together, in order, on every pass."
 autowrap_mode = 3
 
 [node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The for block is placed and locked. Its step is already 1; you fill in the name and the two bounds."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Work out one climb first, then ask how many climbs the staircase needs."
-autowrap_mode = 3
-
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Order matters: from facing right, turn left points the robot UP the stair. The other way around walks it off the bottom."
-autowrap_mode = 3
-
-[node name="Line6" type="Label" parent="LevelDescription" index="6"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
@@ -235,7 +86,7 @@ autowrap_mode = 3
 
 [node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("8_nested")]
 layout_mode = 2
-data = SubResource("BD_14")
+data = ExtResource("19_for_int")
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
 bounds = Rect2(32, 65.92, 158.08, 158.08)
@@ -245,7 +96,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("9_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -285,7 +136,7 @@ position = Vector2(48, 208)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.34846058
+frame_progress = 0.9506013
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("14_move"), ExtResource("15_turn")])

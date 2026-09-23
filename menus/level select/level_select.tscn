@@ -156,8 +156,7 @@ theme_override_constants/separation = 16
 
 [node name="CodeTitle" type="Label" parent="Background/Margin/Root/Footer"]
 layout_mode = 2
-theme_type_variation = &"HeaderSmall"
-text = "Your progress code:"
+theme_type_variation = &"LegibleLabel"
 
 [node name="CodeLabel" type="Label" parent="Background/Margin/Root/Footer"]
 layout_mode = 2

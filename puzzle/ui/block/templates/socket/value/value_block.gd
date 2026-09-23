@@ -63,6 +63,14 @@ func typecast(string: String) -> Variant:
 	
 	return super(string)
 
+## Re-reads the flags that decide whether the field can be typed into. _ready()
+## reads them once, and a preset block is readied while its slots still carry the
+## .tres default toolbox = true; get_preset() clears that flag afterwards, so
+## without a refresh a preset's fields stayed locked until the first run happened
+## to fire running_changed.
+func refresh_editable() -> void:
+	_on_interpreter_running_changed()
+
 func _on_interpreter_running_changed() -> void:
 	var should_be_disabled := (
 		not data.value.editable or

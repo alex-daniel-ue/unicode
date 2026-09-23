@@ -32,42 +32,39 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 tutorial_overlay = ExtResource("1_overlay")
 
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
 theme_type_variation = &"HeaderMedium"
 text = "First steps"
 horizontal_alignment = 1
 
 [node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
 size_flags_horizontal = 3
 theme = ExtResource("3_theme")
 theme_type_variation = &"LegibleLabel"
-text = "This is the tour. It walks you through the screen, and you can skip it from Level select at any time."
+text = "Get the robot onto the flag."
 autowrap_mode = 3
 
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
-visible = false
+[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
 size_flags_horizontal = 3
-theme = ExtResource("3_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Everything you build goes under the begin block on the canvas."
-autowrap_mode = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
 
-[node name="Inert3" parent="LevelDescription" index="3" instance=ExtResource("4_statement")]
-visible = false
-offset_right = 140.0
+[node name="Move" parent="LevelDescription/Blocks" index="0" instance=ExtResource("4_statement")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 data = ExtResource("5_move")
 
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
+[node name="MoveSays" type="Label" parent="LevelDescription/Blocks" index="1"]
+layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 theme = ExtResource("3_theme")
 theme_type_variation = &"LegibleLabel"
-text = "One move forward is the whole level. Drop it under begin and press Play."
+text = "Moves the robot one tile the way it's facing."
 autowrap_mode = 3
 
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
+[node name="Line3" type="Label" parent="LevelDescription" index="3"]
 size_flags_horizontal = 3
 theme = ExtResource("3_theme")
 theme_type_variation = &"LegibleLabel"
@@ -82,7 +79,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("7_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 

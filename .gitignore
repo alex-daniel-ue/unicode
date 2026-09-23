@@ -23,6 +23,9 @@ mono_crash.*.json
 
 # Exports
 *.exe
+*.zip
 
 # API keys
 ai/.env
+
+*.lnk

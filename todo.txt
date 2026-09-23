@@ -1,3 +1,0 @@
-add notification when timed out finishes
-add cant zoom or pan if bounds no longer intersect with camera view
-notification should wrap when bigger than parent, reuse chat bubble logic, generalize?

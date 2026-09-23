@@ -75,7 +75,7 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Four rows of seats. Each one is longer than the one above it."
+text = "Pick up every pen, then finish on the flag."
 autowrap_mode = 3
 
 [node name="Line2" type="Label" parent="LevelDescription" index="2"]
@@ -83,42 +83,10 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "The shape is the same as the last level -- a loop inside a loop -- but the inner loop can't run the same number of times on every pass."
+text = "A for loop's start and end can be variables, not only numbers."
 autowrap_mode = 3
 
 [node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The outer counter is a number like any other. You can type its NAME into the inner loop's bound instead of a number, and the inner loop will read whatever it holds on that pass."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The step down at the end of the body is turn right, move, turn left: down one row and facing right again. Keep it inside the loop. The last one lands on the door."
-autowrap_mode = 3
-
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Nothing here is new. This is the whole module in one program."
-autowrap_mode = 3
-
-[node name="Line6" type="Label" parent="LevelDescription" index="6"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "13 pens. Miss one and the room isn't solved."
-autowrap_mode = 3
-
-[node name="Line7" type="Label" parent="LevelDescription" index="7"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
@@ -137,7 +105,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("5_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -424,7 +392,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.716524
+frame_progress = 0.19665635
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("4_block_data")]([ExtResource("12_move"), ExtResource("13_turn")])

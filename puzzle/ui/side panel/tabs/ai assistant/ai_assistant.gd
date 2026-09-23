@@ -7,12 +7,12 @@ const DEFAULT_URL := "http://127.0.0.1:3000/api/hint"
 const DEFAULT_PLACEHOLDER := "Type here..."
 
 const REQUEST_TIMEOUT := 35.0
+const SUMMARY_TIMEOUT := 12.0
 const BLOCKED_TIMEOUT := 10
 const RATE_LIMIT_TIMEOUT := 15
 const SHOT_WIDTH := 768
+const SHOT_BACKGROUND := Color(0.11, 0.11, 0.14)
 const LOG_LINES := 40
-
-const ALLOW_WHILE_PAUSED := false
 
 @export var chat_bubble_scene: PackedScene
 
@@ -31,12 +31,27 @@ const ALLOW_WHILE_PAUSED := false
 
 var api_url := DEFAULT_URL
 var fallback_url := ""
+var summary_url := ""
 var client_token := ""
 
 var in_timeout := false
 var _awaiting_reply := false
 var _pending_json := ""
 var _tried_fallback := false
+
+## The prompt shown in the empty field: the default, or the nudge's scaffolding
+## question. The pool status is added to it, never written over it.
+var _base_placeholder := DEFAULT_PLACEHOLDER
+## True while the message in flight has been paid for from the HintPool, so a
+## request that never reached the model can be refunded exactly once.
+var _charged := false
+var _pool_ticker: Timer
+
+## Screenshot diagnostics, printed with the request in debug builds.
+var _shot_note := ""
+var _shot_bytes := 0
+
+var _summary_http: HTTPRequest
 
 @onready var puzzle := get_node_or_null(^"/root/Puzzle") as Puzzle
 
@@ -49,9 +64,24 @@ func _ready() -> void:
 	_reset_chat()
 	Interpreter.running_changed.connect(_refresh_busy_state)
 	Interpreter.paused_changed.connect(_refresh_busy_state)
+	
+	# The pool regenerates by the clock, so the field has to be re-read once a
+	# second while it is empty or the countdown in the placeholder would freeze.
+	_pool_ticker = Timer.new()
+	_pool_ticker.wait_time = 1.0
+	_pool_ticker.autostart = true
+	_pool_ticker.timeout.connect(_refresh_busy_state)
+	add_child(_pool_ticker)
+	
+	_summary_http = HTTPRequest.new()
+	_summary_http.timeout = SUMMARY_TIMEOUT
+	_summary_http.use_threads = true
+	add_child(_summary_http)
 
 func _exit_tree() -> void:
 	http_request.cancel_request()
+	if is_instance_valid(_summary_http):
+		_summary_http.cancel_request()
 
 func _load_ai_config() -> void:
 	var folder := ProjectSettings.globalize_path("res://") if OS.has_feature("editor") \
@@ -65,6 +95,7 @@ func _load_ai_config() -> void:
 	api_url = config.get_value("ai", "url", api_url)
 	fallback_url = config.get_value("ai", "fallback_url", fallback_url)
 	client_token = config.get_value("ai", "token", client_token)
+	summary_url = config.get_value("ai", "summary_url", summary_url)
 
 #region UI interaction
 func _on_submit_pressed() -> void:
@@ -75,8 +106,19 @@ func _on_submit_pressed() -> void:
 	if text.is_empty():
 		return
 	
+	if Interpreter.is_running:
+		return
+	if not HintPool.take():
+		puzzle.notif.push(
+			"Out of questions for now. The next one comes back in %s." % _clock(HintPool.seconds_to_next()),
+			Notification.Type.LOG
+		)
+		_refresh_busy_state()
+		return
+	_charged = true
+	
 	message_field.text = ""
-	message_field.placeholder_text = DEFAULT_PLACEHOLDER
+	_base_placeholder = DEFAULT_PLACEHOLDER
 	
 	if not Tutorial.shift_enter_shown:
 		Tutorial.shift_enter_shown = true
@@ -117,20 +159,44 @@ func _reset_chat() -> void:
 	reset_button.disabled = true
 	_refresh_busy_state()
 
+## No chat while a program runs, paused included. A paused run is still a run:
+## the canvas is locked, the robot is mid-program, and a hint about a program
+## half way through executing reads the output log of something unfinished.
+## Decided with the panel's "limit the assistant" question; see HintPool for the
+## other half of that decision.
 func _refresh_busy_state() -> void:
 	if in_timeout:
 		return
 	
-	var is_executing: bool = Interpreter.is_running if not ALLOW_WHILE_PAUSED else (Interpreter.is_running and not Interpreter.is_paused)
-	var busy: bool = is_executing or _awaiting_reply
+	var busy: bool = Interpreter.is_running or _awaiting_reply
+	var left := HintPool.available()
 	
-	submit_button.disabled = busy
+	submit_button.disabled = busy or left == 0
+	# Typing stays open while the pool is empty, so a student can compose the next
+	# question while it refills; only sending waits.
 	message_field.editable = not busy
 	if busy:
 		reset_button.disabled = true
+	
+	submit_button.tooltip_text = "Send (%d of %d questions left)" % [left, HintPool.CAPACITY]
+	_update_placeholder(busy, left)
+
+func _update_placeholder(busy: bool, left: int) -> void:
+	if Interpreter.is_running:
+		message_field.placeholder_text = "Stop the program to ask a question."
+	elif left == 0:
+		message_field.placeholder_text = "Out of questions for now. Next one in %s." % _clock(HintPool.seconds_to_next())
+	elif left <= 3 and not busy:
+		message_field.placeholder_text = "%s (%d left)" % [_base_placeholder, left]
+	else:
+		message_field.placeholder_text = _base_placeholder
+
+func _clock(seconds: int) -> String:
+	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]
 
 func prompt_for_question() -> void:
-	message_field.placeholder_text = "What did you expect to happen, and what happened instead?"
+	_base_placeholder = "What did you expect to happen, and what happened instead?"
+	_refresh_busy_state()
 	if message_field.editable:
 		message_field.grab_focus()
 #endregion
@@ -163,7 +229,7 @@ func _send_hint_request(msg: String) -> void:
 	
 	if OS.is_debug_build():
 		var shown := payload.duplicate(true)
-		shown.screenshot_jpeg_b64 = "<%d base64 chars>" % screenshot.length()
+		shown.screenshot_jpeg_b64 = "<%d base64 chars, %d bytes: %s>" % [screenshot.length(), _shot_bytes, _shot_note]
 		print("-- hint request --\n", JSON.stringify(shown, "  ", false))
 	
 	_post(api_url)
@@ -174,6 +240,7 @@ func _post(url: String) -> void:
 		headers.append("X-UniCode-Token: " + client_token)
 	
 	if http_request.request(url, headers, HTTPClient.METHOD_POST, _pending_json) != OK:
+		_refund()
 		_on_hint_failed("Couldn't start the request. Check %s." % CONFIG_FILE)
 
 func _on_request_completed(
@@ -189,6 +256,13 @@ func _on_request_completed(
 	if OS.is_debug_build():
 		print("-- hint response (HTTP %d, result %d) --\n" % [response_code, result],
 			JSON.stringify(data, "  ", false) if spoke_protocol else body_text.left(500))
+		# The relay reports how many image bytes it attached for the model. Sent but
+		# not attached means the relay rejected it or is running an older main.py.
+		if spoke_protocol and _shot_bytes > 0 and (data as Dictionary).has("image_bytes") \
+				and int((data as Dictionary).image_bytes) == 0:
+			push_warning("AI screenshot: sent %d bytes but the relay attached none. Check the deployed relay's /healthz version." % _shot_bytes)
+		elif spoke_protocol and _shot_bytes > 0 and not (data as Dictionary).has("image_bytes"):
+			push_warning("AI screenshot: the relay doesn't report image_bytes, so it predates this client. Redeploy ai/main.py.")
 	
 	# The relay answers in our own shape even when refusing, so anything else means this host
 	# never handled the request. That's the only case worth spending on the other host.
@@ -198,29 +272,41 @@ func _on_request_completed(
 			await get_tree().process_frame   # let HTTPRequest settle before reusing it
 			_post(fallback_url)
 			return
+		_refund()
 		_on_hint_failed("Couldn't reach the hint helper. Check the internet connection.")
 		return
 	
 	var reply := str((data as Dictionary).get("reply", ""))
 	match str((data as Dictionary).get("status", "")):
 		"ok", "off_topic":
+			_charged = false   # spent: the model answered
 			_finish_request()
 			_add_ai_bubble(reply)
 			Tutorial.assistant_replied.emit(reply)
 		"blocked":
+			_charged = false   # spent: the model saw it, and a blocked message is the student's
 			_on_hint_failed(reply if not reply.is_empty() else "Let's keep our chat about this level.")
 			_apply_timeout(BLOCKED_TIMEOUT)
 		"rate_limited":
+			_refund()
 			_on_hint_failed(reply if not reply.is_empty() else "Give me a few seconds before the next question.")
 			_apply_timeout(RATE_LIMIT_TIMEOUT)
 		"unauthorized":
+			_refund()
 			_on_hint_failed("This copy of UniCode isn't set up to reach the hint helper.")
 		_:
+			_refund()
 			_on_hint_failed(reply if not reply.is_empty() else "The hint helper isn't available right now.")
 
 func _finish_request() -> void:
 	_awaiting_reply = false
 	_refresh_busy_state()
+
+## Gives the message back to the pool when the model never saw it. Idempotent.
+func _refund() -> void:
+	if _charged:
+		_charged = false
+		HintPool.refund()
 
 func _on_hint_failed(text: String) -> void:
 	_finish_request()
@@ -307,21 +393,132 @@ func _robot_state() -> String:
 	]
 
 func _get_viewport_jpeg_base64() -> String:
-	if not (is_instance_valid(Game.level) and is_instance_valid(puzzle.level_viewport)):
-		return ""
-	
-	await RenderingServer.frame_post_draw
-	
-	var img := puzzle.level_viewport.get_texture().get_image()
-	if img == null or img.is_empty():
+	_shot_bytes = 0
+	var img: Image = await _capture_level()
+	if img == null:
+		push_warning("AI screenshot: nothing captured (%s). The hint goes out without one." % _shot_note)
 		return ""
 	
 	if img.get_width() > SHOT_WIDTH:
 		var height := roundi(SHOT_WIDTH * float(img.get_height()) / img.get_width())
 		img.resize(SHOT_WIDTH, height, Image.INTERPOLATE_BILINEAR)
-	img.convert(Image.FORMAT_RGB8)   # the JPEG writer has no use for the alpha channel
 	
-	return Marshalls.raw_to_base64(img.save_jpg_to_buffer(0.8))
+	var jpeg := img.save_jpg_to_buffer(0.8)
+	_shot_bytes = jpeg.size()
+	_shot_note += ", %dx%d" % [img.get_width(), img.get_height()]
+	return Marshalls.raw_to_base64(jpeg)
+
+## What the student sees in the environment panel, flattened onto an opaque
+## background.
+##
+## The SubViewport is transparent_bg, so its texture is transparent wherever the
+## level draws nothing, and in some renderer/driver combinations reading it back
+## gives an image that is empty or entirely transparent. Converting straight to
+## RGB8 then sends the model a black rectangle, which is indistinguishable from
+## sending nothing. So: read the SubViewport; if that comes back unusable, crop
+## the panel out of the window instead; either way composite onto a solid colour.
+func _capture_level() -> Image:
+	if not (is_instance_valid(Game.level) and is_instance_valid(puzzle.level_viewport)):
+		_shot_note = "no level or no viewport"
+		return null
+	
+	await RenderingServer.frame_post_draw
+	
+	var img := puzzle.level_viewport.get_texture().get_image()
+	if _usable(img):
+		_shot_note = "from the level viewport"
+		return _flatten(img)
+	
+	var why := "empty" if img == null or img.is_empty() else "fully transparent"
+	var container := puzzle.level_viewport.get_parent() as Control
+	var window := get_viewport().get_texture().get_image()
+	if container == null or not _usable(window):
+		_shot_note = "level viewport was %s, window capture failed too" % why
+		return null
+	
+	var on_screen := container.get_screen_transform() * Rect2(Vector2.ZERO, container.size)
+	var region := Rect2i(on_screen).intersection(Rect2i(Vector2i.ZERO, window.get_size()))
+	if region.size.x < 8 or region.size.y < 8:
+		_shot_note = "level viewport was %s, environment panel is off screen" % why
+		return null
+	
+	_shot_note = "level viewport was %s, cropped from the window" % why
+	return _flatten(window.get_region(region))
+
+func _usable(img: Image) -> bool:
+	return img != null and not img.is_empty() \
+		and img.get_width() >= 8 and img.get_height() >= 8 \
+		and not img.is_invisible()
+
+func _flatten(img: Image) -> Image:
+	img.convert(Image.FORMAT_RGBA8)
+	var flat := Image.create_empty(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
+	flat.fill(SHOT_BACKGROUND)
+	flat.blend_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), Vector2i.ZERO)
+	flat.convert(Image.FORMAT_RGB8)
+	return flat
+#endregion
+
+#region Post-win summary
+## Two sentences on what the student's own winning program did. Its own endpoint
+## and its own server-side prompt: no screenshot, no chat history, and it never
+## draws from the HintPool, because it is not a hint.
+##
+## Returns "" on any failure; the win card simply leaves the section out.
+func request_summary(program: String) -> String:
+	if program.is_empty() or not is_instance_valid(Game.level):
+		return ""
+	
+	var level := Game.level
+	var body := JSON.stringify({
+		session_id = Game.session_id,
+		level_id = level.scene_file_path.get_file().get_basename(),
+		program = program,
+		context = {
+			instructions = level.description.get_raw(),
+			blocks = _get_available_blocks_doc(),
+		},
+	})
+	
+	for url in [_sibling_url(api_url, "summary"), _sibling_url(fallback_url, "summary")]:
+		if url.is_empty():
+			continue
+		var reply: Variant = await _post_summary(url, body)
+		if reply != null:
+			return reply
+	return ""
+
+## null means this host never answered in our shape, so the other is worth a try;
+## a String, even an empty one, means the relay answered and that is final.
+func _post_summary(url: String, body: String) -> Variant:
+	if not is_instance_valid(_summary_http):
+		return ""
+	var headers := ["Content-Type: application/json"]
+	if not client_token.is_empty():
+		headers.append("X-UniCode-Token: " + client_token)
+	
+	_summary_http.cancel_request()
+	if _summary_http.request(url, headers, HTTPClient.METHOD_POST, body) != OK:
+		return null
+	
+	var outcome: Array = await _summary_http.request_completed
+	var raw: PackedByteArray = outcome[3]
+	print(raw)
+	var data: Variant = JSON.parse_string(raw.get_string_from_utf8() if raw.size() > 0 else "")
+	if typeof(data) != TYPE_DICTIONARY or not (data as Dictionary).has("status"):
+		return null
+	if OS.is_debug_build():
+		print("-- summary response --\n", JSON.stringify(data, "  ", false))
+	return str(data.get("reply", "")).strip_edges() if str(data.get("status", "")) == "ok" else ""
+
+## "https://x/api/hint" -> "https://x/api/summary". The cfg can also name one
+## outright with summary_url, for a relay that lives somewhere else.
+func _sibling_url(url: String, endpoint: String) -> String:
+	if url.is_empty():
+		return ""
+	if url == api_url and not summary_url.is_empty():
+		return summary_url
+	return url.get_base_dir().path_join(endpoint)
 #endregion
 
 #region UI helpers
@@ -376,6 +573,5 @@ func _apply_timeout(duration: int) -> void:
 	
 	if in_timeout:
 		in_timeout = false
-		message_field.placeholder_text = DEFAULT_PLACEHOLDER
 		_refresh_busy_state()
 #endregion

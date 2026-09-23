@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://dw6wgrum8hn14"]
+[gd_scene load_steps=7 format=3 uid="uid://dw6wgrum8hn14"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_qniq0"]
 [ext_resource type="Script" uid="uid://bkwe3jverlh78" path="res://puzzle/ui/tutorial/tutorial_overlay.gd" id="2_8q55t"]
@@ -11,12 +11,19 @@ shader = ExtResource("3_2y4kq")
 shader_parameter/dim_color = Color(0.02, 0.02, 0.08, 0.62)
 shader_parameter/dim_strength = 1.0
 shader_parameter/rect_size = Vector2(1152, 648)
-shader_parameter/holes = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 shader_parameter/hole_count = 0
 shader_parameter/feather = 6.0
 shader_parameter/radius = 8.0
+shader_parameter/hole_0 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_1 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_2 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_3 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_4 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_5 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_6 = Vector4(0, 0, 0, 0)
+shader_parameter/hole_7 = Vector4(0, 0, 0, 0)
 
-[node name="TutorialOverlay" type="Control" node_paths=PackedStringArray("mask", "steps")]
+[node name="TutorialOverlay" type="Control" node_paths=PackedStringArray("mask", "steps", "rings")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,13 +35,21 @@ theme = ExtResource("1_qniq0")
 script = ExtResource("2_8q55t")
 mask = NodePath("Mask")
 steps = NodePath("Steps")
+rings = NodePath("Rings")
 
 [node name="Mask" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_708ml")
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+color = Color(0, 0, 0, 0)
 script = ExtResource("4_l8cdv")
+
+[node name="Rings" type="Control" parent="."]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Steps" type="Control" parent="."]
 anchors_preset = 0
@@ -98,7 +113,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
-targets = PackedStringArray("UserInterface/SideMenuRight/Panel/PuzzleEnvironment")
 next_button = NodePath("Card/Margin/Stack/NextButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/TheRoom"]
@@ -150,7 +164,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
-targets = PackedStringArray("UserInterface/SideMenuLeft/Panel/PuzzleInformation", "UserInterface/SideMenuLeft/ButtonContainer/InfoMenuButton")
 next_button = NodePath("Card/Margin/Stack/NextButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/Instructions"]
@@ -202,7 +215,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
-targets = PackedStringArray("UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton", "UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 next_button = NodePath("Card/Margin/Stack/NextButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/TheToolbox"]
@@ -256,7 +268,6 @@ mouse_filter = 2
 script = ExtResource("5_07kpm")
 advance_on = 1
 only_block = "MoveBlock"
-targets = PackedStringArray("UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton", "UserInterface/SideMenuLeft/Panel/PuzzleToolbox", "Canvas")
 
 [node name="Card" type="PanelContainer" parent="Steps/DragABlock"]
 custom_minimum_size = Vector2(440, 0)
@@ -301,7 +312,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
 advance_on = 2
-targets = PackedStringArray("Canvas", "UserInterface/SideMenuLeft/ButtonContainer/TrashButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/Trash"]
 custom_minimum_size = Vector2(440, 0)
@@ -347,7 +357,6 @@ mouse_filter = 2
 script = ExtResource("5_07kpm")
 advance_on = 1
 only_block = "MoveBlock"
-targets = PackedStringArray("UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton", "UserInterface/SideMenuLeft/Panel/PuzzleToolbox", "Canvas")
 
 [node name="Card" type="PanelContainer" parent="Steps/PlaceAgain"]
 custom_minimum_size = Vector2(440, 0)
@@ -392,7 +401,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
 advance_on = 8
-targets = PackedStringArray("UserInterface/SideMenuLeft/ButtonContainer/AIAssistantMenuButton", "UserInterface/SideMenuLeft/Panel/AIAssistant")
 next_button = NodePath("Card/Margin/Stack/NextButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/Assistant"]
@@ -427,7 +435,7 @@ text = "Ask for a hint"
 custom_minimum_size = Vector2(408, 0)
 layout_mode = 2
 theme_type_variation = &"LegibleLabel"
-text = "Stuck on a level? Open the assistant and tell it what you expected to happen and what happened instead. It asks questions back; it won't hand you the answer. Send it something to try it, or skip."
+text = "Stuck on a level? Open the assistant and tell it what you expected to happen and what happened instead. It asks questions back; it won't hand you the answer. You have ten questions, and one comes back every minute. Send it something to try it, or skip."
 autowrap_mode = 3
 
 [node name="NextButton" type="Button" parent="Steps/Assistant/Card/Margin/Stack"]
@@ -444,7 +452,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
-targets = PackedStringArray("UserInterface/SideMenuLeft/ButtonContainer/VariableWatcherMenuButton")
 next_button = NodePath("Card/Margin/Stack/NextButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/Watcher"]
@@ -497,7 +504,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("5_07kpm")
 advance_on = 3
-targets = PackedStringArray("UserInterface/SideMenuRight/ButtonContainer/PlayButton", "UserInterface/SideMenuRight/ButtonContainer/StopButton", "UserInterface/SideMenuRight/ButtonContainer/SpeedButton")
 
 [node name="Card" type="PanelContainer" parent="Steps/PressPlay"]
 custom_minimum_size = Vector2(440, 0)

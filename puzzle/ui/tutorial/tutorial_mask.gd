@@ -53,13 +53,14 @@ func _push() -> void:
 	var mat := material as ShaderMaterial
 	if mat == null:
 		return
-	var packed := PackedVector4Array()
-	for i in mini(holes.size(), MAX_HOLES):
-		var r := holes[i].grow(padding)
-		packed.append(Vector4(r.position.x, r.position.y, r.size.x, r.size.y))
-	while packed.size() < MAX_HOLES:
-		packed.append(Vector4.ZERO)
-	mat.set_shader_parameter("holes", packed)
+	# One vec4 per hole, not one array: see tutorial_mask.gdshader for why an
+	# array uniform is the thing that broke the highlights in exported builds.
+	for i in MAX_HOLES:
+		var packed := Vector4.ZERO
+		if i < holes.size():
+			var r := holes[i].grow(padding)
+			packed = Vector4(r.position.x, r.position.y, r.size.x, r.size.y)
+		mat.set_shader_parameter("hole_%d" % i, packed)
 	mat.set_shader_parameter("hole_count", mini(holes.size(), MAX_HOLES))
 	mat.set_shader_parameter("rect_size", size)
 	mat.set_shader_parameter("dim_strength", 1.0 if dimmed else 0.0)

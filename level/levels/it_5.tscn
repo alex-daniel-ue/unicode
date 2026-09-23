@@ -69,39 +69,37 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Last level you built a counter by hand: a starting value, a question, and an increase. Here is all three in one block."
+text = "Finish on the flag."
 autowrap_mode = 3
 
-[node name="Inert2" parent="LevelDescription" index="2" instance=ExtResource("3_nested")]
+[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
 visible = false
-offset_right = 140.0
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="For" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_nested")]
+layout_mode = 2
 data = ExtResource("4_for")
+
+[node name="ForSays" type="Label" parent="LevelDescription/Blocks" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"LegibleLabel"
+text = "Counts a variable from a start value to an end value, end included, going up by the step each time. Runs the blocks inside it once per count."
+autowrap_mode = 3
 
 [node name="Line3" type="Label" parent="LevelDescription" index="3"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Give it a name, a first value, and a last value. It counts from the first to the last, INCLUDING the last, and runs everything inside once per number."
+text = "From 1 to 4 counts 1, 2, 3, 4: four passes. In Python that's range(1, 5)."
 autowrap_mode = 3
 
 [node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "from 1 to 4 runs four times. In C that's for (int i = 1; i <= 4; i++), and in Python it's range(1, 5)."
-autowrap_mode = 3
-
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Two legs, one corner. Each leg is its own for. Reusing the name i for both is fine -- a counter leaves when its loop ends."
-autowrap_mode = 3
-
-[node name="Line6" type="Label" parent="LevelDescription" index="6"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
@@ -120,7 +118,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("6_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -160,7 +158,7 @@ position = Vector2(48, 176)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.67465556
+frame_progress = 0.4584223
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("11_move"), ExtResource("12_turn")])

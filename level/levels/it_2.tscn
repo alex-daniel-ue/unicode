@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://gib6nsxvtxoj"]
+[gd_scene load_steps=20 format=4 uid="uid://gib6nsxvtxoj"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
@@ -12,6 +12,7 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="10_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="11_sensed"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="12_tex_dest"]
+[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="13_cuqjy"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="13_robot"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="14_move"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="15_resettable"]
@@ -61,47 +62,29 @@ visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "The door isn't at the end of the hallway any more. It's somewhere in the middle, and the floor keeps going past it."
+text = "Finish on the flag in every room."
 autowrap_mode = 3
 
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
+[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
 visible = false
 size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "So stopping at the wall is no longer the same as stopping at the door."
-autowrap_mode = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
 
-[node name="Inert3" parent="LevelDescription" index="3" instance=ExtResource("3_expression")]
-visible = false
-offset_right = 140.0
+[node name="AheadIs" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_expression")]
+layout_mode = 2
 data = ExtResource("4_ahead_is")
 
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
+[node name="AheadIsSays" type="Label" parent="LevelDescription/Blocks" index="1"]
+layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
 theme_type_variation = &"LegibleLabel"
-text = "Ask about the door instead of the wall."
+text = "Checks the one tile in front of the robot for a wall (blocked), the flag (destination), or a puddle. Gives True or False."
 autowrap_mode = 3
 
-[node name="Line5" type="Label" parent="LevelDescription" index="5"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Careful: the loop stops with the door in FRONT of the robot, not under it."
-autowrap_mode = 3
-
-[node name="Line6" type="Label" parent="LevelDescription" index="6"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Room 3 is the odd one. Look at where the robot starts before you press Play."
-autowrap_mode = 3
-
-[node name="Line7" type="Label" parent="LevelDescription" index="7"]
+[node name="Line3" type="Label" parent="LevelDescription" index="3"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("2_theme")
@@ -120,7 +103,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("8_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -133,7 +116,7 @@ focus_marker = NodePath("../../Visuals/Destination2")
 script = ExtResource("8_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination2")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination2")
 detection_area = NodePath("../../../Visuals/Destination2")
 
@@ -146,7 +129,7 @@ focus_marker = NodePath("../../Visuals/Destination3")
 script = ExtResource("8_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination3")
-fail_message = "The robot didn't finish on the door."
+fail_message = "The robot didn't finish on the flag."
 camera_focus = NodePath("../../../Visuals/Destination3")
 detection_area = NodePath("../../../Visuals/Destination3")
 
@@ -200,17 +183,25 @@ texture = ExtResource("12_tex_dest")
 [node name="YSorted" type="Node2D" parent="Visuals" index="4"]
 y_sort_enabled = true
 
-[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
+[node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted" index="0"]
+modulate = Color(1, 1, 1, 0.38039216)
+position = Vector2(48, 176)
+scale = Vector2(0.915, 0.915)
+sprite_frames = ExtResource("13_cuqjy")
+animation = &"idle_right"
+speed_scale = 0.0
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAHAAAAAAAAAAAAAAAEAAUAAgAAAAAAAEAHAAkAAwAAAAAAADA=")
 tile_set = ExtResource("17_hhgpj")
 
-[node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("13_robot")]
+[node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("13_robot")]
 position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.21657111
+frame_progress = 0.6525692
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("7_block_data")]([ExtResource("14_move"), ExtResource("4_ahead_is")])
@@ -230,10 +221,18 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 48, 304)
 })])
 
-[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="2"]
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted" index="3"]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAABAAcAAQADAAAAAAABAAgAAQADAAEAAAACAAcAAQABAAAAAAACAAgAAQABAAEAAAADAAcAAQABAAAAAAADAAgAAQABAAEAAAAEAAcAAQABAAAAAAAEAAgAAQABAAEAAAAFAAcAAQABAAAAAAAFAAgAAQABAAEAAAAGAAcAAQABAAAAAAAGAAgAAQABAAEAAAAHAAcAAQABAAAAAAAHAAgAAQABAAEAAAAIAAcAAQABAAAAAAAIAAgAAQABAAEAAAAJAAcAAQABAAAAAAAJAAgAAQABAAEAAAABAAMAAQADAAAAAAABAAQAAQADAAEAAAACAAMAAQABAAAAAAACAAQAAQABAAEAAAADAAMAAQABAAAAAAADAAQAAQABAAEAAAAEAAMAAQABAAAAAAAEAAQAAQABAAEAAAAFAAMAAQABAAAAAAAFAAQAAQABAAEAAAAGAAMAAQABAAAAAAAGAAQAAQABAAEAAAAHAAMAAQABAAAAAAAHAAQAAQABAAEAAAAIAAMAAQABAAAAAAAIAAQAAQABAAEAAAAJAAMAAQABAAAAAAAJAAQAAQABAAEAAAABAP//AQADAAAAAAABAAAAAQADAAEAAAACAP//AQABAAAAAAACAAAAAQABAAEAAAADAP//AQABAAAAAAADAAAAAQABAAEAAAAEAP//AQABAAAAAAAEAAAAAQABAAEAAAAFAP//AQABAAAAAAAFAAAAAQABAAEAAAAGAP//AQABAAAAAAAGAAAAAQABAAEAAAAHAP//AQABAAAAAAAHAAAAAQABAAEAAAAIAP//AQABAAAAAAAIAAAAAQABAAEAAAAJAP//AQABAAAAAAAJAAAAAQABAAEAAAAAAP//AQAAAAAAAAAAAAAAAQAAAAEAAAAAAAMAAQAAAAAAAAAAAAQAAQAAAAEAAAAAAAcAAQAAAAAAAAAAAAgAAQAAAAEAAAAKAP//AQAAAAAAABAKAAAAAQAAAAEAABAKAAMAAQAAAAAAABAKAAQAAQAAAAEAABAKAAcAAQAAAAAAABAKAAgAAQAAAAEAABAKAAkAAQAAAAEAABAKAAUAAQAAAAEAABAKAAEAAQAAAAEAABAAAAEAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAkAAQAAAAEAAAAAAAoAAQACAAAAADAKAAoAAQACAAAAACAKAAYAAQACAAAAACAKAAIAAQACAAAAACAAAAIAAQACAAAAADAAAAYAAQACAAAAADABAAYAAAAAAAEAAFACAAYAAAAAAAEAAFADAAYAAAAAAAEAAFAEAAYAAAAAAAEAAFAFAAYAAAAAAAEAAFAGAAYAAAAAAAEAAFAHAAYAAAAAAAEAAFAIAAYAAAAAAAEAAFAJAAYAAAAAAAEAAFABAAIAAAAAAAEAAFACAAIAAAAAAAEAAFADAAIAAAAAAAEAAFAEAAIAAAAAAAEAAFAFAAIAAAAAAAEAAFAGAAIAAAAAAAEAAFAHAAIAAAAAAAEAAFAIAAIAAAAAAAEAAFAJAAIAAAAAAAEAAFABAAoAAAAAAAEAAFACAAoAAAAAAAEAAFADAAoAAAAAAAEAAFAEAAoAAAAAAAEAAFAFAAoAAAAAAAEAAFAGAAoAAAAAAAEAAFAHAAoAAAAAAAEAAFAIAAoAAAAAAAEAAFAJAAoAAAAAAAEAAFA=")
 tile_set = ExtResource("16_tiles_wall")
+
+[node name="PhantomSprite2" type="AnimatedSprite2D" parent="Visuals/YSorted" index="4"]
+modulate = Color(1, 1, 1, 0.38039216)
+position = Vector2(48, 304)
+scale = Vector2(0.915, 0.915)
+sprite_frames = ExtResource("13_cuqjy")
+animation = &"idle_right"
+speed_scale = 0.0
 
 [node name="Room1Label" type="Label" parent="Visuals" index="5"]
 offset_left = 134.0
