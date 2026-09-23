@@ -95,6 +95,13 @@ func fail(reason: String) -> void:
 	Interpreter.output_log.append("LEVEL FAILED: " + reason)
 	failed.emit(reason)
 
+## Puts entities and goals back to the first room's starting snapshot, for
+## when a run is aborted mid-way (e.g. the Stop button) rather than finishing.
+func reset_to_start() -> void:
+	if not room_goals.is_empty() and room_goals[0] != null:
+		room_goals[0].reset_goals()
+	reset_state(0)
+
 func run_rooms(begin: CapBlock) -> bool:
 	has_failed = false
 	_room_label = ""
