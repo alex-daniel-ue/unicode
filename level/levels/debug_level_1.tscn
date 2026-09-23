@@ -112,6 +112,7 @@ focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
 script = ExtResource("15_xe4we")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/YSorted/Destination1")
+fail_message = "You didn't reach the flag."
 camera_focus = NodePath("../../../Visuals/YSorted/Destination1")
 detection_area = NodePath("../../../Visuals/YSorted/Destination1")
 
@@ -121,7 +122,7 @@ required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 is_complete = true
 permanent = false
 must_maintain = true
-fail_message = "You skipped past the Goal!"
+fail_message = "You skipped past the flag."
 camera_focus = NodePath("../../../Visuals/YSorted/Hazard1")
 detection_area = NodePath("../../../Visuals/YSorted/Hazard1")
 
@@ -171,7 +172,7 @@ position = Vector2(16, 112)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.51440585
+frame_progress = 0.5891413
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("23_u7k4g")

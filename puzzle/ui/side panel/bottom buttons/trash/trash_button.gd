@@ -14,6 +14,7 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 func _drop_data(_at_position: Vector2, drop: Variant) -> void:
 	# drop is Block, drop is trashable
 	SfxPlayer.play(TRASH_SOUND)
+	Tutorial.block_trashed.emit(StringName(drop.data.name))
 	drop.queue_free()
 
 func _on_pressed() -> void:

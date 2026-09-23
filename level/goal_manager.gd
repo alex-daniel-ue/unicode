@@ -54,9 +54,12 @@ func bake_bounds() -> void:
 		rect = source_rect if not found else rect.merge(source_rect)
 		found = true
 	
-	var robot := get_tree().get_first_node_in_group(&"robot")
-	if robot:
-		rect = rect.merge(LevelCamera.node_bounds(robot))
+	var index := level.room_goals.find(self) if level else -1
+	if index >= 0:
+		for node in level.find_children("*", "", true, false):
+			if node is Resettable and index < node.room_snapshots.size():
+				var t: Transform2D = node.room_snapshots[index].get(&"transform", Transform2D())
+				rect = rect.merge(Rect2(t.origin - Vector2(16, 16), Vector2(32, 32)))
 	
 	bounds = rect
 	update_configuration_warnings()

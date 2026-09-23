@@ -8,12 +8,23 @@ signal completed  ## This is for this Level's completion
 signal failed(reason: String)
 @warning_ignore("unused_signal")
 signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalManager
+signal prediction_made
 
 @export_multiline var intended_solution: String
 @export var room_goals: Array[GoalManager]
 
 @export var star_slack := 1
 @export var star_par_override := 0
+
+## Worked examples ask for a prediction before the program may run. The level
+## text carries a button wired to make_prediction(), and ButtonManager keeps Play
+## disabled until it is pressed.
+@export var prediction_required := false
+
+## A tutorial overlay to lay over the whole puzzle while this level is open.
+## Puzzle instances it; it can't live in the level itself, which renders in a
+## SubViewport and would be clipped to the environment panel.
+@export var tutorial_overlay: PackedScene
 
 @export_group("Exports")
 @export var rooms: Node
@@ -25,6 +36,9 @@ var min_zoom := 0.5
 var max_zoom := 3.0
 
 var has_failed := false
+## "Room 2 of 3 — " while a multi-room run is in progress. fail() prefixes it,
+## so hazards and the Stop button name the room the same way goal checks do.
+var _room_label := ""
 
 @onready var camera: LevelCamera = $Camera2D
 
@@ -79,18 +93,25 @@ func get_block_data() -> Array[BlockData]:
 			result.append_array((node as BlockProvider).block_data)
 	return result
 
+func make_prediction() -> void:
+	prediction_made.emit()
+
 func fail(reason: String) -> void:
 	if has_failed: return
 	has_failed = true
+	if not _room_label.is_empty() and not reason.begins_with(_room_label):
+		reason = _room_label + reason
 	Interpreter.output_log.append("LEVEL FAILED: " + reason)
 	failed.emit(reason)
 
 func run_rooms(begin: CapBlock) -> bool:
 	has_failed = false
+	_room_label = ""
 	var room_count := maxi(room_goals.size(), 1)
 	
 	for room_index in range(room_count):
 		var label := room_label(room_index, room_count)
+		_room_label = label
 		if room_count > 1:
 			Interpreter.output_log.append(label.strip_edges())
 		

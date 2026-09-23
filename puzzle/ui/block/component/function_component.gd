@@ -29,6 +29,10 @@ func initialize() -> void:
 	var type := base.data.func_type
 	if type != BlockData.FuncType.LAMBDA:
 		if type == BlockData.FuncType.ENTITY:
+			if object == null:
+				object = _find_entity()
+			if object == null:
+				push_error("(%s) No entity found for '%s'. Is there one in the level?" % [base.name, base.data.func_method])
 			assert(object != null)
 			_function = Callable(object, base.data.func_method).bind(base)
 		
@@ -107,6 +111,36 @@ func error(message: String) -> void:
 
 func set_func(new_func: Callable) -> void:
 	_function = new_func
+
+## Blocks handed out by a BlockProvider arrive already bound to their entity.
+## Blocks built from data do not: anything inside a pre-filled socket, because
+## text.format() constructs those at runtime where no scene path can reach them,
+## and any preset block authored without a FunctionComponent.object path. Bind
+## them to the node in the same level whose script this block's data names,
+## which is the object a BlockProvider would have used.
+func _find_entity() -> Node:
+	var wanted := base.data.func_entity_script
+	if wanted == null:
+		return null
+	
+	var root: Node = base
+	while root != null and not (root is Level):
+		root = root.get_parent()
+	if root == null:
+		root = Game.level
+	if root == null:
+		return null
+	
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		var script := node.get_script() as Script
+		while script != null:
+			if script == wanted:
+				return node
+			script = script.get_base_script()
+		stack.append_array(node.get_children())
+	return null
 
 
 class Argument:

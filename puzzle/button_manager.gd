@@ -15,6 +15,23 @@ func _ready() -> void:
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 	Interpreter.paused_changed.connect(_update_play_button)
 	_update_play_button()
+	# Deferred: Puzzle instantiates the level in its own _ready, which runs after
+	# this one, since children are readied first.
+	_gate_play_on_prediction.call_deferred()
+
+func _gate_play_on_prediction() -> void:
+	var level := Game.level
+	if level == null or not level.prediction_required:
+		return
+	
+	play_button.disabled = true
+	play_button.tooltip_text = "Make your prediction first"
+	level.prediction_made.connect(
+		func() -> void:
+			play_button.disabled = false
+			_update_play_button(),
+		CONNECT_ONE_SHOT
+	)
 
 func _on_interpreter_running_changed() -> void:
 	for btn: Button in scripting_buttons:
@@ -45,9 +62,6 @@ func _on_stop_button_pressed() -> void:
 
 func _on_speed_button_pressed() -> void:
 	Interpreter.is_fast = not Interpreter.is_fast
-
-func _on_return_button_pressed() -> void:
-	Transition.change_scene(Core.LEVEL_SELECT)
 
 func _on_frame_button_pressed() -> void:
 	Game.level.camera.frame()

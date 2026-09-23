@@ -314,6 +314,7 @@ NotificationLabel/font_sizes/font_size = 20
 NotificationLabel/fonts/font = ExtResource("3_oiocf")
 NotificationPanel/base_type = &"PanelContainer"
 NotificationPanel/styles/panel = SubResource("StyleBoxFlat_v43nb")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_xejr6")
 PlayButton/base_type = &"Button"
 PlayButton/colors/icon_focus_color = Color(0.13333334, 0.77254903, 0.36862746, 1)
 PlayButton/colors/icon_hover_color = Color(0.2901961, 0.87058824, 0.5019608, 1)

@@ -16,7 +16,11 @@ func _ready() -> void:
 		option_button.add_item(item)
 	
 	if option_button.item_count > 0:
-		option_button.select(0)
+		# A preset authored through data names its choice in `text`, which is the
+		# only way to pre-select anything but the first option. Toolbox blocks
+		# have no matching text and fall back to the first choice, as before.
+		var chosen := data.value.enum_values.find(data.text)
+		option_button.select(maxi(chosen, 0))
 	
 	# If editables or static text is shown
 	text_container.visible = not data.value.editable_shown

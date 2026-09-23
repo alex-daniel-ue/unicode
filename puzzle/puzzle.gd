@@ -24,12 +24,7 @@ var _paused_before_menu := false
 @export var ai_assistant: AIAssistant
 @export var notif: NotificationStack
 @export var level_viewport: SubViewport
-@export var level_complete_overlay: Control
-@export var level_complete_stars: Label
-@export var level_complete_blocks: Label
-@export var level_complete_summary: Label
-@export var code_button: Button
-@export var exit_button: Button
+@export var level_complete: LevelComplete
 @export var pause_menu: PopupPanel
 
 func _ready() -> void:
@@ -86,6 +81,11 @@ func configure_level() -> void:
 	preset.reparent(canvas)
 	preset.position = canvas.size / 2.
 	preset.visible = true
+	
+	if Game.level.tutorial_overlay != null:
+		var overlay := Game.level.tutorial_overlay.instantiate() as TutorialOverlay
+		add_child(overlay)
+		overlay.attach(self)
 
 func run_program() -> void:
 	for err in Interpreter.active_errors:
@@ -158,25 +158,7 @@ func _on_level_completed() -> void:
 	_show_level_complete(stars)
 
 func _show_level_complete(stars: int) -> void:
-	var par := Game.level.get_star_par()
-	
-	level_complete_summary.text = "You used %d blocks. ★★★ at %d, ★★ at %d." % [
-		current_run_placed_blocks, par, par + Game.level.star_slack
-	]
-	level_complete_stars.text = "★".repeat(stars) + "☆".repeat(3 - stars)
-	
-	code_button.text = "Copy progress code:\n%s" % Progress.get_code()
-	
-	exit_button.disabled = true
-	level_complete_overlay.show()
-	
-	# Hold the exit for about two seconds, then enable it whether
-	# or not the summary has arrived.
-	get_tree().create_timer(2.0).timeout.connect(
-		func() -> void:
-			if is_instance_valid(exit_button):
-				exit_button.disabled = false
-	)
+	level_complete.present(stars, current_run_placed_blocks, Game.level.get_star_par(), Game.level.star_slack)
 
 func _on_level_failed(reason: String) -> void:
 	Interpreter.interrupted = true

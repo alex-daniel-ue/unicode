@@ -78,6 +78,7 @@ func _notification(what: int) -> void:
 				dp_container.add_child(current_block)
 				dp_container.move_child(current_block, dp_idx)
 				
+				Tutorial.block_placed.emit(current_block, Core.get_block(dp_container))
 				block_dropped.emit()
 			
 			# Delete the preview and remove references

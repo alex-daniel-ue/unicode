@@ -89,6 +89,7 @@ func _on_submit_pressed() -> void:
 	user_bubble.text = text
 	user_bubble.right_aligned = true
 	_add_bubble(user_bubble)
+	Tutorial.message_sent.emit(text)
 	
 	_awaiting_reply = true
 	_refresh_busy_state()
@@ -205,6 +206,7 @@ func _on_request_completed(
 		"ok", "off_topic":
 			_finish_request()
 			_add_ai_bubble(reply)
+			Tutorial.assistant_replied.emit(reply)
 		"blocked":
 			_on_hint_failed(reply if not reply.is_empty() else "Let's keep our chat about this level.")
 			_apply_timeout(BLOCKED_TIMEOUT)

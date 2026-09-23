@@ -91,7 +91,10 @@ func _check_rooms(where: String, level: Level) -> void:
 		if manager != null:
 			listed[manager] = true
 	for manager in _find_all(level, "GoalManager"):
-		if not listed.has(manager):
+		# An empty one is just level.tscn's template manager left unused, which
+		# is harmless. One holding goals that never run is the real danger.
+		var has_goals := manager.get_children().any(func(c: Node) -> bool: return c is Goal)
+		if not listed.has(manager) and has_goals:
 			_warn(where, "GoalManager '%s' exists but is not in room_goals, so its goals are never checked."
 				% manager.name)
 
@@ -200,8 +203,10 @@ func _check_props(where: String, level: Level) -> void:
 			var tagged := node as SensedArea
 			if tagged.tag == &"":
 				_warn(where, "SensedArea '%s' has an empty tag." % tagged.name)
+			elif tagged.tag == &"undetectable":
+				pass  # deliberate: a goal area the robot is never meant to sense
 			elif not (tagged.tag in Robot.TAGS):
-				_warn(where, "SensedArea '%s' uses tag '%s', which ahead_is() will reject as unknown."
+				_warn(where, "SensedArea '%s' has tag '%s', which the robot can never sense. Tag it 'undetectable' if that's deliberate."
 					% [tagged.name, tagged.tag])
 		else:
 			# The classifier excludes every Area2D from the blocked channel, so
@@ -217,10 +222,17 @@ func _check_par(where: String, level: Level) -> void:
 
 	var par := Serializer.count_solid_blocks(level.intended_solution, true)
 	if par <= 0:
-		_error(where, "intended_solution parses to 0 blocks. Regenerate it from the in-game debug print.")
+		# Zero placed blocks is right for a worked example, where the preset is
+		# the whole program. It is only wrong when there are no blocks at all.
+		if Serializer.count_solid_blocks(level.intended_solution, false) <= 0:
+			_error(where, "intended_solution parses to 0 blocks. Regenerate it from the in-game debug print.")
+			return
+		print("  %s: worked example, every block is preset; completing it is 3 stars" % where)
 		return
 
-	var effective := level.get_star_par()
+	# Mirrors Level.get_star_par() from exported values. Level isn't @tool, so in
+	# the editor it's a placeholder and its methods can't be called.
+	var effective: int = level.star_par_override if level.star_par_override > 0 else maxi(1, par)
 	print("  %s: par %d, 2 stars at %d, id '%s'" % [where, effective, effective + level.star_slack, where])
 
 	# The star target is written into the level text by hand today. Catch the

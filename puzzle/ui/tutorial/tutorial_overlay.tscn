@@ -1,0 +1,461 @@
+[gd_scene load_steps=7 format=4 uid="uid://dw6wgrum8hn14"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_qniq0"]
+[ext_resource type="Script" uid="uid://bkwe3jverlh78" path="res://puzzle/ui/tutorial/tutorial_overlay.gd" id="2_8q55t"]
+[ext_resource type="Shader" uid="uid://coo0ikpqiy8rb" path="res://puzzle/ui/tutorial/tutorial_mask.gdshader" id="3_2y4kq"]
+[ext_resource type="Script" uid="uid://u4ve5ihtuuvu" path="res://puzzle/ui/tutorial/tutorial_mask.gd" id="4_l8cdv"]
+[ext_resource type="Script" uid="uid://cw6lhgms8ajal" path="res://puzzle/ui/tutorial/tutorial_step.gd" id="5_07kpm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_708ml"]
+shader = ExtResource("3_2y4kq")
+shader_parameter/dim_color = Color(0.02, 0.02, 0.08, 0.62)
+shader_parameter/dim_strength = 1.0
+shader_parameter/rect_size = Vector2(1152, 648)
+shader_parameter/holes = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/hole_count = 0
+shader_parameter/feather = 6.0
+shader_parameter/radius = 8.0
+
+[node name="TutorialOverlay" type="Control" node_paths=PackedStringArray("mask", "steps")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_qniq0")
+script = ExtResource("2_8q55t")
+mask = NodePath("Mask")
+steps = NodePath("Steps")
+
+[node name="Mask" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_708ml")
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("4_l8cdv")
+
+[node name="Steps" type="Control" parent="."]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Welcome" type="Control" parent="Steps" node_paths=PackedStringArray("next_button")]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+next_button = NodePath("Card/Margin/Stack/NextButton")
+
+[node name="Card" type="PanelContainer" parent="Steps/Welcome"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="Steps/Welcome/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/Welcome/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/Welcome/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Welcome to UniCode"
+
+[node name="Body" type="Label" parent="Steps/Welcome/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "You'll program a robot by snapping blocks together. This tour takes about two minutes."
+autowrap_mode = 3
+
+[node name="NextButton" type="Button" parent="Steps/Welcome/Card/Margin/Stack"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Next"
+
+[node name="TheRoom" type="Control" parent="Steps" node_paths=PackedStringArray("next_button")]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+next_button = NodePath("Card/Margin/Stack/NextButton")
+
+[node name="Card" type="PanelContainer" parent="Steps/TheRoom"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/TheRoom/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/TheRoom/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/TheRoom/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "The robot's room"
+
+[node name="Body" type="Label" parent="Steps/TheRoom/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "This is where your program runs. Each level tells you where the robot needs to finish."
+autowrap_mode = 3
+
+[node name="NextButton" type="Button" parent="Steps/TheRoom/Card/Margin/Stack"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Next"
+
+[node name="Instructions" type="Control" parent="Steps" node_paths=PackedStringArray("next_button")]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+next_button = NodePath("Card/Margin/Stack/NextButton")
+
+[node name="Card" type="PanelContainer" parent="Steps/Instructions"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/Instructions/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/Instructions/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/Instructions/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Read the level first"
+
+[node name="Body" type="Label" parent="Steps/Instructions/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "The instructions say what to build, and how many blocks earn three stars."
+autowrap_mode = 3
+
+[node name="NextButton" type="Button" parent="Steps/Instructions/Card/Margin/Stack"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Next"
+
+[node name="DragABlock" type="Control" parent="Steps"]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 1
+only_block = "MoveBlock"
+
+[node name="Card" type="PanelContainer" parent="Steps/DragABlock"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/DragABlock/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/DragABlock/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/DragABlock/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Place a block"
+
+[node name="Body" type="Label" parent="Steps/DragABlock/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Open the toolbox, then drag a move forward block under begin."
+autowrap_mode = 3
+
+[node name="Trash" type="Control" parent="Steps"]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 2
+
+[node name="Card" type="PanelContainer" parent="Steps/Trash"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/Trash/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/Trash/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/Trash/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Throw it away"
+
+[node name="Body" type="Label" parent="Steps/Trash/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Placed the wrong thing? Drag it onto the bin. Try it with that block."
+autowrap_mode = 3
+
+[node name="PlaceAgain" type="Control" parent="Steps"]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 1
+only_block = "MoveBlock"
+
+[node name="Card" type="PanelContainer" parent="Steps/PlaceAgain"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/PlaceAgain/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/PlaceAgain/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/PlaceAgain/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Put it back"
+
+[node name="Body" type="Label" parent="Steps/PlaceAgain/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Drag a move forward block under begin again."
+autowrap_mode = 3
+
+[node name="Assistant" type="Control" parent="Steps"]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 8
+
+[node name="Card" type="PanelContainer" parent="Steps/Assistant"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/Assistant/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/Assistant/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/Assistant/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Ask for a hint"
+
+[node name="Body" type="Label" parent="Steps/Assistant/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Stuck? Open the assistant and tell it what you expected to happen. It gives hints, not answers. Send it anything to try it."
+autowrap_mode = 3
+
+[node name="PressPlay" type="Control" parent="Steps"]
+visible = false
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 3
+
+[node name="Card" type="PanelContainer" parent="Steps/PressPlay"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/PressPlay/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/PressPlay/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/PressPlay/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Run it"
+
+[node name="Body" type="Label" parent="Steps/PressPlay/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Press Play to run your program."
+autowrap_mode = 3
+
+[node name="Watch" type="Control" parent="Steps"]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_07kpm")
+advance_on = 4
+dim = false
+block_input = true
+
+[node name="Card" type="PanelContainer" parent="Steps/Watch"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="Steps/Watch/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Stack" type="VBoxContainer" parent="Steps/Watch/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Steps/Watch/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Watch"
+
+[node name="Body" type="Label" parent="Steps/Watch/Card/Margin/Stack"]
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "The block that's running lights up. When the robot stops, the tour is over."
+autowrap_mode = 3

@@ -54,6 +54,9 @@ func has_overridden() -> bool:
 	return overridden_socket != null
 
 func socket_function() -> Variant:
+	if data.value == null and data.socket != null and data.socket.receptive:
+		function.error("This slot is empty. Drop a condition into it.")
+		return null
 	return typecast(text.get_raw())
 
 func _has_top_notch(block: Block) -> bool:

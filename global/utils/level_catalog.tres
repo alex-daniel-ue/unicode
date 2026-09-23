@@ -1,10 +1,12 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=12 format=3 uid="uid://dyc1t3vgb4y2h"]
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=16 format=3 uid="uid://dyc1t3vgb4y2h"]
 
 [ext_resource type="Script" uid="uid://bosuufgg1ovh8" path="res://global/utils/level_module.gd" id="1_5uqvf"]
 [ext_resource type="Script" uid="uid://copysdfiq2iil" path="res://global/utils/level_entry.gd" id="2_cp0gs"]
 [ext_resource type="Script" uid="uid://br03lngef16na" path="res://global/utils/level_catalog.gd" id="2_n0r71"]
 [ext_resource type="PackedScene" uid="uid://2l2o3laaml6j" path="res://level/levels/debug_level_1.tscn" id="3_8vj6e"]
 [ext_resource type="PackedScene" uid="uid://xhdv8mmxh803" path="res://level/levels/it_0b.tscn" id="4_7un1p"]
+[ext_resource type="PackedScene" uid="uid://cjltfsx4hwic8" path="res://level/levels/it_0a.tscn" id="5_7un1p"]
+[ext_resource type="PackedScene" uid="uid://dfygahr6nf5cb" path="res://level/levels/it_1.tscn" id="6_fvjdf"]
 
 [sub_resource type="Resource" id="Resource_fvjdf"]
 script = ExtResource("2_cp0gs")
@@ -18,40 +20,54 @@ metadata/_custom_type_script = "uid://copysdfiq2iil"
 script = ExtResource("1_5uqvf")
 id = &"tutorial"
 display_name = "Tutorial"
+subtitle = "How to play."
 levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_fvjdf")])
 locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
-[sub_resource type="Resource" id="Resource_8vj6e"]
-script = ExtResource("2_cp0gs")
-id = &"exactly three"
-title = "Exactly Three"
-concept = "for loop from while loop"
-scene = ExtResource("3_8vj6e")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
 [sub_resource type="Resource" id="Resource_q75gs"]
 script = ExtResource("2_cp0gs")
-id = &"puddle"
+id = &"a"
+scene = ExtResource("5_7un1p")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_ry6sb"]
+script = ExtResource("2_cp0gs")
+id = &"b"
 label = "2"
-title = "Puddle"
-concept = "Multiple rooms"
 scene = ExtResource("4_7un1p")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_kobgr"]
+script = ExtResource("2_cp0gs")
+id = &"c"
+label = "3"
+scene = ExtResource("6_fvjdf")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Resource_4cimd"]
+script = ExtResource("2_cp0gs")
+id = &"d"
+label = "4"
+scene = ExtResource("3_8vj6e")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
 [sub_resource type="Resource" id="Resource_7un1p"]
 script = ExtResource("1_5uqvf")
 id = &"iteration"
 display_name = "Iteration"
-levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_8vj6e"), SubResource("Resource_q75gs")])
+subtitle = "Don't repeat yourself."
+levels = Array[ExtResource("2_cp0gs")]([SubResource("Resource_q75gs"), SubResource("Resource_ry6sb"), SubResource("Resource_kobgr"), SubResource("Resource_4cimd"), null, null, null, null, null, null])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [sub_resource type="Resource" id="Resource_r35se"]
 script = ExtResource("1_5uqvf")
 id = &"arrays"
 display_name = "Arrays"
+subtitle = "Zero to hero."
+levels = Array[ExtResource("2_cp0gs")]([null, null, null, null, null, null, null, null, null])
 released = false
-locked_notice = "For next next week, around early October."
+locked_notice = "Stay tuned for next, next week."
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [resource]

@@ -144,8 +144,11 @@ func _kind_of(block: Block) -> String:
 
 
 ## Derived, not a new exported flag, so there is nothing extra to keep in sync.
+## Only slots get one. A slot is a SocketBlock with no function of its own
+## (LAMBDA): an empty condition, a typable value, a dropdown. A placed `not` or
+## `ahead is` is a SocketBlock too, but it is a block, not a place to put one.
 func _accepts_of(block: Block) -> String:
-	if not (block is SocketBlock):
+	if not (block is SocketBlock) or block.data.func_type != BlockData.FuncType.LAMBDA:
 		return ""
 	
 	var parts: PackedStringArray = []

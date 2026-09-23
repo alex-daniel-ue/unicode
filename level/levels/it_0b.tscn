@@ -50,18 +50,21 @@ room_goals = [NodePath("RoomGoals/GoalManagerRoom1"), NodePath("RoomGoals/GoalMa
 [node name="Header" type="Label" parent="LevelDescription" index="0"]
 visible = false
 theme_type_variation = &"HeaderMedium"
-text = "Instructions"
+text = "Replace with level title here"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Instructions" type="Label" parent="LevelDescription" index="1"]
 visible = false
 size_flags_horizontal = 3
 theme = ExtResource("17_eisnh")
 theme_type_variation = &"LegibleLabel"
-text = "One program must solve both rooms!
+text = "REPLACE WITH BETTER BODY
+
+One program must solve both rooms!
 
 • Room 1: Step forward and reach the door.
-• Room 2: Stop on the pressure plate if a puddle is ahead.
+• Room 2: Don't step on the puddle.
 
 Goal: 3 stars in 4 blocks."
 autowrap_mode = 2
@@ -152,7 +155,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.09449486
+frame_progress = 0.05745898
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("2_block_data")]([ExtResource("11_move"), ExtResource("12_ahead_is")])

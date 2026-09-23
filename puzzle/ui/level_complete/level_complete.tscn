@@ -1,0 +1,129 @@
+[gd_scene load_steps=3 format=3 uid="uid://bafuclrikj4j7"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_m0nfs"]
+[ext_resource type="Script" uid="uid://dit0t1lwo3tuh" path="res://puzzle/ui/level_complete/level_complete.gd" id="2_orori"]
+
+[node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "code_label", "copy_button", "stay_button", "select_button", "next_button")]
+z_index = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_m0nfs")
+script = ExtResource("2_orori")
+stars_label = NodePath("Center/Card/Margin/Stack/Stars")
+usage_label = NodePath("Center/Card/Margin/Stack/Usage")
+target_label = NodePath("Center/Card/Margin/Stack/Target")
+summary_label = NodePath("Center/Card/Margin/Stack/Summary")
+code_label = NodePath("Center/Card/Margin/Stack/CodeRow/Code")
+copy_button = NodePath("Center/Card/Margin/Stack/CodeRow/CopyButton")
+stay_button = NodePath("Center/Card/Margin/Stack/Buttons/StayButton")
+select_button = NodePath("Center/Card/Margin/Stack/Buttons/SelectButton")
+next_button = NodePath("Center/Card/Margin/Stack/Buttons/NextButton")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0.05, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Card" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Stack" type="VBoxContainer" parent="Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Level complete!"
+horizontal_alignment = 1
+
+[node name="Stars" type="Label" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "★★☆"
+horizontal_alignment = 1
+
+[node name="Usage" type="Label" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "You used 5 blocks."
+horizontal_alignment = 1
+
+[node name="Target" type="Label" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "★★★ at 4 or fewer, ★★ at 5."
+horizontal_alignment = 1
+
+[node name="Summary" type="Label" parent="Center/Card/Margin/Stack"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+autowrap_mode = 3
+
+[node name="CodeRow" type="HBoxContainer" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="CodeTitle" type="Label" parent="Center/Card/Margin/Stack/CodeRow"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+text = "Progress code:"
+
+[node name="Code" type="Label" parent="Center/Card/Margin/Stack/CodeRow"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "00000-00000"
+
+[node name="CopyButton" type="Button" parent="Center/Card/Margin/Stack/CodeRow"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Copy"
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Card/Margin/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="StayButton" type="Button" parent="Center/Card/Margin/Stack/Buttons"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Try for more stars"
+
+[node name="SelectButton" type="Button" parent="Center/Card/Margin/Stack/Buttons"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Level select"
+
+[node name="NextButton" type="Button" parent="Center/Card/Margin/Stack/Buttons"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Next level"
+
+[connection signal="pressed" from="Center/Card/Margin/Stack/CodeRow/CopyButton" to="." method="_on_copy_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/Stack/Buttons/StayButton" to="." method="_on_stay_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/Stack/Buttons/SelectButton" to="." method="_on_select_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/Stack/Buttons/NextButton" to="." method="_on_next_pressed"]
