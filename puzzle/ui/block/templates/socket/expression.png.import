@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6dgx5x5uad7h"
-path="res://.godot/imported/expression.png-d9ac1978f817d414c60b43e6db73ba8c.ctex"
+uid="uid://bt5yiciadm86h"
+path="res://.godot/imported/expression.png-740f2211c8ee934a40f405fc7f89bb05.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/expression/expression.png"
-dest_files=["res://.godot/imported/expression.png-d9ac1978f817d414c60b43e6db73ba8c.ctex"]
+source_file="res://puzzle/ui/block/templates/socket/expression.png"
+dest_files=["res://.godot/imported/expression.png-740f2211c8ee934a40f405fc7f89bb05.ctex"]
 
 [params]
 
