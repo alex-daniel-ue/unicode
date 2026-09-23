@@ -31,45 +31,11 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager")]
 tutorial_overlay = ExtResource("1_overlay")
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-theme_type_variation = &"HeaderMedium"
-text = "First steps"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-size_flags_horizontal = 3
-theme = ExtResource("3_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Get the robot onto the flag."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="Move" parent="LevelDescription/Blocks" index="0" instance=ExtResource("4_statement")]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-data = ExtResource("5_move")
-
-[node name="MoveSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme = ExtResource("3_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Moves the robot one tile the way it's facing."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-size_flags_horizontal = 3
-theme = ExtResource("3_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 1 block."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "First steps"
+mission = "Get the robot onto the red flag."
+blocks = Array[ExtResource("6_block_data")]([ExtResource("5_move")])
+block_notes = PackedStringArray("Your only block for now. It moves the robot one tile the way it's facing.")
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
 bounds = Rect2(32, 32, 62.08, 32)
@@ -140,3 +106,4 @@ tile_set = ExtResource("13_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

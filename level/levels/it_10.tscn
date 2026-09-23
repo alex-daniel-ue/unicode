@@ -69,46 +69,12 @@ block: BeginBlock
       text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Back to the question"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("18_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag in every room."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="Continue" parent="LevelDescription/Blocks" index="0" instance=ExtResource("19_statement_block")]
-layout_mode = 2
-data = ExtResource("5_continue")
-
-[node name="ContinueSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("18_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Skips the rest of the loop's blocks for this pass and goes straight back to the loop's condition."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("18_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 6 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Back to the question"
+mission = "One program, three winding rooms. Finish on the flag in every room."
+twist = "But there's no else block this time."
+blocks = Array[ExtResource("6_block_data")]([ExtResource("5_continue")])
+block_notes = PackedStringArray("Skips the rest of the loop's blocks for this pass and goes straight back to the loop's condition. It's a loop's way of saying: check again.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("2_while"), ExtResource("3_if"), ExtResource("4_not"), ExtResource("5_continue")])
@@ -269,3 +235,4 @@ text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

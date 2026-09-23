@@ -15,6 +15,11 @@ signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalMan
 @export var star_slack := 1
 @export var star_par_override := 0
 
+## Runs the preset program by itself shortly after the level opens, for worked
+## examples the student watches instead of building. Play still works after.
+@export var auto_run := false
+@export var auto_run_delay := 2.5
+
 ## A tutorial overlay to lay over the whole puzzle while this level is open.
 ## Puzzle instances it; it can't live in the level itself, which renders in a
 ## SubViewport and would be clipped to the environment panel.
@@ -28,6 +33,11 @@ signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalMan
 var zoom_speed := 1.15
 var min_zoom := 0.5
 var max_zoom := 3.0
+## How much of the view, per axis, the level must still fill after a pan or a
+## zoom (0.25 = a quarter). Stops the view being dragged off into the void.
+var keep_visible := 0.25
+
+var _panning := false
 
 var has_failed := false
 ## "Room 2 of 3 — " while a multi-room run is in progress. fail() prefixes it,
@@ -45,6 +55,28 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not camera:
+		return
+	
+	# Drag with the left or middle button to look around. Nothing else in the
+	# level view takes a click, so there is nothing for this to get in the way of.
+	if event is InputEventMouseButton:
+		var button := event as InputEventMouseButton
+		if button.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_MIDDLE]:
+			_panning = button.pressed
+			Input.set_default_cursor_shape(Input.CURSOR_DRAG if _panning else Input.CURSOR_ARROW)
+			get_viewport().set_input_as_handled()
+			return
+	
+	if event is InputEventMouseMotion and _panning:
+		var motion := event as InputEventMouseMotion
+		if (motion.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_MIDDLE)) == 0:
+			# The release happened somewhere we never heard about.
+			_panning = false
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			return
+		camera.global_position -= motion.relative / camera.zoom.x
+		clamp_camera()
+		get_viewport().set_input_as_handled()
 		return
 	
 	if event is InputEventMouseButton and event.pressed:
@@ -67,8 +99,27 @@ func _unhandled_input(event: InputEvent) -> void:
 				var world_after := camera.global_position + offset / camera.zoom.x
 				
 				camera.global_position += world_before - world_after
+				clamp_camera()
 			
 			get_viewport().set_input_as_handled()
+
+## Keeps part of the level on screen (see keep_visible), so a pan or a zoom can
+## never leave the view looking at nothing. An unbaked level (no level_bounds)
+## isn't clamped.
+func clamp_camera() -> void:
+	var bounds := camera.level_bounds
+	if not bounds.has_area():
+		return
+	var half := get_viewport().get_visible_rect().size / camera.zoom / 2.0
+	var keep := (half * 2.0 * keep_visible).min(bounds.size / 2.0)
+	var p := camera.global_position
+	p.x = clampf(p.x, bounds.position.x - half.x + keep.x, bounds.end.x + half.x - keep.x)
+	p.y = clampf(p.y, bounds.position.y - half.y + keep.y, bounds.end.y + half.y - keep.y)
+	camera.global_position = p
+
+func _exit_tree() -> void:
+	if _panning:
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 func get_blocks() -> Array[Block]:
 	var result: Array[Block]

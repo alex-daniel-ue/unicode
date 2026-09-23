@@ -9,6 +9,8 @@ extends Node
 @export var bounds: Rect2
 
 @export var focus_markers: Array[Node2D] = []
+## Superseded by focus_markers, and ignored when that has anything in it. Kept so
+## older scenes still bake; clear it when you next touch a room.
 @export var focus_marker: Node2D
 
 var goals: Array[Goal]
@@ -41,7 +43,7 @@ func bake_bounds() -> void:
 	for goal in goals:
 		if goal.camera_focus != null:
 			sources.append(goal.camera_focus)
-	if focus_marker != null and not (focus_marker in sources):
+	if focus_markers.is_empty() and focus_marker != null and not (focus_marker in sources):
 		sources.append(focus_marker)
 	
 	var rect := Rect2()

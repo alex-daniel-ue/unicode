@@ -9,6 +9,9 @@ extends Control
 ## key reaches through `text_submitted` with Unbind set to 1.
 
 const CONFIG_FILE := "unicode.cfg"
+## Checked second. The codebase notes told people to put [levels] here, beside
+## the relay settings, so honour it rather than silently ignore it.
+const AI_CONFIG_FILE := "unicode_ai.cfg"
 const STAR_FILLED := "★"
 const STAR_EMPTY := "☆"
 
@@ -61,9 +64,13 @@ func _load_release_config() -> void:
 		else OS.get_executable_path().get_base_dir()
 
 	var config := ConfigFile.new()
-	if config.load(folder.path_join(CONFIG_FILE)) != OK:
-		return
-	if not config.has_section_key("levels", "released"):
+	var found := false
+	for file in [CONFIG_FILE, AI_CONFIG_FILE]:
+		config = ConfigFile.new()
+		if config.load(folder.path_join(file)) == OK and config.has_section_key("levels", "released"):
+			found = true
+			break
+	if not found:
 		return
 
 	_override_active = true

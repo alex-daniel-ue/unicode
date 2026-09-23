@@ -58,54 +58,12 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager")]
 star_slack = 3
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "One block instead of three"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="For" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_nested")]
-layout_mode = 2
-data = ExtResource("4_for")
-
-[node name="ForSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Counts a variable from a start value to an end value, end included, going up by the step each time. Runs the blocks inside it once per count."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "From 1 to 4 counts 1, 2, 3, 4: four passes. In Python that's range(1, 5)."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 5 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "One block instead of three"
+mission = "Get the robot around the corner and onto the flag."
+twist = "But there's no while and no variables this time. The for block is the only way to repeat."
+blocks = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
+block_notes = PackedStringArray("Counts a variable from a start to an end, end included, and runs its blocks once per count. From 1 to 4 is four passes, like range(1, 5) in Python.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
@@ -179,3 +137,4 @@ tile_set = ExtResource("14_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

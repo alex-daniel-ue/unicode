@@ -3,7 +3,8 @@
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_m0nfs"]
 [ext_resource type="Script" uid="uid://dit0t1lwo3tuh" path="res://puzzle/ui/level_complete/level_complete.gd" id="2_orori"]
 
-[node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "code_label", "copy_button", "stay_button", "select_button", "next_button")]
+[node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "stay_button", "select_button", "next_button")]
+visible = false
 z_index = 2
 layout_mode = 3
 anchors_preset = 15
@@ -17,8 +18,6 @@ stars_label = NodePath("Center/Card/Margin/Stack/Stars")
 usage_label = NodePath("Center/Card/Margin/Stack/Usage")
 target_label = NodePath("Center/Card/Margin/Stack/Target")
 summary_label = NodePath("Center/Card/Margin/Stack/Summary")
-code_label = NodePath("")
-copy_button = NodePath("")
 stay_button = NodePath("Center/Card/Margin/Stack/Buttons/StayButton")
 select_button = NodePath("Center/Card/Margin/Stack/Buttons/SelectButton")
 next_button = NodePath("Center/Card/Margin/Stack/Buttons/NextButton")

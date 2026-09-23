@@ -6,6 +6,7 @@ const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
 const NUDGE_AFTER := [3, 7]
+const DEFAULT_TUTORIAL_OVERLAY := "res://puzzle/ui/tutorial/tutorial_overlay.tscn"
 
 var failed_runs := 0
 var last_run_yaml := ""
@@ -43,11 +44,18 @@ func _ready() -> void:
 ## Perfectly functional; toggled on each "pause" action. Tested.
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
-		_paused_before_menu = Interpreter.is_paused
-		Interpreter.is_paused = true
-		pause_menu.show()
+		open_menu()
 	elif event.is_action_released("pause"):
 		pause_menu.hide()
+
+## Esc and the on-screen Esc button both land here. A run pauses behind the menu
+## and gets its previous state back when the menu closes.
+func open_menu() -> void:
+	if pause_menu.visible:
+		return
+	_paused_before_menu = Interpreter.is_paused
+	Interpreter.is_paused = true
+	pause_menu.show()
 
 func _on_pause_menu_visibility_changed() -> void:
 	if not pause_menu.visible:
@@ -71,7 +79,11 @@ func configure_level() -> void:
 	for child in information.get_children():
 		child.queue_free()
 	for content in Game.level.description.take_content():
-		content.reparent(information)
+		# The brief is built fresh and has no parent yet; authored children do.
+		if content.get_parent() == null:
+			information.add_child(content)
+		else:
+			content.reparent(information)
 	
 	for block in Game.level.get_blocks():
 		toolbox.add_block(block)
@@ -89,10 +101,41 @@ func configure_level() -> void:
 		preset.position = canvas.size / 2.
 		preset.visible = true
 	
-	if Game.level.tutorial_overlay != null:
-		var overlay := Game.level.tutorial_overlay.instantiate() as TutorialOverlay
+	# The export lives in tutorial_1.tscn and can be lost the same way the tour's
+	# step values were, which silently means no tour at all. The first tutorial
+	# level always gets it.
+	var overlay_scene := Game.level.tutorial_overlay
+	if overlay_scene == null and Game.level_id == &"tutorial":
+		push_warning("Level 'tutorial' lost its tutorial_overlay export; using the default overlay.")
+		overlay_scene = load(DEFAULT_TUTORIAL_OVERLAY)
+	if overlay_scene != null:
+		var overlay := overlay_scene.instantiate() as TutorialOverlay
 		add_child(overlay)
 		overlay.attach(self)
+	
+	if Game.level.auto_run:
+		_auto_run()
+
+## Worked examples play themselves once, after a moment to take in the canvas.
+## A child Timer rather than a SceneTreeTimer, so leaving the level early frees it
+## instead of resuming into a freed Puzzle. Waits out the pause menu rather than
+## starting behind it, and does nothing if the student already pressed Play.
+func _auto_run() -> void:
+	notif.push("Watch: this program runs by itself in a moment.", Notification.Type.LOG)
+	var timer := Timer.new()
+	timer.one_shot = true
+	timer.timeout.connect(_on_auto_run_timeout.bind(timer))
+	add_child(timer)
+	timer.start(Game.level.auto_run_delay)
+
+func _on_auto_run_timeout(timer: Timer) -> void:
+	if pause_menu.visible:
+		timer.start(0.5)
+		return
+	timer.queue_free()
+	if Interpreter.is_running or level_complete.visible:
+		return
+	run_program()
 
 func run_program() -> void:
 	for err in Interpreter.active_errors:
@@ -170,7 +213,9 @@ func _show_level_complete(stars: int) -> void:
 	)
 	# The card is up before this returns; the summary fills in when it arrives.
 	# last_run_yaml is the program as it was when Play was pressed: the winner.
-	var summary := await ai_assistant.request_summary(last_run_yaml)
+	var summary := await ai_assistant.request_summary(
+		last_run_yaml, current_run_placed_blocks, Game.level.get_star_par()
+	)
 	if is_instance_valid(level_complete):
 		level_complete.show_summary(summary, card)
 

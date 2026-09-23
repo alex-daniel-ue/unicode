@@ -459,13 +459,17 @@ func _flatten(img: Image) -> Image:
 	return flat
 #endregion
 
-#region Post-win summary
-## Two sentences on what the student's own winning program did. Its own endpoint
-## and its own server-side prompt: no screenshot, no chat history, and it never
-## draws from the HintPool, because it is not a hint.
+#region Post-win comment
+## A short comment on the student's winning program: a Python connection, a
+## real-world parallel, a what-if question, or, when the program is over par, a
+## pointer at where it could be tighter. The relay picks which (see
+## _summary_angle in ai/main.py). Its own endpoint and prompt: no screenshot, no
+## chat history, and it never draws from the HintPool, because it is not a hint.
 ##
-## Returns "" on any failure; the win card simply leaves the section out.
-func request_summary(program: String) -> String:
+## `placed` and `par` are the game's own numbers; the relay uses them only to
+## choose the angle and never repeats them. Returns "" on any failure; the win
+## card simply leaves the section out.
+func request_summary(program: String, placed := -1, par := -1) -> String:
 	if program.is_empty() or not is_instance_valid(Game.level):
 		return ""
 	
@@ -477,6 +481,9 @@ func request_summary(program: String) -> String:
 		context = {
 			instructions = level.description.get_raw(),
 			blocks = _get_available_blocks_doc(),
+			placed = placed,
+			par = par,
+			intended_solution = level.intended_solution,
 		},
 	})
 	
@@ -503,8 +510,9 @@ func _post_summary(url: String, body: String) -> Variant:
 	
 	var outcome: Array = await _summary_http.request_completed
 	var raw: PackedByteArray = outcome[3]
-	print(raw)
-	var data: Variant = JSON.parse_string(raw.get_string_from_utf8() if raw.size() > 0 else "")
+	if raw.is_empty():
+		return null  # nothing came back at all; JSON.parse_string("") would log an error
+	var data: Variant = JSON.parse_string(raw.get_string_from_utf8())
 	if typeof(data) != TYPE_DICTIONARY or not (data as Dictionary).has("status"):
 		return null
 	if OS.is_debug_build():

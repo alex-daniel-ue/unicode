@@ -1,265 +1,184 @@
 extends Node
 
-## Runs programs through the real Puzzle, interpreter, physics and goals.
+## Real-engine replay: builds each program from a compact spec, runs it through
+## the real Puzzle, interpreter, physics and goals, and prints PASS or the fail
+## reason next to what was expected. Replaces the old IT-0a/IT-1-only checks.
+##
+## Run the scene (F6 on level_checks.tscn), or headless and fast:
+##   godot --headless --fixed-fps 60 --path . res://tools/level_checks.tscn -- IT-9
+## The optional argument filters cases by title. A program that never ends is
+## stopped after RUN_LIMIT_S and reported as RUNS FOREVER.
+##
+## It clears Begin and rebuilds every block, locked ones included, so it checks
+## the rooms, goals and painted tiles, not the preset. Add a case per program a
+## level claims to accept or kill.
 
-const PUZZLE := "res://puzzle/puzzle.tscn"
-var MOVE: BlockData = load("res://level/objects/entities/robot/blocks/move.tres")
-var AHEAD: BlockData = load("res://level/objects/entities/robot/blocks/ahead_is.tres")
-var NOT: BlockData = load("res://puzzle/blocks/socket/not.tres")
+const DATA := {
+	"move": "res://level/objects/entities/robot/blocks/move.tres",
+	"turn": "res://level/objects/entities/robot/blocks/turn.tres",
+	"ahead": "res://level/objects/entities/robot/blocks/ahead_is.tres",
+	"while": "res://puzzle/blocks/control flow/while.tres",
+	"if": "res://puzzle/blocks/control flow/if.tres",
+	"elif": "res://puzzle/blocks/control flow/elif.tres",
+	"else": "res://puzzle/blocks/control flow/else.tres",
+	"break": "res://puzzle/blocks/control flow/break.tres",
+	"continue": "res://puzzle/blocks/control flow/continue.tres",
+	"for": "res://puzzle/blocks/control flow/for_int.tres",
+	"not": "res://puzzle/blocks/socket/not.tres",
+	"bool": "res://puzzle/blocks/socket/boolean.tres",
+	"cmp": "res://puzzle/blocks/socket/comparison.tres",
+	"declare": "res://puzzle/blocks/generic/initialize.tres",
+	"inc": "res://puzzle/blocks/generic/increment.tres",
+}
+const RUN_LIMIT_S := 90.0
 
-var report: Array[String] = []
-## `-- base` runs IT-1 alone against code without this round's patches.
-var BASE := "base" in OS.get_cmdline_user_args()
-var EMPTY_SLOT := "FAIL error: 1st argument must be a Boolean." if "base" in OS.get_cmdline_user_args() else "FAIL error: This slot is empty."
-var yamls := {}
-
+var report: PackedStringArray = []
+var filter := ""
 
 func _ready() -> void:
-	get_tree().create_timer(420.0).timeout.connect(func() -> void:
-		print("!! safety timeout"); for l in report: print(l)
-		get_tree().quit())
+	var args := OS.get_cmdline_user_args()
+	filter = args[0] if not args.is_empty() else ""
 	Interpreter.is_fast = true
 	await get_tree().process_frame
-
-	# ---- IT-1: the while is locked in the preset; the student fills it ----
-	await case("IT-1 intended: while not ahead_is(blocked) { move }", "res://level/levels/it_1.tscn",
-		func(p: Puzzle) -> void: _fill_while(p, _not_ahead(&"blocked"), 1), "PASS", "it_1")
-	await case("IT-1 target, not barrier: while not ahead_is(destination) { move }", "res://level/levels/it_1.tscn",
-		func(p: Puzzle) -> void: _fill_while(p, _not_ahead(&"destination"), 1), "FAIL Room 1")
-	await case("IT-1 two steps per check: { move; move }", "res://level/levels/it_1.tscn",
-		func(p: Puzzle) -> void: _fill_while(p, _not_ahead(&"blocked"), 2), "FAIL error: Robot: I can't move forward.")
-	await case("IT-1 unrolled: loop skipped, five moves after it", "res://level/levels/it_1.tscn",
-		func(p: Puzzle) -> void:
-			_fill_while(p, _ahead(&"blocked"), 0)
-			for i in 5:
-				_begin(p).mouth.add_child(_tool(MOVE)),
-		"FAIL Room 2")
-	await case("IT-1 empty condition", "res://level/levels/it_1.tscn",
-		func(p: Puzzle) -> void: _add_to(_while(p), _tool(MOVE)), EMPTY_SLOT)
-	await retry_case()
-
-	# ---- IT-0a: the whole program is the preset ----
-	if BASE:
-		_finish(); return
-	await it_0a_case()
-	await case("IT-0a hazard check: third move unguarded", "res://level/levels/it_0a.tscn",
-		func(p: Puzzle) -> void:
-			var if_block := _find(_begin(p), "IfBlock")
-			var idx := if_block.get_index()
-			if_block.get_parent().remove_child(if_block); if_block.queue_free()
-			var m := _tool(MOVE); _begin(p).mouth.add_child(m); _begin(p).mouth.move_child(m, idx),
-		"FAIL Room 2")
-	await case("IT-0a two moves only", "res://level/levels/it_0a.tscn",
-		func(p: Puzzle) -> void:
-			var if_block := _find(_begin(p), "IfBlock")
-			if_block.get_parent().remove_child(if_block); if_block.queue_free(),
-		"FAIL Room 1")
-
-	_finish()
-
-
-func _finish() -> void:
+	for c in cases():
+		if not filter.is_empty() and not (c[0] as String).contains(filter):
+			continue
+		await run_case(c[0], c[1], c[2], c[3])
 	print("\n==================== RESULTS ====================")
-	for line in report:
-		print(line)
-	for key in yamls:
-		var f := FileAccess.open("res://tools/%s.yaml" % key, FileAccess.WRITE)
-		f.store_string(yamls[key]); f.close()
+	for line in report: print(line)
 	get_tree().quit()
 
+func W(cond, body: Array) -> Array: return ["while", cond, body]
+func I(cond, body: Array) -> Array: return ["if", cond, body]
+func A(tag: String) -> Array: return ["ahead", tag]
+func N(cond) -> Array: return ["not", cond]
+func M() -> Array: return ["move"]
+func T(dir: String) -> Array: return ["turn", dir]
+func F(v: String, a, b, s, body: Array) -> Array: return ["for", v, a, b, s, body]
 
-func case(title: String, path: String, build: Callable, expect: String, yaml_key := "") -> void:
-	var run := await _run(path, build)
-	var got := "PASS" if run.completed else "FAIL %s" % run.reason
-	var ok := got.begins_with(expect)
-	report.append("%s  %-58s -> %s" % ["OK  " if ok else "BAD ", title, got])
-	report.append("       placed %d, par %d, stars %d" % [run.placed, run.par, run.stars])
-	if not yaml_key.is_empty():
-		yamls[yaml_key] = run.yaml
+func cases() -> Array:
+	var it9 := "res://level/levels/it_9.tscn"
+	var it10 := "res://level/levels/it_10.tscn"
+	return [
+		["T-1 First steps", "res://level/levels/tutorial_1.tscn", [M()], "PASS"],
+		["T-2 Read it first", "res://level/levels/it_0a.tscn", [M(), M(), I(N(A("puddle")), [M()])], "PASS"],
+		["T-3 Rebuild it", "res://level/levels/it_0b.tscn", [M(), M(), I(N(A("puddle")), [M()])], "PASS"],
+		["IT-1 intended", "res://level/levels/it_1.tscn", [W(N(A("blocked")), [M()])], "PASS"],
+		["IT-2 intended", "res://level/levels/it_2.tscn", [W(N(A("destination")), [M()]), M()], "PASS"],
+		["IT-3 intended", "res://level/levels/it_3.tscn", [W(N(A("destination")), [I(A("blocked"), [T("left")]), ["else", [M()]]]), M()], "PASS"],
+		["IT-4 intended", "res://level/levels/it_4.tscn", [["declare", "i", 0], W(["cmp", "i", "<", 3], [M(), ["inc", "i"]])], "PASS"],
+		["IT-5 intended", "res://level/levels/it_5.tscn", [F("i", 1, 3, 1, [M()]), T("left"), F("i", 1, 4, 1, [M()])], "PASS"],
+		["IT-6 intended", "res://level/levels/it_6.tscn", [F("i", 1, 4, 1, [M(), T("left"), M(), T("right")])], "PASS"],
+		["IT-7 intended", "res://level/levels/it_7.tscn", [F("a", 1, 3, 1, [T("left"), F("s", 1, 3, 1, [M()]), T("back"), F("s", 1, 3, 1, [M()]), T("left"), F("s", 1, 2, 1, [M()])]), T("left"), M()], "PASS"],
+		["IT-8 intended", "res://level/levels/it_8.tscn", [F("row", 1, 4, 1, [F("seat", 1, "row", 1, [M()]), T("right"), M(), T("left")])], "PASS"],
+		["IT-9 intended", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), I(A("destination"), [M(), ["break"]]), M()])], "PASS"],
+		["IT-9 checks swapped", it9, [W(["bool", "True"], [I(A("destination"), [M(), ["break"]]), I(A("puddle"), [["break"]]), M()])], "PASS"],
+		["IT-9 puddle check only", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), M()])], "FAIL"],
+		["IT-9 flag check only", it9, [W(["bool", "True"], [I(A("destination"), [M(), ["break"]]), M()])], "FAIL"],
+		["IT-9 flag check, no step onto it", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), I(A("destination"), [["break"]]), M()])], "FAIL"],
+		["IT-9 move first, then check", it9, [W(["bool", "True"], [M(), I(A("puddle"), [["break"]]), I(A("destination"), [M(), ["break"]])])], "FAIL"],
+		["IT-9 four unrolled moves", it9, [M(), M(), M(), M()], "FAIL"],
+		["IT-10 intended", it10, [W(N(A("destination")), [I(A("blocked"), [T("left"), ["continue"]]), M()]), M()], "PASS"],
+		["IT-10 accepted: if not blocked {move; continue}; turn left", it10, [W(N(A("destination")), [I(N(A("blocked")), [M(), ["continue"]]), T("left")]), M()], "PASS"],
+		["IT-10 two ifs, no continue", it10, [W(N(A("destination")), [I(A("blocked"), [T("left")]), M()]), M()], "FAIL"],
+		["IT-10 nested while", it10, [W(N(A("destination")), [W(A("blocked"), [T("left")]), M()]), M()], "FAIL"],
+		["IT-10 no trailing move", it10, [W(N(A("destination")), [I(A("blocked"), [T("left"), ["continue"]]), M()])], "FAIL"],
+		["IT-10 turn right", it10, [W(N(A("destination")), [I(A("blocked"), [T("right"), ["continue"]]), M()]), M()], "FAIL"],
+	]
 
-
-func retry_case() -> void:
-	# The last line of the authoring checklist: fail on purpose, then retry in
-	# the same session. run_rooms() past index 0 and the retry path are what
-	# have broken silently before.
-	var level: Level = (load("res://level/levels/it_1.tscn") as PackedScene).instantiate()
-	var puzzle := await _open(level)
-	_fill_while(puzzle, _not_ahead(&"destination"), 1)
-	await get_tree().process_frame
-	await _apply_choices()
-	var first := await _execute(puzzle, level)
-	# Fix it the way a student would: swap the condition's dropdown to "blocked".
-	var enum_block: ValueBlock = _find_all(_begin(puzzle), "ValueEditableEnumBlock")[0]
-	enum_block.option_button.select(enum_block.data.value.enum_values.find("blocked"))
-	var second := await _execute(puzzle, level)
-	var ok: bool = not first.completed and second.completed
-	report.append("%s  %-58s -> first %s, then %s" % ["OK  " if ok else "BAD ", "IT-1 fail, edit the dropdown, retry",
-		"FAIL" if not first.completed else "PASS", "PASS" if second.completed else "FAIL %s" % second.reason])
-	await _close(puzzle)
-
-
-func it_0a_case() -> void:
-	var level: Level = (load("res://level/levels/it_0a.tscn") as PackedScene).instantiate()
-	var puzzle := await _open(level)
-	var play: Button = puzzle.get_node("ButtonManager").play_button
-	var gated := play.disabled
-	var predict: Button = null
-	for node in puzzle.information.find_children("*", "Button", true, false):
-		if node.name == "PredictButton": predict = node
-	predict.pressed.emit()
-	await get_tree().process_frame
-	var released := not play.disabled and predict.disabled
-
-	var ahead_block: Block = _find_all(_begin(puzzle), "AheadIsBlock")[0]
-	var robot := level.get_node("Visuals/YSorted/RobotCharacter")
-	var bound: bool = ahead_block.function.object == robot
-	var reads: Array = _begin(puzzle).get_all_blocks().map(func(b: Block) -> String: return b.text.get_raw())
-
-	var run := await _execute(puzzle, level)
-	report.append("%s  %-58s -> %s" % ["OK  " if run.completed else "BAD ", "IT-0a as built (the preset is the program)",
-		"PASS" if run.completed else "FAIL %s" % run.reason])
-	report.append("       placed %d, par %d, stars %d" % [run.placed, run.par, run.stars])
-	report.append("%s  %-58s -> Play disabled %s, then enabled %s" % ["OK  " if gated and released else "BAD ", "IT-0a prediction gate", gated, released])
-	report.append("%s  %-58s -> %s" % ["OK  " if bound else "BAD ", "IT-0a socketed ahead_is bound to the robot", bound])
-	report.append("       preset reads: %s" % [reads.filter(func(s: String) -> bool: return s.begins_with("if"))])
-	yamls["it_0a"] = puzzle.canvas.serializer.yaml_serialize()
-	await _close(puzzle)
-
-
-#region Running
-func _run(path: String, build: Callable) -> Dictionary:
+func run_case(title: String, path: String, program: Array, expect: String) -> void:
 	var level: Level = (load(path) as PackedScene).instantiate()
-	var puzzle := await _open(level)
-	build.call(puzzle)
-	await get_tree().process_frame
-	await _apply_choices()
-	var run := await _execute(puzzle, level)
-	await _close(puzzle)
-	return run
-
-
-func _open(level: Level) -> Puzzle:
 	Game.level_scene = null
 	Game.level = level
 	Game.level_id = &"e2e"
-	var puzzle: Puzzle = (load(PUZZLE) as PackedScene).instantiate()
+	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
 	add_child(puzzle)
 	puzzle.configure_level()
-	for i in 3:
+	for i in 3: await get_tree().process_frame
+	var begin: CapBlock = puzzle._get_begin()
+	for child in begin.mouth.get_children():
+		begin.mouth.remove_child(child); child.queue_free()
+	await get_tree().process_frame
+	await build_into(begin, program)
+	for i in 2: await get_tree().process_frame
+
+	var out := {completed = false, reason = ""}
+	level.completed.connect(func() -> void: out.completed = true)
+	level.failed.connect(func(r: String) -> void: out.reason = r)
+	puzzle.run_program()
+	var started := Time.get_ticks_msec()
+	var frames := 0
+	while Interpreter.is_running:
 		await get_tree().process_frame
-	return puzzle
-
-
-func _execute(puzzle: Puzzle, level: Level) -> Dictionary:
-	var out := {completed = false, reason = "", placed = 0, par = 0, stars = 0, yaml = ""}
-	var on_done := func() -> void: out.completed = true
-	var on_fail := func(r: String) -> void: out.reason = r
-	level.completed.connect(on_done)
-	level.failed.connect(on_fail)
-	await puzzle.run_program()
+		frames += 1
+		if frames > int(RUN_LIMIT_S * 60):
+			Interpreter.interrupted = true
+			level.fail("RUNS FOREVER (stopped by harness)")
+			while Interpreter.is_running: await get_tree().process_frame
 	if out.reason.is_empty() and not out.completed and not Interpreter.active_errors.is_empty():
 		out.reason = "error: " + Interpreter.active_errors[0].message
-	out.yaml = puzzle.canvas.serializer.yaml_serialize()
-	out.placed = puzzle.current_run_placed_blocks
-	out.par = level.get_star_par()
-	out.stars = level.calculate_stars(out.placed) if out.completed else 0
-	level.completed.disconnect(on_done)
-	level.failed.disconnect(on_fail)
-	if puzzle.level_complete.visible:
-		puzzle.level_complete.hide()
-	return out
-
-
-func _close(puzzle: Puzzle) -> void:
+	var got: String = "PASS" if out.completed else "FAIL " + str(out.reason)
+	var ok := got.begins_with(expect)
+	report.append("%s %-58s -> %s" % ["OK  " if ok else "BAD ", title, got])
+	if "yaml" in OS.get_cmdline_user_args():
+		print(puzzle.canvas.serializer.yaml_serialize())
 	puzzle.queue_free()
-	for i in 3:
+	for i in 3: await get_tree().process_frame
+
+func make(kind: String) -> Block:
+	var data: BlockData = load(DATA[kind])
+	return Block.construct(data)
+
+func build_into(nested: NestedBlock, program: Array) -> void:
+	for spec in program:
+		var block := make(spec[0])
+		nested.mouth.add_child(block)
 		await get_tree().process_frame
-#endregion
+		await fill(block, spec)
 
+func fill(block: Block, spec: Array) -> void:
+	match spec[0]:
+		"turn", "ahead", "bool":
+			await choose(block.text.get_blocks()[0], spec[1])
+		"while", "if", "elif":
+			await plug(block.text.get_blocks()[0], spec[1])
+			await build_into(block, spec[2])
+		"else":
+			await build_into(block, spec[1])
+		"not":
+			await plug(block.text.get_blocks()[0], spec[1])
+		"for":
+			var slots := block.text.get_blocks()
+			for k in 4: type_into(slots[k], str(spec[1 + k]))
+			await build_into(block, spec[5])
+		"declare":
+			var slots := block.text.get_blocks()
+			type_into(slots[0], str(spec[1])); type_into(slots[1], str(spec[2]))
+		"inc":
+			type_into(block.text.get_blocks()[0], str(spec[1]))
+		"cmp":
+			var slots := block.text.get_blocks()
+			type_into(slots[0], str(spec[1])); await choose(slots[1], spec[2]); type_into(slots[2], str(spec[3]))
 
-#region Program building, mimicking what a student's drops produce
-func _begin(p: Puzzle) -> CapBlock:
-	return p._get_begin()
-
-
-func _while(p: Puzzle) -> NestedBlock:
-	return _find(_begin(p), "WhileBlock")
-
-
-func _fill_while(p: Puzzle, condition: Block, moves: int) -> void:
-	var w := _while(p)
-	_place_in_socket(w.text.get_blocks()[0], condition)
-	for i in moves:
-		_add_to(w, _tool(MOVE))
-
-
-## A block as the toolbox hands it out: constructed, then bound to the robot
-## the way BlockProvider does, so nothing here depends on the new fallback.
-func _tool(data: BlockData) -> Block:
-	var block := Block.construct(data)
-	if data.func_type == BlockData.FuncType.ENTITY:
-		block.function.object = Game.level.get_node("Visuals/YSorted/RobotCharacter")
-	return block
-
-
-## Exactly what socket_drop_manager does on a successful drop.
-func _place_in_socket(slot: Block, block: Block) -> void:
+func plug(slot: Block, spec: Array) -> void:
+	var block := make(spec[0])
 	var container := slot.get_parent()
 	var idx := slot.get_index()
 	slot.visible = false
 	container.add_child(block)
 	container.move_child(block, idx)
 	block.overridden_socket = slot
-
-
-func _add_to(nested: NestedBlock, block: Block) -> void:
-	nested.mouth.add_child(block)
-
-
-## `not` from the toolbox, with `ahead is` from the toolbox dropped into its slot
-## once `not` is on the canvas. Dropping into a block before it is in the tree
-## doesn't survive: Block._ready() rebuilds its sockets from data.
-func _not_ahead(tag: StringName) -> Block:
-	var not_block := _tool(NOT)
-	_pending_drops.append([not_block, _ahead(tag)])
-	return not_block
-
-var _pending_drops: Array = []
-
-
-func _ahead(tag: StringName) -> Block:
-	var block := _tool(AHEAD)
-	_pending_choices.append([block, String(tag)])
-	return block
-
-
-## Dropdowns only fill once in the tree, so choices are applied after a frame,
-## the way a student picks one after dropping the block.
-var _pending_choices: Array = []
-func _apply_choices() -> void:
-	for pair in _pending_drops:
-		_place_in_socket((pair[0] as Block).text.get_blocks()[0], pair[1])
-	_pending_drops.clear()
 	await get_tree().process_frame
-	for pair in _pending_choices:
-		var enum_block: ValueBlock = (pair[0] as Block).text.get_blocks()[0]
-		enum_block.option_button.select(enum_block.data.value.enum_values.find(pair[1]))
-	_pending_choices.clear()
+	await fill(block, spec)
 
+func choose(slot: Block, value: String) -> void:
+	await get_tree().process_frame
+	var vb := slot as ValueBlock
+	var idx := vb.data.value.enum_values.find(value)
+	assert(idx >= 0, "no option " + value)
+	vb.option_button.select(idx)
 
-func _find(root: Node, block_name: String) -> Block:
-	var all := _find_all(root, block_name)
-	return all[0] if not all.is_empty() else null
-
-
-func _find_all(root: Node, data_name: String) -> Array:
-	var out := []
-	var stack: Array[Node] = [root]
-	while not stack.is_empty():
-		var n: Node = stack.pop_back()
-		if n is Block and (n.data.name == data_name or String(n.name) == data_name):
-			out.append(n)
-		stack.append_array(n.get_children())
-	out.reverse()
-	return out
-#endregion
+func type_into(slot: Block, value: String) -> void:
+	var le := (slot as ValueBlock).line_edit
+	le.text = value
+	le.text_changed.emit(value)

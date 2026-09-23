@@ -50,78 +50,13 @@ block: BeginBlock
           text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Until the wall"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag in every room."
-autowrap_mode = 3
-
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The same program runs in all three rooms, and each hallway is a different length."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="While" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_nested")]
-layout_mode = 2
-data = ExtResource("4_while")
-
-[node name="WhileSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Runs the blocks inside it again and again, for as long as its condition is True."
-autowrap_mode = 3
-
-[node name="AheadIs" parent="LevelDescription/Blocks" index="2" instance=ExtResource("18_expression_block")]
-layout_mode = 2
-data = ExtResource("14_ahead_is")
-
-[node name="AheadIsSays" type="Label" parent="LevelDescription/Blocks" index="3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Checks the one tile in front of the robot for a wall (blocked), the flag (destination), or a puddle. Gives True or False."
-autowrap_mode = 3
-
-[node name="Not" parent="LevelDescription/Blocks" index="4" instance=ExtResource("18_expression_block")]
-layout_mode = 2
-data = ExtResource("5_not")
-
-[node name="NotSays" type="Label" parent="LevelDescription/Blocks" index="5"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Turns True into False, and False into True."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 1 block."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Until the wall"
+mission = "One program runs in all three rooms. Get the robot onto the flag in each one."
+rooms = PackedStringArray("A short hallway.", "A longer hallway.", "The longest hallway.")
+twist = "But the hallways are all different lengths, and the same program has to handle every one."
+blocks = Array[ExtResource("6_block_data")]([ExtResource("4_while"), ExtResource("14_ahead_is"), ExtResource("5_not")])
+block_notes = PackedStringArray("It's already on the canvas; you decide what it checks. A while repeats the blocks inside it for as long as its condition is True.", "The robot's eyes. It checks the one tile in front: a wall (blocked), the flag (destination), or a puddle, and gives True or False.", "Flips True into False and False into True. It lets you ask the opposite question.")
 
 [node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_nested")]
 layout_mode = 2
@@ -298,3 +233,4 @@ text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

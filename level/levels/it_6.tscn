@@ -54,35 +54,11 @@ block: BeginBlock
             - right"
 room_goals = [NodePath("RoomGoals/GoalManager")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "A pattern, not a step"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag."
-autowrap_mode = 3
-
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Everything inside a loop repeats together, in order, on every pass."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 4 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "A pattern, not a step"
+mission = "Climb the staircase of desks and finish on the flag."
+twist = "But the for loop is already placed, and it's the only loop you get."
+tip = "Everything inside a loop repeats together, in order, on every pass."
 
 [node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("8_nested")]
 layout_mode = 2
@@ -157,3 +133,4 @@ tile_set = ExtResource("17_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

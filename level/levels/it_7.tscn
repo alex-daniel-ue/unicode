@@ -100,43 +100,11 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager")]
 star_slack = 3
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Aisle by aisle"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Pick up every pen, then finish on the flag. Driving over a pen picks it up."
-autowrap_mode = 3
-
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "A loop can hold another loop. The inner one runs all the way through on every pass of the outer one."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Loops inside each other each need their own variable name."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 11 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Aisle by aisle"
+mission = "Drive down every aisle to pick up all the pens, then finish on the flag. Driving over a pen picks it up."
+twist = "But the outer loop is already placed, one pass per aisle. What goes inside it is up to you."
+tip = "A loop can hold another loop: the inner one runs all the way through on every pass of the outer one. Loops inside each other need different variable names."
 
 [node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("10_nested")]
 layout_mode = 2
@@ -385,3 +353,4 @@ tile_set = ExtResource("21_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

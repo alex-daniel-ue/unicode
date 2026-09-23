@@ -72,70 +72,13 @@ block: BeginBlock
       text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Around the bends"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag in every room."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="If" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_nested")]
-layout_mode = 2
-data = ExtResource("4_if")
-
-[node name="IfSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Runs the blocks inside it only when its condition is True."
-autowrap_mode = 3
-
-[node name="Else" parent="LevelDescription/Blocks" index="2" instance=ExtResource("3_nested")]
-layout_mode = 2
-data = ExtResource("5_else")
-
-[node name="ElseSays" type="Label" parent="LevelDescription/Blocks" index="3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Goes right under an if. Runs the blocks inside it only when that if didn't."
-autowrap_mode = 3
-
-[node name="Turn" parent="LevelDescription/Blocks" index="4" instance=ExtResource("23_statement_block")]
-layout_mode = 2
-data = ExtResource("24_turn")
-
-[node name="TurnSays" type="Label" parent="LevelDescription/Blocks" index="5"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Turns the robot left, right, or back (all the way around)."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 6 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Around the bends"
+mission = "One program, three rooms with corners. Finish on the flag in every room."
+rooms = PackedStringArray("One bend.", "Two bends.", "A winding path.")
+twist = "But every room turns a different number of times, so no fixed list of moves works for all three."
+blocks = Array[ExtResource("11_block_data")]([ExtResource("4_if"), ExtResource("5_else"), ExtResource("24_turn")])
+block_notes = PackedStringArray("Lets the robot make a decision at every step. It runs the blocks inside it only when its condition is True.", "Goes right under an if and runs only when that if didn't. Together they make an either-or choice.", "Turns the robot left, right, or back (all the way around). Turning doesn't move it off its tile.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("11_block_data")]([ExtResource("6_while"), ExtResource("4_if"), ExtResource("5_else"), ExtResource("7_not")])
@@ -305,3 +248,4 @@ text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

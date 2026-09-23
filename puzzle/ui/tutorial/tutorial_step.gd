@@ -31,6 +31,12 @@ enum Advance {
 ## with that data name.
 @export var targets: PackedStringArray = []
 
+## A side panel tab to open when this screen appears, as a path from the Puzzle
+## root to the tab's content ("UserInterface/SideMenuLeft/Panel/PuzzleToolbox").
+## The overlay calls SidePanel.focus_content() on it, so the thing the card talks
+## about is already on screen instead of the student hunting for its button.
+@export var focus_panel := ""
+
 ## Dim everything except the targets.
 @export var dim := true
 

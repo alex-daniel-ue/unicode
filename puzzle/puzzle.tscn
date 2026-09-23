@@ -332,6 +332,16 @@ mouse_filter = 2
 script = ExtResource("4_8isiv")
 panel = NodePath("../Panel")
 
+[node name="MenuButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+tooltip_text = "Menu (Esc): resume, level select, main menu"
+focus_mode = 0
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+theme_override_font_sizes/font_size = 16
+text = "Esc"
+
 [node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
@@ -346,7 +356,7 @@ associated_contents = NodePath("../../Panel/PuzzleEnvironment")
 [node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Frame level"
+tooltip_text = "Reset the view (drag the level to look around, scroll to zoom)"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
 icon = ExtResource("24_a3a4o")
@@ -426,3 +436,4 @@ layout_mode = 1
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/StopButton" to="ButtonManager" method="_on_stop_button_pressed"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/MenuButton" to="." method="open_menu"]

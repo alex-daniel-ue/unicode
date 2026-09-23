@@ -24,8 +24,6 @@ const SUMMARY_WAITING := "Looking at your program..."
 @export var target_label: Label
 ## Reserved for the post-win summary (design doc §8). Hidden until it has text.
 @export var summary_label: Label
-@export var code_label: Label
-@export var copy_button: Button
 @export var stay_button: Button
 @export var select_button: Button
 @export var next_button: Button
@@ -63,9 +61,6 @@ func present(stars: int, placed: int, par: int, slack: int, summary_expected := 
 	summary_label.text = SUMMARY_WAITING if summary_expected else ""
 	summary_label.modulate.a = 0.6 if summary_expected else 1.0
 	summary_label.visible = summary_expected
-
-	code_label.text = Progress.get_code()
-	copy_button.text = "Copy"
 
 	_next = _find_next()
 	next_button.visible = _next != null
@@ -176,9 +171,4 @@ func _on_next_pressed() -> void:
 	Game.level_scene = _next.scene
 	Game.level_id = _next.id
 	Transition.change_scene(Core.PUZZLE_CANVAS)
-
-
-func _on_copy_pressed() -> void:
-	DisplayServer.clipboard_set(Progress.get_code())
-	copy_button.text = "Copied"
 #endregion

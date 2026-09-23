@@ -22,12 +22,8 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="20_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="21_sensed"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="22_tex_dest"]
-<<<<<<< Updated upstream
 [ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="23_tex_puddle"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="24_i1ewq"]
-=======
-[ext_resource type="Texture2D" uid="uid://dluqpu1nq07x" path="res://level/objects/danger.png" id="23_bk2i5"]
->>>>>>> Stashed changes
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="24_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="25_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="26_tiles_wall"]
@@ -168,75 +164,18 @@ block: BeginBlock
           text: \"move forward\"
           locked: true"
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
+auto_run = true
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Read it first"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The program on the canvas is already written. It runs once in each room."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="Move" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_statement")]
-layout_mode = 2
-data = ExtResource("4_move")
-
-[node name="MoveSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Moves the robot one tile the way it's facing."
-autowrap_mode = 2
-
-[node name="AheadIs" parent="LevelDescription/Blocks" index="2" instance=ExtResource("5_expression")]
-layout_mode = 2
-data = ExtResource("6_ahead_is")
-
-[node name="AheadIsSays" type="Label" parent="LevelDescription/Blocks" index="3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Checks the one tile in front of the robot for a wall (blocked), the flag (destination), or a puddle. Gives True or False."
-autowrap_mode = 3
-
-[node name="Not" parent="LevelDescription/Blocks" index="4" instance=ExtResource("5_expression")]
-layout_mode = 2
-data = ExtResource("7_not")
-
-[node name="NotSays" type="Label" parent="LevelDescription/Blocks" index="5"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Turns True into False, and False into True."
-autowrap_mode = 3
-
-[node name="If" parent="LevelDescription/Blocks" index="6" instance=ExtResource("8_nested")]
-layout_mode = 2
-data = ExtResource("9_if")
-
-[node name="IfSays" type="Label" parent="LevelDescription/Blocks" index="7"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Runs the blocks inside it only when its condition is True."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Read it first"
+mission = "This program is already written. Watch it run in Room 1, then again in Room 2, and work out why the robot stops in a different place."
+rooms = PackedStringArray("Finish on the flag.", "Stop right before the puddle.")
+twist = "But it's the same program in both rooms. The only difference is what's in front of the robot."
+blocks = Array[ExtResource("12_block_data")]([ExtResource("6_ahead_is"), ExtResource("7_not"), ExtResource("9_if")])
+block_notes = PackedStringArray("Here it looks for the puddle. It checks the one tile in front of the robot and gives True or False.", "Flips the answer, so True becomes False and False becomes True. It lets a program ask the opposite question.", "The last step only happens when its condition is True. An if runs the blocks inside it only when its condition is True.")
+block_values = PackedStringArray("puddle", "", "")
+tip = "It runs by itself when the level opens. Press Play to watch it again."
+show_stars = false
 
 [node name="LevelBlockPreset" parent="." index="1"]
 immovable = true
@@ -307,7 +246,6 @@ tile_set = ExtResource("20_tiles_floor")
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
 position = Vector2(144, 48)
-scale = Vector2(0.8, 0.8)
 script = ExtResource("21_sensed")
 tag = &"destination"
 
@@ -340,8 +278,7 @@ tag = &"puddle"
 shape = SubResource("Circle_10")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Hazard2" index="1"]
-modulate = Color(1, 1, 0.90588236, 1)
-texture = ExtResource("23_bk2i5")
+texture = ExtResource("23_tex_puddle")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="4"]
 y_sort_enabled = true
@@ -359,12 +296,7 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-<<<<<<< Updated upstream
 frame_progress = 0.6706057
-=======
-animation = &"idle_right"
-frame_progress = 0.19686718
->>>>>>> Stashed changes
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("12_block_data")]([])
@@ -413,3 +345,4 @@ position = Vector2(232, 166)
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="LevelBlockPreset/BeginBlock/Mouth/IfBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

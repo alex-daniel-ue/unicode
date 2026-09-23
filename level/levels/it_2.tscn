@@ -51,46 +51,14 @@ block: BeginBlock
       text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Until you see it"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Finish on the flag in every room."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="AheadIs" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_expression")]
-layout_mode = 2
-data = ExtResource("4_ahead_is")
-
-[node name="AheadIsSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Checks the one tile in front of the robot for a wall (blocked), the flag (destination), or a puddle. Gives True or False."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 3 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Until you see it"
+mission = "One program, three rooms. Finish on the flag in every room."
+rooms = PackedStringArray("The flag is partway down the hall.", "The flag is further along.", "The flag is somewhere else again.")
+twist = "But the flags aren't against the wall anymore. The robot has to stop on the flag, not at the end of the hall."
+blocks = Array[ExtResource("7_block_data")]([ExtResource("4_ahead_is")])
+block_notes = PackedStringArray("It can look for the flag too: pick destination from its list. Like before, it only checks the one tile in front of the robot.")
+block_values = PackedStringArray("destination")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("7_block_data")]([ExtResource("5_while"), ExtResource("6_not")])
@@ -263,3 +231,4 @@ text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

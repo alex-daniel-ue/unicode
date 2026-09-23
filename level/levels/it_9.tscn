@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://dnv7d6rbll2fk"]
+[gd_scene load_steps=22 format=4 uid="uid://dnv7d6rbll2fk"]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="Resource" uid="uid://cpomp6ug5x4mx" path="res://puzzle/blocks/control flow/while.tres" id="2_while"]
@@ -12,15 +12,13 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="10_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="11_sensed"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="12_tex_dest"]
-[ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="13_tex_puddle"]
+[ext_resource type="Texture2D" uid="uid://45yaet5go20t" path="res://level/objects/danger.png" id="13_3ptfa"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="14_robot"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="15_move"]
 [ext_resource type="Resource" uid="uid://buc1h3ks738pt" path="res://level/objects/entities/robot/blocks/ahead_is.tres" id="16_ahead_is"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="17_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="18_tiles_wall"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="19_theme"]
-[ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="20_statement_block"]
-[ext_resource type="PackedScene" uid="uid://pj76penmyeli" path="res://puzzle/ui/block/templates/socket/expression/expression_block.tscn" id="21_expression_block"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="22_0f4uy"]
 
 [sub_resource type="CircleShape2D" id="Circle_1"]
@@ -77,58 +75,11 @@ block: BeginBlock
           text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Two ways out"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("19_theme")
-theme_type_variation = &"LegibleLabel"
-text = "In every room, stop on the flag or right before a puddle, whichever comes first."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="Break" parent="LevelDescription/Blocks" index="0" instance=ExtResource("20_statement_block")]
-layout_mode = 2
-data = ExtResource("4_break")
-
-[node name="BreakSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("19_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Ends the loop it's inside, right away. The program carries on after the loop."
-autowrap_mode = 3
-
-[node name="Boolean" parent="LevelDescription/Blocks" index="2" instance=ExtResource("21_expression_block")]
-layout_mode = 2
-data = ExtResource("5_boolean")
-
-[node name="BooleanSays" type="Label" parent="LevelDescription/Blocks" index="3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("19_theme")
-theme_type_variation = &"LegibleLabel"
-text = "A condition that is always True, or always False."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("19_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 7 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Two ways out"
+mission = "One program, three rooms. In each room, stop on the flag or right before a puddle, whichever comes first."
+twist = "But the not block is missing this time."
+blocks = Array[ExtResource("6_block_data")]([ExtResource("4_break"), ExtResource("5_boolean")])
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("2_while"), ExtResource("3_if"), ExtResource("4_break"), ExtResource("5_boolean")])
@@ -230,7 +181,7 @@ tag = &"puddle"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Hazard2" index="1"]
-texture = ExtResource("13_tex_puddle")
+texture = ExtResource("13_3ptfa")
 
 [node name="Destination3" type="Area2D" parent="Visuals" index="4"]
 position = Vector2(80, 304)
@@ -253,7 +204,7 @@ tag = &"puddle"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Hazard3" index="1"]
-texture = ExtResource("13_tex_puddle")
+texture = ExtResource("13_3ptfa")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="6"]
 y_sort_enabled = true
@@ -263,7 +214,8 @@ position = Vector2(48, 48)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.0023193683
+animation = &"idle_right"
+frame_progress = 0.53154296
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("15_move"), ExtResource("16_ahead_is")])

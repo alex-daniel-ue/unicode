@@ -4,49 +4,83 @@
 [ext_resource type="Script" uid="uid://cyukojsqjo6hy" path="res://menus/main/progress_dialog.gd" id="1_xno63"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="3_2cbwm"]
 
-[node name="ImportPopup" type="PopupPanel" node_paths=PackedStringArray("code_label", "copy_button", "import_edit", "feedback")]
+[node name="ImportPopup" type="PopupPanel" node_paths=PackedStringArray("code_label", "copy_button", "import_edit", "import_button", "feedback")]
 oversampling_override = 1.0
 initial_position = 1
-size = Vector2i(437, 375)
-visible = true
+size = Vector2i(500, 460)
+visible = false
 theme = ExtResource("1_6ejbb")
 script = ExtResource("1_xno63")
-code_label = NodePath("Margin/Stack/Hint")
-copy_button = NodePath("Margin/Stack/Buttons/ConfirmButton")
-import_edit = NodePath("Margin/Stack/CodeField")
+code_label = NodePath("Margin/Stack/CodeRow/Code")
+copy_button = NodePath("Margin/Stack/CodeRow/CopyButton")
+import_edit = NodePath("Margin/Stack/ImportRow/CodeField")
+import_button = NodePath("Margin/Stack/ImportRow/ImportButton")
 feedback = NodePath("Margin/Stack/Feedback")
 
 [node name="Margin" type="MarginContainer" parent="."]
-offset_left = 32.0
-offset_top = 28.0
-offset_right = 405.0
-offset_bottom = 339.0
-theme_override_constants/margin_left = 20
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 496.0
+offset_bottom = 456.0
+theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
+theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 20
 
 [node name="Stack" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="Margin/Stack"]
 layout_mode = 2
 theme_type_variation = &"HeaderMedium"
-text = "Import Progress Code"
+text = "Your progress"
 horizontal_alignment = 1
 
-[node name="Hint" type="Label" parent="Margin/Stack"]
+[node name="Explain" type="Label" parent="Margin/Stack"]
+custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_type_variation = &"HeaderSmall"
-theme_override_fonts/font = ExtResource("3_2cbwm")
-theme_override_font_sizes/font_size = 14
-text = "00000-00000"
+theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 20
+text = "Your stars are saved on this computer. Playing somewhere else next time? Copy this code before you leave."
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
-[node name="CodeField" type="LineEdit" parent="Margin/Stack"]
-custom_minimum_size = Vector2(0, 60)
+[node name="CodeRow" type="HBoxContainer" parent="Margin/Stack"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="Code" type="Label" parent="Margin/Stack/CodeRow"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_2cbwm")
+theme_override_font_sizes/font_size = 28
+text = "00000-00000"
+vertical_alignment = 1
+
+[node name="CopyButton" type="Button" parent="Margin/Stack/CodeRow"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Copy"
+
+[node name="Divider" type="HSeparator" parent="Margin/Stack"]
+layout_mode = 2
+
+[node name="HaveCode" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 20
+text = "Have a code from another computer? Type it here."
+horizontal_alignment = 1
+
+[node name="ImportRow" type="HBoxContainer" parent="Margin/Stack"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="CodeField" type="LineEdit" parent="Margin/Stack/ImportRow"]
+custom_minimum_size = Vector2(260, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 placeholder_text = "#####-#####"
@@ -54,28 +88,28 @@ alignment = 1
 max_length = 12
 caret_blink = true
 
+[node name="ImportButton" type="Button" parent="Margin/Stack/ImportRow"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Import"
+
 [node name="Feedback" type="Label" parent="Margin/Stack"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(440, 32)
 layout_mode = 2
 theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 
-[node name="Buttons" type="HBoxContainer" parent="Margin/Stack"]
+[node name="CloseButton" type="Button" parent="Margin/Stack"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 20
-
-[node name="ConfirmButton" type="Button" parent="Margin/Stack/Buttons"]
-layout_mode = 2
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 20
-text = "Copy"
+text = "Close"
 
-[node name="CancelButton" type="Button" parent="Margin/Stack/Buttons"]
-layout_mode = 2
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "Cancel"
-
-[connection signal="pressed" from="Margin/Stack/Buttons/CancelButton" to="." method="hide"]
+[connection signal="pressed" from="Margin/Stack/CodeRow/CopyButton" to="." method="_on_copy_pressed"]
+[connection signal="text_submitted" from="Margin/Stack/ImportRow/CodeField" to="." method="_on_import_pressed" unbinds=1]
+[connection signal="pressed" from="Margin/Stack/ImportRow/ImportButton" to="." method="_on_import_pressed"]
+[connection signal="pressed" from="Margin/Stack/CloseButton" to="." method="hide"]

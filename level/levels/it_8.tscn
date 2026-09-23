@@ -64,35 +64,11 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager")]
 star_slack = 2
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Every row is longer"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Pick up every pen, then finish on the flag."
-autowrap_mode = 3
-
-[node name="Line2" type="Label" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "A for loop's start and end can be variables, not only numbers."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 6 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Every row is longer"
+mission = "Pick up every pen, row by row, then finish on the flag."
+twist = "But every row of pens is longer than the one before it."
+tip = "A for loop's start and end can be variables, not only numbers."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("4_block_data")]([ExtResource("3_for")])
@@ -413,3 +389,4 @@ tile_set = ExtResource("15_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+

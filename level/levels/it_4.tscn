@@ -58,78 +58,13 @@ block: BeginBlock
             - i"
 room_goals = [NodePath("RoomGoals/GoalManager")]
 
-[node name="Header" type="Label" parent="LevelDescription" index="0"]
-visible = false
-theme_type_variation = &"HeaderMedium"
-text = "Count the desks"
-horizontal_alignment = 1
-
-[node name="Line1" type="Label" parent="LevelDescription" index="1"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Stop on the flag."
-autowrap_mode = 3
-
-[node name="Blocks" type="GridContainer" parent="LevelDescription" index="2"]
-visible = false
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
-columns = 2
-
-[node name="Initialize" parent="LevelDescription/Blocks" index="0" instance=ExtResource("3_statement")]
-layout_mode = 2
-data = ExtResource("4_initialize")
-
-[node name="InitializeSays" type="Label" parent="LevelDescription/Blocks" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Makes a new variable and gives it a starting value."
-autowrap_mode = 3
-
-[node name="Increment" parent="LevelDescription/Blocks" index="2" instance=ExtResource("3_statement")]
-layout_mode = 2
-data = ExtResource("5_increment")
-
-[node name="IncrementSays" type="Label" parent="LevelDescription/Blocks" index="3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Adds 1 to a variable."
-autowrap_mode = 3
-
-[node name="Comparison" parent="LevelDescription/Blocks" index="4" instance=ExtResource("18_expression_block")]
-layout_mode = 2
-data = ExtResource("8_comparison")
-
-[node name="ComparisonSays" type="Label" parent="LevelDescription/Blocks" index="5"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "Compares two values, like less than or equal to. Gives True or False."
-autowrap_mode = 3
-
-[node name="Line3" type="Label" parent="LevelDescription" index="3"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "The Variables tab shows every variable's value while the program runs."
-autowrap_mode = 3
-
-[node name="Line4" type="Label" parent="LevelDescription" index="4"]
-visible = false
-size_flags_horizontal = 3
-theme = ExtResource("2_theme")
-theme_type_variation = &"LegibleLabel"
-text = "3 stars: 3 blocks."
-autowrap_mode = 3
+[node name="LevelDescription" parent="." index="0"]
+title = "Count the desks"
+mission = "Stop the robot exactly on the flag."
+twist = "But there's only one move forward block, and it's already on the canvas."
+blocks = Array[ExtResource("9_block_data")]([ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
+block_notes = PackedStringArray("Makes a new variable and gives it a starting value. A variable is a named box that holds a value.", "Adds 1 to a variable. Each time it runs, the number goes up by one.", "Compares two values, like 2 < 5, and gives True or False. That makes it usable as a loop's condition.")
+tip = "Open the Variables tab to watch your variables change while the program runs."
 
 [node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_statement")]
 layout_mode = 2
@@ -207,3 +142,4 @@ tile_set = ExtResource("16_tiles_wall")
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]
+
