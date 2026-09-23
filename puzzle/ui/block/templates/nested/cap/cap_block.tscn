@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://nrgx8s4alnrc" path="res://puzzle/ui/block/templates/nested/cap/cap_block.gd" id="1_1vde0"]
 [ext_resource type="PackedScene" uid="uid://demtvw17w06g5" path="res://puzzle/ui/block/templates/statement/statement_block.tscn" id="1_3hsbr"]
-[ext_resource type="Texture2D" uid="uid://c41502381fng6" path="res://puzzle/ui/block/templates/nested/cap/begin.png" id="3_3hsbr"]
+[ext_resource type="Texture2D" uid="uid://dlsiebqwgau4c" path="res://puzzle/ui/block/templates/nested/cap/begin.png" id="3_3hsbr"]
 [ext_resource type="Script" uid="uid://brobqg1pqeq3l" path="res://puzzle/ui/block/component/derivations/drag_component_cap.gd" id="6_17osp"]
 [ext_resource type="Script" uid="uid://bq3nnugnoxpbo" path="res://puzzle/ui/block/component/derivations/visual_component_cap.gd" id="8_12l2t"]
 
@@ -15,7 +15,7 @@ texture = ExtResource("3_3hsbr")
 texture_margin_left = 129.0
 texture_margin_top = 25.0
 texture_margin_right = 8.0
-texture_margin_bottom = 8.0
+texture_margin_bottom = 11.186308
 region_rect = Rect2(0, 0, 278, 125)
 
 [node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_3hsbr")]
