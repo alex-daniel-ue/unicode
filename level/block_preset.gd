@@ -23,6 +23,7 @@ func get_preset() -> Block:
 		block.data.trashable = false
 		block.data.copyable = false
 		if immovable:
+			block.data.placeable = false
 			block.data.draggable = false
 		preset_data.append(block.data)
 

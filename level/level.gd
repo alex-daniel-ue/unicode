@@ -8,18 +8,12 @@ signal completed  ## This is for this Level's completion
 signal failed(reason: String)
 @warning_ignore("unused_signal")
 signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalManager
-signal prediction_made
 
 @export_multiline var intended_solution: String
 @export var room_goals: Array[GoalManager]
 
 @export var star_slack := 1
 @export var star_par_override := 0
-
-## Worked examples ask for a prediction before the program may run. The level
-## text carries a button wired to make_prediction(), and ButtonManager keeps Play
-## disabled until it is pressed.
-@export var prediction_required := false
 
 ## A tutorial overlay to lay over the whole puzzle while this level is open.
 ## Puzzle instances it; it can't live in the level itself, which renders in a
@@ -92,9 +86,6 @@ func get_block_data() -> Array[BlockData]:
 		if node is BlockProvider:
 			result.append_array((node as BlockProvider).block_data)
 	return result
-
-func make_prediction() -> void:
-	prediction_made.emit()
 
 func fail(reason: String) -> void:
 	if has_failed: return

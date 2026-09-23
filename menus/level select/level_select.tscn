@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="2_home"]
 [ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="3_shader"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="4_theme"]
-[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="5_soyww"]
+[ext_resource type="Texture2D" uid="uid://c68bjhj7ntbed" path="res://menus/level select/pixelarticons--circle-question-solid.png" id="5_soyww"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bg"]
 shader = ExtResource("3_shader")
@@ -17,7 +17,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="LevelSelect" type="Control" node_paths=PackedStringArray("module_label", "module_subtitle", "grid", "locked_notice", "prev_button", "next_button", "code_label", "copy_button", "import_edit", "import_feedback", "import_popup")]
+[node name="LevelSelect" type="Control" node_paths=PackedStringArray("module_label", "module_subtitle", "grid", "locked_notice", "prev_button", "next_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,11 +32,6 @@ grid = NodePath("Background/Margin/Root/Body/BodyStack/LevelGrid")
 locked_notice = NodePath("Background/Margin/Root/Body/BodyStack/LockedNotice")
 prev_button = NodePath("Background/Margin/Root/ModuleHeader/ModuleRow/PrevButton")
 next_button = NodePath("Background/Margin/Root/ModuleHeader/ModuleRow/NextButton")
-code_label = NodePath("Background/Margin/Root/Footer/CodeLabel")
-copy_button = NodePath("Background/Margin/Root/Footer/CopyButton")
-import_edit = NodePath("ImportPopup/Margin/Stack/CodeField")
-import_feedback = NodePath("ImportPopup/Margin/Stack/Feedback")
-import_popup = NodePath("ImportPopup")
 columns = 4
 
 [node name="Background" type="ColorRect" parent="."]
@@ -81,11 +76,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="TutorialButton" type="Button" parent="Background/Margin/Root/TopBar"]
+visible = false
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "How to Play"
+tooltip_text = "How to play"
+icon = ExtResource("5_soyww")
+expand_icon = true
 
 [node name="ModuleHeader" type="VBoxContainer" parent="Background/Margin/Root"]
 layout_mode = 2
@@ -149,110 +146,7 @@ text = "Opens when your instructor covers this topic."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Footer" type="HBoxContainer" parent="Background/Margin/Root"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 16
-
-[node name="CodeTitle" type="Label" parent="Background/Margin/Root/Footer"]
-layout_mode = 2
-theme_type_variation = &"LegibleLabel"
-
-[node name="CodeLabel" type="Label" parent="Background/Margin/Root/Footer"]
-layout_mode = 2
-theme_type_variation = &"HeaderSmall"
-theme_override_fonts/font = ExtResource("5_soyww")
-text = "00000-00000"
-
-[node name="CopyButton" type="Button" parent="Background/Margin/Root/Footer"]
-custom_minimum_size = Vector2(110, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "Copy"
-
-[node name="ImportButton" type="Button" parent="Background/Margin/Root/Footer"]
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "Import"
-
-[node name="ImportPopup" type="PopupPanel" parent="."]
-oversampling_override = 1.0
-initial_position = 1
-size = Vector2i(437, 341)
-
-[node name="Margin" type="MarginContainer" parent="ImportPopup"]
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 413.0
-offset_bottom = 317.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Stack" type="VBoxContainer" parent="ImportPopup/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Title" type="Label" parent="ImportPopup/Margin/Stack"]
-layout_mode = 2
-theme_type_variation = &"HeaderMedium"
-text = "Import Progress Code"
-horizontal_alignment = 1
-
-[node name="Hint" type="Label" parent="ImportPopup/Margin/Stack"]
-visible = false
-layout_mode = 2
-theme_type_variation = &"LegibleLabel"
-theme_override_font_sizes/font_size = 16
-text = "Ten characters. Your stars are kept if they are already higher."
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="CodeField" type="LineEdit" parent="ImportPopup/Margin/Stack"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-placeholder_text = "#####-#####"
-alignment = 1
-max_length = 12
-caret_blink = true
-
-[node name="Feedback" type="Label" parent="ImportPopup/Margin/Stack"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-theme_type_variation = &"LegibleLabel"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="Buttons" type="HBoxContainer" parent="ImportPopup/Margin/Stack"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 20
-
-[node name="ConfirmButton" type="Button" parent="ImportPopup/Margin/Stack/Buttons"]
-layout_mode = 2
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "Import"
-
-[node name="CancelButton" type="Button" parent="ImportPopup/Margin/Stack/Buttons"]
-layout_mode = 2
-theme_type_variation = &"MainMenuButton"
-theme_override_font_sizes/font_size = 20
-text = "Cancel"
-
 [connection signal="pressed" from="Background/Margin/Root/TopBar/HomeButton" to="." method="_on_home_pressed"]
 [connection signal="pressed" from="Background/Margin/Root/TopBar/TutorialButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="Background/Margin/Root/ModuleHeader/ModuleRow/PrevButton" to="." method="_on_prev_pressed"]
 [connection signal="pressed" from="Background/Margin/Root/ModuleHeader/ModuleRow/NextButton" to="." method="_on_next_pressed"]
-[connection signal="pressed" from="Background/Margin/Root/Footer/CopyButton" to="." method="_on_copy_pressed"]
-[connection signal="pressed" from="Background/Margin/Root/Footer/ImportButton" to="." method="_on_import_opened"]
-[connection signal="pressed" from="Background/Margin/Root/Footer/ImportButton" to="ImportPopup" method="popup_centered"]
-[connection signal="text_submitted" from="ImportPopup/Margin/Stack/CodeField" to="." method="_apply_code" unbinds=1]
-[connection signal="pressed" from="ImportPopup/Margin/Stack/Buttons/ConfirmButton" to="." method="_apply_code"]
-[connection signal="pressed" from="ImportPopup/Margin/Stack/Buttons/CancelButton" to="ImportPopup" method="hide"]

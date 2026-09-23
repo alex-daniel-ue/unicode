@@ -20,13 +20,6 @@ const STAR_EMPTY := "☆"
 @export var prev_button: Button
 @export var next_button: Button
 
-@export_group("Progress code")
-@export var code_label: Label
-@export var copy_button: Button
-@export var import_edit: LineEdit
-@export var import_feedback: Label
-@export var import_popup: PopupPanel
-
 @export_group("Appearance")
 @export var button_size := Vector2(120, 85)
 @export var columns := 5
@@ -118,19 +111,9 @@ func _refresh() -> void:
 		locked_notice.visible = not released
 	if grid != null:
 		grid.visible = released
-
-	_refresh_code()
-
+	
 	if released:
 		_build_grid(module)
-
-
-func _refresh_code() -> void:
-	if code_label != null:
-		code_label.text = Progress.get_code()
-	if copy_button != null:
-		copy_button.disabled = Progress.total_stars() == 0
-
 
 func _build_grid(module: LevelModule) -> void:
 	if grid == null:
@@ -232,56 +215,3 @@ func _on_prev_pressed() -> void:
 func _on_next_pressed() -> void:
 	_module_index += 1
 	_refresh()
-
-
-func _on_copy_pressed() -> void:
-	DisplayServer.clipboard_set(Progress.get_code())
-	if copy_button == null:
-		return
-	copy_button.text = "Copied"
-	get_tree().create_timer(1.5).timeout.connect(
-		func() -> void:
-			if is_instance_valid(copy_button):
-				copy_button.text = "Copy"
-	)
-
-
-## Connect this to the Import button's `pressed` alongside ImportPopup's
-## popup_centered, so the field starts empty and focused.
-func _on_import_opened() -> void:
-	if import_feedback != null:
-		import_feedback.text = ""
-	if import_edit != null:
-		import_edit.clear()
-		import_edit.grab_focus()
-
-
-## Reachable from the Import button's `pressed` and from the field's
-## `text_submitted` with Unbind set to 1. It says so when a code is rejected:
-## silently doing nothing is the worst outcome for a student who has just typed
-## ten characters off a piece of paper.
-func _apply_code() -> void:
-	if import_edit == null:
-		return
-
-	var code := import_edit.text.strip_edges()
-	if code.is_empty():
-		_say("Type your code first.")
-		return
-
-	if not Progress.apply_code(code):
-		_say("That code isn't readable. Check for a mistyped character.")
-		return
-
-	if import_popup != null:
-		import_popup.hide()
-	import_edit.clear()
-	_refresh()
-
-
-func _say(message: String) -> void:
-	if import_feedback != null:
-		import_feedback.text = message
-	else:
-		push_warning("LevelSelect: " + message)
-#endregion

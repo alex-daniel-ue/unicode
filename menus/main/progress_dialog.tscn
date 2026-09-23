@@ -1,0 +1,81 @@
+[gd_scene load_steps=4 format=3 uid="uid://otyyclm1wsck"]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_6ejbb"]
+[ext_resource type="Script" uid="uid://cyukojsqjo6hy" path="res://menus/main/progress_dialog.gd" id="1_xno63"]
+[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="3_2cbwm"]
+
+[node name="ImportPopup" type="PopupPanel" node_paths=PackedStringArray("code_label", "copy_button", "import_edit", "feedback")]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(437, 375)
+visible = true
+theme = ExtResource("1_6ejbb")
+script = ExtResource("1_xno63")
+code_label = NodePath("Margin/Stack/Hint")
+copy_button = NodePath("Margin/Stack/Buttons/ConfirmButton")
+import_edit = NodePath("Margin/Stack/CodeField")
+feedback = NodePath("Margin/Stack/Feedback")
+
+[node name="Margin" type="MarginContainer" parent="."]
+offset_left = 32.0
+offset_top = 28.0
+offset_right = 405.0
+offset_bottom = 339.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Stack" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Import Progress Code"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+theme_override_fonts/font = ExtResource("3_2cbwm")
+theme_override_font_sizes/font_size = 14
+text = "00000-00000"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CodeField" type="LineEdit" parent="Margin/Stack"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+placeholder_text = "#####-#####"
+alignment = 1
+max_length = 12
+caret_blink = true
+
+[node name="Feedback" type="Label" parent="Margin/Stack"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Margin/Stack"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="ConfirmButton" type="Button" parent="Margin/Stack/Buttons"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Copy"
+
+[node name="CancelButton" type="Button" parent="Margin/Stack/Buttons"]
+layout_mode = 2
+theme_type_variation = &"MainMenuButton"
+theme_override_font_sizes/font_size = 20
+text = "Cancel"
+
+[connection signal="pressed" from="Margin/Stack/Buttons/CancelButton" to="." method="hide"]

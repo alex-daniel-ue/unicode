@@ -7,6 +7,8 @@ extends Node
 @export_tool_button("Bake camera bounds") var _bake_btn := bake_bounds
 
 @export var bounds: Rect2
+
+@export var focus_markers: Array[Node2D] = []
 @export var focus_marker: Node2D
 
 var goals: Array[Goal]
@@ -30,16 +32,17 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return []
 
 func bake_bounds() -> void:
-	# Collect fresh rather than trusting _ready — in the editor it won't have run
-	# since the last goal was added.
 	collect_goals()
-	
+
 	var sources: Array[Node] = []
-	if focus_marker != null:
-		sources.append(focus_marker)
+	for marker in focus_markers:
+		if marker != null:
+			sources.append(marker)
 	for goal in goals:
 		if goal.camera_focus != null:
 			sources.append(goal.camera_focus)
+	if focus_marker != null and not (focus_marker in sources):
+		sources.append(focus_marker)
 	
 	var rect := Rect2()
 	var found := false

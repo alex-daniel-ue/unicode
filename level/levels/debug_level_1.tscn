@@ -105,8 +105,9 @@ object = NodePath("../../../../../Visuals/YSorted/RobotCharacter")
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("4_uuttg")]([ExtResource("5_15s5g"), ExtResource("6_pdcv0"), ExtResource("16_44kmb"), ExtResource("12_i2otl"), ExtResource("9_h7wu1"), ExtResource("11_mofqk"), ExtResource("6_deifc"), ExtResource("12_h7wu1"), ExtResource("13_wgt82"), ExtResource("8_pdcv0"), ExtResource("5_b0lvt"), ExtResource("10_wgt82"), ExtResource("17_mofqk"), ExtResource("18_i2otl"), ExtResource("14_xbbit"), ExtResource("13_bcnb2"), ExtResource("7_15s5g"), ExtResource("15_b6pcm")])
 
-[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers", "focus_marker")]
 bounds = Rect2(0, 96, 154, 32)
+focus_markers = [NodePath("../../Visuals/YSorted/RobotCharacter"), NodePath("../../Room1Marker")]
 focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
@@ -127,7 +128,10 @@ fail_message = "You skipped past the flag."
 camera_focus = NodePath("../../../Visuals/YSorted/Hazard1")
 detection_area = NodePath("../../../Visuals/YSorted/Hazard1")
 
-[node name="Visuals" type="Node2D" parent="." index="4"]
+[node name="Room1Marker" type="Node2D" parent="." index="4"]
+position = Vector2(202, 113)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals" index="0"]
 tile_map_data = PackedByteArray("AAAAAAIAAQAAAAAAAAAAAAMAAQAAAAEAAAABAAIAAQABAAAAAAABAAMAAQABAAIAAAACAAIAAQACAAAAAAACAAMAAQACAAIAAAADAAIAAQABAAAAAAADAAMAAQABAAIAAAAEAAMAAQACAAIAAAAEAAIAAQACAAAAAAAFAAIAAQADAAAAAAAFAAMAAQADAAIAAAAAAAQAAQAAAAMAAAABAAQAAQACAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQADAAMAAAA=")
@@ -173,7 +177,7 @@ position = Vector2(16, 112)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-frame_progress = 0.25029823
+frame_progress = 0.109700724
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="3" node_paths=PackedStringArray("base")]
 script = ExtResource("23_u7k4g")
@@ -187,7 +191,7 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 [node name="ShapeCast2D" parent="Visuals/YSorted/RobotCharacter" index="4"]
 position = Vector2(32, 0)
 
-[node name="Camera2D" parent="." index="5"]
+[node name="Camera2D" parent="." index="6"]
 position = Vector2(96, 80)
 zoom = Vector2(4.3933825, 4.3933825)
 level_bounds = Rect2(-32, 0, 256, 192)
