@@ -3,7 +3,7 @@ extends MarginContainer
 
 
 const CONFIG_FILE := "unicode_ai.cfg"
-const DEFAULT_URL := "http://127.0.0.1:3000/api/hint"
+const DEFAULT_URL := "https://unicode-vert.vercel.app/api/hint"
 const DEFAULT_PLACEHOLDER := "Type here..."
 
 const REQUEST_TIMEOUT := 35.0

@@ -3,6 +3,8 @@ import base64, binascii, logging, os, random, secrets, threading, time
 from collections import defaultdict, deque
 from typing import Literal
 import difflib
+import mimetypes
+from pathlib import Path
 
 import flask
 from dotenv import load_dotenv
@@ -133,6 +135,9 @@ def _get_client():
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 * 1024
+
+mimetypes.add_type("application/wasm", ".wasm")  # some hosts lack it; browsers refuse wasm served as anything else
+GAME_DIR = Path(__file__).parent / "public" / "game"
 
 _lock = threading.Lock()
 _hits: defaultdict[str, deque] = defaultdict(deque)
@@ -331,6 +336,21 @@ def summary():
     status = "ok" if reply else "unavailable"
     _log_usage("summary", status, model, started, response)
     return _respond(status, reply, model=model, summary_version=SUMMARY_VERSION, angle=angle)
+
+
+@app.get("/game")
+@app.get("/game/")
+def game_page():
+    return game_file("unicode.html")
+
+
+@app.get("/game/<path:name>")
+def game_file(name):
+    # On Vercel the CDN serves public/ before this runs; on Render this does it.
+    resp = flask.send_from_directory(GAME_DIR, name)  # refuses paths outside GAME_DIR
+    if name.endswith((".html", ".pck")):
+        resp.headers["Cache-Control"] = "no-cache"  # a re-export shows up without a hard reload
+    return resp
 
 
 @app.get("/healthz")

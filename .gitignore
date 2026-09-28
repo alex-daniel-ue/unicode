@@ -29,3 +29,5 @@ mono_crash.*.json
 ai/.env
 
 *.lnk
+
+ai/public/

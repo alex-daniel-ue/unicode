@@ -176,8 +176,8 @@ func run_rooms(begin: CapBlock) -> bool:
 			push_error("Level '%s': room %d is missing a Resettable snapshot." % [name, room_index + 1])
 			fail(label + "This room isn't set up correctly, so it can't be played.")
 			return false
-		camera.frame_rect(manager.bounds)
 		
+		camera.frame()
 		await begin.function.run()
 		
 		if Interpreter.interrupted:

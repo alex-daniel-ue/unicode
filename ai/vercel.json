@@ -4,5 +4,10 @@
     "main.py": {
       "maxDuration": 60
     }
-  }
+  },
+  "source": "/game/(.*)",
+  "headers": [{
+  		"key": "Cache-Control",
+  		"value": "no-cache"
+  	}]
 }
