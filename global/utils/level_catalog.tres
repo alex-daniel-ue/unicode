@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=35 format=3 uid="uid://dyc1t3vgb4y2h"]
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=32 format=3 uid="uid://dyc1t3vgb4y2h"]
 
 [ext_resource type="Script" uid="uid://bosuufgg1ovh8" path="res://global/utils/level_module.gd" id="1_level_module"]
 [ext_resource type="Script" uid="uid://copysdfiq2iil" path="res://global/utils/level_entry.gd" id="2_level_entry"]
@@ -6,17 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://bpti5nvyvdf1y" path="res://level/levels/tutorial_1.tscn" id="4_tutorial_1"]
 [ext_resource type="PackedScene" path="res://level/levels/it_0a.tscn" id="5_it_0a"]
 [ext_resource type="PackedScene" uid="uid://xhdv8mmxh803" path="res://level/levels/it_0b.tscn" id="6_it_0b"]
-[ext_resource type="PackedScene" uid="uid://dfygahr6nf5cb" path="res://level/levels/it_1.tscn" id="7_it_1"]
-[ext_resource type="PackedScene" uid="uid://gib6nsxvtxoj" path="res://level/levels/it_2.tscn" id="8_it_2"]
-[ext_resource type="PackedScene" uid="uid://bg88ubvlxvcqp" path="res://level/levels/it_3.tscn" id="9_it_3"]
-[ext_resource type="PackedScene" uid="uid://ch4cfogwpxysf" path="res://level/levels/it_4.tscn" id="10_it_4"]
-[ext_resource type="PackedScene" uid="uid://vvhlgp1lv2mn" path="res://level/levels/it_5.tscn" id="11_it_5"]
-[ext_resource type="PackedScene" uid="uid://dgexfaubxv3sd" path="res://level/levels/it_6.tscn" id="12_it_6"]
-[ext_resource type="PackedScene" uid="uid://dlevwf870j8pq" path="res://level/levels/it_7.tscn" id="13_it_7"]
-[ext_resource type="PackedScene" uid="uid://c3b0cw5wv4v8j" path="res://level/levels/it_8.tscn" id="14_it_8"]
-[ext_resource type="PackedScene" uid="uid://dnv7d6rbll2fk" path="res://level/levels/it_9.tscn" id="15_it_9"]
-[ext_resource type="PackedScene" uid="uid://dcr8c3qi60ygr" path="res://level/levels/it_10.tscn" id="16_it_10"]
-[ext_resource type="PackedScene" uid="uid://bbb2vktiqspqd" path="res://level/levels/ar_sample.tscn" id="17_ar_sample"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_1.tscn" id="17_ar_1"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_2.tscn" id="18_ar_2"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_3.tscn" id="19_ar_3"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_4.tscn" id="20_ar_4"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_5.tscn" id="21_ar_5"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_6.tscn" id="22_ar_6"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_7.tscn" id="23_ar_7"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_8.tscn" id="24_ar_8"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_9.tscn" id="25_ar_9"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_10.tscn" id="26_ar_10"]
 
 [sub_resource type="Resource" id="Res_1"]
 script = ExtResource("2_level_entry")
@@ -56,112 +55,93 @@ levels = Array[ExtResource("2_level_entry")]([SubResource("Res_1"), SubResource(
 locked_notice = ""
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
-[sub_resource type="Resource" id="Res_5"]
-script = ExtResource("2_level_entry")
-id = &"it-1"
-title = "Until the wall"
-concept = "while, driven by what the robot senses."
-scene = ExtResource("7_it_1")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_6"]
-script = ExtResource("2_level_entry")
-id = &"it-2"
-label = "2"
-title = "Until you see it"
-concept = "A loop that watches for the target."
-scene = ExtResource("8_it_2")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_7"]
-script = ExtResource("2_level_entry")
-id = &"it-3"
-label = "3"
-title = "Around the bends"
-concept = "A decision inside a loop."
-scene = ExtResource("9_it_3")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_8"]
-script = ExtResource("2_level_entry")
-id = &"it-4"
-label = "4"
-title = "Count the desks"
-concept = "A counter built by hand."
-scene = ExtResource("10_it_4")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_9"]
-script = ExtResource("2_level_entry")
-id = &"it-5"
-label = "5"
-title = "One block instead of three"
-concept = "for: the counter, packaged."
-scene = ExtResource("11_it_5")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_10"]
-script = ExtResource("2_level_entry")
-id = &"it-6"
-label = "6"
-title = "A pattern, not a step"
-concept = "A loop body worth more than one move."
-scene = ExtResource("12_it_6")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_11"]
-script = ExtResource("2_level_entry")
-id = &"it-7"
-label = "7"
-title = "Aisle by aisle"
-concept = "A loop inside a loop."
-scene = ExtResource("13_it_7")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_12"]
-script = ExtResource("2_level_entry")
-id = &"it-8"
-label = "8"
-title = "Every row is longer"
-concept = "The inner bound is the outer counter."
-scene = ExtResource("14_it_8")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_13"]
-script = ExtResource("2_level_entry")
-id = &"it-9"
-label = "9"
-title = "Two ways out"
-concept = "Leaving a loop early: break."
-scene = ExtResource("15_it_9")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_14"]
-script = ExtResource("2_level_entry")
-id = &"it-10"
-label = "10"
-title = "Back to the question"
-concept = "Skipping to the next pass: continue."
-scene = ExtResource("16_it_10")
-metadata/_custom_type_script = "uid://copysdfiq2iil"
-
-[sub_resource type="Resource" id="Res_15"]
-script = ExtResource("1_level_module")
-id = &"iteration"
-display_name = "Iteration"
-subtitle = "Don't repeat yourself."
-levels = Array[ExtResource("2_level_entry")]([SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12"), SubResource("Res_13"), SubResource("Res_14")])
-locked_notice = ""
-metadata/_custom_type_script = "uid://bosuufgg1ovh8"
-
 [sub_resource type="Resource" id="Res_17"]
 script = ExtResource("2_level_entry")
-id = &"ar-sample"
-label = "S"
+id = &"ar-1"
+title = "Read the card"
+concept = "Reading one item of a list by its position."
+scene = ExtResource("17_ar_1")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_18"]
+script = ExtResource("2_level_entry")
+id = &"ar-2"
+label = "2"
+title = "Count, then the last"
+concept = "How long a list is, and where its last item sits."
+scene = ExtResource("18_ar_2")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_19"]
+script = ExtResource("2_level_entry")
+id = &"ar-3"
+label = "3"
+title = "Every stop"
+concept = "Going through a list by position."
+scene = ExtResource("19_ar_3")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_20"]
+script = ExtResource("2_level_entry")
+id = &"ar-4"
+label = "4"
+title = "Every stop, again"
+concept = "Going through a list item by item: for each."
+scene = ExtResource("20_ar_4")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_21"]
+script = ExtResource("2_level_entry")
+id = &"ar-5"
+label = "5"
+title = "There and back"
+concept = "Going through a list backwards."
+scene = ExtResource("21_ar_5")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_22"]
+script = ExtResource("2_level_entry")
+id = &"ar-6"
+label = "6"
+title = "Number the lockers"
+concept = "Changing a list's items in place."
+scene = ExtResource("22_ar_6")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_23"]
+script = ExtResource("2_level_entry")
+id = &"ar-7"
+label = "7"
 title = "Passing marks"
-concept = "Sample level: tuples, append and for each. Remove before Arrays ships."
-scene = ExtResource("17_ar_sample")
-counts_for_progress = false
+concept = "Tuples can't change, so build a new list with append."
+scene = ExtResource("23_ar_7")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_24"]
+script = ExtResource("2_level_entry")
+id = &"ar-8"
+label = "8"
+title = "Tidy the shelf"
+concept = "Comparing each item with the one before it."
+scene = ExtResource("24_ar_8")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_25"]
+script = ExtResource("2_level_entry")
+id = &"ar-9"
+label = "9"
+title = "Here either day"
+concept = "Sets keep one of each: joining two lists."
+scene = ExtResource("25_ar_9")
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="Res_26"]
+script = ExtResource("2_level_entry")
+id = &"ar-10"
+label = "10"
+title = "In all three"
+concept = "Checking membership with in: what sets share."
+scene = ExtResource("26_ar_10")
 metadata/_custom_type_script = "uid://copysdfiq2iil"
 
 [sub_resource type="Resource" id="Res_16"]
@@ -169,10 +149,9 @@ script = ExtResource("1_level_module")
 id = &"arrays"
 display_name = "Arrays"
 subtitle = "Zero to hero."
-levels = Array[ExtResource("2_level_entry")]([SubResource("Res_17")])
-released = false
+levels = Array[ExtResource("2_level_entry")]([SubResource("Res_17"), SubResource("Res_18"), SubResource("Res_19"), SubResource("Res_20"), SubResource("Res_21"), SubResource("Res_22"), SubResource("Res_23"), SubResource("Res_24"), SubResource("Res_25"), SubResource("Res_26")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [resource]
 script = ExtResource("3_level_catalog")
-modules = Array[ExtResource("1_level_module")]([SubResource("Res_4"), SubResource("Res_15"), SubResource("Res_16")])
+modules = Array[ExtResource("1_level_module")]([SubResource("Res_4"), SubResource("Res_16")])

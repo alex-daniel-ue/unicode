@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://cb5ve56xnp5r5"]
 
-[ext_resource type="Script" path="res://level/objects/entities/list/list_entity.gd" id="1_list"]
-[ext_resource type="Texture2D" path="res://level/objects/entities/list/art/white.png" id="2_white"]
+[ext_resource type="Script" uid="uid://bqmntal78tk4f" path="res://level/objects/entities/list/list_entity.gd" id="1_list"]
+[ext_resource type="Texture2D" uid="uid://d3klv6ri1y8la" path="res://level/objects/entities/list/art/white.png" id="2_white"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_theme"]
-[ext_resource type="Script" path="res://level/objects/entities/list/list_block_provider.gd" id="4_provider"]
-[ext_resource type="FontFile" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="5_font"]
+[ext_resource type="Script" uid="uid://bpcx3u5ucuild" path="res://level/objects/entities/list/list_block_provider.gd" id="4_provider"]
+[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="5_font"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ghost"]
 font = ExtResource("5_font")
@@ -15,32 +15,40 @@ script = ExtResource("1_list")
 
 [node name="Back" type="Sprite2D" parent="."]
 modulate = Color(0.16862746, 0.12941177, 0.10980392, 1)
+position = Vector2(-12, -2)
+scale = Vector2(6, 14)
 texture = ExtResource("2_white")
 centered = false
 
 [node name="Tag" type="Label" parent="."]
-offset_right = 60.0
-offset_bottom = 32.0
-mouse_filter = 2
+offset_left = -108.0
+offset_right = -16.0
+offset_bottom = 42.0
 theme = ExtResource("3_theme")
 theme_type_variation = &"RoomLabel"
-text = "list ="
+text = "ListEntity ="
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="OpenBracket" type="Line2D" parent="."]
+position = Vector2(-9, 2)
+points = PackedVector2Array(7, 0, 0, 0, 0, 48, 7, 48)
 width = 2.0
 default_color = Color(0.9529412, 0.9098039, 0.8235294, 1)
 
 [node name="CloseBracket" type="Line2D" parent="."]
+position = Vector2(9, 2)
 scale = Vector2(-1, 1)
+points = PackedVector2Array(7, 0, 0, 0, 0, 48, 7, 48)
 width = 2.0
 default_color = Color(0.9529412, 0.9098039, 0.8235294, 1)
 
 [node name="Slots" type="Node2D" parent="."]
 
 [node name="Glass" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.68, 0.87, 1, 0.3)
+scale = Vector2(1e-05, 8)
 texture = ExtResource("2_white")
 centered = false
 
@@ -61,7 +69,6 @@ modulate = Color(1, 1, 1, 0)
 offset_top = 31.0
 offset_right = 32.0
 offset_bottom = 51.0
-mouse_filter = 2
 label_settings = SubResource("LabelSettings_ghost")
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -406,9 +406,11 @@ func _checked_index(index: Variant, from_this: Block, what: String) -> Variant:
 	var i: int = index
 	if i < -count or i >= count:
 		_show_ghost(i)
-		# set item past the end is almost always an attempt to add an item.
+		# set item on an empty list is an attempt to add an item. Past the end of
+		# a list that has items it's usually an off-by-one, where pointing at
+		# append would send the student the wrong way.
 		var hint := " set item only changes items that are already there; append adds a new one." \
-				if what == "set item" and kind == Kind.LIST and i >= count else ""
+				if what == "set item" and kind == Kind.LIST and count == 0 else ""
 		if count == 0:
 			from_this.function.error("'%s' is empty, so it has no item %d.%s" % [list_label, i, hint])
 		else:
