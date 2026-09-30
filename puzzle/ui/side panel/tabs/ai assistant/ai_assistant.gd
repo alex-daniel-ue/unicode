@@ -4,6 +4,7 @@ extends MarginContainer
 
 const CONFIG_FILE := "unicode_ai.cfg"
 const DEFAULT_URL := "https://unicode-vert.vercel.app/api/hint"
+const DEFAULT_TOKEN := "i3RjY9TjdbCIkQPH4DgRDrR-kasNLBNSz0Et3iEGUPA"
 const DEFAULT_PLACEHOLDER := "Type here..."
 
 const REQUEST_TIMEOUT := 35.0
@@ -32,7 +33,7 @@ const LOG_LINES := 40
 var api_url := DEFAULT_URL
 var fallback_url := ""
 var summary_url := ""
-var client_token := ""
+var client_token := DEFAULT_TOKEN
 
 var in_timeout := false
 var _awaiting_reply := false
@@ -221,6 +222,7 @@ func _send_hint_request(msg: String) -> void:
 			last_run_program = puzzle.last_run_yaml,  # the relay diffs this against workspace
 			output_log = "\n".join(Interpreter.output_log.slice(-LOG_LINES)),
 			robot = _robot_state(),
+			lists = _lists_state(),
 		},
 	}
 	
@@ -391,6 +393,32 @@ func _robot_state() -> String:
 		Vector2i((robot.global_position / step).floor()),
 		FACING.get(robot.get(&"facing_direction"), "?"),
 	]
+
+## Every list in the level as Python writes it, room by room, because a
+## screenshot is a poor way to read numbers. It's what each list holds now, so
+## after a run it's what the program left there; a list that changed also says
+## what it started as. Empty on levels without lists, and the relay then leaves
+## the section out.
+func _lists_state() -> String:
+	var lists: Array[ListEntity] = []
+	for node in get_tree().get_nodes_in_group(ListEntity.GROUP):
+		if node is ListEntity:
+			lists.append(node as ListEntity)
+	lists.sort_custom(func(a: ListEntity, b: ListEntity) -> bool:
+		return a.room_index < b.room_index if a.room_index != b.room_index \
+				else String(a.get_list_name()) < String(b.get_list_name()))
+
+	var rooms := Game.level.room_goals.size() if is_instance_valid(Game.level) else 1
+	var lines: PackedStringArray = []
+	for list in lists:
+		var line := "%s%s = %s  (%s)" % [
+			"Room %d: " % (list.room_index + 1) if rooms > 1 else "",
+			list.get_list_name(), list.repr(), list.kind_name(),
+		]
+		if list.repr() != list.initial_repr():
+			line += "; it started as " + list.initial_repr()
+		lines.append(line)
+	return "\n".join(lines)
 
 func _get_viewport_jpeg_base64() -> String:
 	_shot_bytes = 0

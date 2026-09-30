@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=8 format=3 uid="uid://1tbtf1um8k7l"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket_dat"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value_data"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="4_receptive_"]
+[ext_resource type="Script" uid="uid://coj7ansgdg3uk" path="res://puzzle/functions/list_functions.gd" id="5_list_funct"]
+
+[sub_resource type="Resource" id="Resource_socket"]
+script = ExtResource("2_socket_dat")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_value"]
+script = ExtResource("3_value_data")
+show_type = false
+editable = false
+editable_shown = false
+_socket_ref = SubResource("Resource_socket")
+
+[resource]
+script = ExtResource("1_block_data")
+name = "LengthOfBlock"
+color = Color(0.98, 0.66, 0.36, 1)
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_socket")
+value = SubResource("Resource_value")
+category = "Lists"
+syntax = "length of {list: list}"
+description = "Gives how many items a list, tuple or set holds."
+top_notch = false
+text = "length of {}"
+text_blocks = Array[ExtResource("1_block_data")]([ExtResource("4_receptive_")])
+Type/value = SubResource("Resource_value")
+Type/socket = SubResource("Resource_socket")
+Function/script = ExtResource("5_list_funct")
+Function/entity_name = &""
+Function/method = &"_length"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

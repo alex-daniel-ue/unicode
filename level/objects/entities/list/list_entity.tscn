@@ -1,0 +1,70 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://level/objects/entities/list/list_entity.gd" id="1_list"]
+[ext_resource type="Texture2D" path="res://level/objects/entities/list/art/white.png" id="2_white"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_theme"]
+[ext_resource type="Script" path="res://level/objects/entities/list/list_block_provider.gd" id="4_provider"]
+[ext_resource type="FontFile" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="5_font"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ghost"]
+font = ExtResource("5_font")
+font_color = Color(0.9843137, 0.44313726, 0.52156866, 1)
+
+[node name="ListEntity" type="Node2D"]
+script = ExtResource("1_list")
+
+[node name="Back" type="Sprite2D" parent="."]
+modulate = Color(0.16862746, 0.12941177, 0.10980392, 1)
+texture = ExtResource("2_white")
+centered = false
+
+[node name="Tag" type="Label" parent="."]
+offset_right = 60.0
+offset_bottom = 32.0
+mouse_filter = 2
+theme = ExtResource("3_theme")
+theme_type_variation = &"RoomLabel"
+text = "list ="
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="OpenBracket" type="Line2D" parent="."]
+width = 2.0
+default_color = Color(0.9529412, 0.9098039, 0.8235294, 1)
+
+[node name="CloseBracket" type="Line2D" parent="."]
+scale = Vector2(-1, 1)
+width = 2.0
+default_color = Color(0.9529412, 0.9098039, 0.8235294, 1)
+
+[node name="Slots" type="Node2D" parent="."]
+
+[node name="Glass" type="Sprite2D" parent="."]
+modulate = Color(0.68, 0.87, 1, 0.3)
+texture = ExtResource("2_white")
+centered = false
+
+[node name="Pointer" type="Polygon2D" parent="."]
+visible = false
+color = Color(0.21960784, 0.7411765, 0.972549, 1)
+polygon = PackedVector2Array(-6, -11, 6, -11, 0, -3)
+
+[node name="Ghost" type="Sprite2D" parent="."]
+modulate = Color(0.9843137, 0.44313726, 0.52156866, 0)
+position = Vector2(1, 1)
+scale = Vector2(7.5, 7.5)
+texture = ExtResource("2_white")
+centered = false
+
+[node name="GhostIndex" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_top = 31.0
+offset_right = 32.0
+offset_bottom = 51.0
+mouse_filter = 2
+label_settings = SubResource("LabelSettings_ghost")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ListBlockProvider" type="Node" parent="."]
+script = ExtResource("4_provider")

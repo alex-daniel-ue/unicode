@@ -203,26 +203,47 @@ func _arithmetic(this: Block) -> Variant:
 	return null
 
 ## text: {boolean} {and/or} {boolean}
+##
+## Short-circuits, as Python does: the right side runs only when the left side
+## hasn't already decided the answer, so on screen it never lights up. That is
+## what makes a guard work: `length of xs > 0 and item 0 of xs == 3` stops at the
+## left side for an empty list instead of reading an item that isn't there.
 func _logical(this: Block) -> Variant:
-	var args := await __resolve_operation_args(this)
-	if args.is_empty(): return
-	
-	var value1: Variant = args[0]
-	var symbol: Variant = args[1]
-	var value2: Variant = args[2]
-	
-	if typeof(value1) != TYPE_BOOL or typeof(value2) != TYPE_BOOL:
-		this.function.error("'%s' only works on true or false values." % symbol)
-		return
-	
+	var left: Variant = await __logical_side(this, 0)
+	if Interpreter.interrupted: return null
+
+	var symbol: Variant = await this.function.eval_arg(1)
+	if Interpreter.interrupted: return null
+	if symbol not in ["and", "or"]:
+		this.function.error("'%s' isn't a logical operator." % symbol)
+		return null
+
+	var decided: bool = (symbol == "and" and not left) or (symbol == "or" and left)
+	if decided:
+		await Interpreter.step(this)
+		return left
+
+	var right: Variant = await __logical_side(this, 2)
+	if Interpreter.interrupted: return null
 	await Interpreter.step(this)
-	
-	match symbol:
-		"and": return (value1 as bool) and (value2 as bool)
-		"or": return (value1 as bool) or (value2 as bool)
-	
-	this.function.error("'%s' isn't a logical operator." % symbol)
-	return
+	return right
+
+## One side of an and/or, checked to be True or False.
+func __logical_side(this: Block, index: int) -> Variant:
+	var value: Variant = this.function.unwrap(await this.function.eval_arg(index))
+	if Interpreter.interrupted: return null
+
+	var symbol := this.text.get_blocks()[1].text.get_raw() if this.text.get_blocks().size() > 1 else "and/or"
+	if value == null:
+		this.function.error("One side of '%s' is empty." % symbol)
+		return null
+	if typeof(value) != TYPE_BOOL:
+		this.function.error(
+			"'%s' only works on True or False, but one side is %s."
+			% [symbol, Core.to_python_repr(value)]
+		)
+		return null
+	return value
 
 #region Generic helper methods
 func __resolve_operation_args(this: Block) -> Array:

@@ -68,6 +68,39 @@ func move(from_this: Block) -> void:
 	cancel_motion()
 	position = target
 
+## text: move forward {tiles}
+##
+## Arrays' move. Repetition isn't the lesson there, and a list's values need a
+## slot to plug into: `move forward (item i of route)`. It is n single moves, each
+## checked for a wall and paced like `move forward`, so a wrong count walks and
+## bumps where the student can see it.
+func move_steps(from_this: Block) -> void:
+	var args := await from_this.function.eval_args([from_this.function.Argument.VARIANT])
+	if Interpreter.interrupted or args.is_empty():
+		return
+
+	var tiles: Variant = from_this.function.unwrap(args[0])
+	if Interpreter.interrupted:
+		return
+
+	if typeof(tiles) == TYPE_FLOAT:
+		from_this.function.error("Robot: I can only move a whole number of tiles, not %s. Use // to divide without a decimal." % tiles)
+		return
+	if typeof(tiles) != TYPE_INT:
+		from_this.function.error("Robot: I can only move a whole number of tiles, but I got %s." % Core.to_python_repr(tiles))
+		return
+	if tiles < 0:
+		from_this.function.error("Robot: I can't move %d tiles. I only go forward." % tiles)
+		return
+
+	if tiles == 0:
+		await Interpreter.step(from_this)
+		return
+	for i in tiles:
+		await move(from_this)
+		if Interpreter.interrupted:
+			return
+
 ## Stops any in-flight movement. Without this a tween started before a Stop or a
 ## hazard keeps writing `position` and overwrites whatever Resettable.reset()
 ## put there, leaving the robot off-grid.

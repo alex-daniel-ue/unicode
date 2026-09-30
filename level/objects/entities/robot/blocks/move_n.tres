@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://qvifbk4f011m"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="2_receptive_"]
+[ext_resource type="Script" uid="uid://bhjguxn0u73no" path="res://level/objects/entities/robot/robot.gd" id="3_robot"]
+
+[resource]
+script = ExtResource("1_block_data")
+name = "MoveTilesBlock"
+color = Color(0.92156863, 0.80784315, 0.47843137, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Robot"
+syntax = "move forward {tiles: int}"
+description = "Moves the robot forward that many tiles, one at a time. Fails if the robot hits a wall on the way."
+text = "move forward {}"
+text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_")])
+Function/entity_script = ExtResource("3_robot")
+Function/entity_name = &"RobotCharacter"
+Function/method = &"move_steps"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

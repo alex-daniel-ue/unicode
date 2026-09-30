@@ -165,6 +165,9 @@ func _show_message(message: String) -> void:
 
 
 func _display_value(value: Variant) -> String:
+	# A variable holding a room's list (x = scores) shows the list's contents.
+	if value is ListEntity:
+		return Core.to_python_repr(value)
 	match typeof(value):
 		TYPE_NIL:
 			return "not set yet"
@@ -181,4 +184,6 @@ func _display_value(value: Variant) -> String:
 func _display_type(value: Variant) -> String:
 	if value == null:
 		return "—"
+	if value is ListEntity:
+		return (value as ListEntity).kind_name()
 	return TYPE_NAMES.get(typeof(value), type_string(typeof(value)))

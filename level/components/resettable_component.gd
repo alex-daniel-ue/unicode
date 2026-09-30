@@ -29,7 +29,7 @@ func save_snapshot() -> void:
 	var snap: Dictionary[StringName, Variant] = {}
 	for prop in tracked_properties:
 		if prop in base:
-			snap[prop] = base.get(prop)
+			snap[prop] = _detached(base.get(prop))
 		else:
 			push_warning("Base has no property '%s', cannot save." % prop)
 	
@@ -50,8 +50,16 @@ func reset(room_index: int) -> bool:
 	var snap: Dictionary = room_snapshots[room_index]
 	for prop in snap:
 		if prop in base:
-			base.set(prop, snap[prop])
+			base.set(prop, _detached(snap[prop]))
 		elif not Engine.is_editor_hint():
 			push_warning("Base has no property '%s', cannot reset." % prop)
-	
+
 	return true
+
+## Arrays and dictionaries are shared by reference. Stored or restored as-is, a
+## list written during one run would be written into the snapshot itself, and
+## every retry would start from the previous run's contents.
+func _detached(value: Variant) -> Variant:
+	if value is Array or value is Dictionary:
+		return value.duplicate(true)
+	return value

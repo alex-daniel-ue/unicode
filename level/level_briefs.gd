@@ -105,6 +105,16 @@ const BRIEFS := {
 		"blocks": ["res://puzzle/blocks/control flow/continue.tres"],
 		"block_notes": ["Skips the rest of the loop's blocks for this pass and goes straight back to the loop's condition. It's a loop's way of saying: check again."],
 	},
+	# The Arrays sample: the proposed AR-7 on IT-1's corridors. Not a study level.
+	"ar_sample": {
+		"title": "Passing marks",
+		"mission": "One program, three rooms. Put every passing score (75 or higher) from scores into passed, then walk one tile for each passing score to reach the flag.",
+		"twist": "But scores is a tuple, and a tuple can't be changed.",
+		"rooms": ["Five scores.", "Four scores.", "Six scores."],
+		"blocks": ["res://puzzle/blocks/control flow/for_each.tres", "res://puzzle/blocks/lists/append.tres", "res://puzzle/blocks/lists/length_of.tres", "res://level/objects/entities/robot/blocks/move_n.tres"],
+		"block_notes": ["Here it goes through scores one score at a time. A for each loop runs the blocks inside it once for every item, with its variable holding that item.", "Here it adds a score to the end of passed. Append makes a list one item longer; a tuple can't grow.", "Here it counts what ended up in a list. It gives how many items a list, tuple or set holds.", "Here the robot walks as far as a number says. It moves forward that many tiles, one at a time."],
+		"tip": "The brackets on a shelf say what it holds, the way Python writes it: [ ] is a list and ( ) is a tuple.",
+	},
 }
 
 

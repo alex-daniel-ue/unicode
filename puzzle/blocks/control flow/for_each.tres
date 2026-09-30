@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=7 format=3 uid="uid://0qbunxipm6kc"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
+[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="2_nested_dat"]
+[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value/editable_line_notype.tres" id="3_editable_l"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="4_receptive_"]
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="5_control_fl"]
+
+[sub_resource type="Resource" id="Resource_nested"]
+script = ExtResource("2_nested_dat")
+type = 9
+
+[resource]
+script = ExtResource("1_block_data")
+name = "ForEachBlock"
+color = Color(0.37254903, 0.5176471, 0.72156864, 1)
+base_path = "uid://cbwa1bqy2sbq"
+type = 1
+nested = SubResource("Resource_nested")
+category = "Iterative"
+syntax = "for each {name: variable} in {list: list}"
+description = "Runs the blocks inside once for every item of a list, tuple or set, in order. The variable holds a copy of the item, so changing the variable doesn't change the list."
+text = "for each {} in {}"
+text_blocks = Array[ExtResource("1_block_data")]([ExtResource("3_editable_l"), ExtResource("4_receptive_")])
+Type/nested = SubResource("Resource_nested")
+Function/script = ExtResource("5_control_fl")
+Function/entity_name = &""
+Function/method = &"_for_each"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

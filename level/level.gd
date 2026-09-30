@@ -40,6 +40,9 @@ var keep_visible := 0.25
 var _panning := false
 
 var has_failed := false
+## The room the program is running in, counted from 0. A list block finds the
+## shelf for this room (ListEntity.find), since each room has its own.
+var current_room := 0
 ## "Room 2 of 3 — " while a multi-room run is in progress. fail() prefixes it,
 ## so hazards and the Stop button name the room the same way goal checks do.
 var _room_label := ""
@@ -135,7 +138,7 @@ func get_block_data() -> Array[BlockData]:
 	var result: Array[BlockData]
 	for node in Core.get_children_recursive(self, true):
 		if node is BlockProvider:
-			result.append_array((node as BlockProvider).block_data)
+			result.append_array((node as BlockProvider).get_block_data())
 	return result
 
 func fail(reason: String) -> void:
@@ -150,8 +153,14 @@ func run_rooms(begin: CapBlock) -> bool:
 	has_failed = false
 	_room_label = ""
 	var room_count := maxi(room_goals.size(), 1)
-	
+
+	# Every room's lists at once, and only here: after a run each shelf keeps
+	# what the program wrote into it, so a student can read what went wrong.
+	for list in get_tree().get_nodes_in_group(ListEntity.GROUP):
+		(list as ListEntity).restore()
+
 	for room_index in range(room_count):
+		current_room = room_index
 		var label := room_label(room_index, room_count)
 		_room_label = label
 		if room_count > 1:

@@ -161,7 +161,7 @@ facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
 animation = &"idle_right"
-frame_progress = 0.20091704
+frame_progress = 0.08985573
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("13_move"), ExtResource("14_ahead_is")])

@@ -29,7 +29,10 @@ func update_type_color() -> void:
 	# Explicit type conversion
 	var value_base := base as ValueBlock
 	
-	if value_base.data.has_text_blocks():
+	# A value block with a function of its own is a block, not a slot, and wears
+	# its own colour: a list's name block would otherwise read as a variable
+	# name and turn pink.
+	if value_base.data.has_text_blocks() or value_base.data.func_type != BlockData.FuncType.LAMBDA:
 		target_color = base.data.color
 		return
 	

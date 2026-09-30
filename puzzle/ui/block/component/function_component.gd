@@ -53,6 +53,13 @@ func unwrap(value: Variant) -> Variant:
 		return value
 	
 	if not Interpreter.has_var(value):
+		# The room's lists aren't variables, but in Python their names are just
+		# names, so a list's name typed into a slot means that list. A variable
+		# of the same name still wins, as it would in Python.
+		var list := ListEntity.find(value)
+		if list != null:
+			return list
+
 		var var_name := str(value)
 		var hint := " Python spells it %s." % var_name.capitalize() if var_name in ["true", "false"] else ""
 		error("Variable '%s' doesn't exist.%s" % [value, hint])
@@ -88,6 +95,21 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 				return[]
 				
 	return evaluated
+
+## One parameter, evaluated on its own and only when asked for. eval_args() runs
+## every parameter up front; a short-circuiting `and`/`or` must not run its right
+## side at all when the left side already decides the answer. Null after an
+## error, so check Interpreter.interrupted.
+func eval_arg(index: int) -> Variant:
+	var params := base.text.get_blocks().filter(func(block: Block) -> bool: return block.visible)
+	if index >= params.size():
+		error("%d arguments are required." % (index + 1))
+		return null
+
+	var block: Block = params[index]
+	await Interpreter.step(block)
+	if Interpreter.interrupted: return null
+	return await block.function.run()
 
 func error(message: String) -> void:
 	Interpreter.interrupted = true

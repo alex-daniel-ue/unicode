@@ -9,9 +9,9 @@
 [ext_resource type="Script" uid="uid://px6s8s2ecxm7" path="res://puzzle/ui/block/component/derivations/visual_component_value.gd" id="6_wbh7f"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xhcyd"]
-content_margin_left = 4.0
+content_margin_left = 7.0
 content_margin_top = 4.0
-content_margin_right = 4.0
+content_margin_right = 7.0
 content_margin_bottom = 4.0
 texture = ExtResource("3_x1suh")
 texture_margin_left = 14.0

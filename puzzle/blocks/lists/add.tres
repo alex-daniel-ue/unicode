@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="2_receptive_"]
+[ext_resource type="Script" path="res://puzzle/functions/list_functions.gd" id="3_list_funct"]
+
+[resource]
+script = ExtResource("1_block_data")
+name = "AddBlock"
+color = Color(0.98, 0.66, 0.36, 1)
+base_path = "uid://demtvw17w06g5"
+type = 0
+category = "Lists"
+syntax = "add {value: variant} to {set: set}"
+description = "Adds a value to a set. A set keeps one of each value, so adding one it already holds changes nothing. Lists use append."
+text = "add {} to {}"
+text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("2_receptive_")])
+Function/script = ExtResource("3_list_funct")
+Function/entity_name = &""
+Function/method = &"_add"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

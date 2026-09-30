@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=7 format=3]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket_dat"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value_data"]
+[ext_resource type="Script" path="res://puzzle/functions/list_functions.gd" id="4_list_funct"]
+
+[sub_resource type="Resource" id="Resource_socket"]
+script = ExtResource("2_socket_dat")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_value"]
+script = ExtResource("3_value_data")
+show_type = false
+editable = false
+editable_shown = false
+_socket_ref = SubResource("Resource_socket")
+
+[resource]
+script = ExtResource("1_block_data")
+name = "ListReporter"
+color = Color(1.0, 0.78, 0.5, 1)
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_socket")
+value = SubResource("Resource_value")
+category = "Lists"
+syntax = "{list name}"
+description = "A list in the room, by its name. Levels make one of these per list; this file is the template they copy."
+top_notch = false
+text = "list"
+Type/value = SubResource("Resource_value")
+Type/socket = SubResource("Resource_socket")
+Function/script = ExtResource("4_list_funct")
+Function/entity_name = &""
+Function/method = &"_reporter"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

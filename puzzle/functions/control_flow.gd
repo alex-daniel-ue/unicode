@@ -12,6 +12,7 @@ const ITERATIVE_BLOCKS := {
 	NestedData.Type.WHILE: true,
 	NestedData.Type.FOR: true,
 	NestedData.Type.REPEAT: true,
+	NestedData.Type.FOR_EACH: true,
 }
 
 const MAX_LOOP_ERROR := "Reached maximum amount of loops."
@@ -106,7 +107,62 @@ func _for(this: NestedBlock) -> void:
 			break
 		
 		Interpreter.assign_var(var_name, Interpreter.read_var(var_name) + step)
-	
+
+	Interpreter.pop_scope()
+
+## text: for each {variable} in {list}
+##
+## The packaging of `for i from 0 to length of xs - 1 { ... item i of xs ... }`,
+## as `for` is of the counted while. Walks by index and re-reads the length every
+## pass, as Python's list iterator does, so appending to the list being walked
+## keeps the loop going (until the shelf is full). The variable gets a copy of
+## each item, so changing it doesn't change the list, in Python or here.
+func _for_each(this: NestedBlock) -> void:
+	var args := await this.function.eval_args([
+		this.function.Argument.STRING_NAME,
+		this.function.Argument.VARIANT,
+	])
+	if Interpreter.interrupted: return
+
+	var var_name := args[0] as StringName
+	var list := ListFunctions.resolve(this, args[1], "for each")
+	if list == null: return
+
+	Interpreter.push_scope("for each " + String(var_name), this.get_instance_id())
+	if not Interpreter.declare_var(var_name, null):
+		Interpreter.pop_scope()
+		this.function.error("Variable '%s' already exists." % var_name)
+		return
+
+	var set_size := list.values.size()
+	var index := 0
+	var loop_count := 0
+
+	while index < list.values.size():
+		if list.kind == ListEntity.Kind.SET and list.values.size() != set_size:
+			this.function.error("'%s' changed size while the loop was going through it. Python stops here too." % list.get_list_name())
+			break
+
+		list.point_at(index)
+		var item: Variant = list.values[index]
+		Interpreter.assign_var(var_name, item.duplicate(true) if item is Array else item)
+
+		await Interpreter.step(this)
+		if Interpreter.interrupted: break
+
+		var outcome := await __run_body(this)
+		if Interpreter.interrupted: break
+		if outcome == ControlSignal.BREAK: break
+
+		index += 1
+		loop_count += 1
+		if loop_count > Interpreter.MAX_LOOPS:
+			this.function.error(MAX_LOOP_ERROR)
+			break
+
+	# Left in place after an error, so the student can see where it stopped.
+	if not Interpreter.interrupted:
+		list.point_at(-1)
 	Interpreter.pop_scope()
 #endregion
 

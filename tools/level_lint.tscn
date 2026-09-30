@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="GDScript" id="GDScript_run"]
+script/source = "extends Node
+
+## The level lint from a terminal:
+##   godot --headless --path . res://tools/level_lint.tscn
+## Same checks as Ctrl+Shift+X on level_lint.gd; they live in level_lint_core.gd.
+
+
+func _ready() -> void:
+	LevelLint.new().run()
+	get_tree().quit()
+"
+
+[node name="LevelLint" type="Node"]
+script = SubResource("GDScript_run")

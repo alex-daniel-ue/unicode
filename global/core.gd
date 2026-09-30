@@ -94,6 +94,9 @@ func to_python_literal(value: Variant) -> String:
 	return to_python_repr(value)
 
 func to_python_repr(value: Variant) -> String:
+	# A room's list: [1, 2], (1,) or {1, 2}, by its kind.
+	if value is ListEntity:
+		return (value as ListEntity).repr()
 	match typeof(value):
 		TYPE_NIL:
 			return "None"
@@ -112,6 +115,9 @@ func get_type_string(variant: Variant) -> String:
 	if variant == null:
 		return "null"
 	
+	if variant is ListEntity:
+		return (variant as ListEntity).kind_name()
+
 	if variant is Object:
 		var obj: Object = variant
 		var script: Variant = obj.get_script()
