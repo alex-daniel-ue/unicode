@@ -70,16 +70,22 @@ func unwrap(value: Variant) -> Variant:
 func eval_args(types: Array[PackedInt32Array]) -> Array:
 	var evaluated: Array
 	var arg_count := types.size()
-	
+	Interpreter.values_cleared.emit(base)
+
 	for block in base.text.get_blocks():
 		if not block.visible: continue
-		
+
 		await Interpreter.step(block)
 		if Interpreter.interrupted: return []
-		
+
 		var value: Variant = await block.function.run()
 		if Interpreter.interrupted: return []
-		
+
+		# A slot that names the variable being set (set, for, for each) isn't
+		# read, so its value would only be the old one.
+		var index := evaluated.size()
+		if index >= arg_count or types[index] != Argument.STRING_NAME:
+			Interpreter.value_shown.emit(block, value)
 		evaluated.append(value)
 		
 	if evaluated.size() < arg_count:
@@ -101,15 +107,30 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 ## side at all when the left side already decides the answer. Null after an
 ## error, so check Interpreter.interrupted.
 func eval_arg(index: int) -> Variant:
-	var params := base.text.get_blocks().filter(func(block: Block) -> bool: return block.visible)
+	var params := _visible_params()
 	if index >= params.size():
 		error("%d arguments are required." % (index + 1))
 		return null
 
+	if index == 0:
+		Interpreter.values_cleared.emit(base)
 	var block: Block = params[index]
 	await Interpreter.step(block)
 	if Interpreter.interrupted: return null
-	return await block.function.run()
+	var value: Variant = await block.function.run()
+	if not Interpreter.interrupted:
+		Interpreter.value_shown.emit(block, value)
+	return value
+
+## Marks parameter `index` as not evaluated this time, for the value bubbles, as
+## when the left side of an and/or has already decided the answer.
+func skip_arg(index: int) -> void:
+	var params := _visible_params()
+	if index < params.size():
+		Interpreter.value_skipped.emit(params[index])
+
+func _visible_params() -> Array:
+	return base.text.get_blocks().filter(func(block: Block) -> bool: return block.visible)
 
 func error(message: String) -> void:
 	Interpreter.interrupted = true

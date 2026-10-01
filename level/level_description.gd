@@ -15,6 +15,7 @@ extends Node
 
 const ACCENT := Color(1.0, 0.82, 0.3)       # the tutorial ring colour: "this matters"
 const TWIST := Color(1.0, 0.5, 0.38)
+const IDEA := Color(0.36, 0.78, 1.0)
 const MUTED := Color(0.78, 0.8, 0.88)
 const CARD_BG := Color(1, 1, 1, 0.06)
 const BLOCK_BG := Color(0, 0, 0, 0.28)
@@ -31,6 +32,11 @@ const EXAMPLE_TOOLTIP := "This is a picture of the block.\nDrag the real one fro
 @export var rooms: PackedStringArray = []
 ## The constraint that makes this level this level: "But there's no else block."
 @export_multiline var twist := ""
+## A concept introduced here that isn't a block, such as what a tuple is, shown
+## on its own card as "NEW IDEA: <idea_title>". Say what it is and what it can't
+## do, never how to use it in this level.
+@export var idea_title := ""
+@export_multiline var idea := ""
 ## Blocks introduced here, each shown as an inert picture on its own card.
 @export var blocks: Array[BlockData] = []
 ## One note per entry in `blocks`: a sentence about the block in this level, then
@@ -72,6 +78,8 @@ func _fill_from_table() -> void:
 	if mission.is_empty() and t.has("mission"): mission = t.mission; patched.append("mission")
 	if twist.is_empty() and t.has("twist"): twist = t.twist; patched.append("twist")
 	if tip.is_empty() and t.has("tip"): tip = t.tip; patched.append("tip")
+	if idea.is_empty() and t.has("idea"): idea = t.idea; patched.append("idea")
+	if idea_title.is_empty() and t.has("idea_title"): idea_title = t.idea_title; patched.append("idea_title")
 	if rooms.is_empty() and t.has("rooms"): rooms = PackedStringArray(t.rooms); patched.append("rooms")
 	if blocks.is_empty() and t.has("blocks"):
 		for path in t.blocks:
@@ -167,6 +175,7 @@ func _brief_text() -> String:
 	for i in rooms.size():
 		lines.append("Room %d: %s" % [i + 1, rooms[i]])
 	if not twist.is_empty(): lines.append("Twist: " + twist)
+	if not idea.is_empty(): lines.append("New idea (%s): %s" % [idea_title, idea])
 	for i in blocks.size():
 		if blocks[i] != null:
 			lines.append("%s: %s" % [blocks[i].text.replace("{}", "...").replace("\\n", " "), _note(i)])
@@ -209,7 +218,14 @@ func _build_brief() -> Control:
 		stack.add_child(_caption("THE TWIST", TWIST))
 		stack.add_child(_body(twist))
 		root.add_child(card)
-	
+
+	if not idea.is_empty():
+		var card := _card(Color(IDEA, 0.1), IDEA)
+		var stack := _stack(card)
+		stack.add_child(_caption(("NEW IDEA: " + idea_title).to_upper() if not idea_title.is_empty() else "NEW IDEA", IDEA))
+		stack.add_child(_body(idea))
+		root.add_child(card)
+
 	var shown := blocks.filter(func(b: BlockData) -> bool: return b != null)
 	if not shown.is_empty():
 		root.add_child(_caption("NEW BLOCKS" if shown.size() > 1 else "NEW BLOCK", MUTED))

@@ -28,12 +28,12 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nto {}, at step {}\"
+      text: \"for var {}, from {}\\nuntil {}, at step {}\"
       locked: true
       parameters:
         - i
         - 1
-        - 4
+        - 5
         - 1
       children:
         - block: MoveBlock

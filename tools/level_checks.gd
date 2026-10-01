@@ -46,6 +46,9 @@ const RUN_LIMIT_S := 90.0
 
 var report: PackedStringArray = []
 var filter := ""
+## What the running case typed into slots a student can't type into, such as
+## a list slot. Not typed: the case is reported BAD unless it expects "LOCKED".
+var typed_into_locked: PackedStringArray = []
 
 func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
@@ -83,10 +86,10 @@ func cases() -> Array:
 		["IT-2 intended", "res://level/levels/it_2.tscn", [W(N(A("destination")), [M()]), M()], "PASS"],
 		["IT-3 intended", "res://level/levels/it_3.tscn", [W(N(A("destination")), [I(A("blocked"), [T("left")]), ["else", [M()]]]), M()], "PASS"],
 		["IT-4 intended", "res://level/levels/it_4.tscn", [["declare", "i", 0], W(["cmp", "i", "<", 3], [M(), ["inc", "i"]])], "PASS"],
-		["IT-5 intended", "res://level/levels/it_5.tscn", [F("i", 1, 3, 1, [M()]), T("left"), F("i", 1, 4, 1, [M()])], "PASS"],
-		["IT-6 intended", "res://level/levels/it_6.tscn", [F("i", 1, 4, 1, [M(), T("left"), M(), T("right")])], "PASS"],
-		["IT-7 intended", "res://level/levels/it_7.tscn", [F("a", 1, 3, 1, [T("left"), F("s", 1, 3, 1, [M()]), T("back"), F("s", 1, 3, 1, [M()]), T("left"), F("s", 1, 2, 1, [M()])]), T("left"), M()], "PASS"],
-		["IT-8 intended", "res://level/levels/it_8.tscn", [F("row", 1, 4, 1, [F("seat", 1, "row", 1, [M()]), T("right"), M(), T("left")])], "PASS"],
+		["IT-5 intended", "res://level/levels/it_5.tscn", [F("i", 1, 4, 1, [M()]), T("left"), F("i", 1, 5, 1, [M()])], "PASS"],
+		["IT-6 intended", "res://level/levels/it_6.tscn", [F("i", 1, 5, 1, [M(), T("left"), M(), T("right")])], "PASS"],
+		["IT-7 intended", "res://level/levels/it_7.tscn", [F("a", 1, 4, 1, [T("left"), F("s", 1, 4, 1, [M()]), T("back"), F("s", 1, 4, 1, [M()]), T("left"), F("s", 1, 3, 1, [M()])]), T("left"), M()], "PASS"],
+		["IT-8 intended", "res://level/levels/it_8.tscn", [F("row", 1, 5, 1, [F("seat", 0, "row", 1, [M()]), T("right"), M(), T("left")])], "PASS"],
 		["IT-9 intended", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), I(A("destination"), [M(), ["break"]]), M()])], "PASS"],
 		["IT-9 checks swapped", it9, [W(["bool", "True"], [I(A("destination"), [M(), ["break"]]), I(A("puddle"), [["break"]]), M()])], "PASS"],
 		["IT-9 puddle check only", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), M()])], "FAIL"],
@@ -109,18 +112,23 @@ func cases() -> Array:
 func arrays_cases() -> Array:
 	var lv := func(n: int) -> String: return "res://level/levels/ar_%d.tscn" % n
 	var ar := "res://level/levels/ar_7.tscn"
+	var length := func(list: String) -> Array: return ["len", L(list)]
 	var last := func(list: String) -> Array: return ["arith", ["len", L(list)], "-", 1]
 	var route_i := MV(["item", "i", L("route")])
+	var lockers := func(from: Variant, until: Variant, index: Variant, number: Variant) -> Array:
+		return [F("i", from, until, 1, [["setitem", index, L("lockers"), number], M()])]
 	var passing := func(op: String) -> Array:
-		return E("s", L("scores"), [I(["cmp", "s", op, 75], [["append", "s", L("passed")]])])
-	var tidy_from := func(from: int, lead: bool) -> Array:
-		var body := [F("i", from, last.call("bags"), 1, [I(["cmp", ["item", "i", L("bags")], "!=", ["item", ["arith", "i", "-", 1], L("bags")]], [["append", ["item", "i", L("bags")], L("tidy")]])]), MV(["len", L("tidy")])]
-		return ([["append", ["item", 0, L("bags")], L("tidy")]] if lead else []) + body
-	var days := func(op: String) -> Array:
-		return [E("s", L("mon"), [[op, "s", L("present")]]), E("s", L("tue"), [[op, "s", L("present")]])]
+		return [E("s", L("scores"), [I(["cmp", "s", op, 75], [["append", "s", L("passed")]]), M()])]
+	var tidy_from := func(from: int, until: Variant, lead: bool) -> Array:
+		var body := [F("i", from, until, 1, [I(["cmp", ["item", "i", L("bags")], "!=", ["item", ["arith", "i", "-", 1], L("bags")]], [["append", ["item", "i", L("bags")], L("tidy")]]), M()])]
+		return ([["append", ["item", 0, L("bags")], L("tidy")], M()] if lead else []) + body
+	var days := func(op: String, gap: bool) -> Array:
+		return [E("s", L("mon"), [[op, "s", L("present")], M()])] + ([M()] if gap else []) + [E("s", L("tue"), [[op, "s", L("present")], M()])]
 	var clubs := func(cond: Array) -> Array:
-		return [E("s", L("chess"), [I(cond, [["add", "s", L("all_three")]])]), MV(["len", L("all_three")])]
+		return [E("s", L("chess"), [I(cond, [["add", "s", L("all_three")]]), M()])]
+	var both := ["andor", ["in", "s", L("choir")], "and", ["in", "s", L("coding")]]
 	var out_trip := E("leg", L("route"), [MV("leg"), T("left")])
+	var home := func(from: Variant, until: Variant, body: Array) -> Array: return [out_trip, T("back"), F("i", from, until, -1, body)]
 	var bag := [{name = "bag", values = [3, 1, 3, 2, 1]}, {name = "seen", kind = ListEntity.Kind.SET, capacity = 5}]
 	var seen := [{name = "seen", kind = ListEntity.Kind.SET, values = [3, 1, 2], capacity = 5}]
 	var nums := [{name = "nums", values = [1, 2]}]
@@ -130,51 +138,51 @@ func arrays_cases() -> Array:
 		["AR-1 counting from 1", lv.call(1), [MV(["item", 1, L("route")]), T("left"), MV(["item", 2, L("route")])], "FAIL error: Index 2 is out of range. 'route' has 2 items, at indexes 0 to 1."],
 		["AR-1 items swapped", lv.call(1), [MV(["item", 1, L("route")]), T("left"), MV(["item", 0, L("route")])], "FAIL"],
 		["AR-1 turn right", lv.call(1), [MV(["item", 0, L("route")]), T("right"), MV(["item", 1, L("route")])], "FAIL"],
-		["AR-2 intended", lv.call(2), [MV(["len", L("route")]), T("left"), MV(["item", last.call("route"), L("route")])], "PASS"],
-		["AR-2 accepted: item -1", lv.call(2), [MV(["len", L("route")]), T("left"), MV(["item", -1, L("route")])], "PASS"],
-		["AR-2 item length of route", lv.call(2), [MV(["len", L("route")]), T("left"), MV(["item", ["len", L("route")], L("route")])], "FAIL error: Index 3 is out of range. 'route' has 3 items, at indexes 0 to 2."],
-		["AR-2 last index typed in", lv.call(2), [MV(["len", L("route")]), T("left"), MV(["item", 2, L("route")])], "FAIL error: Index 2 is out of range. 'route' has 2 items"],
-		["AR-2 length both ways", lv.call(2), [MV(["len", L("route")]), T("left"), MV(["len", L("route")])], "FAIL"],
-		["AR-3 intended", lv.call(3), [F("i", 0, last.call("route"), 1, [route_i, T("left")])], "PASS"],
-		["AR-3 to length of route", lv.call(3), [F("i", 0, ["len", L("route")], 1, [route_i, T("left")])], "FAIL error: Index 4 is out of range. 'route' has 4 items, at indexes 0 to 3."],
-		["AR-3 from 1", lv.call(3), [F("i", 1, last.call("route"), 1, [route_i, T("left")])], "FAIL"],
+		["AR-2 intended", lv.call(2), [MV(length.call("route")), T("left"), MV(["item", last.call("route"), L("route")])], "PASS"],
+		["AR-2 accepted: item -1", lv.call(2), [MV(length.call("route")), T("left"), MV(["item", -1, L("route")])], "PASS"],
+		["AR-2 item length of route", lv.call(2), [MV(length.call("route")), T("left"), MV(["item", length.call("route"), L("route")])], "FAIL error: Index 3 is out of range. 'route' has 3 items, at indexes 0 to 2."],
+		["AR-2 last index typed in", lv.call(2), [MV(length.call("route")), T("left"), MV(["item", 2, L("route")])], "FAIL error: Index 2 is out of range. 'route' has 2 items"],
+		["AR-2 length both ways", lv.call(2), [MV(length.call("route")), T("left"), MV(length.call("route"))], "FAIL"],
+		["AR-3 intended", lv.call(3), [F("i", 0, length.call("route"), 1, [route_i, T("left")])], "PASS"],
+		["AR-3 until length - 1", lv.call(3), [F("i", 0, last.call("route"), 1, [route_i, T("left")])], "FAIL"],
+		["AR-3 until length + 1", lv.call(3), [F("i", 0, ["arith", ["len", L("route")], "+", 1], 1, [route_i, T("left")])], "FAIL error: Index 4 is out of range. 'route' has 4 items, at indexes 0 to 3."],
+		["AR-3 from 1", lv.call(3), [F("i", 1, length.call("route"), 1, [route_i, T("left")])], "FAIL"],
 		["AR-3 Room 1's lap typed in", lv.call(3), [MV(4), T("left"), MV(2), T("left"), MV(4), T("left"), MV(2), T("left")], "FAIL Room 2 of 3"],
 		["AR-4 intended", lv.call(4), [out_trip], "PASS"],
 		["AR-4 turn right", lv.call(4), [E("leg", L("route"), [MV("leg"), T("right")])], "FAIL"],
-		["AR-5 intended", lv.call(5), [out_trip, T("back"), F("i", last.call("route"), 0, -1, [T("right"), route_i])], "PASS"],
-		["AR-5 from length of route", lv.call(5), [out_trip, T("back"), F("i", ["len", L("route")], 0, -1, [T("right"), route_i])], "FAIL error: Index 3 is out of range. 'route' has 3 items, at indexes 0 to 2."],
-		["AR-5 stops at 1", lv.call(5), [out_trip, T("back"), F("i", last.call("route"), 1, -1, [T("right"), route_i])], "FAIL"],
+		["AR-5 intended", lv.call(5), home.call(last.call("route"), -1, [T("right"), route_i]), "PASS"],
+		["AR-5 from length of route", lv.call(5), home.call(length.call("route"), -1, [T("right"), route_i]), "FAIL error: Index 3 is out of range. 'route' has 3 items, at indexes 0 to 2."],
+		["AR-5 until 0", lv.call(5), home.call(last.call("route"), 0, [T("right"), route_i]), "FAIL"],
 		["AR-5 home in forward order", lv.call(5), [out_trip, T("back"), E("leg", L("route"), [T("right"), MV("leg")])], "FAIL"],
-		["AR-5 home turning left", lv.call(5), [out_trip, T("back"), F("i", last.call("route"), 0, -1, [T("left"), route_i])], "FAIL"],
-		["AR-5 home moving before turning", lv.call(5), [out_trip, T("back"), F("i", last.call("route"), 0, -1, [route_i, T("right")])], "FAIL"],
-		["AR-6 intended", lv.call(6), [F("i", 0, last.call("lockers"), 1, [["setitem", "i", L("lockers"), ["arith", "i", "+", 1]], MV(1)])], "PASS"],
-		["AR-6 accepted: count from 1", lv.call(6), [F("i", 1, ["len", L("lockers")], 1, [["setitem", ["arith", "i", "-", 1], L("lockers"), "i"], MV(1)])], "PASS"],
-		["AR-6 numbered from 0", lv.call(6), [F("i", 0, last.call("lockers"), 1, [["setitem", "i", L("lockers"), "i"], MV(1)])], "FAIL Room 1 of 3 — 'lockers' should end up as [1, 2, 3], but it's [0, 1, 2]."],
-		["AR-6 index one too far", lv.call(6), [F("i", 0, last.call("lockers"), 1, [["setitem", ["arith", "i", "+", 1], L("lockers"), ["arith", "i", "+", 1]], MV(1)])], "FAIL error: Index 3 is out of range. 'lockers' has 3 items, at indexes 0 to 2."],
-		["AR-6 for each's variable is a copy", lv.call(6), [E("x", L("lockers"), [["set", "x", ["arith", "x", "+", 1]], MV(1)])], "FAIL Room 1 of 3 — 'lockers' should end up as [1, 2, 3], but it's [0, 0, 0]."],
-		["AR-7 intended", ar, [passing.call(">="), MV(["len", L("passed")])], "PASS"],
-		["AR-7 accepted: list names typed in", ar, [E("s", "scores", [I(["cmp", "s", ">=", 75], [["append", "s", "passed"]])]), MV(["len", "passed"])], "PASS"],
-		["AR-7 no filter", ar, [E("s", L("scores"), [["append", "s", L("passed")]]), MV(["len", L("passed")])], "FAIL Room 1 of 3 — 'passed' should end up as [82, 75, 91], but it's [70, 82, 75, 60, 91]."],
-		["AR-7 > instead of >=", ar, [passing.call(">"), MV(["len", L("passed")])], "FAIL Room 1 of 3 — 'passed' should end up as [82, 75, 91], but it's [82, 91]."],
+		["AR-5 home turning left", lv.call(5), home.call(last.call("route"), -1, [T("left"), route_i]), "FAIL"],
+		["AR-5 home moving before turning", lv.call(5), home.call(last.call("route"), -1, [route_i, T("right")]), "FAIL"],
+		["AR-6 intended", lv.call(6), lockers.call(0, length.call("lockers"), "i", ["arith", "i", "+", 1]), "PASS"],
+		["AR-6 accepted: count from 1", lv.call(6), lockers.call(1, ["arith", ["len", L("lockers")], "+", 1], ["arith", "i", "-", 1], "i"), "PASS"],
+		["AR-6 numbered from 0", lv.call(6), lockers.call(0, length.call("lockers"), "i", "i"), "FAIL Room 1 of 3 — 'lockers' should end up as [1, 2, 3], but it's [0, 1, 2]."],
+		["AR-6 index one too far", lv.call(6), lockers.call(0, length.call("lockers"), ["arith", "i", "+", 1], ["arith", "i", "+", 1]), "FAIL error: Index 3 is out of range. 'lockers' has 3 items, at indexes 0 to 2."],
+		["AR-6 until length - 1", lv.call(6), lockers.call(0, last.call("lockers"), "i", ["arith", "i", "+", 1]), "FAIL Room 1 of 3 — 'lockers' should end up as [1, 2, 3], but it's [1, 2, 0]."],
+		["AR-6 for each's variable is a copy", lv.call(6), [E("x", L("lockers"), [["set", "x", ["arith", "x", "+", 1]], M()])], "FAIL Room 1 of 3 — 'lockers' should end up as [1, 2, 3], but it's [0, 0, 0]."],
+		["AR-7 intended", ar, passing.call(">="), "PASS"],
+		["AR-7 no filter", ar, [E("s", L("scores"), [["append", "s", L("passed")], M()])], "FAIL Room 1 of 3 — 'passed' should end up as [82, 75, 91], but it's [70, 82, 75, 60, 91]."],
+		["AR-7 > instead of >=", ar, passing.call(">"), "FAIL Room 1 of 3 — 'passed' should end up as [82, 75, 91], but it's [82, 91]."],
+		["AR-7 move inside the if", ar, [E("s", L("scores"), [I(["cmp", "s", ">=", 75], [["append", "s", L("passed")], M()])])], "FAIL Room 1 of 3"],
 		["AR-7 writes into the tuple", ar, [E("s", L("scores"), [I(["cmp", "s", "<", 75], [["setitem", 0, L("scores"), 0]])])], "FAIL error: 'scores' is a tuple, so its items can't be changed."],
 		["AR-7 set item into empty passed", ar, [["setitem", 0, L("passed"), 82]], "FAIL error: 'passed' is empty, so it has no item 0. set item only changes"],
-		["AR-7 walks the length of scores", ar, [passing.call(">="), MV(["len", L("scores")])], "FAIL Room 1 of 3 — The robot didn't finish on the flag."],
-		["AR-7 walk typed in", ar, [passing.call(">="), MV(3)], "FAIL Room 2 of 3 — The robot didn't finish on the flag."],
-		["AR-8 intended", lv.call(8), tidy_from.call(1, true), "PASS"],
-		["AR-8 accepted: for each, or, item -1", lv.call(8), [E("b", L("bags"), [I(["andor", ["cmp", ["len", L("tidy")], "==", 0], "or", ["cmp", "b", "!=", ["item", -1, L("tidy")]]], [["append", "b", L("tidy")]])]), MV(["len", L("tidy")])], "PASS"],
-		["AR-8 first bag forgotten", lv.call(8), tidy_from.call(1, false), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [5, 2, 3]."],
-		["AR-8 from 0, first bag forgotten", lv.call(8), tidy_from.call(0, false), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [5, 2, 3]."],
-		["AR-8 from 0 as well as the first bag", lv.call(8), tidy_from.call(0, true), "FAIL Room 2 of 3 — 'tidy' should end up as [1, 2, 1, 4], but it's [1, 1, 2, 1, 4]."],
-		["AR-8 to length of bags", lv.call(8), [["append", ["item", 0, L("bags")], L("tidy")], F("i", 1, ["len", L("bags")], 1, [I(["cmp", ["item", "i", L("bags")], "!=", ["item", ["arith", "i", "-", 1], L("bags")]], [["append", ["item", "i", L("bags")], L("tidy")]])])], "FAIL error: Index 8 is out of range. 'bags' has 8 items, at indexes 0 to 7."],
-		["AR-9 intended", lv.call(9), days.call("add") + [MV(["len", L("present")])], "PASS"],
-		["AR-9 append into a set", lv.call(9), days.call("append") + [MV(["len", L("present")])], "FAIL error: 'present' is a set. Sets use add, not append."],
-		["AR-9 Monday only", lv.call(9), [E("s", L("mon"), [["add", "s", L("present")]]), MV(["len", L("present")])], "FAIL Room 1 of 3 — 'present' should end up as {1, 2, 3, 4}, but it's {1, 2, 3}."],
-		["AR-9 walks both lengths added", lv.call(9), days.call("add") + [MV(["arith", ["len", L("mon")], "+", ["len", L("tue")]])], "FAIL Room 1 of 3 — The robot didn't finish on the flag."],
-		["AR-10 intended", lv.call(10), clubs.call(["andor", ["in", "s", L("choir")], "and", ["in", "s", L("coding")]]), "PASS"],
+		["AR-8 intended", lv.call(8), tidy_from.call(1, length.call("bags"), true), "PASS"],
+		["AR-8 accepted: for each, or, item -1", lv.call(8), [E("b", L("bags"), [I(["andor", ["cmp", ["len", L("tidy")], "==", 0], "or", ["cmp", "b", "!=", ["item", -1, L("tidy")]]], [["append", "b", L("tidy")]]), M()])], "PASS"],
+		["AR-8 first bag forgotten", lv.call(8), [M()] + tidy_from.call(1, length.call("bags"), false), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [5, 2, 3]."],
+		["AR-8 from 0, first bag forgotten", lv.call(8), tidy_from.call(0, length.call("bags"), false), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [5, 2, 3]."],
+		["AR-8 from 0 as well as the first bag", lv.call(8), tidy_from.call(0, length.call("bags"), true), "FAIL Room 1 of 3 — The robot didn't finish on the flag."],
+		["AR-8 until length - 1", lv.call(8), tidy_from.call(1, last.call("bags"), true), "FAIL Room 1 of 3"],
+		["AR-9 intended", lv.call(9), days.call("add", true), "PASS"],
+		["AR-9 append into a set", lv.call(9), days.call("append", true), "FAIL error: 'present' is a set. Sets use add, not append."],
+		["AR-9 Monday only", lv.call(9), [E("s", L("mon"), [["add", "s", L("present")], M()])], "FAIL Room 1 of 3 — 'present' should end up as {1, 2, 3, 4}, but it's {1, 2, 3}."],
+		["AR-9 no step across the gap", lv.call(9), days.call("add", false), "FAIL Room 1 of 3 — The robot didn't finish on the flag."],
+		["AR-10 intended", lv.call(10), clubs.call(both), "PASS"],
 		["AR-10 or instead of and", lv.call(10), clubs.call(["andor", ["in", "s", L("choir")], "or", ["in", "s", L("coding")]]), "FAIL Room 1 of 3 — 'all_three' should end up as {3, 4}, but it's {1, 2, 3, 4}."],
 		["AR-10 choir only", lv.call(10), clubs.call(["in", "s", L("choir")]), "FAIL Room 1 of 3 — 'all_three' should end up as {3, 4}, but it's {2, 3, 4}."],
 		["AR-10 coding only", lv.call(10), clubs.call(["in", "s", L("coding")]), "FAIL Room 1 of 3 — 'all_three' should end up as {3, 4}, but it's {1, 3, 4}."],
-		["AR-10 walk typed in", lv.call(10), [E("s", L("chess"), [I(["andor", ["in", "s", L("choir")], "and", ["in", "s", L("coding")]], [["add", "s", L("all_three")]])]), MV(2)], "FAIL Room 2 of 3 — The robot didn't finish on the flag."],
+		["AR-10 move inside the if", lv.call(10), [E("s", L("chess"), [I(both, [["add", "s", L("all_three")], M()])])], "FAIL Room 1 of 3"],
 		["Lists: a tuple prints like Python", ar, [["print", L("scores")]], "LOG (70, 82, 75, 60, 91)"],
 		["Lists: -1 is the last item", ar, [["print", ["item", -1, L("scores")]]], "LOG 91"],
 		["Lists: out of range names the list", ar, [["print", ["item", 5, L("scores")]]], "FAIL error: Index 5 is out of range. 'scores' has 5 items, at indexes 0 to 4."],
@@ -183,6 +191,7 @@ func arrays_cases() -> Array:
 		["Lists: for each's variable is a copy", ar, [E("x", L("nums"), [["set", "x", 9]]), ["print", L("nums")]], "LOG [1, 2]", nums],
 		["Lists: break works in for each", ar, [E("x", L("nums"), [["break"]]), ["print", 7]], "LOG 7", nums],
 		["Lists: growing the list being walked", ar, [E("x", L("nums"), [["append", "x", L("nums")]])], "FAIL error: 'nums' is full", nums],
+		["Lists: a list slot can't be typed into", ar, [["print", ["len", "scores"]]], "LOCKED"],
 		["Sets: repeats bounce off", ar, [E("x", L("bag"), [["add", "x", L("seen")]]), ["print", L("seen")]], "LOG {1, 2, 3}", bag],
 		["Sets: in finds a value", ar, [["print", ["in", 2, L("seen")]]], "LOG True", seen],
 		["Sets: no item 0", ar, [["print", ["item", 0, L("seen")]]], "FAIL error: 'seen' is a set. Sets have no positions", seen],
@@ -190,7 +199,7 @@ func arrays_cases() -> Array:
 		["Logic: and stops at a False left side", ar, [I(["andor", ["cmp", ["len", L("passed")], ">", 0], "and", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 1]]), ["else", [["print", 2]]]], "LOG 2"],
 		["Logic: or stops at a True left side", ar, [I(["andor", ["cmp", ["len", L("passed")], "==", 0], "or", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 3]])], "LOG 3"],
 		["Logic: and runs the right side when it must", ar, [I(["andor", ["cmp", ["len", L("scores")], ">", 0], "and", ["cmp", ["item", 0, L("scores")], "==", 71]], [["print", 4]]), ["else", [["print", 5]]]], "LOG 5"],
-		["Robot: move forward text", ar, [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only move a whole number of tiles, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
+		["Robot: move forward text", ar, [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only move forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
 	]
 
 ## `extras` adds lists to the level before it opens, so list operations can be
@@ -218,8 +227,16 @@ func run_case(title: String, path: String, program: Array, expect: String, extra
 	for child in begin.mouth.get_children():
 		begin.mouth.remove_child(child); child.queue_free()
 	await get_tree().process_frame
+	typed_into_locked.clear()
 	await build_into(begin, program)
 	for i in 2: await get_tree().process_frame
+	if expect == "LOCKED" or not typed_into_locked.is_empty():
+		var locked := not typed_into_locked.is_empty()
+		var said := "refused typing %s" % ", ".join(typed_into_locked) if locked else "accepted every value typed"
+		report.append("%s %-58s -> %s" % ["OK  " if locked == (expect == "LOCKED") else "BAD ", title, said])
+		puzzle.queue_free()
+		for i in 3: await get_tree().process_frame
+		return
 
 	var out := {completed = false, reason = ""}
 	level.completed.connect(func() -> void: out.completed = true)
@@ -232,7 +249,7 @@ func run_case(title: String, path: String, program: Array, expect: String, extra
 	while Interpreter.is_running:
 		await get_tree().process_frame
 		frames += 1
-		if snap and frames == 90: await _snap(title + " 2 during")
+		if snap and frames in [90, 240]: await _snap(title + " 2 during %d" % frames)
 		if frames > int(RUN_LIMIT_S * 60):
 			Interpreter.interrupted = true
 			level.fail("RUNS FOREVER (stopped by harness)")
@@ -353,6 +370,9 @@ func choose(slot: Block, value: String) -> void:
 	vb.option_button.select(idx)
 
 func type_into(slot: Block, value: String) -> void:
+	if not (slot as ValueBlock).data.value.editable:
+		typed_into_locked.append(value)
+		return
 	var le := (slot as ValueBlock).line_edit
 	le.text = value
 	le.text_changed.emit(value)

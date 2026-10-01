@@ -54,7 +54,12 @@ func _while(this: NestedBlock) -> void:
 			this.function.error(MAX_LOOP_ERROR)
 			return
 
-## text: for var {variable}, from {int}\nto {int}, at step {int}
+## text: for var {variable}, from {int}\nuntil {int}, at step {int}
+##
+## Counts like Python's range(): from the start, up to but not including the
+## end. `from 0 until 3` runs 0, 1, 2, which is range(0, 3), so walking a list by
+## position is `from 0 until length of xs`, as in range(len(xs)). Counting down
+## stops before the end too: `from 3 until -1 at step -1` runs 3, 2, 1, 0.
 func _for(this: NestedBlock) -> void:
 	var args := await this.function.eval_args([
 		this.function.Argument.STRING_NAME,
@@ -68,7 +73,7 @@ func _for(this: NestedBlock) -> void:
 	
 	var from_value: Variant = __resolve_bound(this, args[1], "from")
 	if from_value == null: return
-	var to_value: Variant = __resolve_bound(this, args[2], "to")
+	var to_value: Variant = __resolve_bound(this, args[2], "until")
 	if to_value == null: return
 	var step_value: Variant = __resolve_bound(this, args[3], "step")
 	if step_value == null: return
@@ -84,8 +89,8 @@ func _for(this: NestedBlock) -> void:
 	
 	var loop_count := 0
 	
-	while (step >= 0 and Interpreter.read_var(var_name) <= to) or \
-		  (step < 0 and Interpreter.read_var(var_name) >= to):
+	while (step >= 0 and Interpreter.read_var(var_name) < to) or \
+		  (step < 0 and Interpreter.read_var(var_name) > to):
 		
 		await Interpreter.step(this)
 		if Interpreter.interrupted: break

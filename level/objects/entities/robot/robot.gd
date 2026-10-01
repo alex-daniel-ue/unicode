@@ -68,35 +68,35 @@ func move(from_this: Block) -> void:
 	cancel_motion()
 	position = target
 
-## text: move forward {tiles}
+## text: move forward {count} times
 ##
 ## Arrays' move. Repetition isn't the lesson there, and a list's values need a
-## slot to plug into: `move forward (item i of route)`. It is n single moves, each
-## checked for a wall and paced like `move forward`, so a wrong count walks and
-## bumps where the student can see it.
+## slot to plug into: `move forward (item i of route) times`. It is n single
+## moves, each checked for a wall and paced like `move forward`, so a wrong count
+## walks and bumps where the student can see it.
 func move_steps(from_this: Block) -> void:
 	var args := await from_this.function.eval_args([from_this.function.Argument.VARIANT])
 	if Interpreter.interrupted or args.is_empty():
 		return
 
-	var tiles: Variant = from_this.function.unwrap(args[0])
+	var times: Variant = from_this.function.unwrap(args[0])
 	if Interpreter.interrupted:
 		return
 
-	if typeof(tiles) == TYPE_FLOAT:
-		from_this.function.error("Robot: I can only move a whole number of tiles, not %s. Use // to divide without a decimal." % tiles)
+	if typeof(times) == TYPE_FLOAT:
+		from_this.function.error("Robot: I can only move forward a whole number of times, not %s. Use // to divide without a decimal." % times)
 		return
-	if typeof(tiles) != TYPE_INT:
-		from_this.function.error("Robot: I can only move a whole number of tiles, but I got %s." % Core.to_python_repr(tiles))
+	if typeof(times) != TYPE_INT:
+		from_this.function.error("Robot: I can only move forward a whole number of times, but I got %s." % Core.to_python_repr(times))
 		return
-	if tiles < 0:
-		from_this.function.error("Robot: I can't move %d tiles. I only go forward." % tiles)
+	if times < 0:
+		from_this.function.error("Robot: I can't move forward %d times. I only go forward." % times)
 		return
 
-	if tiles == 0:
+	if times == 0:
 		await Interpreter.step(from_this)
 		return
-	for i in tiles:
+	for i in times:
 		await move(from_this)
 		if Interpreter.interrupted:
 			return

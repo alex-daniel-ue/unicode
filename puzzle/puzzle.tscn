@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=30 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 [ext_resource type="Texture2D" uid="uid://dvh7ej8j7rh2y" path="res://puzzle/ui/side panel/icons/pixelarticons--frame.png" id="24_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://bafuclrikj4j7" path="res://puzzle/ui/level_complete/level_complete.tscn" id="28_88ajp"]
+[ext_resource type="PackedScene" path="res://puzzle/ui/canvas/value_bubbles.tscn" id="29_bubbles"]
 
 [node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete", "pause_menu")]
 layout_mode = 3
@@ -68,6 +69,9 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ValueBubbles" parent="." instance=ExtResource("29_bubbles")]
+layout_mode = 1
 
 [node name="UserInterface" type="HBoxContainer" parent="."]
 layout_mode = 1

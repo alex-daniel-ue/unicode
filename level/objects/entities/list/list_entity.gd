@@ -38,6 +38,10 @@ const RAIL := 20.0
 const BRACKET_W := 10.0
 ## How far above the shelf the for-each pointer reaches.
 const POINTER_REACH := 11.0
+## Where a name tag above the shelf starts: clear of the pointer below it.
+const TAG_ABOVE_Y := -CELL - 10.0
+## Longest a bag takes to fly from one shelf to another.
+const FLIGHT_TIME := 0.45
 ## Longest an animation runs; slower speeds still leave a still frame to read.
 const ANIM_TIME := 0.25
 ## The ghost cubby for an out-of-range index is drawn at most this far past the end.
@@ -47,6 +51,9 @@ const GHOST_REACH := 3
 const TINT_EMPTY := Color(0.62, 0.62, 0.62)
 const TINT_FLASH := Color("#ffd166")
 const TINT_ERROR := Color("#fb7185")
+## A bag the program wrote that matches the goal, or doesn't.
+const TINT_RIGHT := Color(0.78, 1.0, 0.8)
+const TINT_WRONG := Color(1.0, 0.62, 0.62)
 
 ## What students read, and what the name block says. Empty means the node's name.
 @export var list_name: StringName = &"":
@@ -73,9 +80,30 @@ const TINT_ERROR := Color("#fb7185")
 	set(value):
 		capacity = value
 		_rebuild()
+## Puts the name tag above the shelf instead of to its left: for shelves along a
+## hallway wall, where the next shelf leaves no room at the side.
+@export var tag_above := false:
+	set(value):
+		tag_above = value
+		_rebuild()
+
+## The last few cubbies values were read from, anywhere in the level, newest
+## last: where a bag flies from when that value goes into a list. A few rather
+## than one, because a program often reads something else in between, as in
+## `if b != item -1 of tidy: append b to tidy`. Cleared at each run.
+static var _sources: Array[Dictionary] = []
+const SOURCES_KEPT := 4
 
 var _initial: Array = []
 var _slots: Array[ListSlot] = []
+## What a ListGoal wants this list to end up as, shown on the shelf so the goal
+## is on screen the way a flag is. Empty and unused without a goal.
+var _target: Array = []
+var _has_target := false
+## What the program has written this run: positions for a list or tuple, values
+## for a set. Only written bags are marked right or wrong, so a list that starts
+## off different from its goal (AR-6's lockers) isn't red before anything runs.
+var _written: Array = []
 
 @onready var _back: Sprite2D = get_node_or_null(^"Back")
 @onready var _tag: Label = get_node_or_null(^"Tag")
@@ -148,7 +176,13 @@ func matches(expected: Array) -> bool:
 	return true
 
 func cubby_count() -> int:
-	return maxi(values.size(), capacity)
+	return maxi(maxi(values.size(), capacity), _target.size())
+
+## Called by a ListGoal: what this list should end up holding.
+func set_target(expected: Array) -> void:
+	_has_target = true
+	_target = normalized(expected) if kind == Kind.SET else expected.duplicate()
+	_rebuild()
 
 ## The whole shelf in global coordinates, name tag and pointer included. Worked
 ## out from the exported values rather than measured from the nodes, so it is
@@ -158,8 +192,13 @@ func get_global_bounds() -> Rect2:
 	var width := cubby_count() * CELL
 	var left := -BRACKET_W - 6.0 - _tag_width()
 	var right := width + BRACKET_W + 2.0
+	var top := -POINTER_REACH
+	if tag_above:
+		left = -BRACKET_W - 2.0
+		right = maxf(right, left + _tag_width())
+		top = TAG_ABOVE_Y
 	var bottom := CELL + _rail() + 2.0
-	return global_transform * Rect2(left, -POINTER_REACH, right - left, bottom + POINTER_REACH)
+	return global_transform * Rect2(left, top, right - left, bottom - top)
 
 ## Among every shelf of this name in the level, the one that hands out the name
 ## block: the lowest room_index, then the first in the tree.
@@ -271,6 +310,7 @@ func read(index: Variant, from_this: Block) -> Variant:
 	if i == null:
 		return null
 	_flash(i, index)
+	_remember(i)
 	await Interpreter.step(from_this)
 	var value: Variant = values[i]
 	return value.duplicate(true) if value is Array else value
@@ -288,7 +328,9 @@ func write(index: Variant, value: Variant, from_this: Block) -> void:
 		return
 	values[i] = value
 	_slots[i].value_label.text = _value_text(value)
-	_pop(_slots[i])
+	_written.append(i)
+	_arrive(_slots[i], value, true)
+	_refresh_marks()
 	await Interpreter.step(from_this)
 
 ## length of {list}
@@ -314,7 +356,9 @@ func append_value(value: Variant, from_this: Block) -> void:
 	values.append(value)
 	var i := values.size() - 1
 	_fill_slot(i)
-	_drop(_slots[i])
+	_written.append(i)
+	_arrive(_slots[i], value)
+	_refresh_marks()
 	await Interpreter.step(from_this)
 
 ## add {value} to {set}
@@ -339,12 +383,13 @@ func add_value(value: Variant, from_this: Block) -> void:
 
 	if not _has_room(from_this):
 		return
+	_written.append(value)
 	var grown := values.duplicate()
 	grown.append(value)
 	values = grown  # re-sorts and redraws
 	for i in values.size():
 		if same(values[i], value):
-			_drop(_slots[i])
+			_arrive(_slots[i], value)
 			break
 	await Interpreter.step(from_this)
 
@@ -373,6 +418,8 @@ func point_at(i: int) -> void:
 	_pointer.visible = i >= 0 and i < _slots.size()
 	if _pointer.visible:
 		_pointer.position = Vector2(i * CELL + CELL / 2.0, 0)
+		if i < values.size():
+			_remember(i)
 
 func flash_name() -> void:
 	if _tag == null or Engine.is_editor_hint():
@@ -384,6 +431,8 @@ func flash_name() -> void:
 ## Back to the contents the level was authored with. Redraws, which also clears
 ## the pointer and any ghost cubby left by the last run.
 func restore() -> void:
+	_written.clear()
+	_sources.clear()
 	values = _initial.duplicate(true)
 #endregion
 
@@ -465,8 +514,13 @@ func _rebuild() -> void:
 	# Reads as the Python that makes the list: `scores = (70, 82, 75)`.
 	var tag_width := _tag_width()
 	_tag.text = _tag_text()
-	_tag.position = Vector2(-BRACKET_W - 6.0 - tag_width, 0)
 	_tag.size = Vector2(tag_width, CELL)
+	if tag_above:
+		_tag.position = Vector2(-BRACKET_W, TAG_ABOVE_Y)
+		_tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	else:
+		_tag.position = Vector2(-BRACKET_W - 6.0 - tag_width, 0)
+		_tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	var bracket_height := CELL + rail - 4.0
 	_open.points = _bracket_points(bracket_height)
@@ -492,6 +546,53 @@ func _rebuild() -> void:
 			_fill_slot(i)
 		else:
 			_empty_slot(i)
+	_refresh_marks()
+
+## Shows the goal on the shelf: a faded bag in each empty cubby the goal wants
+## filled, the wanted value in the corner of a cubby that holds something else,
+## and a green or red tint on each bag the program wrote, by whether it's right.
+## Lists and tuples compare cubby by cubby; a set compares by value, since its
+## positions shift as it grows.
+func _refresh_marks() -> void:
+	if _slots.is_empty():
+		return
+	var missing: Array = []
+	if kind == Kind.SET:
+		for wanted: Variant in _target:
+			if not values.any(func(v: Variant) -> bool: return same(v, wanted)):
+				missing.append(wanted)
+
+	for i in _slots.size():
+		var slot := _slots[i]
+		var has_value := i < values.size()
+		var want: Variant = null
+		var want_known := false
+		if kind == Kind.SET:
+			var j := i - values.size()
+			if not has_value and j < missing.size():
+				want = missing[j]
+				want_known = true
+		elif i < _target.size():
+			want = _target[i]
+			want_known = true
+
+		slot.target.visible = _has_target and not has_value and want_known
+		slot.target_label.text = _value_text(want) if want_known else ""
+
+		var right := false
+		if has_value:
+			right = _target.any(func(t: Variant) -> bool: return same(t, values[i])) \
+					if kind == Kind.SET else (want_known and same(values[i], want))
+		slot.wanted.visible = _has_target and has_value and kind != Kind.SET and want_known and not right
+		slot.wanted.text = _value_text(want) if want_known else ""
+
+		var written := false
+		if has_value:
+			written = _written.any(func(w: Variant) -> bool: return same(w, values[i])) \
+					if kind == Kind.SET else _written.has(i)
+		slot.bag.self_modulate = Color.WHITE
+		if _has_target and written:
+			slot.bag.self_modulate = TINT_RIGHT if right else TINT_WRONG
 
 func _fill_slot(i: int) -> void:
 	var slot := _slots[i]
@@ -599,19 +700,88 @@ func _drop(slot: ListSlot) -> void:
 	tween.tween_property(slot.bag, "position", slot.bag_rest, t).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(slot.bag, "modulate:a", 1.0, t * 0.5)
 
-## A repeat added to a set: a copy drops onto its twin, bounces off and fades.
+## A repeat added to a set: a copy lands on its twin, bounces off and fades. The
+## copy flies in from where the value was read, when that's known.
 func _bounce_off(i: int) -> void:
-	var t := _anim_time()
 	var slot := _slots[i]
 	var copy := slot.bag.duplicate() as Sprite2D
-	copy.position = slot.bag_rest - Vector2(0, CELL * 0.6)
+	copy.self_modulate = Color.WHITE
 	slot.add_child(copy)
+	var from: Variant = _source_for(values[i], slot)
+	var t := _anim_time()
 	var tween := create_tween()
-	tween.tween_property(copy, "position:y", slot.bag_rest.y - 6.0, t * 0.4)
+	if from != null:
+		var flight := _flight_time()
+		copy.z_index = 3
+		copy.position = from
+		tween.tween_method(_arc.bind(copy, from, slot.bag_rest - Vector2(0, 6)), 0.0, 1.0, flight * 0.7) \
+				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		t = flight * 0.3
+	else:
+		copy.position = slot.bag_rest - Vector2(0, CELL * 0.6)
+		tween.tween_property(copy, "position:y", slot.bag_rest.y - 6.0, t * 0.4)
 	tween.tween_property(copy, "position:y", slot.bag_rest.y - CELL, t * 0.6)
 	tween.parallel().tween_property(copy, "modulate:a", 0.0, t * 0.6)
 	tween.tween_callback(copy.queue_free)
 	_flash_bag(slot, 0.4)
+
+## Remembers cubby `i` as where a value was just read, for _arrive().
+func _remember(i: int) -> void:
+	if Engine.is_editor_hint() or i >= _slots.size():
+		return
+	var slot := _slots[i]
+	_sources.append({value = values[i], position = slot.to_global(slot.bag_rest), list = self, index = i})
+	if _sources.size() > SOURCES_KEPT:
+		_sources.pop_front()
+
+## Where, in `slot`'s own coordinates, a bag carrying `value` should fly in from:
+## the cubby that value was most recently read from, anywhere in the level. Null
+## when it didn't come from a shelf (typed in, or worked out), so it drops in.
+func _source_for(value: Variant, slot: ListSlot) -> Variant:
+	for k in range(_sources.size() - 1, -1, -1):
+		var source := _sources[k]
+		if not is_instance_valid(source.list) or not same(source.value, value):
+			continue
+		if source.list == self and source.index == _slots.find(slot):
+			return null  # read from and written to the same cubby: nothing to carry
+		return slot.to_local(source.position)
+	return null
+
+## A written bag arriving in its cubby: it flies from the shelf its value was
+## read from, or drops in (pops, when it replaces a value in place).
+func _arrive(slot: ListSlot, value: Variant, in_place := false) -> void:
+	if Engine.is_editor_hint():
+		return
+	var from: Variant = _source_for(value, slot)
+	if from == null:
+		if in_place:
+			_pop(slot)
+		else:
+			_drop(slot)
+		return
+	var flight := _flight_time()
+	slot.bag.z_index = 3  # over the walls and the robot while it crosses the room
+	slot.bag.modulate.a = 1.0
+	slot.bag.position = from
+	var tween := create_tween()
+	tween.tween_method(_arc.bind(slot.bag, from, slot.bag_rest), 0.0, 1.0, flight) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(func() -> void:
+		if is_instance_valid(slot):
+			slot.bag.z_index = 0
+			slot.bag.position = slot.bag_rest)
+
+## One point of a bag's flight: a straight line from `from` to `to`, lifted into
+## a shallow arc so it reads as carried rather than slid.
+func _arc(k: float, bag: Sprite2D, from: Vector2, to: Vector2) -> void:
+	if not is_instance_valid(bag):
+		return
+	var at := from.lerp(to, k)
+	at.y -= sin(k * PI) * minf(24.0, from.distance_to(to) * 0.25)
+	bag.position = at
+
+func _flight_time() -> float:
+	return minf(FLIGHT_TIME, Interpreter.current_delay)
 
 func _flash_glass() -> void:
 	if _glass == null or Engine.is_editor_hint():

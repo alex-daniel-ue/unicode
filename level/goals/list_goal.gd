@@ -13,7 +13,13 @@ extends Goal
 	set(value):
 		list = value
 		update_configuration_warnings()
-@export var expected: Array = []
+		_show_goal()
+## Also shown on the list's shelf: faded bags for what's missing, so the goal is
+## on screen the way a flag is, not a hidden condition.
+@export var expected: Array = []:
+	set(value):
+		expected = value
+		_show_goal()
 
 var _authored_message := ""
 
@@ -21,6 +27,11 @@ var _authored_message := ""
 func _ready() -> void:
 	_authored_message = fail_message
 	super()
+	_show_goal()
+
+func _show_goal() -> void:
+	if list != null and is_inside_tree():
+		list.set_target(expected)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := super()

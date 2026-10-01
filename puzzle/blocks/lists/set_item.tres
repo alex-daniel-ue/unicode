@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="BlockData" load_steps=4 format=3 uid="uid://nmr0s807ywjf"]
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3 uid="uid://nmr0s807ywjf"]
 
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
 [ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="2_receptive_"]
 [ext_resource type="Script" uid="uid://coj7ansgdg3uk" path="res://puzzle/functions/list_functions.gd" id="3_list_funct"]
+[ext_resource type="Resource" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
 
 [resource]
 script = ExtResource("1_block_data")
@@ -13,7 +14,7 @@ category = "Lists"
 syntax = "set item {index: int} of {list: list} to {value: variant}"
 description = "Changes the item at a position in a list. The position has to exist already; append adds a new item. Tuples can't be changed."
 text = "set item {} of {} to {}"
-text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("2_receptive_"), ExtResource("2_receptive_")])
+text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("list_slot"), ExtResource("2_receptive_")])
 Function/script = ExtResource("3_list_funct")
 Function/entity_name = &""
 Function/method = &"_set_item"

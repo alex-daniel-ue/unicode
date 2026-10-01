@@ -34,7 +34,7 @@ block: BeginBlock
   children:
     - block: MoveTilesBlock
       kind: statement
-      text: \"move forward {}\"
+      text: \"move forward {} times\"
       parameters:
         - block: LengthOfBlock
           kind: value
@@ -48,7 +48,7 @@ block: BeginBlock
         - left
     - block: MoveTilesBlock
       kind: statement
-      text: \"move forward {}\"
+      text: \"move forward {} times\"
       parameters:
         - block: ItemOfBlock
           kind: value

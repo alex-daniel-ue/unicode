@@ -43,7 +43,7 @@ block: BeginBlock
       children:
         - block: MoveTilesBlock
           kind: statement
-          text: \"move forward {}\"
+          text: \"move forward {} times\"
           parameters:
             - leg
         - block: TurnBlock
@@ -58,7 +58,7 @@ block: BeginBlock
         - back
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nto {}, at step {}\"
+      text: \"for var {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - i
         - block: ArithmeticBlock
@@ -72,7 +72,7 @@ block: BeginBlock
                 - route
             - -
             - 1
-        - 0
+        - -1
         - -1
       children:
         - block: TurnBlock
@@ -82,7 +82,7 @@ block: BeginBlock
             - right
         - block: MoveTilesBlock
           kind: statement
-          text: \"move forward {}\"
+          text: \"move forward {} times\"
           parameters:
             - block: ItemOfBlock
               kind: value
@@ -98,7 +98,7 @@ title = "There and back"
 mission = "One program, three rooms. Drive the card's stops out to the pen, turning left after each, then drive the same way back to the flag where you started."
 rooms = PackedStringArray("A long way out.", "A winding way out.", "A short way out.")
 twist = "But the way home is the same trip, backwards."
-tip = "A for loop can count down: from 3 to 0 at step -1 runs 3, 2, 1, 0."
+tip = "A for loop can count down with a step of -1, and it still stops before its end: from 3 until -1 at step -1 runs 3, 2, 1, 0."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("3_block_data")]([ExtResource("17_for_each"), ExtResource("18_for_int"), ExtResource("19_item_of"), ExtResource("20_length_of"), ExtResource("21_arithmetic")])

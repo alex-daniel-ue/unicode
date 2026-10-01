@@ -3,6 +3,9 @@ extends Resource
 
 
 @export var show_type := true
+## Grey hint shown in an empty slot in place of "...": "list" on a slot that only
+## takes a list's name block. Empty keeps the default.
+@export var placeholder := ""
 @export_group("Editable", "editable_")
 @export var editable := true
 @export var editable_shown := true

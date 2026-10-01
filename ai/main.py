@@ -16,7 +16,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("unicode-ai")
 
-PROMPT_VERSION = "2026-10-01a"  # bump on ANY prompt change; report the frozen value in Chapter 3
+PROMPT_VERSION = "2026-10-01b"  # bump on ANY prompt change; report the frozen value in Chapter 3
 SUMMARY_VERSION = "2026-09-24c"  # the post-win comment prompt, versioned separately
 MODELS = [m.strip() for m in os.environ.get(
     "GEMINI_MODELS", "gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",") if m.strip()]
@@ -66,7 +66,7 @@ You are given the level instructions, the blocks in the level, the student's own
 The student has just watched their program run, so they already know what it did. Never retell it. The comment exists to add something they don't know yet, or to give them something to think about.
 
 Write for the ANGLE you are given:
-- python: show how one idea from their program is written in real Python, as one short inline fragment such as while not ahead_is("blocked"): or for seat in range(1, row + 1): and say in a few words what carries over.
+- python: show how one idea from their program is written in real Python, as one short inline fragment such as while not ahead_is("blocked"): or for seat in range(0, row): and say in a few words what carries over.
 - real_world: connect the idea their program relies on to something outside the game that works the same way, such as a game redrawing the screen in a loop, a phone checking for new messages, or a microwave counting down.
 - tighter: their program works but is longer than it needs to be. Point at where the extra length is, such as the same blocks written out more than once, or a check whose answer never changes the outcome. Never say which blocks to use instead, and never show or describe the shorter program.
 

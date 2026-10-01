@@ -28,6 +28,8 @@ func _ready() -> void:
 	
 	line_edit.editable = data.value.editable
 	option_button.disabled = not data.value.editable
+	if not data.value.placeholder.is_empty():
+		line_edit.placeholder_text = data.value.placeholder
 	
 	if not data.value.editable_shown or data.toolbox:
 		line_edit.editable = false

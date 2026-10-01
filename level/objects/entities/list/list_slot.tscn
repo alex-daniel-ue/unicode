@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://level/objects/entities/list/list_slot.gd" id="1_slot"]
 [ext_resource type="Texture2D" path="res://level/objects/entities/list/art/cubby.png" id="2_cubby"]
@@ -13,6 +13,12 @@ font_color = Color(0.12156863, 0.105882354, 0.09411765, 1)
 font = ExtResource("4_font")
 font_color = Color(0.9529412, 0.9098039, 0.8235294, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_wanted"]
+font = ExtResource("4_font")
+font_color = Color(0.49019608, 0.827451, 0.627451, 1)
+outline_size = 4
+outline_color = Color(0.10980392, 0.12941177, 0.09803922, 1)
+
 [node name="ListSlot" type="Node2D"]
 script = ExtResource("1_slot")
 
@@ -20,6 +26,22 @@ script = ExtResource("1_slot")
 position = Vector2(1, 1)
 texture = ExtResource("2_cubby")
 centered = false
+
+[node name="Target" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.42)
+position = Vector2(16, 16)
+texture = ExtResource("3_bag")
+
+[node name="Value" type="Label" parent="Target"]
+offset_left = -19.0
+offset_top = -12.0
+offset_right = 19.0
+offset_bottom = 14.0
+mouse_filter = 2
+label_settings = SubResource("LabelSettings_value")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Bag" type="Sprite2D" parent="."]
 position = Vector2(16, 16)
@@ -33,6 +55,17 @@ offset_bottom = 14.0
 mouse_filter = 2
 label_settings = SubResource("LabelSettings_value")
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Wanted" type="Label" parent="."]
+visible = false
+offset_left = 14.0
+offset_top = -9.0
+offset_right = 36.0
+offset_bottom = 9.0
+mouse_filter = 2
+label_settings = SubResource("LabelSettings_wanted")
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="Index" type="Label" parent="."]

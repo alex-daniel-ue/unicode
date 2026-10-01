@@ -7,6 +7,16 @@ signal paused_changed
 signal block_highlighted(block: Block)
 signal scope_changed
 
+## A parameter block was just evaluated to `value`: a literal, a variable's name,
+## or what a reporter block worked out. The value bubbles show it on the block.
+signal value_shown(block: Block, value: Variant)
+## A parameter wasn't evaluated this time: the right side of an and/or whose left
+## side already decided the answer.
+signal value_skipped(block: Block)
+## `block` is evaluating its parameters again, so what its parameters showed the
+## last time is out of date.
+signal values_cleared(block: Block)
+
 signal error_raised(error: Interpreter.Error)
 signal output_logged(line: String)
 

@@ -5,7 +5,7 @@ extends Control
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
-const NUDGE_AFTER := [3, 7]
+const NUDGE_AFTER := [1, 4, 7]
 const DEFAULT_TUTORIAL_OVERLAY := "res://puzzle/ui/tutorial/tutorial_overlay.tscn"
 
 var failed_runs := 0

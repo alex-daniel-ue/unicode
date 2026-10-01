@@ -29,19 +29,19 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nto {}, at step {}\"
+      text: \"for var {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - row
         - 1
-        - 4
+        - 5
         - 1
       children:
         - block: ForBlock (Integer)
           kind: nested
-          text: \"for var {}, from {}\\nto {}, at step {}\"
+          text: \"for var {}, from {}\\nuntil {}, at step {}\"
           parameters:
             - seat
-            - 1
+            - 0
             - row
             - 1
           children:

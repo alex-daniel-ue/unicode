@@ -25,7 +25,7 @@
 [ext_resource type="Resource" path="res://puzzle/blocks/lists/item_of.tres" id="23_item_of"]
 [ext_resource type="Resource" path="res://puzzle/blocks/lists/length_of.tres" id="24_length_of"]
 [ext_resource type="Resource" path="res://puzzle/blocks/lists/append.tres" id="25_append"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move_n.tres" id="26_move_n"]
+[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move.tres" id="26_move"]
 
 [sub_resource type="CircleShape2D" id="Circle_1"]
 radius = 12.0
@@ -48,23 +48,20 @@ block: BeginBlock
             - 0
             - bags
         - tidy
+    - block: MoveBlock
+      kind: statement
+      text: \"move forward\"
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nto {}, at step {}\"
+      text: \"for var {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - i
         - 1
-        - block: ArithmeticBlock
+        - block: LengthOfBlock
           kind: value
-          text: \"{} {} {}\"
+          text: \"length of {}\"
           parameters:
-            - block: LengthOfBlock
-              kind: value
-              text: \"length of {}\"
-              parameters:
-                - bags
-            - -
-            - 1
+            - bags
         - 1
       children:
         - block: IfBlock
@@ -106,20 +103,14 @@ block: BeginBlock
                     - i
                     - bags
                 - tidy
-    - block: MoveTilesBlock
-      kind: statement
-      text: \"move forward {}\"
-      parameters:
-        - block: LengthOfBlock
-          kind: value
-          text: \"length of {}\"
-          parameters:
-            - tidy"
+        - block: MoveBlock
+          kind: statement
+          text: \"move forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Tidy the shelf"
-mission = "One program, three rooms. Copy bags onto tidy, leaving out any bag that's the same as the one right before it. Then walk one tile for each bag on tidy."
+mission = "One program, three rooms. Walk along bags and copy them onto tidy, leaving out any bag that's the same as the one right before it, so tidy ends up like its faded bags. Finish on the flag just past the last bag."
 rooms = PackedStringArray("Eight bags.", "Five bags.", "Four bags.")
 twist = "But a number can come back later, and when it does, it stays."
 tip = "!= means not equal. It's in the comparison block's list."
@@ -128,7 +119,7 @@ tip = "!= means not equal. It's in the comparison block's list."
 block_data = Array[ExtResource("3_block_data")]([ExtResource("17_for_int"), ExtResource("18_for_each"), ExtResource("19_if"), ExtResource("20_comparison"), ExtResource("21_and_or"), ExtResource("22_arithmetic"), ExtResource("23_item_of"), ExtResource("24_length_of"), ExtResource("25_append")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
-bounds = Rect2(24.0, -1.0, 340.0, 225.0)
+bounds = Rect2(20.0, 0.0, 298.080017089844, 224.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room1"), NodePath("../../Visuals/Destination1")]
 
 [node name="TidyGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("list")]
@@ -146,7 +137,7 @@ detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(24.0, 287.0, 244.0, 225.0)
+bounds = Rect2(20.0, 256.0, 216.0, 224.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room2"), NodePath("../../Visuals/Destination2")]
 
 [node name="TidyGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("list")]
@@ -164,7 +155,7 @@ detection_area = NodePath("../../../Visuals/Destination2")
 
 [node name="GoalManagerRoom3" type="Node" parent="RoomGoals" index="2" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(24.0, 575.0, 212.0, 225.0)
+bounds = Rect2(20.0, 512.0, 170.080001831055, 224.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room3"), NodePath("../../Visuals/Destination3")]
 
 [node name="TidyGoal" type="Node" parent="RoomGoals/GoalManagerRoom3" index="0" node_paths=PackedStringArray("list")]
@@ -181,16 +172,16 @@ camera_focus = NodePath("../../../Visuals/Destination3")
 detection_area = NodePath("../../../Visuals/Destination3")
 
 [node name="Camera2D" parent="." index="4"]
-level_bounds = Rect2(0.0, -1.0, 364.0, 833.0)
+level_bounds = Rect2(0.0, 0.0, 416.0, 736.0)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals"]
-tile_map_data = PackedByteArray("AAABAAYAAQAAAAAAAAACAAYAAQABAAAAAAADAAYAAQACAAAAAAAEAAYAAQABAAAAAAAFAAYAAQACAAAAAAAGAAYAAQABAAAAAAAHAAYAAQADAAAAAAABAA8AAQAAAAAAAAACAA8AAQABAAAAAAADAA8AAQACAAAAAAAEAA8AAQABAAAAAAAFAA8AAQACAAAAAAAGAA8AAQABAAAAAAAHAA8AAQADAAAAAAABABgAAQAAAAAAAAACABgAAQABAAAAAAADABgAAQACAAAAAAAEABgAAQADAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAAMAAQAAAAAAAAACAAMAAQABAAAAAAADAAMAAQACAAAAAAAEAAMAAQABAAAAAAAFAAMAAQACAAAAAAAGAAMAAQABAAAAAAAHAAMAAQACAAAAAAAIAAMAAQABAAAAAAAJAAMAAQACAAAAAAAKAAMAAQABAAAAAAALAAMAAQADAAAAAAABAAsAAQAAAAAAAAACAAsAAQABAAAAAAADAAsAAQACAAAAAAAEAAsAAQABAAAAAAAFAAsAAQACAAAAAAAGAAsAAQABAAAAAAAHAAsAAQACAAAAAAAIAAsAAQADAAAAAAABABMAAQAAAAAAAAACABMAAQABAAAAAAADABMAAQACAAAAAAAEABMAAQABAAAAAAAFABMAAQACAAAAAAAGABMAAQABAAAAAAAHABMAAQADAAAAAAA=")
 tile_set = ExtResource("8_school_tiles")
 
 [node name="Destination1" type="Area2D" parent="Visuals"]
-position = Vector2(176, 208)
+position = Vector2(304, 112)
 script = ExtResource("10_sensed_area")
 tag = &"destination"
 
@@ -202,7 +193,7 @@ scale = Vector2(0.055, 0.055)
 texture = ExtResource("11_red_flag")
 
 [node name="Destination2" type="Area2D" parent="Visuals"]
-position = Vector2(176, 496)
+position = Vector2(208, 368)
 script = ExtResource("10_sensed_area")
 tag = &"destination"
 
@@ -214,7 +205,7 @@ scale = Vector2(0.055, 0.055)
 texture = ExtResource("11_red_flag")
 
 [node name="Destination3" type="Area2D" parent="Visuals"]
-position = Vector2(80, 784)
+position = Vector2(176, 624)
 script = ExtResource("10_sensed_area")
 tag = &"destination"
 
@@ -229,55 +220,62 @@ texture = ExtResource("11_red_flag")
 
 [node name="Room1" type="Node2D" parent="Visuals/Lists"]
 
-[node name="bags" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 10)
-room_index = 0
-values = [3, 3, 5, 5, 5, 2, 3, 3]
-
 [node name="tidy" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 74)
+position = Vector2(96, 170)
 room_index = 0
 values = []
 capacity = 8
 
+[node name="bags" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
+position = Vector2(32, 42)
+z_index = 1
+room_index = 0
+values = [3, 3, 5, 5, 5, 2, 3, 3]
+tag_above = true
+
 [node name="Room2" type="Node2D" parent="Visuals/Lists"]
 
-[node name="bags" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 298)
-room_index = 1
-values = [1, 2, 1, 1, 4]
-
 [node name="tidy" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 362)
+position = Vector2(96, 426)
 room_index = 1
 values = []
 capacity = 5
 
+[node name="bags" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
+position = Vector2(32, 298)
+z_index = 1
+room_index = 1
+values = [1, 2, 1, 1, 4]
+tag_above = true
+
 [node name="Room3" type="Node2D" parent="Visuals/Lists"]
 
-[node name="bags" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 586)
-room_index = 2
-values = [4, 4, 4, 4]
-
 [node name="tidy" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 650)
+position = Vector2(96, 682)
 room_index = 2
 values = []
 capacity = 4
+
+[node name="bags" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
+position = Vector2(32, 554)
+z_index = 1
+room_index = 2
+values = [4, 4, 4, 4]
+tag_above = true
 
 [node name="YSorted" type="Node2D" parent="Visuals"]
 y_sort_enabled = true
 
 [node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("13_robot_charac")]
-position = Vector2(48, 208)
+z_index = 2
+position = Vector2(48, 112)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
 animation = &"idle_right"
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
-block_data = Array[ExtResource("3_block_data")]([ExtResource("26_move_n")])
+block_data = Array[ExtResource("3_block_data")]([ExtResource("26_move")])
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
 script = ExtResource("14_resettable_c")
@@ -285,59 +283,61 @@ base = NodePath("..")
 tracked_properties = PackedStringArray("facing_direction", "transform")
 room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 208)
+&"transform": Transform2D(1, 0, 0, 1, 48, 112)
 }), Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 496)
+&"transform": Transform2D(1, 0, 0, 1, 48, 368)
 }), Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 784)
+&"transform": Transform2D(1, 0, 0, 1, 48, 624)
 })])
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAQAAQAAAAAAAAABAAQAAQADAAAAAAACAAQAAQABAAAAAAADAAQAAQABAAAAAAAEAAQAAQABAAAAAAAFAAQAAQABAAAAAAAGAAQAAQABAAAAAAAHAAQAAQABAAAAAAAIAAQAAQAAAAAAABAAAAUAAQAAAAEAAAABAAUAAQADAAEAAAACAAUAAQABAAEAAAADAAUAAQABAAEAAAAEAAUAAQABAAEAAAAFAAUAAQABAAEAAAAGAAUAAQABAAEAAAAHAAUAAQABAAEAAAAIAAUAAQAAAAEAABAAAAYAAQAAAAEAAAAIAAYAAQAAAAEAABAAAAcAAQACAAAAADABAAcAAAAAAAEAAHACAAcAAAAAAAEAAHADAAcAAAAAAAEAAHAEAAcAAAAAAAEAAHAFAAcAAAAAAAEAAHAGAAcAAAAAAAEAAHAHAAcAAAAAAAEAAHAIAAcAAQACAAAAACAAAA0AAQAAAAAAAAABAA0AAQADAAAAAAACAA0AAQABAAAAAAADAA0AAQABAAAAAAAEAA0AAQABAAAAAAAFAA0AAQABAAAAAAAGAA0AAQABAAAAAAAHAA0AAQABAAAAAAAIAA0AAQAAAAAAABAAAA4AAQAAAAEAAAABAA4AAQADAAEAAAACAA4AAQABAAEAAAADAA4AAQABAAEAAAAEAA4AAQABAAEAAAAFAA4AAQABAAEAAAAGAA4AAQABAAEAAAAHAA4AAQABAAEAAAAIAA4AAQAAAAEAABAAAA8AAQAAAAEAAAAIAA8AAQAAAAEAABAAABAAAQACAAAAADABABAAAAAAAAEAAHACABAAAAAAAAEAAHADABAAAAAAAAEAAHAEABAAAAAAAAEAAHAFABAAAAAAAAEAAHAGABAAAAAAAAEAAHAHABAAAAAAAAEAAHAIABAAAQACAAAAACAAABYAAQAAAAAAAAABABYAAQADAAAAAAACABYAAQABAAAAAAADABYAAQABAAAAAAAEABYAAQABAAAAAAAFABYAAQAAAAAAABAAABcAAQAAAAEAAAABABcAAQADAAEAAAACABcAAQABAAEAAAADABcAAQABAAEAAAAEABcAAQABAAEAAAAFABcAAQAAAAEAABAAABgAAQAAAAEAAAAFABgAAQAAAAEAABAAABkAAQACAAAAADABABkAAAAAAAEAAHACABkAAAAAAAEAAHADABkAAAAAAAEAAHAEABkAAAAAAAEAAHAFABkAAQACAAAAACA=")
+tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAEAAQADAAAAAAACAAEAAQABAAAAAAADAAEAAQABAAAAAAAEAAEAAQABAAAAAAAFAAEAAQABAAAAAAAGAAEAAQABAAAAAAAHAAEAAQABAAAAAAAIAAEAAQABAAAAAAAJAAEAAQABAAAAAAAKAAEAAQABAAAAAAALAAEAAQABAAAAAAAMAAEAAQAAAAAAABAAAAIAAQAAAAEAAAABAAIAAQADAAEAAAACAAIAAQABAAEAAAADAAIAAQABAAEAAAAEAAIAAQABAAEAAAAFAAIAAQABAAEAAAAGAAIAAQABAAEAAAAHAAIAAQABAAEAAAAIAAIAAQABAAEAAAAJAAIAAQABAAEAAAAKAAIAAQABAAEAAAALAAIAAQABAAEAAAAMAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAMAAMAAQAAAAEAABAAAAQAAQACAAAAADABAAQAAAAAAAEAAHACAAQAAAAAAAEAAHADAAQAAAAAAAEAAHAEAAQAAAAAAAEAAHAFAAQAAAAAAAEAAHAGAAQAAAAAAAEAAHAHAAQAAAAAAAEAAHAIAAQAAAAAAAEAAHAJAAQAAAAAAAEAAHAKAAQAAAAAAAEAAHALAAQAAAAAAAEAAHAMAAQAAQACAAAAACAAAAkAAQAAAAAAAAABAAkAAQADAAAAAAACAAkAAQABAAAAAAADAAkAAQABAAAAAAAEAAkAAQABAAAAAAAFAAkAAQABAAAAAAAGAAkAAQABAAAAAAAHAAkAAQABAAAAAAAIAAkAAQABAAAAAAAJAAkAAQAAAAAAABAAAAoAAQAAAAEAAAABAAoAAQADAAEAAAACAAoAAQABAAEAAAADAAoAAQABAAEAAAAEAAoAAQABAAEAAAAFAAoAAQABAAEAAAAGAAoAAQABAAEAAAAHAAoAAQABAAEAAAAIAAoAAQABAAEAAAAJAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAJAAsAAQAAAAEAABAAAAwAAQACAAAAADABAAwAAAAAAAEAAHACAAwAAAAAAAEAAHADAAwAAAAAAAEAAHAEAAwAAAAAAAEAAHAFAAwAAAAAAAEAAHAGAAwAAAAAAAEAAHAHAAwAAAAAAAEAAHAIAAwAAAAAAAEAAHAJAAwAAQACAAAAACAAABEAAQAAAAAAAAABABEAAQADAAAAAAACABEAAQABAAAAAAADABEAAQABAAAAAAAEABEAAQABAAAAAAAFABEAAQABAAAAAAAGABEAAQABAAAAAAAHABEAAQABAAAAAAAIABEAAQAAAAAAABAAABIAAQAAAAEAAAABABIAAQADAAEAAAACABIAAQABAAEAAAADABIAAQABAAEAAAAEABIAAQABAAEAAAAFABIAAQABAAEAAAAGABIAAQABAAEAAAAHABIAAQABAAEAAAAIABIAAQAAAAEAABAAABMAAQAAAAEAAAAIABMAAQAAAAEAABAAABQAAQACAAAAADABABQAAAAAAAEAAHACABQAAAAAAAEAAHADABQAAAAAAAEAAHAEABQAAAAAAAEAAHAFABQAAAAAAAEAAHAGABQAAAAAAAEAAHAHABQAAAAAAAEAAHAIABQAAQACAAAAACA=")
 tile_set = ExtResource("9_school_walls")
 
 [node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted"]
+z_index = 2
 modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 496)
+position = Vector2(48, 368)
 scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("15_sprite_frame")
 animation = &"idle_right"
 speed_scale = 0.0
 
 [node name="PhantomSprite2" type="AnimatedSprite2D" parent="Visuals/YSorted"]
+z_index = 2
 modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 784)
+position = Vector2(48, 624)
 scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("15_sprite_frame")
 animation = &"idle_right"
 speed_scale = 0.0
 
 [node name="Room1Label" type="Label" parent="Visuals"]
-offset_left = 198.0
-offset_top = 146.0
-offset_right = 250.0
-offset_bottom = 169.0
+offset_left = 326.0
+offset_top = 50.0
+offset_right = 378.0
+offset_bottom = 73.0
 theme = ExtResource("2_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 1"
 
 [node name="Room2Label" type="Label" parent="Visuals"]
-offset_left = 198.0
-offset_top = 434.0
-offset_right = 250.0
-offset_bottom = 457.0
+offset_left = 230.0
+offset_top = 306.0
+offset_right = 282.0
+offset_bottom = 329.0
 theme = ExtResource("2_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 2"
 
 [node name="Room3Label" type="Label" parent="Visuals"]
-offset_left = 102.0
-offset_top = 722.0
-offset_right = 154.0
-offset_bottom = 745.0
+offset_left = 198.0
+offset_top = 562.0
+offset_right = 250.0
+offset_bottom = 585.0
 theme = ExtResource("2_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 3"

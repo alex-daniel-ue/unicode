@@ -220,6 +220,7 @@ func _logical(this: Block) -> Variant:
 
 	var decided: bool = (symbol == "and" and not left) or (symbol == "or" and left)
 	if decided:
+		this.function.skip_arg(2)
 		await Interpreter.step(this)
 		return left
 

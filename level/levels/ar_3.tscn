@@ -35,26 +35,20 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nto {}, at step {}\"
+      text: \"for var {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - i
         - 0
-        - block: ArithmeticBlock
+        - block: LengthOfBlock
           kind: value
-          text: \"{} {} {}\"
+          text: \"length of {}\"
           parameters:
-            - block: LengthOfBlock
-              kind: value
-              text: \"length of {}\"
-              parameters:
-                - route
-            - -
-            - 1
+            - route
         - 1
       children:
         - block: MoveTilesBlock
           kind: statement
-          text: \"move forward {}\"
+          text: \"move forward {} times\"
           parameters:
             - block: ItemOfBlock
               kind: value
@@ -74,7 +68,7 @@ title = "Every stop"
 mission = "One program, three rooms. The card lists how far to drive before each left turn. Drive every stop in order, pick up the pens on the way, and finish on the flag."
 rooms = PackedStringArray("A lap that ends where it starts.", "A spiral.", "A U-turn.")
 twist = "But every card has a different number of stops."
-tip = "UniCode's for counts up to and including its last number: from 0 to 3 is 0, 1, 2, 3. Python's range(0, 3) stops before the 3."
+tip = "for stops before its end number, the way Python's range does: from 0 until 3 runs 0, 1 and 2."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("3_block_data")]([ExtResource("17_for_int"), ExtResource("18_item_of"), ExtResource("19_length_of"), ExtResource("20_arithmetic")])
