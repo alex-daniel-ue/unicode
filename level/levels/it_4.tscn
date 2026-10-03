@@ -31,7 +31,7 @@ block: BeginBlock
   children:
     - block: DeclareAsBlock
       kind: statement
-      text: \"declare var {} as {}\"
+      text: \"declare {} as {}\"
       parameters:
         - i
         - 0
@@ -63,8 +63,8 @@ title = "Count the desks"
 mission = "Stop the robot exactly on the flag."
 twist = "But there's only one move forward block, and it's already on the canvas."
 blocks = Array[ExtResource("9_block_data")]([ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
-block_notes = PackedStringArray("Makes a new variable and gives it a starting value. A variable is a named box that holds a value.", "Adds 1 to a variable. Each time it runs, the number goes up by one.", "Compares two values, like 2 < 5, and gives True or False. That makes it usable as a loop's condition.")
-tip = "Open the Variables tab to watch your variables change while the program runs."
+block_notes = PackedStringArray("Makes a variable: a named box that holds a value.", "Adds 1 to a variable.", "Compares two values, like 2 < 5. Gives True or False.")
+tip = "The Variables tab shows your variables while the program runs."
 
 [node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_statement")]
 layout_mode = 2

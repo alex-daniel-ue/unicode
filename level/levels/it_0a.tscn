@@ -130,6 +130,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 radius = 12.0
 
 [node name="IT0aReadItFirst" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+minimal_ui = true
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
 block: BeginBlock
   kind: nested
@@ -168,11 +169,11 @@ auto_run = true
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Read it first"
-mission = "This program is already written. Watch it run in Room 1, then again in Room 2, and work out why the robot stops in a different place."
+mission = "Watch this program run in both rooms. Why does the robot stop in a different place?"
 rooms = PackedStringArray("Finish on the flag.", "Stop right before the puddle.")
-twist = "But it's the same program in both rooms. The only difference is what's in front of the robot."
+twist = "Same program, two rooms. Only what's ahead of the robot is different."
 blocks = Array[ExtResource("12_block_data")]([ExtResource("6_ahead_is"), ExtResource("7_not"), ExtResource("9_if")])
-block_notes = PackedStringArray("Here it looks for the puddle. It checks the one tile in front of the robot and gives True or False.", "Flips the answer, so True becomes False and False becomes True. It lets a program ask the opposite question.", "The last step only happens when its condition is True. An if runs the blocks inside it only when its condition is True.")
+block_notes = PackedStringArray("Checks the tile in front of the robot. Gives True or False.", "Flips True and False.", "Runs the blocks inside it only when its condition is True.")
 block_values = PackedStringArray("puddle", "", "")
 tip = "It runs by itself when the level opens. Press Play to watch it again."
 show_stars = false

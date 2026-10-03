@@ -76,9 +76,9 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 title = "Around the bends"
 mission = "One program, three rooms with corners. Finish on the flag in every room."
 rooms = PackedStringArray("One bend.", "Two bends.", "A winding path.")
-twist = "But every room turns a different number of times, so no fixed list of moves works for all three."
+twist = "Every room turns a different number of times."
 blocks = Array[ExtResource("11_block_data")]([ExtResource("4_if"), ExtResource("5_else"), ExtResource("24_turn")])
-block_notes = PackedStringArray("Lets the robot make a decision at every step. It runs the blocks inside it only when its condition is True.", "Goes right under an if and runs only when that if didn't. Together they make an either-or choice.", "Turns the robot left, right, or back (all the way around). Turning doesn't move it off its tile.")
+block_notes = PackedStringArray("Runs the blocks inside it only when its condition is True.", "Goes right under an if. Runs only when the if didn't.", "Turns the robot left, right, or back.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("11_block_data")]([ExtResource("6_while"), ExtResource("4_if"), ExtResource("5_else"), ExtResource("7_not")])

@@ -74,7 +74,7 @@ title = "Back to the question"
 mission = "One program, three winding rooms. Finish on the flag in every room."
 twist = "But there's no else block this time."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("5_continue")])
-block_notes = PackedStringArray("Skips the rest of the loop's blocks for this pass and goes straight back to the loop's condition. It's a loop's way of saying: check again.")
+block_notes = PackedStringArray("Skips the rest of this pass and checks the loop's condition again.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("2_while"), ExtResource("3_if"), ExtResource("4_not"), ExtResource("5_continue")])

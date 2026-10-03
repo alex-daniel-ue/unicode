@@ -55,9 +55,9 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 title = "Until you see it"
 mission = "One program, three rooms. Finish on the flag in every room."
 rooms = PackedStringArray("The flag is partway down the hall.", "The flag is further along.", "The flag is somewhere else again.")
-twist = "But the flags aren't against the wall anymore. The robot has to stop on the flag, not at the end of the hall."
+twist = "The flag isn't at the end of the hall anymore."
 blocks = Array[ExtResource("7_block_data")]([ExtResource("4_ahead_is")])
-block_notes = PackedStringArray("It can look for the flag too: pick destination from its list. Like before, it only checks the one tile in front of the robot.")
+block_notes = PackedStringArray("It can look for the flag too: pick destination.")
 block_values = PackedStringArray("destination")
 
 [node name="GenericBlockProvider" parent="." index="2"]

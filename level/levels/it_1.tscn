@@ -52,7 +52,7 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 [node name="LevelDescription" parent="." index="0"]
 title = "Until the wall"
 mission = "One program runs in all three rooms. Get the robot onto the flag in each one."
-twist = "But the hallways are all different lengths, and the same program has to handle every one."
+twist = "Every hallway is a different length."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("4_while"), ExtResource("14_ahead_is"), ExtResource("5_not")])
 
 [node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_nested")]

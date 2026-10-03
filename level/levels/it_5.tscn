@@ -28,7 +28,7 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nuntil {}, at step {}\"
+      text: \"for {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - i
         - 1
@@ -45,7 +45,7 @@ block: BeginBlock
         - left
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nuntil {}, at step {}\"
+      text: \"for {}, from {}\\nuntil {}, at step {}\"
       parameters:
         - i
         - 1
@@ -61,9 +61,9 @@ star_slack = 3
 [node name="LevelDescription" parent="." index="0"]
 title = "One block instead of three"
 mission = "Get the robot around the corner and onto the flag."
-twist = "But there's no while and no variables this time. The for block is the only way to repeat."
+twist = "No while this time: for is the only way to repeat."
 blocks = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
-block_notes = PackedStringArray("Counts a variable from a start up to, but not including, an end, and runs its blocks once per count. From 1 until 5 is four passes (1, 2, 3, 4), like range(1, 5) in Python.")
+block_notes = PackedStringArray("Counts from a start up to, not including, an end, and runs its blocks each time. From 1 until 5 runs 1, 2, 3, 4.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("4_for")])

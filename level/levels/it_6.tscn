@@ -28,7 +28,7 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nuntil {}, at step {}\"
+      text: \"for {}, from {}\\nuntil {}, at step {}\"
       locked: true
       parameters:
         - i

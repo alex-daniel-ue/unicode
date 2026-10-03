@@ -30,7 +30,7 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for var {}, from {}\\nuntil {}, at step {}\"
+      text: \"for {}, from {}\\nuntil {}, at step {}\"
       locked: true
       parameters:
         - a
@@ -45,7 +45,7 @@ block: BeginBlock
             - left
         - block: ForBlock (Integer)
           kind: nested
-          text: \"for var {}, from {}\\nuntil {}, at step {}\"
+          text: \"for {}, from {}\\nuntil {}, at step {}\"
           parameters:
             - s
             - 1
@@ -62,7 +62,7 @@ block: BeginBlock
             - back
         - block: ForBlock (Integer)
           kind: nested
-          text: \"for var {}, from {}\\nuntil {}, at step {}\"
+          text: \"for {}, from {}\\nuntil {}, at step {}\"
           parameters:
             - s
             - 1
@@ -79,7 +79,7 @@ block: BeginBlock
             - left
         - block: ForBlock (Integer)
           kind: nested
-          text: \"for var {}, from {}\\nuntil {}, at step {}\"
+          text: \"for {}, from {}\\nuntil {}, at step {}\"
           parameters:
             - s
             - 1
@@ -102,9 +102,9 @@ star_slack = 3
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Aisle by aisle"
-mission = "Drive down every aisle to pick up all the pens, then finish on the flag. Driving over a pen picks it up."
+mission = "Drive down every aisle over every blue flag, then finish on the red flag."
 twist = "But the outer loop is already placed, one pass per aisle. What goes inside it is up to you."
-tip = "A loop can hold another loop: the inner one runs all the way through on every pass of the outer one. Loops inside each other need different variable names."
+tip = "A loop can hold another loop. Give each loop its own variable name."
 
 [node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("10_nested")]
 layout_mode = 2
@@ -128,63 +128,63 @@ detection_area = NodePath("../../../Visuals/Destination1")
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_1")
 detection_area = NodePath("../../../Visuals/Pen1_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_2")
 detection_area = NodePath("../../../Visuals/Pen1_2")
 
 [node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_3")
 detection_area = NodePath("../../../Visuals/Pen1_3")
 
 [node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManager" index="4" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_4")
 detection_area = NodePath("../../../Visuals/Pen1_4")
 
 [node name="CheckpointGoal5" type="Node" parent="RoomGoals/GoalManager" index="5" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_5")
 detection_area = NodePath("../../../Visuals/Pen1_5")
 
 [node name="CheckpointGoal6" type="Node" parent="RoomGoals/GoalManager" index="6" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_6")
 detection_area = NodePath("../../../Visuals/Pen1_6")
 
 [node name="CheckpointGoal7" type="Node" parent="RoomGoals/GoalManager" index="7" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_7")
 detection_area = NodePath("../../../Visuals/Pen1_7")
 
 [node name="CheckpointGoal8" type="Node" parent="RoomGoals/GoalManager" index="8" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_8")
 detection_area = NodePath("../../../Visuals/Pen1_8")
 
 [node name="CheckpointGoal9" type="Node" parent="RoomGoals/GoalManager" index="9" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one pen."
+fail_message = "The robot missed at least one blue flag."
 camera_focus = NodePath("../../../Visuals/Pen1_9")
 detection_area = NodePath("../../../Visuals/Pen1_9")
 

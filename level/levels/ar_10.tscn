@@ -1,32 +1,20 @@
-[gd_scene load_steps=24 format=4]
+[gd_scene load_steps=14 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
-[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_main_theme"]
-[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="3_block_data"]
-[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="4_destination_"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_main_theme"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_block_data"]
 [ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="5_goal_manager"]
-[ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="6_checkpoint_g"]
-[ext_resource type="Script" path="res://level/goals/list_goal.gd" id="7_list_goal"]
-[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="8_school_tiles"]
-[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="9_school_walls"]
-[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="10_sensed_area"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="11_red_flag"]
-[ext_resource type="Texture2D" uid="uid://bwhmko7mb5rj" path="res://level/objects/flag.png" id="12_flag"]
-[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="13_robot_charac"]
-[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="14_resettable_c"]
-[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="15_sprite_frame"]
-[ext_resource type="PackedScene" path="res://level/objects/entities/list/list_entity.tscn" id="16_list_entity"]
-[ext_resource type="Resource" path="res://puzzle/blocks/lists/contains.tres" id="17_contains"]
-[ext_resource type="Resource" path="res://puzzle/blocks/socket/and_or.tres" id="18_and_or"]
-[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_each.tres" id="19_for_each"]
-[ext_resource type="Resource" path="res://puzzle/blocks/control flow/if.tres" id="20_if"]
-[ext_resource type="Resource" path="res://puzzle/blocks/lists/add.tres" id="21_add"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move.tres" id="22_move"]
+[ext_resource type="Script" path="res://level/goals/list_goal.gd" id="6_list_goal"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="7_school_tiles"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="8_school_walls"]
+[ext_resource type="PackedScene" uid="uid://cb5ve56xnp5r5" path="res://level/objects/entities/list/list_entity.tscn" id="9_list_entity"]
+[ext_resource type="Resource" path="res://puzzle/blocks/lists/contains.tres" id="10_contains"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_each.tres" id="11_for_each"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/if.tres" id="12_if"]
+[ext_resource type="Resource" path="res://puzzle/blocks/lists/append.tres" id="13_append"]
 
-[sub_resource type="CircleShape2D" id="Circle_1"]
-radius = 12.0
-
-[node name="AR10InAllThree" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+[node name="AR10InBoth" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
 block: BeginBlock
   kind: nested
@@ -44,312 +32,172 @@ block: BeginBlock
           kind: nested
           text: \"if {}\"
           parameters:
-            - block: AndOrBlock
+            - block: InBlock
               kind: expression
-              text: \"{} {} {}\"
-              parameters:
-                - block: InBlock
-                  kind: expression
-                  text: \"{} in {}\"
-                  parameters:
-                    - s
-                    - choir
-                - and
-                - block: InBlock
-                  kind: expression
-                  text: \"{} in {}\"
-                  parameters:
-                    - s
-                    - coding
-          children:
-            - block: AddBlock
-              kind: statement
-              text: \"add {} to {}\"
+              text: \"{} in {}\"
               parameters:
                 - s
-                - all_three
-        - block: MoveBlock
-          kind: statement
-          text: \"move forward\""
+                - choir
+          children:
+            - block: AppendBlock
+              kind: statement
+              text: \"append {} to {}\"
+              parameters:
+                - s
+                - both"
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
 [node name="LevelDescription" parent="." index="0"]
-title = "In all three"
-mission = "One program, three rooms. Walk along chess, and add each player who is also in choir and in coding to all_three. Finish on the flag just past the last chess player."
-rooms = PackedStringArray("Four chess players.", "Two chess players.", "Three chess players.")
-twist = "But a student counts only if they're in chess, choir and coding."
-blocks = Array[ExtResource("3_block_data")]([ExtResource("17_contains"), ExtResource("18_and_or")])
-block_notes = PackedStringArray("Here it checks whether a student is in a club. It gives True if the value is anywhere in the list, tuple or set.", "Here it can ask about two clubs at once. and is True only when both sides are; or is True when either one is.")
-tip = "Python can find what three sets share in one step: chess & choir & coding."
+title = "In both"
+mission = "Put every student who is in both chess and choir into both."
+rooms = PackedStringArray("Four in chess.", "Two in chess.", "Three in chess.")
+twist = "Some rooms have nobody in both."
+blocks = Array[ExtResource("4_block_data")]([ExtResource("10_contains")])
+block_notes = PackedStringArray("True if the value is somewhere in the list.")
+block_values = PackedStringArray("2,list:choir")
+tip = "In Python: s in choir"
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("3_block_data")]([ExtResource("19_for_each"), ExtResource("20_if"), ExtResource("17_contains"), ExtResource("18_and_or"), ExtResource("21_add")])
+block_data = Array[ExtResource("4_block_data")]([ExtResource("11_for_each"), ExtResource("12_if"), ExtResource("10_contains"), ExtResource("13_append")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
-bounds = Rect2(15.0, -1.0, 477.0, 269.0)
-focus_markers = [NodePath("../../Visuals/Lists/Room1"), NodePath("../../Visuals/Destination1")]
+bounds = Rect2(38.0, 3.0, 386.0, 127.0)
+focus_markers = [NodePath("../../Visuals/Lists/Room1")]
 
-[node name="AllThreeGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("list")]
-script = ExtResource("7_list_goal")
-list = NodePath("../../../Visuals/Lists/Room1/all_three")
-expected = [3, 4]
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
-script = ExtResource("4_destination_")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
-camera_focus = NodePath("../../../Visuals/Destination1")
-detection_area = NodePath("../../../Visuals/Destination1")
+[node name="BothGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("list")]
+script = ExtResource("6_list_goal")
+list = NodePath("../../../Visuals/Lists/Room1/both")
+expected = [2, 4]
 
 [node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(15.0, 319.0, 413.0, 269.0)
-focus_markers = [NodePath("../../Visuals/Lists/Room2"), NodePath("../../Visuals/Destination2")]
+bounds = Rect2(38.0, 227.0, 258.0, 127.0)
+focus_markers = [NodePath("../../Visuals/Lists/Room2")]
 
-[node name="AllThreeGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("list")]
-script = ExtResource("7_list_goal")
-list = NodePath("../../../Visuals/Lists/Room2/all_three")
+[node name="BothGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("list")]
+script = ExtResource("6_list_goal")
+list = NodePath("../../../Visuals/Lists/Room2/both")
 expected = []
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="1" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
-script = ExtResource("4_destination_")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination2")
-fail_message = "The robot didn't finish on the flag."
-camera_focus = NodePath("../../../Visuals/Destination2")
-detection_area = NodePath("../../../Visuals/Destination2")
 
 [node name="GoalManagerRoom3" type="Node" parent="RoomGoals" index="2" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(15.0, 639.0, 445.0, 269.0)
-focus_markers = [NodePath("../../Visuals/Lists/Room3"), NodePath("../../Visuals/Destination3")]
+bounds = Rect2(38.0, 451.0, 386.0, 127.0)
+focus_markers = [NodePath("../../Visuals/Lists/Room3")]
 
-[node name="AllThreeGoal" type="Node" parent="RoomGoals/GoalManagerRoom3" index="0" node_paths=PackedStringArray("list")]
-script = ExtResource("7_list_goal")
-list = NodePath("../../../Visuals/Lists/Room3/all_three")
+[node name="BothGoal" type="Node" parent="RoomGoals/GoalManagerRoom3" index="0" node_paths=PackedStringArray("list")]
+script = ExtResource("6_list_goal")
+list = NodePath("../../../Visuals/Lists/Room3/both")
 expected = [1, 5, 9]
 
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom3" index="1" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
-script = ExtResource("4_destination_")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination3")
-fail_message = "The robot didn't finish on the flag."
-camera_focus = NodePath("../../../Visuals/Destination3")
-detection_area = NodePath("../../../Visuals/Destination3")
-
 [node name="Camera2D" parent="." index="4"]
-level_bounds = Rect2(0.0, -1.0, 492.0, 909.0)
+level_bounds = Rect2(0.0, 0.0, 544.0, 640.0)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals"]
-tile_map_data = PackedByteArray("AAABAAUAAQAAAAAAAAACAAUAAQABAAAAAAADAAUAAQACAAAAAAAEAAUAAQABAAAAAAAFAAUAAQACAAAAAAAGAAUAAQABAAAAAAAHAAUAAQADAAAAAAABAA8AAQAAAAAAAAACAA8AAQABAAAAAAADAA8AAQACAAAAAAAEAA8AAQABAAAAAAAFAA8AAQADAAAAAAABABkAAQAAAAAAAAACABkAAQABAAAAAAADABkAAQACAAAAAAAEABkAAQABAAAAAAAFABkAAQACAAAAAAAGABkAAQADAAAAAAA=")
-tile_set = ExtResource("8_school_tiles")
-
-[node name="Destination1" type="Area2D" parent="Visuals"]
-position = Vector2(176, 176)
-script = ExtResource("10_sensed_area")
-tag = &"destination"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("11_red_flag")
-
-[node name="Destination2" type="Area2D" parent="Visuals"]
-position = Vector2(112, 496)
-script = ExtResource("10_sensed_area")
-tag = &"destination"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination2"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Destination2"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("11_red_flag")
-
-[node name="Destination3" type="Area2D" parent="Visuals"]
-position = Vector2(144, 816)
-script = ExtResource("10_sensed_area")
-tag = &"destination"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination3"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Destination3"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("11_red_flag")
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQABAAAAAAAJAAIAAQACAAAAAAAKAAIAAQABAAAAAAALAAIAAQACAAAAAAAMAAIAAQABAAAAAAANAAIAAQACAAAAAAAOAAIAAQABAAAAAAAPAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQABAAEAAAAJAAMAAQACAAEAAAAKAAMAAQABAAEAAAALAAMAAQACAAEAAAAMAAMAAQABAAEAAAANAAMAAQACAAEAAAAOAAMAAQABAAEAAAAPAAMAAQADAAEAAAABAAQAAQAAAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQACAAMAAAAGAAQAAQABAAMAAAAHAAQAAQACAAMAAAAIAAQAAQABAAMAAAAJAAQAAQACAAMAAAAKAAQAAQABAAMAAAALAAQAAQACAAMAAAAMAAQAAQABAAMAAAANAAQAAQACAAMAAAAOAAQAAQABAAMAAAAPAAQAAQADAAMAAAABAAkAAQAAAAAAAAACAAkAAQABAAAAAAADAAkAAQACAAAAAAAEAAkAAQABAAAAAAAFAAkAAQACAAAAAAAGAAkAAQABAAAAAAAHAAkAAQACAAAAAAAIAAkAAQABAAAAAAAJAAkAAQACAAAAAAAKAAkAAQABAAAAAAALAAkAAQADAAAAAAABAAoAAQAAAAEAAAACAAoAAQABAAEAAAADAAoAAQACAAEAAAAEAAoAAQABAAEAAAAFAAoAAQACAAEAAAAGAAoAAQABAAEAAAAHAAoAAQACAAEAAAAIAAoAAQABAAEAAAAJAAoAAQACAAEAAAAKAAoAAQABAAEAAAALAAoAAQADAAEAAAABAAsAAQAAAAMAAAACAAsAAQABAAMAAAADAAsAAQACAAMAAAAEAAsAAQABAAMAAAAFAAsAAQACAAMAAAAGAAsAAQABAAMAAAAHAAsAAQACAAMAAAAIAAsAAQABAAMAAAAJAAsAAQACAAMAAAAKAAsAAQABAAMAAAALAAsAAQADAAMAAAABABAAAQAAAAAAAAACABAAAQABAAAAAAADABAAAQACAAAAAAAEABAAAQABAAAAAAAFABAAAQACAAAAAAAGABAAAQABAAAAAAAHABAAAQACAAAAAAAIABAAAQABAAAAAAAJABAAAQACAAAAAAAKABAAAQABAAAAAAALABAAAQACAAAAAAAMABAAAQABAAAAAAANABAAAQACAAAAAAAOABAAAQABAAAAAAAPABAAAQADAAAAAAABABEAAQAAAAEAAAACABEAAQABAAEAAAADABEAAQACAAEAAAAEABEAAQABAAEAAAAFABEAAQACAAEAAAAGABEAAQABAAEAAAAHABEAAQACAAEAAAAIABEAAQABAAEAAAAJABEAAQACAAEAAAAKABEAAQABAAEAAAALABEAAQACAAEAAAAMABEAAQABAAEAAAANABEAAQACAAEAAAAOABEAAQABAAEAAAAPABEAAQADAAEAAAABABIAAQAAAAMAAAACABIAAQABAAMAAAADABIAAQACAAMAAAAEABIAAQABAAMAAAAFABIAAQACAAMAAAAGABIAAQABAAMAAAAHABIAAQACAAMAAAAIABIAAQABAAMAAAAJABIAAQACAAMAAAAKABIAAQABAAMAAAALABIAAQACAAMAAAAMABIAAQABAAMAAAANABIAAQACAAMAAAAOABIAAQABAAMAAAAPABIAAQADAAMAAAA=")
+tile_set = ExtResource("7_school_tiles")
 
 [node name="Lists" type="Node2D" parent="Visuals"]
 
 [node name="Room1" type="Node2D" parent="Visuals/Lists"]
 
-[node name="choir" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 10)
-kind = 2
-room_index = 0
-values = [2, 3, 4, 5]
-
-[node name="coding" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(352, 10)
-kind = 2
-room_index = 0
-values = [1, 3, 4, 6]
-
-[node name="all_three" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(128, 234)
-kind = 2
-room_index = 0
-values = []
-capacity = 4
-
-[node name="chess" parent="Visuals/Lists/Room1" instance=ExtResource("16_list_entity")]
-position = Vector2(32, 106)
+[node name="chess" parent="Visuals/Lists/Room1" instance=ExtResource("9_list_entity")]
+position = Vector2(104, 8)
 z_index = 1
-kind = 2
 room_index = 0
 values = [1, 2, 3, 4]
-tag_above = true
+
+[node name="choir" parent="Visuals/Lists/Room1" instance=ExtResource("9_list_entity")]
+position = Vector2(322, 8)
+z_index = 1
+room_index = 0
+values = [2, 4, 5]
+
+[node name="both" parent="Visuals/Lists/Room1" instance=ExtResource("9_list_entity")]
+position = Vector2(98, 69)
+room_index = 0
+values = []
+standing = true
 
 [node name="Room2" type="Node2D" parent="Visuals/Lists"]
 
-[node name="choir" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 330)
-kind = 2
+[node name="chess" parent="Visuals/Lists/Room2" instance=ExtResource("9_list_entity")]
+position = Vector2(104, 232)
+z_index = 1
+room_index = 1
+values = [6, 7]
+
+[node name="choir" parent="Visuals/Lists/Room2" instance=ExtResource("9_list_entity")]
+position = Vector2(258, 232)
+z_index = 1
 room_index = 1
 values = [8]
 
-[node name="coding" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(352, 330)
-kind = 2
-room_index = 1
-values = [6, 7]
-
-[node name="all_three" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(128, 554)
-kind = 2
+[node name="both" parent="Visuals/Lists/Room2" instance=ExtResource("9_list_entity")]
+position = Vector2(98, 293)
 room_index = 1
 values = []
-capacity = 2
-
-[node name="chess" parent="Visuals/Lists/Room2" instance=ExtResource("16_list_entity")]
-position = Vector2(32, 426)
-z_index = 1
-kind = 2
-room_index = 1
-values = [6, 7]
-tag_above = true
+standing = true
 
 [node name="Room3" type="Node2D" parent="Visuals/Lists"]
 
-[node name="choir" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(96, 650)
-kind = 2
+[node name="chess" parent="Visuals/Lists/Room3" instance=ExtResource("9_list_entity")]
+position = Vector2(104, 456)
+z_index = 1
+room_index = 2
+values = [1, 5, 9]
+
+[node name="choir" parent="Visuals/Lists/Room3" instance=ExtResource("9_list_entity")]
+position = Vector2(290, 456)
+z_index = 1
 room_index = 2
 values = [1, 5, 9, 10]
 
-[node name="coding" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(352, 650)
-kind = 2
-room_index = 2
-values = [1, 5, 9]
-
-[node name="all_three" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(128, 874)
-kind = 2
+[node name="both" parent="Visuals/Lists/Room3" instance=ExtResource("9_list_entity")]
+position = Vector2(98, 517)
 room_index = 2
 values = []
-capacity = 3
-
-[node name="chess" parent="Visuals/Lists/Room3" instance=ExtResource("16_list_entity")]
-position = Vector2(32, 746)
-z_index = 1
-kind = 2
-room_index = 2
-values = [1, 5, 9]
-tag_above = true
+standing = true
 
 [node name="YSorted" type="Node2D" parent="Visuals"]
 y_sort_enabled = true
 
-[node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("13_robot_charac")]
-z_index = 2
-position = Vector2(48, 176)
-facing_direction = Vector2(1, 0)
-
-[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
-animation = &"idle_right"
-
-[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
-block_data = Array[ExtResource("3_block_data")]([ExtResource("22_move")])
-
-[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
-script = ExtResource("14_resettable_c")
-base = NodePath("..")
-tracked_properties = PackedStringArray("facing_direction", "transform")
-room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
-&"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 176)
-}), Dictionary[StringName, Variant]({
-&"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 496)
-}), Dictionary[StringName, Variant]({
-&"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 816)
-})])
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAALAAIAAgAAAAAAABAPAAIAAwAAAAAAAAAMAAMAAQABAAAAAAAPAAMAAQAAAAAAAAAKAAQAAgAAAAAAABALAAQAAQACAAAAAAALAAkAAAAAAAAAAAAJAAoAAQACAAAAAAAKAAoAAwAAAAAAAAAGAAsAAQAAAAAAAAAJAAsAAwAAAAAAABAMABAAAwAAAAAAAAAPABAAAAAAAAAAAAAJABEAAQACAAAAAAAPABEAAQAAAAAAAAAKABIAAgAAAAAAAAANABIAAQABAAAAAAA=")
+tile_set = ExtResource("2_school_chair")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAMAAQAAAAAAAAABAAMAAQADAAAAAAACAAMAAQABAAAAAAADAAMAAQABAAAAAAAEAAMAAQABAAAAAAAFAAMAAQABAAAAAAAGAAMAAQABAAAAAAAHAAMAAQABAAAAAAAIAAMAAQAAAAAAABAAAAQAAQAAAAEAAAABAAQAAQADAAEAAAACAAQAAQABAAEAAAADAAQAAQABAAEAAAAEAAQAAQABAAEAAAAFAAQAAQABAAEAAAAGAAQAAQABAAEAAAAHAAQAAQABAAEAAAAIAAQAAQAAAAEAABAAAAUAAQAAAAEAAAAIAAUAAQAAAAEAABAAAAYAAQACAAAAADABAAYAAAAAAAEAAHACAAYAAAAAAAEAAHADAAYAAAAAAAEAAHAEAAYAAAAAAAEAAHAFAAYAAAAAAAEAAHAGAAYAAAAAAAEAAHAHAAYAAAAAAAEAAHAIAAYAAQACAAAAACAAAA0AAQAAAAAAAAABAA0AAQADAAAAAAACAA0AAQABAAAAAAADAA0AAQABAAAAAAAEAA0AAQABAAAAAAAFAA0AAQABAAAAAAAGAA0AAQAAAAAAABAAAA4AAQAAAAEAAAABAA4AAQADAAEAAAACAA4AAQABAAEAAAADAA4AAQABAAEAAAAEAA4AAQABAAEAAAAFAA4AAQABAAEAAAAGAA4AAQAAAAEAABAAAA8AAQAAAAEAAAAGAA8AAQAAAAEAABAAABAAAQACAAAAADABABAAAAAAAAEAAHACABAAAAAAAAEAAHADABAAAAAAAAEAAHAEABAAAAAAAAEAAHAFABAAAAAAAAEAAHAGABAAAQACAAAAACAAABcAAQAAAAAAAAABABcAAQADAAAAAAACABcAAQABAAAAAAADABcAAQABAAAAAAAEABcAAQABAAAAAAAFABcAAQABAAAAAAAGABcAAQABAAAAAAAHABcAAQAAAAAAABAAABgAAQAAAAEAAAABABgAAQADAAEAAAACABgAAQABAAEAAAADABgAAQABAAEAAAAEABgAAQABAAEAAAAFABgAAQABAAEAAAAGABgAAQABAAEAAAAHABgAAQAAAAEAABAAABkAAQAAAAEAAAAHABkAAQAAAAEAABAAABoAAQACAAAAADABABoAAAAAAAEAAHACABoAAAAAAAEAAHADABoAAAAAAAEAAHAEABoAAAAAAAEAAHAFABoAAAAAAAEAAHAGABoAAAAAAAEAAHAHABoAAQACAAAAACA=")
-tile_set = ExtResource("9_school_walls")
-
-[node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted"]
-z_index = 2
-modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 496)
-scale = Vector2(0.915, 0.915)
-sprite_frames = ExtResource("15_sprite_frame")
-animation = &"idle_right"
-speed_scale = 0.0
-
-[node name="PhantomSprite2" type="AnimatedSprite2D" parent="Visuals/YSorted"]
-z_index = 2
-modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 816)
-scale = Vector2(0.915, 0.915)
-sprite_frames = ExtResource("15_sprite_frame")
-animation = &"idle_right"
-speed_scale = 0.0
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQABAAAAAAAKAAAAAQABAAAAAAALAAAAAQABAAAAAAAMAAAAAQABAAAAAAANAAAAAQABAAAAAAAOAAAAAQABAAAAAAAPAAAAAQABAAAAAAAQAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQABAAEAAAAKAAEAAQABAAEAAAALAAEAAQABAAEAAAAMAAEAAQABAAEAAAANAAEAAQABAAEAAAAOAAEAAQABAAEAAAAPAAEAAQABAAEAAAAQAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAQAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAQAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAQAAQAAQAAAAEAABAAAAUAAQACAAAAADABAAUAAAAAAAEAAHACAAUAAAAAAAEAAHADAAUAAAAAAAEAAHAEAAUAAAAAAAEAAHAFAAUAAAAAAAEAAHAGAAUAAAAAAAEAAHAHAAUAAAAAAAEAAHAIAAUAAAAAAAEAAHAJAAUAAAAAAAEAAHAKAAUAAAAAAAEAAHALAAUAAAAAAAEAAHAMAAUAAAAAAAEAAHANAAUAAAAAAAEAAHAOAAUAAAAAAAEAAHAPAAUAAAAAAAEAAHAQAAUAAQACAAAAACAAAAcAAQAAAAAAAAABAAcAAQADAAAAAAACAAcAAQABAAAAAAADAAcAAQABAAAAAAAEAAcAAQABAAAAAAAFAAcAAQABAAAAAAAGAAcAAQABAAAAAAAHAAcAAQABAAAAAAAIAAcAAQABAAAAAAAJAAcAAQABAAAAAAAKAAcAAQABAAAAAAALAAcAAQABAAAAAAAMAAcAAQAAAAAAABAAAAgAAQAAAAEAAAABAAgAAQADAAEAAAACAAgAAQABAAEAAAADAAgAAQABAAEAAAAEAAgAAQABAAEAAAAFAAgAAQABAAEAAAAGAAgAAQABAAEAAAAHAAgAAQABAAEAAAAIAAgAAQABAAEAAAAJAAgAAQABAAEAAAAKAAgAAQABAAEAAAALAAgAAQABAAEAAAAMAAgAAQAAAAEAABAAAAkAAQAAAAEAAAAMAAkAAQAAAAEAABAAAAoAAQAAAAEAAAAMAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAMAAsAAQAAAAEAABAAAAwAAQACAAAAADABAAwAAAAAAAEAAHACAAwAAAAAAAEAAHADAAwAAAAAAAEAAHAEAAwAAAAAAAEAAHAFAAwAAAAAAAEAAHAGAAwAAAAAAAEAAHAHAAwAAAAAAAEAAHAIAAwAAAAAAAEAAHAJAAwAAAAAAAEAAHAKAAwAAAAAAAEAAHALAAwAAAAAAAEAAHAMAAwAAQACAAAAACAAAA4AAQAAAAAAAAABAA4AAQADAAAAAAACAA4AAQABAAAAAAADAA4AAQABAAAAAAAEAA4AAQABAAAAAAAFAA4AAQABAAAAAAAGAA4AAQABAAAAAAAHAA4AAQABAAAAAAAIAA4AAQABAAAAAAAJAA4AAQABAAAAAAAKAA4AAQABAAAAAAALAA4AAQABAAAAAAAMAA4AAQABAAAAAAANAA4AAQABAAAAAAAOAA4AAQABAAAAAAAPAA4AAQABAAAAAAAQAA4AAQAAAAAAABAAAA8AAQAAAAEAAAABAA8AAQADAAEAAAACAA8AAQABAAEAAAADAA8AAQABAAEAAAAEAA8AAQABAAEAAAAFAA8AAQABAAEAAAAGAA8AAQABAAEAAAAHAA8AAQABAAEAAAAIAA8AAQABAAEAAAAJAA8AAQABAAEAAAAKAA8AAQABAAEAAAALAA8AAQABAAEAAAAMAA8AAQABAAEAAAANAA8AAQABAAEAAAAOAA8AAQABAAEAAAAPAA8AAQABAAEAAAAQAA8AAQAAAAEAABAAABAAAQAAAAEAAAAQABAAAQAAAAEAABAAABEAAQAAAAEAAAAQABEAAQAAAAEAABAAABIAAQAAAAEAAAAQABIAAQAAAAEAABAAABMAAQACAAAAADABABMAAAAAAAEAAHACABMAAAAAAAEAAHADABMAAAAAAAEAAHAEABMAAAAAAAEAAHAFABMAAAAAAAEAAHAGABMAAAAAAAEAAHAHABMAAAAAAAEAAHAIABMAAAAAAAEAAHAJABMAAAAAAAEAAHAKABMAAAAAAAEAAHALABMAAAAAAAEAAHAMABMAAAAAAAEAAHANABMAAAAAAAEAAHAOABMAAAAAAAEAAHAPABMAAAAAAAEAAHAQABMAAQACAAAAACA=")
+tile_set = ExtResource("8_school_walls")
 
 [node name="Room1Label" type="Label" parent="Visuals"]
-offset_left = 198.0
-offset_top = 114.0
-offset_right = 250.0
-offset_bottom = 137.0
-theme = ExtResource("2_main_theme")
+offset_left = 454.0
+offset_top = 18.0
+offset_right = 506.0
+offset_bottom = 41.0
+theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 1"
 
 [node name="Room2Label" type="Label" parent="Visuals"]
-offset_left = 134.0
-offset_top = 434.0
-offset_right = 186.0
-offset_bottom = 457.0
-theme = ExtResource("2_main_theme")
+offset_left = 326.0
+offset_top = 242.0
+offset_right = 378.0
+offset_bottom = 265.0
+theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 2"
 
 [node name="Room3Label" type="Label" parent="Visuals"]
-offset_left = 166.0
-offset_top = 754.0
-offset_right = 218.0
-offset_bottom = 777.0
-theme = ExtResource("2_main_theme")
+offset_left = 454.0
+offset_top = 466.0
+offset_right = 506.0
+offset_bottom = 489.0
+theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
-[editable path="Visuals/YSorted/RobotCharacter"]

@@ -53,7 +53,7 @@ intended_solution = "block: BeginBlock
   text: \"begin code\"
   children:
     - block: DeclareAsBlock
-      text: \"declare var {} as {}\"
+      text: \"declare {} as {}\"
       parameters:
         - \"i\"
         - 0

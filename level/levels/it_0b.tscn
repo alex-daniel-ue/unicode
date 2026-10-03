@@ -23,6 +23,7 @@
 radius = 12.0
 
 [node name="IT0bRebuildIt" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+minimal_ui = true
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
 block: BeginBlock
   kind: nested
