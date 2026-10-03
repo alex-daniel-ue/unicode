@@ -20,10 +20,10 @@ signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalMan
 @export var auto_run := false
 @export var auto_run_delay := 2.5
 
-## A tutorial overlay to lay over the whole puzzle while this level is open.
-## Puzzle instances it; it can't live in the level itself, which renders in a
-## SubViewport and would be clipped to the environment panel.
-@export var tutorial_overlay: PackedScene
+## Hides what the first levels don't use (the assistant, the Variables tab, the
+## speed button), so a newcomer sees only what this level needs. Guides (see
+## Guides) introduce each part when a later level first needs it.
+@export var minimal_ui := false
 
 @export_group("Exports")
 @export var rooms: Node
@@ -41,7 +41,7 @@ var _panning := false
 
 var has_failed := false
 ## The room the program is running in, counted from 0. A list block finds the
-## shelf for this room (ListEntity.find), since each room has its own.
+## board for this room (ListEntity.find), since each room has its own.
 var current_room := 0
 ## "Room 2 of 3 — " while a multi-room run is in progress. fail() prefixes it,
 ## so hazards and the Stop button name the room the same way goal checks do.
@@ -154,7 +154,7 @@ func run_rooms(begin: CapBlock) -> bool:
 	_room_label = ""
 	var room_count := maxi(room_goals.size(), 1)
 
-	# Every room's lists at once, and only here: after a run each shelf keeps
+	# Every room's lists at once, and only here: after a run each board keeps
 	# what the program wrote into it, so a student can read what went wrong.
 	for list in get_tree().get_nodes_in_group(ListEntity.GROUP):
 		(list as ListEntity).restore()

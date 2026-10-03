@@ -154,6 +154,9 @@ func _discard(block: Block) -> void:
 	if socket != null and socket.has_overridden():
 		socket.overridden_socket.visible = true  # the slot gets its default back
 		socket.overridden_socket = null
+	# Trash all is a trash too. A tutorial step waiting for a block to be thrown
+	# away otherwise waits forever once Trash all has taken the block it meant.
+	Tutorial.block_trashed.emit(StringName(block.data.name))
 	block.orphan()  # out of the tree now, so nothing reads it before the free lands
 	block.queue_free()
 #endregion

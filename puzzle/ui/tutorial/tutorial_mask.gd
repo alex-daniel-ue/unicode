@@ -80,19 +80,21 @@ func _draw() -> void:
 	xs = _unique_sorted(xs)
 	ys = _unique_sorted(ys)
 
+	# Row by row, each run of cells outside every hole drawn as one rectangle, so
+	# as few edges as possible meet: where two translucent rectangles meet, a
+	# scaled window can show the seam as a line.
 	for yi in ys.size() - 1:
-		for xi in xs.size() - 1:
-			var cell := Rect2(xs[xi], ys[yi], xs[xi + 1] - xs[xi], ys[yi + 1] - ys[yi])
-			if not cell.has_area():
-				continue
-			var centre := cell.get_center()
-			var inside := false
-			for r in cut:
-				if r.has_point(centre):
-					inside = true
-					break
-			if not inside:
-				draw_rect(cell, dim_color)
+		var run_start := -1.0
+		for xi in xs.size():
+			var outside := false
+			if xi < xs.size() - 1:
+				var cell := Rect2(xs[xi], ys[yi], xs[xi + 1] - xs[xi], ys[yi + 1] - ys[yi])
+				outside = cell.has_area() and not cut.any(func(r: Rect2) -> bool: return r.has_point(cell.get_center()))
+			if outside and run_start < 0.0:
+				run_start = xs[xi]
+			elif not outside and run_start >= 0.0:
+				draw_rect(Rect2(run_start, ys[yi], xs[xi] - run_start, ys[yi + 1] - ys[yi]), dim_color)
+				run_start = -1.0
 
 
 static func _unique_sorted(values: Array) -> Array:

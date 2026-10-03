@@ -14,6 +14,7 @@ syntax = "move forward {count: int} times"
 description = "Moves the robot forward one tile, that many times. Fails if the robot hits a wall on the way."
 text = "move forward {} times"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_")])
+text_hints = PackedStringArray("n")
 Function/entity_script = ExtResource("3_robot")
 Function/entity_name = &"RobotCharacter"
 Function/method = &"move_steps"

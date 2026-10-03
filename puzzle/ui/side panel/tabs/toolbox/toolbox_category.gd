@@ -1,34 +1,36 @@
 class_name ToolboxCategory
-extends VBoxContainer
+extends ScrollContainer
 
+## One tab of the toolbox: a grid of tiles, one block on each.
 
-const LABEL_HIDDEN_OPACITY := 0.7
+const TILE := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.tscn")
 
-@export var label: Label
 @export var container: Container
-@export var category_name := "Undefined":
-	set = _set_category_name
 
+## The BlockData category this tab holds ("Iterative"); the tab's title is the
+## friendlier Toolbox.DISPLAY name for it.
+var category_name := ""
 
-func _ready() -> void:
-	_update_label_text()
 
 func add_block(block: Block) -> void:
-	container.add_child(block)
+	var tile := TILE.instantiate() as ToolboxTile
+	container.add_child(tile)
+	tile.hold(block)
 
-func toggle_visibility() -> void:
-	container.visible = not container.visible
-	label.modulate.a = 1.0 if container.visible else LABEL_HIDDEN_OPACITY
-	_update_label_text()
+func get_blocks() -> Array[Block]:
+	var blocks: Array[Block] = []
+	for tile in container.get_children():
+		if tile is ToolboxTile and (tile as ToolboxTile).block() != null:
+			blocks.append((tile as ToolboxTile).block())
+	return blocks
 
-func _set_category_name(new_name: String) -> void:
-	category_name = new_name
-	_update_label_text()
+## The tile `block` sits on, so it can be dropped once the block has moved on
+## (to the new blocks section).
+func tile_of(block: Block) -> ToolboxTile:
+	for tile in container.get_children():
+		if tile is ToolboxTile and (tile as ToolboxTile).block() == block:
+			return tile as ToolboxTile
+	return null
 
-func _update_label_text() -> void:
-	var prefix = "v " if container.visible else "> "
-	label.text = prefix + category_name
-
-func _on_heading_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("lmb"):
-		toggle_visibility()
+func is_empty() -> bool:
+	return get_blocks().is_empty()

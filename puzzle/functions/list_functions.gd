@@ -79,21 +79,6 @@ func _append(this: Block) -> void:
 
 	await list.append_value(value, this)
 
-## text: add {value} to {set}
-func _add(this: Block) -> void:
-	var args := await this.function.eval_args([
-		this.function.Argument.VARIANT,
-		this.function.Argument.VARIANT,
-	])
-	if Interpreter.interrupted: return
-
-	var value: Variant = this.function.unwrap(args[0])
-	if Interpreter.interrupted: return
-	var list := resolve(this, args[1], "add")
-	if list == null: return
-
-	await list.add_value(value, this)
-
 ## text: {value} in {list}
 func _contains(this: Block) -> Variant:
 	var args := await this.function.eval_args([

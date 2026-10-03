@@ -29,6 +29,10 @@ const STAR_EMPTY := "☆"
 
 var _catalog: LevelCatalog
 var _module_index := 0
+## The module last looked at, for coming back to level select this session.
+## Opening on the module of the level just played comes first; this covers
+## paging to a module and leaving through Home without playing.
+static var _last_module_id: StringName = &""
 ## Module ids force-opened by unicode.cfg, overriding LevelModule.released.
 var _released_override: PackedStringArray = []
 var _override_active := false
@@ -47,7 +51,7 @@ func _ready() -> void:
 
 	Progress.progress_updated.connect(_refresh)
 
-	_module_index = _first_open_module()
+	_module_index = _remembered_module()
 	_refresh()
 
 #region Deployment gate
@@ -86,6 +90,25 @@ func _is_released(module: LevelModule) -> bool:
 	return module.released
 
 
+## Where the student left off: the module of the level they last opened, else
+## the module they last looked at, else the first one that's open. Always
+## landing on Tutorial after a level in another module was jarring.
+func _remembered_module() -> int:
+	for wanted: StringName in [_module_id_of(Game.level_id), _last_module_id]:
+		if wanted.is_empty():
+			continue
+		for i in _catalog.modules.size():
+			if _catalog.modules[i].id == wanted and _is_released(_catalog.modules[i]):
+				return i
+	return _first_open_module()
+
+func _module_id_of(level_id: StringName) -> StringName:
+	if level_id.is_empty():
+		return &""
+	var module := _catalog.module_of(level_id)
+	return module.id if module != null else &""
+
+
 func _first_open_module() -> int:
 	for i in _catalog.modules.size():
 		if _is_released(_catalog.modules[i]):
@@ -101,6 +124,7 @@ func _refresh() -> void:
 	_module_index = clampi(_module_index, 0, _catalog.modules.size() - 1)
 	var module := _catalog.modules[_module_index]
 	var released := _is_released(module)
+	_last_module_id = module.id
 
 	if module_label != null:
 		module_label.text = module.display_name
@@ -132,10 +156,19 @@ func _build_grid(module: LevelModule) -> void:
 
 	var furthest := Progress.furthest_slot()
 
+	var buttons: Array = []
 	for entry in module.levels:
 		if entry == null or entry.retired:
 			continue
-		grid.add_child(_build_button(entry, furthest))
+		var button := _build_button(entry, furthest)
+		grid.add_child(button)
+		buttons.append(button)
+		# The level just played has the focus, so it's where the eye lands.
+		if entry.id == Game.level_id and not button.disabled:
+			button.grab_focus.call_deferred()
+	UiMotion.stagger_in(buttons)
+	if module_label != null:
+		UiMotion.fade_in(module_label, 0.18)
 
 
 func _build_button(entry: LevelEntry, furthest_slot: int) -> Button:

@@ -146,8 +146,11 @@ func _on_submit_pressed() -> void:
 	await _send_hint_request(text)
 
 func _reset_chat() -> void:
+	var had_chat := not reset_button.disabled
 	http_request.cancel_request()
 	_awaiting_reply = false
+	if had_chat and is_instance_valid(puzzle):
+		puzzle.notif.push("New chat. The assistant has forgotten the old one.", Notification.Type.LOG)
 	
 	for child in chat_stack.get_children():
 		child.queue_free()
@@ -581,10 +584,15 @@ func _add_bubble(bubble: ChatBubble) -> void:
 	
 	for node in chat_stack.get_children():
 		if not node.is_queued_for_deletion():
-			reset_button.disabled = false
+			if reset_button.disabled:
+				# It only means something once there's a chat to clear, so it
+				# says so when it wakes up.
+				reset_button.disabled = false
+				UiMotion.pop_in(reset_button)
 			break
 	
 	chat_stack.add_child(bubble)
+	UiMotion.fade_in(bubble, 0.18)
 	
 	var bottom := int(scroll.get_v_scroll_bar().max_value)
 	scroll.set_deferred(&"scroll_vertical", bottom)

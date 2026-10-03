@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/block_picture.gd" id="2_r"]
+[ext_resource type="Resource" path="res://puzzle/blocks/socket/comparison.tres" id="3_r"]
+
+[node name="AnswerTag" type="Control"]
+custom_minimum_size = Vector2(190, 60)
+layout_mode = 3
+offset_right = 190.0
+offset_bottom = 60.0
+mouse_filter = 2
+theme = ExtResource("1_r")
+metadata/scale = 2.0
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 190.0
+offset_bottom = 60.0
+mouse_filter = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Picture" type="Control" parent="Row"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("2_r")
+data = ExtResource("3_r")
+values = PackedStringArray("3", "<", "5")
+tag = "True"

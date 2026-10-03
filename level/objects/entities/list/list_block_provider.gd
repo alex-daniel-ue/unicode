@@ -4,9 +4,9 @@ extends BlockProvider
 ## Hands out a list's name block. ListEntity adds one of these to itself at
 ## runtime; it isn't authored.
 ##
-## A level has one shelf per room under the same name, and they all answer to one
-## name block, so only one of them offers it: the canonical shelf (lowest
-## room_index). The block finds the running room's shelf itself when it runs.
+## A level has one board per room under the same name, and they all answer to one
+## name block, so only one of them offers it: the canonical board (lowest
+## room_index). The block finds the running room's board itself when it runs.
 
 
 func get_block_data() -> Array[BlockData]:

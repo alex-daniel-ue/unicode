@@ -120,7 +120,7 @@ func _for(this: NestedBlock) -> void:
 ## The packaging of `for i from 0 to length of xs - 1 { ... item i of xs ... }`,
 ## as `for` is of the counted while. Walks by index and re-reads the length every
 ## pass, as Python's list iterator does, so appending to the list being walked
-## keeps the loop going (until the shelf is full). The variable gets a copy of
+## keeps the loop going (until the list is too long). The variable gets a copy of
 ## each item, so changing it doesn't change the list, in Python or here.
 func _for_each(this: NestedBlock) -> void:
 	var args := await this.function.eval_args([
@@ -139,15 +139,10 @@ func _for_each(this: NestedBlock) -> void:
 		this.function.error("Variable '%s' already exists." % var_name)
 		return
 
-	var set_size := list.values.size()
 	var index := 0
 	var loop_count := 0
 
 	while index < list.values.size():
-		if list.kind == ListEntity.Kind.SET and list.values.size() != set_size:
-			this.function.error("'%s' changed size while the loop was going through it. Python stops here too." % list.get_list_name())
-			break
-
 		list.point_at(index)
 		var item: Variant = list.values[index]
 		Interpreter.assign_var(var_name, item.duplicate(true) if item is Array else item)

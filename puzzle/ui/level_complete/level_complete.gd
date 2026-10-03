@@ -8,13 +8,11 @@ extends Control
 ## stays until a button is pressed, and holds the way out for a moment so the
 ## result is actually read.
 
-## The way out -- Try for more stars, Level select, Next level -- opens once the
-## post-win summary has arrived AND at least MIN_HOLD seconds have passed, so the
-## summary is on screen long enough to be read. MAX_HOLD is the ceiling: a slow
-## or dead relay can hold a student for fifteen seconds and no longer, because
-## the summary must never block the game.
-const MIN_HOLD := 5.0
-const MAX_HOLD := 15.0
+## The way out -- Try for more stars, Level select, Next level -- opens after
+## MIN_HOLD, long enough that a click meant for the canvas doesn't skip the card.
+## It never waits for the post-win summary: offline, that wait was the whole
+## screen. The summary fills in whenever it arrives, or its line goes away.
+const MIN_HOLD := 1.0
 const SUMMARY_WAITING := "Looking at your program..."
 
 @export var stars_label: Label
@@ -22,15 +20,15 @@ const SUMMARY_WAITING := "Looking at your program..."
 @export var usage_label: Label
 ## The next star tier only: "★★★ takes 4 blocks or fewer." Hidden at three stars.
 @export var target_label: Label
-## Reserved for the post-win summary (design doc §8). Hidden until it has text.
-@export var summary_label: Label
+## The post-win summary (design doc §8). Hidden until it has text. Rich text, so
+## the Python in it shows as code (CodeSpans) instead of running on as English.
+## Its code font is the scene's mono_font: swap in a monospace one there.
+@export var summary_label: RichTextLabel
 @export var stay_button: Button
 @export var select_button: Button
 @export var next_button: Button
 
 var _next: LevelEntry
-var _presented_ms := 0
-var _summary_pending := false
 var _released := false
 ## Bumped per present(), so a timer or a summary left over from an earlier win
 ## (Try for more stars, then win again) can't release or fill a newer card.
@@ -57,8 +55,7 @@ func present(stars: int, placed: int, par: int, slack: int, summary_expected := 
 		target_label.text = _next_tier(stars, par, slack)
 		target_label.visible = not target_label.text.is_empty()
 
-	_summary_pending = summary_expected
-	summary_label.text = SUMMARY_WAITING if summary_expected else ""
+	summary_label.text = "[center]%s[/center]" % SUMMARY_WAITING if summary_expected else ""
 	summary_label.modulate.a = 0.6 if summary_expected else 1.0
 	summary_label.visible = summary_expected
 
@@ -69,12 +66,26 @@ func present(stars: int, placed: int, par: int, slack: int, summary_expected := 
 	stay_button.disabled = true
 	select_button.disabled = true
 	next_button.disabled = true
-	_presented_ms = Time.get_ticks_msec()
 	_presentation += 1
 	show()
+	UiMotion.fade_in(get_node(^"Dim"), 0.25)
+	UiMotion.pop_in(get_node(^"Center/Card"), 0.26)
+	_bounce_stars()
 	get_tree().create_timer(MIN_HOLD).timeout.connect(_try_release.bind(_presentation))
-	get_tree().create_timer(MAX_HOLD).timeout.connect(_on_max_hold.bind(_presentation))
 	return _presentation
+
+## The stars land a moment after the card, with a bounce: the one bit of this
+## screen that is pure reward.
+func _bounce_stars() -> void:
+	stars_label.modulate.a = 0.0
+	await get_tree().process_frame
+	stars_label.pivot_offset = stars_label.size / 2.0
+	stars_label.scale = Vector2(0.3, 0.3)
+	var tween := stars_label.create_tween()
+	tween.tween_interval(0.18)
+	tween.tween_property(stars_label, "modulate:a", 1.0, 0.1)
+	tween.parallel().tween_property(stars_label, "scale", Vector2(1.18, 1.18), 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(stars_label, "scale", Vector2.ONE, 0.12)
 
 
 ## Only the next rung up, and nothing at three stars. Printing both thresholds
@@ -95,30 +106,16 @@ func _next_tier(stars: int, par: int, slack: int) -> String:
 func show_summary(text: String, presentation: int) -> void:
 	if not is_instance_valid(self) or presentation != _presentation:
 		return
-	_summary_pending = false
 	summary_label.modulate.a = 1.0
-	summary_label.text = text
+	summary_label.text = "[center]%s[/center]" % CodeSpans.to_bbcode(text) if not text.is_empty() else ""
 	summary_label.visible = not text.is_empty()
-	_try_release(presentation)
+	if summary_label.visible:
+		UiMotion.fade_in(summary_label, 0.3)
 
 
 func _try_release(presentation: int) -> void:
 	if not is_instance_valid(self) or _released or presentation != _presentation:
 		return
-	var waited := (Time.get_ticks_msec() - _presented_ms) / 1000.0
-	# A SceneTreeTimer can land a frame short of the wall clock; don't make the
-	# student wait another frame's worth of nothing for it.
-	if waited >= MIN_HOLD - 0.05 and not _summary_pending:
-		_release()
-
-
-func _on_max_hold(presentation: int) -> void:
-	if not is_instance_valid(self) or _released or presentation != _presentation:
-		return
-	# Still waiting at the ceiling: drop the placeholder line. If the summary
-	# turns up later it still appears; it just no longer holds anyone.
-	if _summary_pending and summary_label.text == SUMMARY_WAITING:
-		summary_label.visible = false
 	_release()
 
 

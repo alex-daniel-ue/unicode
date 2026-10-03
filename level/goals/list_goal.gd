@@ -14,8 +14,8 @@ extends Goal
 		list = value
 		update_configuration_warnings()
 		_show_goal()
-## Also shown on the list's shelf: faded bags for what's missing, so the goal is
-## on screen the way a flag is, not a hidden condition.
+## Also shown on the list's board (faded values, green badges), so the goal is on
+## screen the way a flag is, not a hidden condition.
 @export var expected: Array = []:
 	set(value):
 		expected = value
@@ -48,9 +48,6 @@ func check_condition() -> bool:
 	if list.matches(expected):
 		return true
 
-	var detail := "'%s' should end up as %s, but it's %s." % [list.get_list_name(), list.repr_of(_expected_as_shown()), list.repr()]
+	var detail := "'%s' should end up as %s, but it's %s." % [list.get_list_name(), list.repr_of(expected), list.repr()]
 	fail_message = detail if _authored_message.is_empty() else _authored_message + " " + detail
 	return false
-
-func _expected_as_shown() -> Array:
-	return ListEntity.normalized(expected) if list.kind == ListEntity.Kind.SET else expected

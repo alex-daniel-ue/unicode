@@ -1,0 +1,59 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_new_section.gd" id="2_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_new"]
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(1, 0.82, 0.3, 0.1)
+border_width_left = 4
+border_color = Color(1, 0.82, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="NewSection" type="VBoxContainer" node_paths=PackedStringArray("entries", "entry_template")]
+size_flags_horizontal = 3
+mouse_filter = 2
+theme = ExtResource("1_theme")
+theme_override_constants/separation = 8
+script = ExtResource("2_script")
+entries = NodePath("Card/Entries")
+entry_template = NodePath("Card/Entries/Entry")
+
+[node name="Caption" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"BlockLabel"
+theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
+text = "NEW IN THIS LEVEL"
+
+[node name="Card" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_new")
+
+[node name="Entries" type="VBoxContainer" parent="Card"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Entry" type="VBoxContainer" parent="Card/Entries"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Holder" type="CenterContainer" parent="Card/Entries/Entry"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Note" type="Label" parent="Card/Entries/Entry"]
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 18
+text = "What the block does."
+horizontal_alignment = 1
+autowrap_mode = 3

@@ -125,7 +125,9 @@ func _check_goals(where: String, level: Level) -> void:
 			if goal.needs_detection() and goal.detection_area == null:
 				_error(where, "%s reacts to contact but has no detection_area, so nothing will trigger it." % tag)
 
-			if goal.has_method("check_condition") and goal.get("destination_area") != null:
+			# A list's goal is a room's win as much as a flag is: a list level
+			# with no robot is finished when its lists are right.
+			if (goal.has_method("check_condition") and goal.get("destination_area") != null) or goal is ListGoal:
 				has_win = true
 			if goal.get("required_entity") == null and ("required_entity" in goal):
 				_error(where, "%s has no required_entity." % tag)
@@ -134,7 +136,7 @@ func _check_goals(where: String, level: Level) -> void:
 				_error(where, "%s has no destination_area; check_condition() will crash." % tag)
 
 			# A ListGoal writes its own message from the two lists, and its list
-			# is measured for the camera through the shelf rather than a focus.
+			# is measured for the camera through the board rather than a focus.
 			if goal is ListGoal:
 				continue
 
@@ -151,6 +153,11 @@ func _check_goals(where: String, level: Level) -> void:
 func _check_resettables(where: String, level: Level) -> void:
 	var rooms := maxi(level.room_goals.size(), 1)
 	var robots := _find_all(level, "Robot")
+	# A level that is only lists needs no robot, and its lists put themselves
+	# back (ListEntity.restore) without a Resettable.
+	var lists_only := robots.is_empty() and _walk(level).any(func(node: Node) -> bool: return node is ListEntity)
+	if lists_only:
+		return
 
 	if robots.is_empty():
 		_error(where, "No Robot in the level.")
@@ -244,17 +251,17 @@ func _check_lists(where: String, level: Level) -> void:
 		by_name.get_or_add(list_name, []).append(list)
 
 	for list_name in by_name:
-		var shelves: Array = by_name[list_name]
-		if shelves.size() == 1:
-			continue  # one shelf serves every room
+		var boards: Array = by_name[list_name]
+		if boards.size() == 1:
+			continue  # one board serves every room
 		var seen: Dictionary[int, bool] = {}
-		for list: ListEntity in shelves:
+		for list: ListEntity in boards:
 			if seen.has(list.room_index):
-				_error(where, "Two shelves named '%s' in Room %d. The name block can only find one." % [list_name, list.room_index + 1])
+				_error(where, "Two lists named '%s' in Room %d. The name block can only find one." % [list_name, list.room_index + 1])
 			seen[list.room_index] = true
 		for room in rooms:
 			if not seen.has(room):
-				_error(where, "Room %d has no shelf named '%s', so any block using it errors there." % [room + 1, list_name])
+				_error(where, "Room %d has no list named '%s', so any block using it errors there." % [room + 1, list_name])
 
 	for i in level.room_goals.size():
 		var manager := level.room_goals[i]
@@ -270,10 +277,10 @@ func _check_lists(where: String, level: Level) -> void:
 				continue
 			var shared: bool = by_name.get(goal.list.get_list_name(), []).size() == 1
 			if not shared and goal.list.room_index != i:
-				_error(where, "%s checks the Room %d shelf of '%s'." % [tag, goal.list.room_index + 1, goal.list.get_list_name()])
-			if goal.list.kind != ListEntity.Kind.TUPLE and goal.expected.size() > goal.list.cubby_count():
-				_error(where, "%s expects %d items, but the shelf has %d cubbies, so no program can fill it. Raise its capacity."
-					% [tag, goal.expected.size(), goal.list.cubby_count()])
+				_error(where, "%s checks the Room %d board of '%s'." % [tag, goal.list.room_index + 1, goal.list.get_list_name()])
+			if goal.expected.size() > ListEntity.MAX_ITEMS:
+				_error(where, "%s expects %d items, more than a list can hold here (%d)."
+					% [tag, goal.expected.size(), ListEntity.MAX_ITEMS])
 			for value: Variant in goal.expected:
 				# The inspector makes it easy to type "3" as a string.
 				if typeof(value) == TYPE_STRING and String(value).is_valid_float():

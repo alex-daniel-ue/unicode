@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/list_graphic.gd" id="2_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/block_picture.gd" id="3_r"]
+[ext_resource type="Resource" path="res://puzzle/blocks/lists/item_of.tres" id="4_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/guide_arrow.gd" id="5_r"]
+[ext_resource type="PackedScene" uid="uid://cb5ve56xnp5r5" path="res://level/objects/entities/list/list_entity.tscn" id="6_r"]
+
+[node name="ItemOf" type="Control" node_paths=PackedStringArray("list")]
+custom_minimum_size = Vector2(360, 152)
+layout_mode = 3
+offset_right = 360.0
+offset_bottom = 152.0
+mouse_filter = 2
+theme = ExtResource("1_r")
+script = ExtResource("2_r")
+list = NodePath("List")
+highlight = 1
+
+[node name="Block" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 360.0
+offset_bottom = 48.0
+mouse_filter = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Picture" type="Control" parent="Block"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("3_r")
+data = ExtResource("4_r")
+values = PackedStringArray("1", "list:route")
+
+[node name="Arrow" type="Control" parent="."]
+layout_mode = 0
+offset_left = 199.0
+offset_top = 52.0
+offset_right = 219.0
+offset_bottom = 90.0
+mouse_filter = 2
+script = ExtResource("5_r")
+from = Vector2(0.5, 0)
+to = Vector2(0.5, 1)
+
+[node name="List" parent="." instance=ExtResource("6_r")]
+position = Vector2(161, 96)
+list_name = &"route"
+values = [3, 2, 4]
+
+[node name="Result" type="Label" parent="."]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 96.0
+offset_right = 340.0
+offset_bottom = 128.0
+theme_type_variation = &"LegibleLabel"
+theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
+theme_override_font_sizes/font_size = 26
+text = "= 2"
+horizontal_alignment = 1
+vertical_alignment = 1

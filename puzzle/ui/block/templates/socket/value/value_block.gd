@@ -7,6 +7,10 @@ extends SocketBlock
 @export var line_edit: LineEdit
 @export var option_button: OptionButton
 
+## What goes in this slot, from the parent block's text_hints: shown greyed while
+## the slot is empty. Wins over the slot data's own placeholder.
+var hint := ""
+
 
 func _ready() -> void:
 	assert(data.value != null)
@@ -28,8 +32,9 @@ func _ready() -> void:
 	
 	line_edit.editable = data.value.editable
 	option_button.disabled = not data.value.editable
-	if not data.value.placeholder.is_empty():
-		line_edit.placeholder_text = data.value.placeholder
+	var shown_hint := hint if not hint.is_empty() else data.value.placeholder
+	if not shown_hint.is_empty():
+		line_edit.placeholder_text = shown_hint
 	
 	if not data.value.editable_shown or data.toolbox:
 		line_edit.editable = false

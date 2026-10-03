@@ -6,7 +6,14 @@ const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
 
 const NUDGE_AFTER := [1, 4, 7]
-const DEFAULT_TUTORIAL_OVERLAY := "res://puzzle/ui/tutorial/tutorial_overlay.tscn"
+const TUTORIAL_OVERLAY := preload("res://puzzle/ui/tutorial/tutorial_overlay.tscn")
+## Hidden when a level asks for the minimal UI (Level.minimal_ui): the first
+## levels show only what they use, because everything at once lost people.
+const EXTRA_UI := [
+	"UserInterface/SideMenuLeft/ButtonContainer/AIAssistantMenuButton",
+	"UserInterface/SideMenuLeft/ButtonContainer/VariableWatcherMenuButton",
+	"UserInterface/SideMenuRight/ButtonContainer/SpeedButton",
+]
 
 var failed_runs := 0
 var last_run_yaml := ""
@@ -14,6 +21,9 @@ var last_run_result := "The student hasn't pressed Play on this level yet."
 var current_run_placed_blocks := 0
 
 var _paused_before_menu := false
+## The guide on screen, if any, and the pages this level's guide has.
+var _guide: TutorialOverlay
+var _guide_pages: Array = []
 
 @export var print_yaml := false
 
@@ -26,7 +36,7 @@ var _paused_before_menu := false
 @export var notif: NotificationStack
 @export var level_viewport: SubViewport
 @export var level_complete: LevelComplete
-@export var pause_menu: PopupPanel
+@export var pause_menu: PauseMenu
 
 func _ready() -> void:
 	side_panels[0].show_menu(true)
@@ -40,6 +50,7 @@ func _ready() -> void:
 	Interpreter.output_logged.connect(_on_interpreter_output)
 	
 	pause_menu.visibility_changed.connect(_on_pause_menu_visibility_changed)
+	pause_menu.tutorials_requested.connect(_on_tutorials_requested)
 
 ## Perfectly functional; toggled on each "pause" action. Tested.
 func _input(event: InputEvent) -> void:
@@ -55,11 +66,30 @@ func open_menu() -> void:
 		return
 	_paused_before_menu = Interpreter.is_paused
 	Interpreter.is_paused = true
+	pause_menu.set_tutorial_state(not _guide_pages.is_empty(), is_instance_valid(_guide) and _guide.is_running())
 	pause_menu.show()
 
 func _on_pause_menu_visibility_changed() -> void:
 	if not pause_menu.visible:
 		Interpreter.is_paused = _paused_before_menu
+	Tutorial.menu_toggled.emit(pause_menu.visible)
+
+## The pause menu's tutorial button: skips the guide that's showing, or shows
+## this level's guide again from its first page.
+func _on_tutorials_requested() -> void:
+	if is_instance_valid(_guide) and _guide.is_running():
+		_guide.skip()
+	else:
+		start_guide()
+
+func start_guide() -> void:
+	if _guide_pages.is_empty():
+		return
+	if is_instance_valid(_guide):
+		_guide.skip()
+	_guide = TUTORIAL_OVERLAY.instantiate() as TutorialOverlay
+	add_child(_guide)
+	_guide.start(self, _guide_pages)
 
 func _exit_tree() -> void:
 	Interpreter.is_running = false
@@ -87,6 +117,11 @@ func configure_level() -> void:
 	
 	for block in Game.level.get_blocks():
 		toolbox.add_block(block)
+	var description := Game.level.description
+	toolbox.mark_new(description.blocks, description.block_notes)
+
+	for path: String in EXTRA_UI:
+		(get_node(path) as Control).visible = not Game.level.minimal_ui
 	
 	# Block preset setup, for permanent, already-initialized Blocks in levels.
 	# level.tscn ships a hidden BeginBlock, so get_preset() only comes back null on a
@@ -101,20 +136,15 @@ func configure_level() -> void:
 		preset.position = canvas.size / 2.
 		preset.visible = true
 	
-	# The export lives in tutorial_1.tscn and can be lost the same way the tour's
-	# step values were, which silently means no tour at all. The first tutorial
-	# level always gets it.
-	var overlay_scene := Game.level.tutorial_overlay
-	if overlay_scene == null and Game.level_id == &"tutorial":
-		push_warning("Level 'tutorial' lost its tutorial_overlay export; using the default overlay.")
-		overlay_scene = load(DEFAULT_TUTORIAL_OVERLAY)
-	if overlay_scene != null:
-		var overlay := overlay_scene.instantiate() as TutorialOverlay
-		add_child(overlay)
-		overlay.attach(self)
-	
+	# The guide comes first, and a worked example only runs itself once the
+	# student has been through it.
+	_guide_pages = Guides.pages_for(Game.level)
+	start_guide()
 	if Game.level.auto_run:
-		_auto_run()
+		if is_instance_valid(_guide):
+			_guide.finished.connect(_auto_run, CONNECT_ONE_SHOT)
+		else:
+			_auto_run()
 
 ## Worked examples play themselves once, after a moment to take in the canvas.
 ## A child Timer rather than a SceneTreeTimer, so leaving the level early frees it
@@ -129,7 +159,7 @@ func _auto_run() -> void:
 	timer.start(Game.level.auto_run_delay)
 
 func _on_auto_run_timeout(timer: Timer) -> void:
-	if pause_menu.visible:
+	if pause_menu.visible or (is_instance_valid(_guide) and _guide.is_running()):
 		timer.start(0.5)
 		return
 	timer.queue_free()
@@ -169,7 +199,7 @@ func run_program() -> void:
 	if not cleared:
 		_report_failure()
 		failed_runs += 1
-		if failed_runs in NUDGE_AFTER:
+		if failed_runs in NUDGE_AFTER and not Game.level.minimal_ui:
 			notif.push(
 				"Stuck? The assistant can look at your last run.",
 				Notification.Type.LOG,

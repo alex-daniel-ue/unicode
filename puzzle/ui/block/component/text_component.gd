@@ -53,6 +53,8 @@ func format() -> void:
 		for idx in range(1, len(plaintexts)):
 			if block_idx < len(base.data.text_blocks):
 				var block := Block.construct(base.data.text_blocks[block_idx])
+				if block is ValueBlock and block_idx < base.data.text_hints.size():
+					(block as ValueBlock).hint = base.data.text_hints[block_idx]
 				hbox.add_child(block)
 				block_idx += 1
 			_add_label(plaintexts[idx], hbox)

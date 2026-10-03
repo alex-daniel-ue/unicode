@@ -1,312 +1,254 @@
 class_name TutorialOverlay
 extends Control
 
-## Walks its TutorialStep children in order, one visible at a time, advancing
-## on the event each step names.
+## A guide (a "dimmed tutorial"): pages shown one at a time on a card over the
+## whole puzzle, with the screen dimmed except for what the page points at. A
+## page moves on when its button is pressed, or when the student does what it
+## asks: places a block, opens the menu, presses Play. Guides.pages_for() says
+## which pages a level gets; this only shows them.
 ##
 ## It lives in the Puzzle, not in the Level: the level renders inside a
-## SubViewport, and anything placed there is clipped to the environment panel
-## and cannot cover the toolbox or the canvas. A level opts in through
-## Level.tutorial_overlay, and Puzzle.configure_level() instances it on top.
+## SubViewport, and anything placed there is clipped to the room panel and can't
+## cover the toolbox or the canvas. A page can still point into the level ("level:"
+## targets); _rect_of() works out where that is on screen.
+##
+## Only the dim changes: no outlines. What a page points at is simply the part of
+## the screen left undimmed and clickable.
 
 signal finished
 
-const LEFT := "UserInterface/SideMenuLeft/Panel"
-const LEFT_BUTTONS := "UserInterface/SideMenuLeft/ButtonContainer/"
-const RIGHT_BUTTONS := "UserInterface/SideMenuRight/ButtonContainer/"
-const WORKSPACE := "UserInterface/MiddleSpace"
-const A := TutorialStep.Advance
-
-## The tour's behaviour, keyed by step node name. This table wins over whatever
-## the step nodes carry in tutorial_overlay.tscn: those exported values have
-## been lost from the scene file twice (a save while the step script wasn't
-## loaded writes the scene without them), and every loss dimmed the whole
-## screen and swallowed the one click the step asked for. The scene now only
-## has to supply the cards' words. Edit here, not in the inspector.
-const PLAN := {
-	&"Welcome": {},
-	&"TheRoom": {targets = ["UserInterface/SideMenuRight/Panel"]},
-	&"Instructions": {focus = LEFT + "/PuzzleInformation", targets = [LEFT]},
-	&"TheToolbox": {focus = LEFT + "/PuzzleToolbox", targets = [LEFT, LEFT_BUTTONS + "ToolboxMenuButton"]},
-	&"DragABlock": {advance = A.BLOCK_PLACED, only = "MoveBlock", focus = LEFT + "/PuzzleToolbox", targets = [LEFT, WORKSPACE]},
-	&"Trash": {advance = A.BLOCK_TRASHED, targets = [LEFT_BUTTONS + "TrashButton", WORKSPACE]},
-	&"PlaceAgain": {advance = A.BLOCK_PLACED, only = "MoveBlock", focus = LEFT + "/PuzzleToolbox", targets = [LEFT, WORKSPACE]},
-	&"Assistant": {advance = A.MESSAGE_SENT, focus = LEFT + "/AIAssistant", targets = [LEFT, LEFT_BUTTONS + "AIAssistantMenuButton"]},
-	&"Watcher": {focus = LEFT + "/VariableWatcher", targets = [LEFT, LEFT_BUTTONS + "VariableWatcherMenuButton"]},
-	&"PressPlay": {advance = A.RUN_STARTED, targets = [RIGHT_BUTTONS + "PlayButton", RIGHT_BUTTONS + "SpeedButton", RIGHT_BUTTONS + "StopButton"]},
-	&"Watch": {advance = A.RUN_FINISHED, dim = false, block_input = true},
-}
+const A := Guides.Advance
+## Gap between the card and the window edge, and between the card and a target.
+const CARD_MARGIN := 24.0
+const FADE := 0.2
 
 @export var mask: TutorialMask
-@export var steps: Control
-## A plain Control above the mask that draws an outline around each target. It
-## carries no material, so it draws the same on every renderer: if the mask's
-## holes ever fail to cut, the targets are still ringed.
-@export var rings: Control
-@export var ring_color := Color(1.0, 0.82, 0.3, 1.0)
-@export var ring_width := 3
+@export var card: GuideCard
 
 var puzzle: Puzzle
-var _steps: Array[TutorialStep] = []
+var pages: Array = []
 var _index := -1
-var _ring_rects: Array[Rect2] = []
-var _ring_box := StyleBoxFlat.new()
-## Where each step's card was authored, in overlay space, keyed by step.
-var _card_home := {}
-
-## Gap between a moved card and the window edge.
-const CARD_MARGIN := 24.0
+var _closing := false
 
 
-func attach(to: Puzzle) -> void:
+func start(to: Puzzle, guide_pages: Array) -> void:
 	puzzle = to
-	# Same failure as the step values: these node references live in the scene
-	# file and go missing with it. The children are always there by name.
+	pages = guide_pages
 	if mask == null: mask = get_node_or_null(^"Mask") as TutorialMask
-	if steps == null: steps = get_node_or_null(^"Steps") as Control
-	if rings == null: rings = get_node_or_null(^"Rings") as Control
-	if mask == null or steps == null:
-		push_error("Tutorial overlay is missing its Mask or Steps node; the tour can't run.")
+	if card == null: card = get_node_or_null(^"Card") as GuideCard
+	if mask == null or card == null or pages.is_empty():
+		push_error("Tutorial overlay is missing its Mask or Card, or has no pages; the guide can't run.")
 		queue_free()
 		return
 
-	_ring_box.draw_center = false
-	_ring_box.border_color = ring_color
-	_ring_box.set_border_width_all(ring_width)
-	_ring_box.set_corner_radius_all(8)
-	if rings != null:
-		rings.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		rings.draw.connect(_draw_rings)
-
-	for child in steps.get_children():
-		if child is TutorialStep:
-			var step := child as TutorialStep
-			step.visible = false
-			_apply_plan(step)
-			_steps.append(step)
-			if step.next_button != null:
-				step.next_button.pressed.connect(_on_event.bind(TutorialStep.Advance.NEXT_BUTTON, &""))
-
+	card.next_pressed.connect(_on_next)
 	Interpreter.running_changed.connect(_on_running_changed)
 	Interpreter.error_raised.connect(_on_error_raised)
 	Game.level.room_completed.connect(_on_room_completed)
-	Game.level.completed.connect(_on_event.bind(TutorialStep.Advance.LEVEL_COMPLETED, &""))
+	Game.level.completed.connect(_on_level_completed)
 	Tutorial.block_placed.connect(_on_block_placed)
 	Tutorial.block_trashed.connect(_on_block_trashed)
 	Tutorial.message_sent.connect(_on_message_sent)
 	Tutorial.assistant_replied.connect(_on_assistant_replied)
+	Tutorial.menu_toggled.connect(_on_menu_toggled)
+	Tutorial.panel_toggled.connect(_on_panel_toggled)
+	Tutorial.view_framed.connect(_on_view_framed)
 
+	for page: Dictionary in pages:
+		for path: String in page.get("targets", []):
+			if not (path.begins_with("block:") or path.begins_with("level:")) and puzzle.get_node_or_null(NodePath(path)) == null:
+				push_warning("Guide page '%s': target '%s' not found under Puzzle." % [page.get("title", ""), path])
+
+	modulate.a = 0.0
+	create_tween().tween_property(self, "modulate:a", 1.0, FADE)
 	_go_to(0)
 
+## Ends the guide now: the pause menu's Skip.
+func skip() -> void:
+	_finish()
 
-## Overwrites the step's exported behaviour with its PLAN entry, and finds its
-## Next button by name if the scene lost that reference too. Reports anything
-## that won't resolve, so a broken tour says so in the Output panel.
-func _apply_plan(step: TutorialStep) -> void:
-	if step.next_button == null:
-		step.next_button = step.find_child("NextButton", true, false) as BaseButton
-	if not PLAN.has(step.name):
-		push_warning("Tutorial: step '%s' has no PLAN entry; using its scene values." % step.name)
-		return
-	var plan: Dictionary = PLAN[step.name]
-	step.advance_on = plan.get("advance", A.NEXT_BUTTON)
-	step.only_block = plan.get("only", "")
-	step.focus_panel = plan.get("focus", "")
-	step.targets = PackedStringArray(plan.get("targets", []))
-	step.dim = plan.get("dim", true)
-	step.block_input = plan.get("block_input", false)
-	for path in step.targets:
-		if _resolve(path) == null:
-			push_warning("Tutorial step '%s': target '%s' not found under Puzzle." % [step.name, path])
-	if step.advance_on == A.NEXT_BUTTON and step.next_button == null:
-		push_warning("Tutorial step '%s' waits for a Next button it doesn't have." % step.name)
-
-
-func current_step() -> TutorialStep:
-	return _steps[_index] if _index >= 0 and _index < _steps.size() else null
+func is_running() -> bool:
+	return not _closing
 
 
 #region Events
-func _on_running_changed() -> void:
-	_on_event(TutorialStep.Advance.RUN_STARTED if Interpreter.is_running else TutorialStep.Advance.RUN_FINISHED)
+# Methods rather than lambdas, so the connections go away with the overlay when
+# a replayed guide replaces it.
+func _on_next() -> void: _on_event(A.NEXT)
+func _on_running_changed() -> void: _on_event(A.RUN_STARTED if Interpreter.is_running else A.RUN_FINISHED)
+func _on_error_raised(_error: Interpreter.Error) -> void: _on_event(A.ERROR_RAISED)
+func _on_room_completed(_done: int, _total: int) -> void: _on_event(A.ROOM_COMPLETED)
+func _on_level_completed() -> void: _on_event(A.LEVEL_COMPLETED)
+func _on_block_placed(block: Block, _into: Block) -> void: _on_event(A.BLOCK_PLACED, StringName(block.data.name))
+func _on_block_trashed(block_name: StringName) -> void: _on_event(A.BLOCK_TRASHED, block_name)
+func _on_message_sent(_text: String) -> void: _on_event(A.MESSAGE_SENT)
+func _on_assistant_replied(_text: String) -> void: _on_event(A.ASSISTANT_REPLIED)
+func _on_menu_toggled(open: bool) -> void: _on_event(A.MENU_OPENED if open else A.MENU_CLOSED)
+func _on_panel_toggled(_panel: SidePanel, open: bool) -> void: _on_event(A.PANEL_OPENED if open else A.PANEL_CLOSED)
+func _on_view_framed() -> void: _on_event(A.VIEW_FRAMED)
 
-func _on_error_raised(_error: Interpreter.Error) -> void:
-	_on_event(TutorialStep.Advance.ERROR_RAISED)
-
-func _on_room_completed(_index_done: int, _total: int) -> void:
-	_on_event(TutorialStep.Advance.ROOM_COMPLETED)
-
-func _on_block_placed(block: Block, _into: Block) -> void:
-	_on_event(TutorialStep.Advance.BLOCK_PLACED, StringName(block.data.name))
-
-func _on_block_trashed(block_name: StringName) -> void:
-	_on_event(TutorialStep.Advance.BLOCK_TRASHED, block_name)
-
-func _on_message_sent(_text: String) -> void:
-	_on_event(TutorialStep.Advance.MESSAGE_SENT)
-
-func _on_assistant_replied(_text: String) -> void:
-	_on_event(TutorialStep.Advance.ASSISTANT_REPLIED)
-
-
-func _on_event(kind: TutorialStep.Advance, block_name: StringName = &"") -> void:
-	var step := current_step()
-	if step == null:
+func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
+	var page := _page()
+	if page.is_empty() or _closing:
 		return
-	# A Next button always advances, whatever the step is waiting for. A tour that
-	# can wedge is worse than one somebody skipped, and the assistant step would
-	# otherwise sit on a network round trip lab day may not deliver.
-	if kind == TutorialStep.Advance.NEXT_BUTTON and step.next_button != null:
+	# The card's button always moves on, whatever the page waits for. A guide
+	# that can wedge is worse than one somebody skipped.
+	if kind == A.NEXT:
 		_go_to(_index + 1)
 		return
-	if step.advance_on != kind:
+	if page.get("advance", A.NEXT) != kind:
 		return
-	if not step.only_block.is_empty() and String(block_name) != step.only_block:
+	var only: String = page.get("only", "")
+	if not only.is_empty() and String(block_name) != only:
 		return
 	_go_to(_index + 1)
 #endregion
 
 
-#region Stepping
-func _go_to(index: int) -> void:
-	if current_step() != null:
-		current_step().visible = false
-	_index = index
+#region Paging
+func _page() -> Dictionary:
+	return pages[_index] if _index >= 0 and _index < pages.size() else {}
 
-	var step := current_step()
-	if step == null:
+func _go_to(index: int) -> void:
+	_index = index
+	var page := _page()
+	if page.is_empty():
 		_finish()
 		return
+	# A page that waits for an action shows no button, unless it names one: the
+	# assistant's page offers Skip, since its reply may never come.
+	var waits: bool = page.get("advance", A.NEXT) != A.NEXT and not page.has("button")
+	card.show_page(page, _index, pages.size(), waits)
+	mask.dimmed = page.get("dim", true)
+	mask.block_all = page.get("block_input", false)
+	_focus_panel(page.get("focus", ""))
+	_update()
 
-	step.visible = true
-	mask.dimmed = step.dim
-	mask.block_all = step.block_input
-	_focus_panel(step)
-	_update_holes()
-
-
-## Opens the side panel tab the step names. focus_content() rather than
+## Opens the side panel tab a page names. focus_content() rather than
 ## show_content(), because show_content() closes a tab that is already open.
-func _focus_panel(step: TutorialStep) -> void:
-	if step.focus_panel.is_empty():
+func _focus_panel(path: String) -> void:
+	if path.is_empty():
 		return
-	var content := puzzle.get_node_or_null(NodePath(step.focus_panel)) as Control
-	var panel: SidePanel = null
-	if content != null:
-		panel = content.get_parent() as SidePanel
+	var content := puzzle.get_node_or_null(NodePath(path)) as Control
+	var panel := content.get_parent() as SidePanel if content != null else null
 	if panel == null:
-		push_warning("Tutorial step '%s': focus_panel '%s' isn't a side panel tab." % [step.name, step.focus_panel])
+		push_warning("Guide: focus '%s' isn't a side panel tab." % path)
 		return
 	panel.focus_content(content)
 
-
-## Every frame, because targets move: a tab opens, a panel scrolls, the window
-## is resized. A target that isn't visible yet simply has no hole until it is.
+## Every frame, because targets move: a tab opens, a panel scrolls, the room's
+## camera reframes, the window is resized.
 func _process(_delta: float) -> void:
-	_update_holes()
+	if not _closing:
+		_update()
 
-
-func _update_holes() -> void:
-	var step := current_step()
-	if step == null or puzzle == null:
+func _update() -> void:
+	var page := _page()
+	if page.is_empty() or puzzle == null:
 		return
 	var to_local := mask.get_global_transform().affine_inverse()
 	var rects: Array[Rect2] = []
-	for path in step.targets:
-		var target := _resolve(path)
-		if target != null and target.is_visible_in_tree():
-			var r := target.get_global_rect()
-			rects.append(Rect2(to_local * r.position, r.size))
+	var targets: Array = page.get("targets", [])
+	for path: String in targets:
+		var rect := _rect_of(path)
+		if rect.has_area():
+			rects.append(Rect2(to_local * rect.position, rect.size))
 	mask.set_holes(rects)
+	# A page whose targets all went missing would dim everything and swallow the
+	# one click it asks for. Drop the dim instead: the card still says what to do.
+	var lost := not targets.is_empty() and rects.is_empty()
+	mask.visible = (page.get("dim", true) or page.get("block_input", false)) and not lost
+	_place_card(page, rects)
 
-	# A step that names targets but resolves none would dim the whole screen and
-	# swallow every click, so one stale node path wedges the tour on exactly the
-	# steps that ask the student to do something. Drop the mask instead: no
-	# highlight, but the UI stays usable and the card still says what to do.
-	var lost := not step.targets.is_empty() and rects.is_empty()
-	mask.visible = (step.dim or step.block_input) and not lost
+## Where a target is on screen, or an empty rect while it isn't showing.
+##   "block:MoveBlock"   the block with that data name, in the toolbox or else on the canvas
+##   "level:Visuals/X"   a node in the level, through the level's camera
+##   anything else       a Control, by path from the Puzzle root
+func _rect_of(path: String) -> Rect2:
+	if path.begins_with("block:"):
+		# The toolbox first; a worked example has an empty one, and then it's the
+		# block in the program on the canvas.
+		var wanted := path.trim_prefix("block:")
+		for where: Node in [puzzle.toolbox, puzzle.canvas]:
+			for node in where.find_children("*", "Block", true, false):
+				var block := node as Block
+				if block.data.name != wanted:
+					continue
+				# A toolbox block in a tab that isn't open: open it.
+				if where == puzzle.toolbox and not block.is_visible_in_tree() and puzzle.toolbox.is_visible_in_tree():
+					puzzle.toolbox.reveal(block)
+				if block.is_visible_in_tree():
+					return block.get_global_rect()
+		return Rect2()
+	if path.begins_with("level:"):
+		return _level_rect(path.trim_prefix("level:"))
+	var control := puzzle.get_node_or_null(NodePath(path)) as Control
+	return control.get_global_rect() if control != null and control.is_visible_in_tree() else Rect2()
 
-	var ringed: Array[Rect2] = []
-	if step.dim and not step.block_input:
-		for r in rects:
-			ringed.append(r.grow(mask.padding + ring_width))
-	_place_card(step, rects)
-	if ringed != _ring_rects:
-		_ring_rects = ringed
-		if rings != null:
-			rings.queue_redraw()
+## A level node's rectangle as it appears on screen: world, through the level
+## camera into the SubViewport, then scaled into the container showing it.
+func _level_rect(node_path: String) -> Rect2:
+	if not is_instance_valid(Game.level):
+		return Rect2()
+	var node := Game.level.get_node_or_null(NodePath(node_path))
+	var viewport := puzzle.level_viewport
+	var container := viewport.get_parent() as Control
+	if node == null or container == null or not container.is_visible_in_tree():
+		return Rect2()
+	var world: Rect2 = (node as ListEntity).get_global_bounds() if node is ListEntity else LevelCamera.node_bounds(node)
+	var to_viewport := viewport.get_canvas_transform()
+	var scale := container.size / Vector2(viewport.size)
+	var a := container.get_global_transform() * ((to_viewport * world.position) * scale)
+	var b := container.get_global_transform() * ((to_viewport * world.end) * scale)
+	return Rect2(a, b - a).intersection(container.get_global_rect())
 
-
-## Keeps the step's card off what it points at. A card is a Control that takes
-## clicks, so one sitting on the Play button or on the begin block's mouth blocks
-## the very action it asks for, and on a 1152-wide window the centred cards did
-## exactly that. Tries the authored spot first, then the corners and edges, and
-## takes the one that covers the least of the targets. Moves only when that is
-## clearly better, so the card doesn't hop while a panel animates open.
-func _place_card(step: TutorialStep, rects: Array[Rect2]) -> void:
-	var card := step.get_node_or_null(^"Card") as Control
-	if card == null or rects.is_empty() or not card.size.x > 0.0:
-		return
-	if not _card_home.has(step):
-		# Record where the authored anchors put it, then pin it top-left so
-		# `position` means the same thing for every candidate spot below.
-		var authored := card.position
-		card.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		card.position = authored
-		_card_home[step] = authored
-	var home: Vector2 = _card_home[step]
+## Keeps the card off what the page points at: a card takes clicks, so one
+## sitting on the Play button blocks the very thing it asks for. Takes the spot
+## that covers the least of the targets, preferring the middle of the screen.
+func _place_card(page: Dictionary, rects: Array[Rect2]) -> void:
 	var area := mask.size
 	var s := card.size
+	var centre := (area - s) / 2.0
+	var top := Vector2(centre.x, CARD_MARGIN)
+	if page.get("card", "") == "top":
+		card.position = top
+		return
+	if rects.is_empty():
+		card.position = centre
+		return
 	var right := area.x - s.x - CARD_MARGIN
 	var bottom := area.y - s.y - CARD_MARGIN
-	var centre_x := (area.x - s.x) / 2.0
 	var spots: Array[Vector2] = [
-		home,
-		Vector2(centre_x, CARD_MARGIN), Vector2(centre_x, bottom),
+		centre, top, Vector2(centre.x, bottom),
+		Vector2(CARD_MARGIN, centre.y), Vector2(right, centre.y),
 		Vector2(right, CARD_MARGIN), Vector2(right, bottom),
 		Vector2(CARD_MARGIN, CARD_MARGIN), Vector2(CARD_MARGIN, bottom),
-		Vector2(centre_x, (area.y - s.y) / 2.0),
 	]
-	var best := home
+	var best := spots[0]
 	var best_cover := INF
 	for spot in spots:
 		var cover := _covered(Rect2(spot, s), rects)
-		if cover < best_cover:
+		if cover < best_cover - 1.0:
 			best = spot
 			best_cover = cover
-	if _covered(Rect2(card.position, s), rects) > best_cover + 64.0:
+	# Only move when that's clearly better, so the card doesn't hop about while
+	# a panel slides open under it.
+	if _covered(Rect2(card.position, s), rects) > best_cover + 64.0 or card.position == Vector2.ZERO:
 		card.position = best
-
 
 func _covered(card_rect: Rect2, rects: Array[Rect2]) -> float:
 	var total := 0.0
 	for r in rects:
-		total += card_rect.intersection(r.grow(mask.padding + ring_width)).get_area()
+		total += card_rect.intersection(r.grow(mask.padding + CARD_MARGIN * 0.5)).get_area()
 	return total
 
-
-func _draw_rings() -> void:
-	# Rings share the mask's local space: both are full-rect children of the overlay.
-	for r in _ring_rects:
-		rings.draw_style_box(_ring_box, r)
-
-
-func _resolve(path: String) -> Control:
-	if path.begins_with("block:"):
-		var wanted := path.trim_prefix("block:")
-		for node in puzzle.toolbox.find_children("*", "Block", true, false):
-			if (node as Block).data.name == wanted:
-				return node as Control
-		return null
-	return puzzle.get_node_or_null(NodePath(path)) as Control
-
-
 func _finish() -> void:
+	if _closing:
+		return
+	_closing = true
 	set_process(false)
-	mask.visible = false
-	_ring_rects.clear()
-	if rings != null:
-		rings.queue_redraw()
 	finished.emit()
-	queue_free()
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, FADE)
+	tween.tween_callback(queue_free)
 #endregion

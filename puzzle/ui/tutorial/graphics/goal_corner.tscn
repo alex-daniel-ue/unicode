@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/list_graphic.gd" id="2_r"]
+[ext_resource type="PackedScene" uid="uid://cb5ve56xnp5r5" path="res://level/objects/entities/list/list_entity.tscn" id="3_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/guide_arrow.gd" id="4_r"]
+
+[node name="GoalCorner" type="Control" node_paths=PackedStringArray("list")]
+custom_minimum_size = Vector2(190, 70)
+layout_mode = 3
+offset_right = 190.0
+offset_bottom = 70.0
+mouse_filter = 2
+theme = ExtResource("1_r")
+script = ExtResource("2_r")
+list = NodePath("List")
+target = [1, 2, 3]
+metadata/scale = 2.0
+
+[node name="List" parent="." instance=ExtResource("3_r")]
+position = Vector2(85, 14)
+list_name = &"lockers"
+values = [0, 0, 0]
+
+[node name="Arrow" type="Control" parent="."]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 0.0
+offset_right = 108.0
+offset_bottom = 12.0
+mouse_filter = 2
+script = ExtResource("4_r")
+from = Vector2(0, 0.2)
+to = Vector2(1, 0.8)

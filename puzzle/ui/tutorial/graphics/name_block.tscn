@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/block_picture.gd" id="2_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/guide_arrow.gd" id="3_r"]
+[ext_resource type="Resource" path="res://puzzle/blocks/lists/item_of.tres" id="4_r"]
+
+[node name="NameBlock" type="Control"]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 3
+offset_right = 360.0
+offset_bottom = 56.0
+mouse_filter = 2
+theme = ExtResource("1_r")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 360.0
+offset_bottom = 56.0
+mouse_filter = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Name" type="Control" parent="Row"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("2_r")
+list_name = "route"
+
+[node name="Arrow" type="Control" parent="Row"]
+custom_minimum_size = Vector2(40, 24)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("3_r")
+from = Vector2(0, 0.5)
+to = Vector2(1, 0.5)
+
+[node name="Item" type="Control" parent="Row"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("2_r")
+data = ExtResource("4_r")
+values = PackedStringArray("0", "list:route")

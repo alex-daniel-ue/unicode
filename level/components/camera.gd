@@ -24,12 +24,12 @@ static func node_bounds(root: Node) -> Rect2:
 		if current is CanvasItem and not (current as CanvasItem).visible:
 			continue
 
-		# A list's shelf is laid out in its _ready(), which can come after this
+		# A list's board is laid out in its _ready(), which can come after this
 		# walk (the editor measures from the camera's own _ready()). It knows its
 		# rectangle from its values, so ask it rather than measuring its parts.
 		if current is ListEntity:
-			var shelf := (current as ListEntity).get_global_bounds()
-			bounds = shelf if not found else bounds.merge(shelf)
+			var board := (current as ListEntity).get_global_bounds()
+			bounds = board if not found else bounds.merge(board)
 			found = true
 			continue
 
@@ -70,7 +70,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		# Deferred: the camera is readied before the level's later siblings
 		# (Visuals), so measuring now would miss anything laid out in their
-		# _ready(). A level saved with those bounds framed its shelves off-screen.
+		# _ready(). A level saved with those bounds framed its lists off-screen.
 		update_bounds.call_deferred()
 	else:
 		frame()

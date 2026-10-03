@@ -14,6 +14,17 @@ const BOOL_COLORS: Dictionary[bool, Color] = {
 	false: Color("#FCA5A5")
 }
 
+## An empty slot that can be typed into shimmers between its grey and this, so
+## it reads as a place to type rather than as part of the block's picture. All
+## slots shimmer in step, from one clock, so a canvas of them breathes together
+## instead of flickering.
+const SHIMMER_LIGHT := Color("#F4F7FB")
+const SHIMMER_PERIOD := 2.2
+## A slot under the pointer brightens, whether or not it's empty.
+const HOVER_LIGHTEN := 0.25
+
+var _hovered := false
+
 
 func _ready() -> void:
 	if base.preview_type != Block.PreviewType.NONE:
@@ -21,6 +32,27 @@ func _ready() -> void:
 	
 	update_type_color()
 	super()
+	var line := (base as ValueBlock).line_edit
+	line.mouse_entered.connect(func() -> void: _hovered = true)
+	line.mouse_exited.connect(func() -> void: _hovered = false)
+
+func _update(delta: float) -> void:
+	var resting := target_color
+	if _typeable():
+		if (base as ValueBlock).line_edit.text.is_empty():
+			var t := Time.get_ticks_msec() / 1000.0
+			var wave := (sin(t * TAU / SHIMMER_PERIOD) + 1.0) / 2.0
+			target_color = resting.lerp(SHIMMER_LIGHT, smoothstep(0.0, 1.0, wave) * 0.85)
+		if _hovered:
+			target_color = target_color.lightened(HOVER_LIGHTEN)
+	super(delta)
+	target_color = resting
+
+## A slot the student can type into right now: shown, not in the toolbox, and
+## not locked by a running program.
+func _typeable() -> bool:
+	var value_base := base as ValueBlock
+	return value_base.line_edit.visible and value_base.line_edit.editable and value_base.is_visible_in_tree()
 
 func reset() -> void:
 	update_type_color()

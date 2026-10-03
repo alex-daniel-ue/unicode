@@ -59,6 +59,11 @@ const GROUPS := {
 		text = value
 		text_changed.emit()
 @export var text_blocks: Array[BlockData]
+## One per slot, in order: a word shown greyed in the slot while it's empty, for
+## what goes there ("var", "index", "value"). It names the slot instead of the
+## block text doing it ("for {}" with "var" rather than "for var {}"). Empty
+## leaves that slot's own placeholder.
+@export var text_hints: PackedStringArray = []
 
 var func_script: GDScript
 var func_entity_script: GDScript

@@ -3,10 +3,13 @@ extends Control
 
 ## What each expression came to while the program runs, shown on the block that
 ## worked it out: a small tag at the block's top-right corner, the way Python
-## Tutor and Thonny show values next to the code. `item i of route` shows 3,
-## `s >= 75` shows True, and the `i` inside shows 0. Literals show nothing,
-## since the block already says what they are, and neither does a list's name,
-## since its shelf is in the room.
+## Tutor and Thonny show values next to the code. `i + 1` shows 3, `s >= 75`
+## shows True, `item i of route` shows 4.
+##
+## Only blocks that work something out get one. A variable's value is the
+## Variables tab's job, and showing it here as well put the same number in two
+## places at once. Literals show nothing, since the block already says what they
+## are, and neither does a list's name, since its board is in the room.
 ##
 ## A block evaluating its parameters again clears what they showed last time, so
 ## nothing on screen is older than the pass it belongs to, and the right side of
@@ -25,14 +28,14 @@ const FALSE_COLOR := Color("#fb7185")
 const TEXT_COLOR := Color("#ffd166")
 const SKIPPED_COLOR := Color(0.62, 0.64, 0.7)
 
-@export var template: PanelContainer
+## One tag; the same scene shows a tag in the guide's pictures.
+const TAG := preload("res://puzzle/ui/canvas/value_tag.tscn")
 
 var _bubbles: Dictionary[Block, PanelContainer] = {}
 
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
-	template.visible = false
 	Interpreter.value_shown.connect(_on_value_shown)
 	Interpreter.value_skipped.connect(_on_value_skipped)
 	Interpreter.values_cleared.connect(_on_values_cleared)
@@ -85,13 +88,8 @@ func _on_values_cleared(block: Block) -> void:
 ## [text, colour] for a value, or empty when there's nothing to add to what the
 ## block already says.
 func _shown(block: Block, value: Variant) -> Array:
-	if typeof(value) == TYPE_STRING_NAME:
-		# A name: a variable shows its value now; a list's name shows nothing.
-		if not Interpreter.has_var(value):
-			return []
-		value = Interpreter.read_var(value)
-	elif block is ValueBlock:
-		return []  # a literal: the block already says it
+	if block is ValueBlock or typeof(value) == TYPE_STRING_NAME:
+		return []  # a literal or a variable's name: the block already says it
 	if value == null or value is Object:
 		return []
 	var text := Core.to_python_repr(value)
@@ -107,9 +105,8 @@ func _shown(block: Block, value: Variant) -> Array:
 func _put(block: Block, text: String, color: Color) -> void:
 	var bubble: PanelContainer = _bubbles.get(block)
 	if bubble == null:
-		bubble = template.duplicate() as PanelContainer
+		bubble = TAG.instantiate() as PanelContainer
 		add_child(bubble)
-		bubble.visible = true
 		bubble.modulate.a = 0.0
 		create_tween().tween_property(bubble, "modulate:a", 1.0, FADE_IN)
 		_bubbles[block] = bubble

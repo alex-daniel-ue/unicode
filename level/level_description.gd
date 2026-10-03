@@ -8,20 +8,22 @@ extends Node
 ##
 ## 1. The brief (preferred). Fill the "Brief" fields in the inspector and the
 ##    panel is built from them in one consistent style: a mission card, one row
-##    per room, the twist, a card per new block, a tip, and the star target
-##    computed from par, so it can never drift. Nothing to lay out per level.
+##    per room, the twist, a tip, and the star target computed from par, so it
+##    can never drift. Nothing to lay out per level.
+##
+##    Keep it short and keep the answer out of it. New blocks aren't shown here:
+##    they and their notes go to the top of the Toolbox (Toolbox.mark_new) and
+##    get a guide page each (Guides), because a brief that explained everything
+##    on entry was the part students skipped.
 ## 2. Controls. Any Labels, TextureRects, inert Blocks or containers added as
 ##    children are shown too, after the brief. Use this for pictures.
 
 const ACCENT := Color(1.0, 0.82, 0.3)       # the tutorial ring colour: "this matters"
 const TWIST := Color(1.0, 0.5, 0.38)
-const IDEA := Color(0.36, 0.78, 1.0)
 const MUTED := Color(0.78, 0.8, 0.88)
 const CARD_BG := Color(1, 1, 1, 0.06)
-const BLOCK_BG := Color(0, 0, 0, 0.28)
 const BODY_SIZE := 20
 const CAPTION_SIZE := 16
-const EXAMPLE_TOOLTIP := "This is a picture of the block.\nDrag the real one from the Toolbox."
 
 @export_group("Brief")
 @export var title := ""
@@ -32,18 +34,13 @@ const EXAMPLE_TOOLTIP := "This is a picture of the block.\nDrag the real one fro
 @export var rooms: PackedStringArray = []
 ## The constraint that makes this level this level: "But there's no else block."
 @export_multiline var twist := ""
-## A concept introduced here that isn't a block, such as what a tuple is, shown
-## on its own card as "NEW IDEA: <idea_title>". Say what it is and what it can't
-## do, never how to use it in this level.
-@export var idea_title := ""
-@export_multiline var idea := ""
-## Blocks introduced here, each shown as an inert picture on its own card.
+## Blocks introduced here. Shown at the top of the Toolbox with their notes, and
+## each gets a guide page when the level opens.
 @export var blocks: Array[BlockData] = []
-## One note per entry in `blocks`: a sentence about the block in this level, then
-## one about what it does in general.
+## One short note per entry in `blocks`: what the block does, in a sentence.
 @export var block_notes: PackedStringArray = []
-## Optional, one per entry in `blocks`: what the picture's slots show, comma
-## separated ("puddle" makes it read "ahead is puddle"). Empty keeps the default.
+## Optional, one per entry in `blocks`: what the guide's picture of it shows in
+## its slots, comma separated ("puddle" makes it read "ahead is puddle").
 @export var block_values: PackedStringArray = []
 @export_multiline var tip := ""
 ## Off for worked examples, where the preset is the whole program.
@@ -78,8 +75,6 @@ func _fill_from_table() -> void:
 	if mission.is_empty() and t.has("mission"): mission = t.mission; patched.append("mission")
 	if twist.is_empty() and t.has("twist"): twist = t.twist; patched.append("twist")
 	if tip.is_empty() and t.has("tip"): tip = t.tip; patched.append("tip")
-	if idea.is_empty() and t.has("idea"): idea = t.idea; patched.append("idea")
-	if idea_title.is_empty() and t.has("idea_title"): idea_title = t.idea_title; patched.append("idea_title")
 	if rooms.is_empty() and t.has("rooms"): rooms = PackedStringArray(t.rooms); patched.append("rooms")
 	if blocks.is_empty() and t.has("blocks"):
 		for path in t.blocks:
@@ -175,7 +170,6 @@ func _brief_text() -> String:
 	for i in rooms.size():
 		lines.append("Room %d: %s" % [i + 1, rooms[i]])
 	if not twist.is_empty(): lines.append("Twist: " + twist)
-	if not idea.is_empty(): lines.append("New idea (%s): %s" % [idea_title, idea])
 	for i in blocks.size():
 		if blocks[i] != null:
 			lines.append("%s: %s" % [blocks[i].text.replace("{}", "...").replace("\\n", " "), _note(i)])
@@ -219,20 +213,6 @@ func _build_brief() -> Control:
 		stack.add_child(_body(twist))
 		root.add_child(card)
 
-	if not idea.is_empty():
-		var card := _card(Color(IDEA, 0.1), IDEA)
-		var stack := _stack(card)
-		stack.add_child(_caption(("NEW IDEA: " + idea_title).to_upper() if not idea_title.is_empty() else "NEW IDEA", IDEA))
-		stack.add_child(_body(idea))
-		root.add_child(card)
-
-	var shown := blocks.filter(func(b: BlockData) -> bool: return b != null)
-	if not shown.is_empty():
-		root.add_child(_caption("NEW BLOCKS" if shown.size() > 1 else "NEW BLOCK", MUTED))
-		for i in blocks.size():
-			if blocks[i] != null:
-				root.add_child(_block_card(blocks[i], _note(i), i))
-	
 	if not tip.is_empty():
 		var tip_label := _body(tip)
 		tip_label.modulate = MUTED
@@ -322,38 +302,4 @@ func _room_row(number: int, text: String) -> Control:
 	row.add_child(_body(text))
 	return row
 
-## An inert block on a card that looks like a specimen rather than a palette:
-## the Toolbox is where blocks are dragged from, so the card answers a drag
-## attempt with the "not allowed" cursor and a tooltip saying where to go.
-func _block_card(data: BlockData, note: String, index: int) -> Control:
-	var card := _card(BLOCK_BG, Color(1, 1, 1, 0.0))
-	card.mouse_filter = Control.MOUSE_FILTER_STOP
-	card.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
-	card.tooltip_text = EXAMPLE_TOOLTIP
-	var stack := _stack(card)
-	stack.add_theme_constant_override(&"separation", 8)
-	
-	var shown := data
-	var values := block_values[index].split(",", false) if index < block_values.size() else PackedStringArray()
-	if not values.is_empty():
-		shown = data.deep_copy()
-		for i in mini(values.size(), shown.text_blocks.size()):
-			shown.text_blocks[i].text = values[i].strip_edges()
-	var block := Block.construct(shown)
-	block.display = true
-	block.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	stack.add_child(block)
-	if not note.is_empty():
-		stack.add_child(_body(note))
-	
-	# format() rebuilds a block's sockets in its own _ready(), so the controls to
-	# silence only exist once the card is ready.
-	card.ready.connect(_silence.bind(card), CONNECT_ONE_SHOT)
-	return card
-
-func _silence(card: Control) -> void:
-	for node in card.find_children("*", "Control", true, false):
-		var control := node as Control
-		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		control.focus_mode = Control.FOCUS_NONE
 #endregion

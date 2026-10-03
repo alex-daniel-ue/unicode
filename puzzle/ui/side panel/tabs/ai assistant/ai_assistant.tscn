@@ -45,7 +45,7 @@ bubble_theme_thinking = SubResource("Resource_wf488")
 chat_stack = NodePath("VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/ChatStack")
 message_field = NodePath("VBoxContainer/HBoxContainer/UserMessageField")
 submit_button = NodePath("VBoxContainer/HBoxContainer/SubmitButton")
-reset_button = NodePath("VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks/MarginContainer/ResetButton")
+reset_button = NodePath("VBoxContainer/TopBar/ResetButton")
 http_request = NodePath("HTTPRequest")
 scroll = NodePath("VBoxContainer/ScrollContainer")
 
@@ -57,6 +57,32 @@ timeout = 35.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="TopBar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderMedium"
+text = "AI Assistant"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/TopBar"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Start a new chat. The assistant forgets this one."
+focus_mode = 0
+theme = ExtResource("1_rgus7")
+theme_type_variation = &"MainMenuButton"
+theme_override_constants/icon_max_width = 20
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "New chat"
+icon = ExtResource("5_q1e47")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -76,44 +102,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 16
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="BadUIButItWorks" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="ExpandFiller" type="Control" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks"]
-custom_minimum_size = Vector2(0, 4)
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks"]
-layout_mode = 2
-theme_override_constants/margin_right = 4
-
-[node name="ResetButton" type="Button" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks/MarginContainer"]
-custom_minimum_size = Vector2(35, 35)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-theme = ExtResource("1_rgus7")
-theme_type_variation = &"SidePanelButton"
-disabled = true
-icon = ExtResource("5_q1e47")
-expand_icon = true
-
-[node name="Header" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 1
-theme_type_variation = &"HeaderMedium"
-text = "AI Assistant"
-
-[node name="ExpandFiller" type="Control" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="ChatStack" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -151,6 +139,6 @@ icon_alignment = 1
 expand_icon = true
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_request_completed"]
-[connection signal="pressed" from="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/BadUIButItWorks/MarginContainer/ResetButton" to="." method="_reset_chat"]
+[connection signal="pressed" from="VBoxContainer/TopBar/ResetButton" to="." method="_reset_chat"]
 [connection signal="submitted" from="VBoxContainer/HBoxContainer/UserMessageField" to="." method="_on_submit_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SubmitButton" to="." method="_on_submit_pressed"]

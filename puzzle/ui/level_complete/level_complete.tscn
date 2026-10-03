@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bafuclrikj4j7"]
+[gd_scene load_steps=5 format=3 uid="uid://bafuclrikj4j7"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_m0nfs"]
 [ext_resource type="Script" uid="uid://dit0t1lwo3tuh" path="res://puzzle/ui/level_complete/level_complete.gd" id="2_orori"]
+[ext_resource type="FontFile" uid="uid://d0dw8vqho76cs" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf" id="3_body"]
+[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="4_code"]
 
 [node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "stay_button", "select_button", "next_button")]
 visible = false
@@ -73,10 +75,18 @@ theme_override_font_sizes/font_size = 20
 text = "★★★ at 4 or fewer, ★★ at 5."
 horizontal_alignment = 1
 
-[node name="Summary" type="Label" parent="Center/Card/Margin/Stack"]
+[node name="Summary" type="RichTextLabel" parent="Center/Card/Margin/Stack"]
 visible = false
+custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_type_variation = &"LegibleLabel"
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("3_body")
+theme_override_fonts/mono_font = ExtResource("4_code")
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/mono_font_size = 16
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 autowrap_mode = 3
 
 [node name="Buttons" type="HBoxContainer" parent="Center/Card/Margin/Stack"]

@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_r"]
+[ext_resource type="PackedScene" uid="uid://cb5ve56xnp5r5" path="res://level/objects/entities/list/list_entity.tscn" id="2_r"]
+[ext_resource type="Script" path="res://puzzle/ui/tutorial/guide_arrow.gd" id="3_r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_outline"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.82, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="ListIndex" type="Control"]
+custom_minimum_size = Vector2(190, 84)
+layout_mode = 3
+offset_right = 190.0
+offset_bottom = 84.0
+mouse_filter = 2
+theme = ExtResource("1_r")
+metadata/scale = 2.0
+
+[node name="List" parent="." instance=ExtResource("2_r")]
+position = Vector2(76, 6)
+list_name = &"route"
+values = [3, 2, 4]
+
+[node name="IndexRow" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 36.0
+offset_right = 176.0
+offset_bottom = 58.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_outline")
+
+[node name="First" type="Label" parent="."]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 66.0
+offset_right = 122.0
+offset_bottom = 84.0
+theme_type_variation = &"LegibleLabel"
+theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "first"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstArrow" type="Control" parent="."]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 56.0
+offset_right = 99.0
+offset_bottom = 68.0
+mouse_filter = 2
+script = ExtResource("3_r")
+from = Vector2(0.5, 1)
+to = Vector2(0.5, 0)
