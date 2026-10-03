@@ -14,6 +14,7 @@ syntax = "decrement {name: variable}"
 description = "Subtracts 1 from the value of the specified variable. The variable must contain a number."
 text = "decrement {}"
 text_blocks = Array[ExtResource("1_yquu0")]([ExtResource("3_gl6w5")])
+text_hints = PackedStringArray("var")
 Function/script = ExtResource("1_k8elu")
 Function/method = &"_decrement"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

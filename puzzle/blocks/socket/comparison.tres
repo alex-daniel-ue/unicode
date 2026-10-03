@@ -51,6 +51,7 @@ description = "Compares two values using operators like ==, !=, >, <. Returns a 
 top_notch = false
 text = "{} {} {}"
 text_blocks = Array[ExtResource("3_n18n1")]([ExtResource("3_8rxj7"), SubResource("Resource_mtaw4"), ExtResource("3_8rxj7")])
+text_hints = PackedStringArray("value", "", "value")
 Type/socket = SubResource("Resource_nxeil")
 Function/script = ExtResource("4_nxeil")
 Function/entity_name = &""

@@ -15,6 +15,7 @@ syntax = "set item {index: int} of {list: list} to {value: variant}"
 description = "Changes the item at a position in a list. The position has to exist already; append adds a new item. Tuples can't be changed."
 text = "set item {} of {} to {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("list_slot"), ExtResource("2_receptive_")])
+text_hints = PackedStringArray("index", "", "value")
 Function/script = ExtResource("3_list_funct")
 Function/entity_name = &""
 Function/method = &"_set_item"

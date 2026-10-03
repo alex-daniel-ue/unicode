@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value_data"]
 [ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="4_receptive_"]
 [ext_resource type="Script" uid="uid://coj7ansgdg3uk" path="res://puzzle/functions/list_functions.gd" id="5_list_funct"]
-[ext_resource type="Resource" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
+[ext_resource type="Resource" uid="uid://ba0jp5y0dd4hf" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
 
 [sub_resource type="Resource" id="Resource_socket"]
 script = ExtResource("2_socket_dat")
@@ -32,6 +32,7 @@ description = "Gives the item at a position in a list or tuple. Positions start 
 top_notch = false
 text = "item {} of {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("4_receptive_"), ExtResource("list_slot")])
+text_hints = PackedStringArray("index", "")
 Type/value = SubResource("Resource_value")
 Type/socket = SubResource("Resource_socket")
 Function/script = ExtResource("5_list_funct")

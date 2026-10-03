@@ -14,6 +14,7 @@ syntax = "increment {name: variable}"
 description = "Adds 1 to the value of the specified variable. The variable must contain a number."
 text = "increment {}"
 text_blocks = Array[ExtResource("1_b737o")]([ExtResource("3_syoas")])
+text_hints = PackedStringArray("var")
 Function/script = ExtResource("1_jwhlw")
 Function/method = &"_increment"
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

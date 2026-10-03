@@ -15,6 +15,7 @@ syntax = "append {value: variant} to {list: list}"
 description = "Adds a value to the end of a list, which makes it one item longer. Tuples can't grow, and sets use add."
 text = "append {} to {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("list_slot")])
+text_hints = PackedStringArray("value", "")
 Function/script = ExtResource("3_list_funct")
 Function/entity_name = &""
 Function/method = &"_append"

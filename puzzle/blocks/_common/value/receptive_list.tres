@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3 uid="uid://ba0jp5y0dd4hf"]
 
 [ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="1_socket"]
 [ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="2_value"]

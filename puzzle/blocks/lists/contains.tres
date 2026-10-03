@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket_dat"]
 [ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="3_receptive_"]
 [ext_resource type="Script" uid="uid://coj7ansgdg3uk" path="res://puzzle/functions/list_functions.gd" id="4_list_funct"]
-[ext_resource type="Resource" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
+[ext_resource type="Resource" uid="uid://ba0jp5y0dd4hf" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
 
 [sub_resource type="Resource" id="Resource_socket"]
 script = ExtResource("2_socket_dat")
@@ -23,6 +23,7 @@ description = "True if the value is somewhere in the list, tuple or set, otherwi
 top_notch = false
 text = "{} in {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("3_receptive_"), ExtResource("list_slot")])
+text_hints = PackedStringArray("value", "")
 Type/socket = SubResource("Resource_socket")
 Function/script = ExtResource("4_list_funct")
 Function/entity_name = &""
