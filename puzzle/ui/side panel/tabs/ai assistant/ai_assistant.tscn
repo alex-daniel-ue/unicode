@@ -60,13 +60,14 @@ size_flags_vertical = 3
 
 [node name="TopBar" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 24
 
 [node name="Header" type="Label" parent="VBoxContainer/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"HeaderMedium"
 text = "AI Assistant"
+horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 

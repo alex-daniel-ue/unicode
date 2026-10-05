@@ -25,7 +25,7 @@ const OVERLAP := Vector2(6, 8)
 const FADE_IN := 0.12
 const TRUE_COLOR := Color("#7dd3a0")
 const FALSE_COLOR := Color("#fb7185")
-const TEXT_COLOR := Color("#ffd166")
+const TEXT_COLOR := Color("#FF8F5E")  # strings, as their slots are coloured
 const SKIPPED_COLOR := Color(0.62, 0.64, 0.7)
 
 ## One tag; the same scene shows a tag in the guide's pictures.

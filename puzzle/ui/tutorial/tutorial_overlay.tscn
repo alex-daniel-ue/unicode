@@ -1,11 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://dw6wgrum8hn14"]
+[gd_scene load_steps=6 format=3 uid="uid://dw6wgrum8hn14"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_qniq0"]
 [ext_resource type="Script" uid="uid://bkwe3jverlh78" path="res://puzzle/ui/tutorial/tutorial_overlay.gd" id="2_8q55t"]
 [ext_resource type="Script" uid="uid://u4ve5ihtuuvu" path="res://puzzle/ui/tutorial/tutorial_mask.gd" id="4_l8cdv"]
-[ext_resource type="PackedScene" path="res://puzzle/ui/tutorial/guide_card.tscn" id="5_card"]
+[ext_resource type="PackedScene" uid="uid://6c1y4v7eoav2" path="res://puzzle/ui/tutorial/guide_card.tscn" id="5_card"]
+[ext_resource type="Script" uid="uid://dg114oo74b70l" path="res://puzzle/ui/tutorial/guide_pointer.gd" id="6_pointer"]
 
-[node name="TutorialOverlay" type="Control" node_paths=PackedStringArray("mask", "card")]
+[node name="TutorialOverlay" type="Control" node_paths=PackedStringArray("mask", "card", "pointer")]
 z_index = 3
 layout_mode = 3
 anchors_preset = 15
@@ -18,6 +19,7 @@ theme = ExtResource("1_qniq0")
 script = ExtResource("2_8q55t")
 mask = NodePath("Mask")
 card = NodePath("Card")
+pointer = NodePath("Pointer")
 
 [node name="Mask" type="Control" parent="."]
 layout_mode = 1
@@ -27,6 +29,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_l8cdv")
+
+[node name="Pointer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_pointer")
 
 [node name="Card" parent="." instance=ExtResource("5_card")]
 layout_mode = 0

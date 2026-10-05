@@ -70,9 +70,11 @@ func _notification(what: int) -> void:
 			
 			# Handle drop event
 			current_block.visible = true
-			SfxPlayer.play(DROP_SOUND)
 			
+			# The click is for attaching only. Dropping on empty canvas, or
+			# letting go where nothing takes the block, makes no sound.
 			if dp_container != null:
+				SfxPlayer.play(DROP_SOUND)
 				# Insert Block data
 				current_block.orphan()
 				dp_container.add_child(current_block)

@@ -8,6 +8,9 @@ extends Control
 ## "list:route" puts route's name block in the slot, as a student would. An
 ## empty entry leaves that slot as it is. `list_name` alone pictures that list's
 ## name block. `tag` puts a value tag on the block's corner, as a run would.
+## `program` pictures a whole program under a begin block, in the preset's JSON
+## (LevelBlockPreset.program), where a nested block's last entry can be
+## {"body": [...]}: [["move"], ["if", ["not", ["ahead", "puddle"]], {"body": [["move"]]}]].
 ##
 ## A plain Control rather than a container, so the tag can sit over the block's
 ## corner; it takes its minimum size from the block, so containers around it
@@ -21,6 +24,9 @@ const TAG_ROOM := Vector2(18, 12)
 @export var values: PackedStringArray = []
 @export var list_name := ""
 @export var tag := ""
+@export_multiline var program := ""
+
+const BEGIN := "res://puzzle/blocks/generic/begin.tres"
 
 var _block: Control
 var _badge: Control
@@ -30,6 +36,8 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	if data == null and not list_name.is_empty():
 		data = ListEntity.reporter_data(StringName(list_name))
+	if data == null and not program.is_empty():
+		data = load(BEGIN) as BlockData
 	if data == null:
 		return
 	var shown := data.deep_copy()
@@ -43,6 +51,13 @@ func _ready() -> void:
 			shown.text_blocks[i].text = value
 	var block := Block.construct(shown)
 	block.display = true
+	if not program.is_empty() and block is NestedBlock:
+		var parsed: Variant = JSON.parse_string(program)
+		if parsed is Array:
+			for spec: Variant in parsed:
+				_add(block as NestedBlock, spec)
+		else:
+			push_warning("BlockPicture: program isn't a JSON list of blocks.")
 	# format() builds the slots in the block's own _ready(), so they can only be
 	# silenced once it has run.
 	block.ready.connect(_silence.bind(block), CONNECT_ONE_SHOT)
@@ -66,6 +81,24 @@ func _fit() -> void:
 	custom_minimum_size = _block.size + room
 	if _badge != null:
 		_badge.position = Vector2(_block.size.x + room.x - _badge.size.x, 0)
+
+## Builds `spec` (with its body, for a nested block) into `parent`'s mouth.
+func _add(parent: NestedBlock, spec: Variant) -> void:
+	if not spec is Array:
+		return
+	var parts := (spec as Array).duplicate()
+	var body: Array = []
+	if not parts.is_empty() and parts[-1] is Dictionary:
+		body = (parts.pop_back() as Dictionary).get("body", [])
+	var spec_data := LevelBlockPreset._data_for(parts)
+	if spec_data == null:
+		return
+	var inner := Block.construct(spec_data)
+	inner.display = true
+	parent.mouth.add_child(inner)
+	if inner is NestedBlock:
+		for child_spec: Variant in body:
+			_add(inner as NestedBlock, child_spec)
 
 func _silence(block: Control) -> void:
 	for node in [block] + block.find_children("*", "Control", true, false):

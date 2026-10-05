@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=32 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -29,6 +29,8 @@
 [ext_resource type="Texture2D" uid="uid://dvh7ej8j7rh2y" path="res://puzzle/ui/side panel/icons/pixelarticons--frame.png" id="24_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://bafuclrikj4j7" path="res://puzzle/ui/level_complete/level_complete.tscn" id="28_88ajp"]
 [ext_resource type="PackedScene" path="res://puzzle/ui/canvas/value_bubbles.tscn" id="29_bubbles"]
+[ext_resource type="Texture2D" uid="uid://bhetqsdff248x" path="res://puzzle/ui/side panel/icons/pixelarticons--arrow-bar-left.png" id="30_bar_left"]
+[ext_resource type="Texture2D" uid="uid://bpi4nty8o3g3f" path="res://puzzle/ui/side panel/icons/pixelarticons--arrow-bar-right.png" id="31_bar_right"]
 
 [node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete", "pause_menu")]
 layout_mode = 3
@@ -58,7 +60,6 @@ scripting_buttons = [NodePath("../UserInterface/SideMenuLeft/ButtonContainer/Tra
 running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
-visible = false
 
 [node name="Canvas" parent="." instance=ExtResource("1_n7lcs")]
 layout_mode = 1
@@ -122,6 +123,7 @@ theme_override_constants/separation = 12
 
 [node name="Header" type="Label" parent="UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_xv3xb")
 theme_type_variation = &"HeaderMedium"
 text = "Instructions"
 horizontal_alignment = 1
@@ -343,19 +345,21 @@ tooltip_text = "Menu (Esc): resume, level select, main menu"
 focus_mode = 0
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
-theme_override_font_sizes/font_size = 16
-text = "Esc"
+icon = ExtResource("10_dipl1")
+expand_icon = true
 
 [node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Open/close panel"
+tooltip_text = "Hide or show the room"
 theme = ExtResource("2_xv3xb")
 theme_type_variation = &"SidePanelButton"
-icon = ExtResource("10_dipl1")
+icon = ExtResource("31_bar_right")
 expand_icon = true
 script = ExtResource("6_82356")
 associated_contents = NodePath("../../Panel/PuzzleEnvironment")
+open_icon = ExtResource("31_bar_right")
+closed_icon = ExtResource("30_bar_left")
 
 [node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -429,15 +433,14 @@ size = Vector2i(2, 648)
 render_target_update_mode = 4
 
 [node name="LevelComplete" parent="." instance=ExtResource("28_88ajp")]
-visible = false
 z_index = 5
 layout_mode = 1
 
 [connection signal="pressed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" to="UserInterface/SideMenuLeft/ButtonContainer/TrashButton" method="_on_pressed"]
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/MenuButton" to="." method="open_menu"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/FrameButton" to="ButtonManager" method="_on_frame_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="ButtonManager" method="_on_speed_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/StopButton" to="ButtonManager" method="_on_stop_button_pressed"]
-[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/MenuButton" to="." method="open_menu"]

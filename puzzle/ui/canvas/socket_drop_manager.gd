@@ -2,6 +2,7 @@ extends Control
 
 
 const REFUSED_TINT := Color(1.0, 0.45, 0.45, 1.0)
+const DROP_SOUND := preload("res://audio/block_drop.mp3")
 
 var current_socket: SocketBlock
 var drop_preview: SocketBlock
@@ -67,6 +68,7 @@ func _notification(what: int) -> void:
 					current_socket.overridden_socket.visible = false
 			
 			if dp_socket != null:
+				SfxPlayer.play(DROP_SOUND)  # attached: the same click as a statement block
 				var container := dp_socket.get_parent()
 				var idx := dp_socket.get_index()
 				

@@ -76,7 +76,7 @@ func _set_item(this: Block) -> void:
 	
 	var target_list: Variant = Interpreter.read_var(list_name)
 	if typeof(target_list) != TYPE_ARRAY:
-		this.function.error("Cannot set item on '%s': it is not a list." % list_name)
+		this.function.error("Can't set an index of '%s': it isn't a list." % list_name)
 		return
 	
 	var list := target_list as Array

@@ -235,6 +235,35 @@ func get_func_type() -> FuncType:
 func has_text_blocks() -> bool:
 	return text.contains("{}")
 
+## What to call this block in a sentence: its text on one line, with "..." for
+## each slot ("ahead is ...", "move forward ... times", "begin code"). A block
+## that starts with a slot ("{} in {}", "{} {} {}") would be all dots that way,
+## so its slots are named instead, as the block shows them: "value in list",
+## "number + number".
+func display_name() -> String:
+	var line := text.replace("\\n", " ").strip_edges()
+	var parts := line.split("{}")
+	var shown := parts[0]
+	for i in range(1, parts.size()):
+		shown += (_slot_word(i - 1) if line.begins_with("{}") else "...") + parts[i]
+	shown = shown.strip_edges()
+	return shown if not shown.is_empty() else name
+
+## The word a slot shows while it's empty: its hint, its placeholder, or its
+## first choice.
+func _slot_word(index: int) -> String:
+	if index < text_hints.size() and not text_hints[index].is_empty():
+		return text_hints[index]
+	var slot: BlockData = text_blocks[index] if index < text_blocks.size() else null
+	if slot != null and slot.value != null:
+		if not slot.value.placeholder.is_empty():
+			return slot.value.placeholder
+		if not slot.value.enum_values.is_empty():
+			return slot.value.enum_values[0]
+	if slot != null and slot.name.begins_with("List") or slot != null and slot.text == "list":
+		return "list"
+	return "..."
+
 ## A duplicate that actually copies the nested parameter blocks.
 ##
 ## Resource.duplicate(true) does not copy a sub-resource that came from a file.

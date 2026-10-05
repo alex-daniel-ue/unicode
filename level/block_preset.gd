@@ -9,7 +9,7 @@ extends Node
 ## for presets whose slots hold other blocks (a level generator writes these).
 ## JSON: a list of blocks, each [name, slot, slot...], where a slot is typed in
 ## or is a block itself, and ["list", "route"] is route's name block:
-##   [["moven", ["item", 0, ["list", "route"]]], ["turn", "left"]]
+##   [["moven", ["index", 0, ["list", "route"]]], ["turn", "left"]]
 ## Only used while begin is empty, so blocks authored in the editor win.
 @export_multiline var program := ""
 
@@ -18,10 +18,16 @@ const PROGRAM_BLOCKS := {
 	"move": "res://level/objects/entities/robot/blocks/move.tres",
 	"moven": "res://level/objects/entities/robot/blocks/move_n.tres",
 	"turn": "res://level/objects/entities/robot/blocks/turn.tres",
-	"item": "res://puzzle/blocks/lists/item_of.tres",
+	"index": "res://puzzle/blocks/lists/item_of.tres",
+	"item": "res://puzzle/blocks/lists/item_of.tres",  # the old name, for presets written before
 	"len": "res://puzzle/blocks/lists/length_of.tres",
 	"arith": "res://puzzle/blocks/socket/arithmetic.tres",
 	"cmp": "res://puzzle/blocks/socket/comparison.tres",
+	"ahead": "res://level/objects/entities/robot/blocks/ahead_is.tres",
+	"not": "res://puzzle/blocks/socket/not.tres",
+	"if": "res://puzzle/blocks/control flow/if.tres",
+	"else": "res://puzzle/blocks/control flow/else.tres",
+	"while": "res://puzzle/blocks/control flow/while.tres",
 }
 
 const IMMOVABLE_TOOLTIP := "This program is locked: read it, then watch it run."

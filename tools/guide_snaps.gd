@@ -31,7 +31,8 @@ func _snap_level(path: String) -> void:
 		var guide := overlay[0] as TutorialOverlay
 		for i in guide.pages.size():
 			guide._go_to(i)
-			for f in 12: await get_tree().process_frame
+			for f in 45: await get_tree().process_frame  # the card glides into place
+			print("PAGE %d spot=%s card=%s size=%s" % [i + 1, guide._spot, guide.card.position, guide.card.size])
 			await _snap("%s_%d" % [key, i + 1])
 	puzzle.queue_free()
 	for i in 3: await get_tree().process_frame

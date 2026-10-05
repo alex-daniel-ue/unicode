@@ -65,12 +65,16 @@ func stagger_in(items: Array, step := STAGGER) -> void:
 func _on_node_added(node: Node) -> void:
 	if node is BaseButton:
 		_juice_button.call_deferred(node)
-	elif node is Popup:
+	elif node is Popup and not node.has_meta(&"juiced"):
+		# Once per popup: one that leaves the tree and comes back (a dropdown's
+		# list, when its block moves) is added again.
+		node.set_meta(&"juiced", true)
 		(node as Popup).about_to_popup.connect(_on_popup.bind(node))
 
 func _juice_button(button: BaseButton) -> void:
-	if not is_instance_valid(button) or button.has_meta(&"no_juice") or _inside_block(button):
+	if not is_instance_valid(button) or button.has_meta(&"no_juice") or button.has_meta(&"juiced") or _inside_block(button):
 		return
+	button.set_meta(&"juiced", true)
 	button.mouse_entered.connect(_scale_button.bind(button, HOVER_SCALE))
 	button.mouse_exited.connect(_scale_button.bind(button, Vector2.ONE))
 	button.button_down.connect(_scale_button.bind(button, PRESS_SCALE))
@@ -83,7 +87,7 @@ func _scale_button(button: BaseButton, to: Vector2) -> void:
 	if button.disabled and to != Vector2.ONE:
 		return
 	button.pivot_offset = button.size / 2.0
-	var old: Tween = button.get_meta(&"juice_tween", null)
+	var old: Tween = button.get_meta(&"juice_tween") if button.has_meta(&"juice_tween") else null
 	if old != null and old.is_valid():
 		old.kill()
 	var tween := button.create_tween()

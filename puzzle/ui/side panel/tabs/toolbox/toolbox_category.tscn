@@ -1,22 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfu3kkn3xy7sr"]
+[gd_scene load_steps=4 format=3 uid="uid://bfu3kkn3xy7sr"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_gc06a"]
 [ext_resource type="Script" uid="uid://c18qpqrtsywdv" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_category.gd" id="2_k8qgo"]
+[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="3_font"]
 
-[node name="Category" type="ScrollContainer" node_paths=PackedStringArray("container")]
+[node name="Category" type="VBoxContainer" node_paths=PackedStringArray("container", "heading")]
 size_flags_horizontal = 3
-size_flags_vertical = 3
+mouse_filter = 2
 theme = ExtResource("1_gc06a")
-horizontal_scroll_mode = 0
+theme_override_constants/separation = 8
 script = ExtResource("2_k8qgo")
 container = NodePath("Margin/Grid")
+heading = NodePath("Heading")
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.8, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 16
+text = "Category"
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
+theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 

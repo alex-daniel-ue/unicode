@@ -2,6 +2,9 @@ class_name SidePanel
 extends Panel
 
 
+## Whenever the panel starts opening or closing, whoever asked.
+signal toggled(open: bool)
+
 const VIEWPORT_RATIO := 1. / 3.5
 
 var is_open := false
@@ -19,7 +22,10 @@ func show_menu(to_open: bool) -> void:
 	if keep_state:
 		return
 	
+	var changed := is_open != to_open
 	is_open = to_open
+	if changed:
+		toggled.emit(is_open)
 	
 	var destination := Vector2(
 		expand_size if to_open else 0.0,

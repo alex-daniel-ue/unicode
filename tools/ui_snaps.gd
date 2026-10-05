@@ -40,7 +40,7 @@ func _puzzle_shots() -> void:
 	asked.text = "why does it stop early?"
 	asked.right_aligned = true
 	assistant._add_bubble(asked)
-	assistant._add_ai_bubble("In Room 2 the robot stops 1 tile short of the second blue flag. How many times did your loop run there?")
+	assistant._add_ai_bubble("In Room 2 the robot stops 1 tile short of the second bottle. How many times did your loop run there?")
 	for i in 30: await get_tree().process_frame
 	await _snap("assistant")
 

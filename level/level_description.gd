@@ -218,13 +218,23 @@ func _build_brief() -> Control:
 		tip_label.modulate = MUTED
 		root.add_child(tip_label)
 	
-	var stars := _star_line()
-	if not stars.is_empty():
+	var par := _star_par()
+	if par >= 0:
+		# The stars and the words are separate labels: only StarText's font has ★.
 		var badge := _card(Color(ACCENT, 0.12), Color(ACCENT, 0.0))
-		var label := _body(stars)
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.add_theme_color_override(&"font_color", ACCENT)
-		badge.add_child(label)
+		var row := HBoxContainer.new()
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		row.add_theme_constant_override(&"separation", 10)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var star_label := StarText.style(Label.new(), BODY_SIZE + 4)
+		star_label.text = StarText.of(3)
+		row.add_child(star_label)
+		var words := _body("%d block%s or fewer" % [par, "" if par == 1 else "s"])
+		words.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		words.autowrap_mode = TextServer.AUTOWRAP_OFF
+		words.add_theme_color_override(&"font_color", ACCENT)
+		row.add_child(words)
+		badge.add_child(row)
 		root.add_child(badge)
 	
 	return root
@@ -233,11 +243,17 @@ func _note(index: int) -> String:
 	return block_notes[index] if index < block_notes.size() else ""
 
 func _star_line() -> String:
+	var par := _star_par()
+	if par < 0:
+		return ""
+	return "★★★  %d block%s or fewer" % [par, "" if par == 1 else "s"]
+
+## The three-star block count, or -1 when this level shows no stars.
+func _star_par() -> int:
 	var level := get_parent() as Level
 	if not show_stars or level == null or Engine.is_editor_hint():
-		return ""
-	var par := level.get_star_par()
-	return "★★★  %d block%s or fewer" % [par, "" if par == 1 else "s"]
+		return -1
+	return level.get_star_par()
 
 func _card(bg: Color, border: Color) -> PanelContainer:
 	var card := PanelContainer.new()

@@ -33,9 +33,9 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_tab_panel"]
-content_margin_left = 8.0
+content_margin_left = 10.0
 content_margin_top = 12.0
-content_margin_right = 8.0
+content_margin_right = 6.0
 content_margin_bottom = 8.0
 bg_color = Color(0.08627451, 0.09803922, 0.14901961, 1)
 border_width_top = 3
@@ -46,7 +46,7 @@ corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBox_focus"]
 
-[node name="Toolbox" type="MarginContainer" node_paths=PackedStringArray("new_holder", "tabs", "hint")]
+[node name="Toolbox" type="MarginContainer" node_paths=PackedStringArray("new_holder", "tabs", "scroll", "sections", "hint")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -62,14 +62,16 @@ theme_override_constants/margin_bottom = 16
 script = ExtResource("1_osgvg")
 _internal_category_order = PackedStringArray("Robot", "Lists", "Iterative", "Selection", "Boolean", "Value", "Generic")
 category_scene = ExtResource("3_pntoy")
-new_holder = NodePath("Layout/NewHolder")
+new_holder = NodePath("Layout/Panel/Scroll/Body/NewHolder")
 tabs = NodePath("Layout/Tabs")
-hint = NodePath("Layout/Hint")
+scroll = NodePath("Layout/Panel/Scroll")
+sections = NodePath("Layout/Panel/Scroll/Body/Sections")
+hint = NodePath("Layout/Panel/Scroll/Body/Hint")
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="Header" type="Label" parent="Layout"]
 layout_mode = 2
@@ -80,11 +82,44 @@ horizontal_alignment = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="NewHolder" type="VBoxContainer" parent="Layout"]
+[node name="Tabs" type="TabBar" parent="Layout"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_selected_color = Color(0.105882354, 0.09411765, 0.13725491, 1)
+theme_override_colors/font_hovered_color = Color(1, 1, 1, 1)
+theme_override_colors/font_unselected_color = Color(0.78, 0.8, 0.88, 1)
+theme_override_constants/h_separation = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/tab_focus = SubResource("StyleBox_focus")
+theme_override_styles/tab_selected = SubResource("StyleBox_tab_selected")
+theme_override_styles/tab_hovered = SubResource("StyleBox_tab_hovered")
+theme_override_styles/tab_unselected = SubResource("StyleBox_tab_unselected")
+clip_tabs = false
+scroll_to_selected = true
+
+[node name="Panel" type="PanelContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_tab_panel")
+
+[node name="Scroll" type="ScrollContainer" parent="Layout/Panel"]
+layout_mode = 2
+theme = ExtResource("1_pe4tv")
+horizontal_scroll_mode = 0
+
+[node name="Body" type="VBoxContainer" parent="Layout/Panel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 14
+
+[node name="NewHolder" type="VBoxContainer" parent="Layout/Panel/Scroll/Body"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Hint" type="Label" parent="Layout"]
+[node name="Hint" type="Label" parent="Layout/Panel/Scroll/Body"]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
 theme = ExtResource("1_pe4tv")
@@ -94,18 +129,7 @@ text = "Drag a block onto the canvas to use it."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Tabs" type="TabContainer" parent="Layout"]
+[node name="Sections" type="VBoxContainer" parent="Layout/Panel/Scroll/Body"]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_selected_color = Color(0.105882354, 0.09411765, 0.13725491, 1)
-theme_override_colors/font_hovered_color = Color(1, 1, 1, 1)
-theme_override_colors/font_unselected_color = Color(0.78, 0.8, 0.88, 1)
-theme_override_constants/side_margin = 0
-theme_override_fonts/font = ExtResource("4_font")
-theme_override_font_sizes/font_size = 16
-theme_override_styles/tab_focus = SubResource("StyleBox_focus")
-theme_override_styles/tab_selected = SubResource("StyleBox_tab_selected")
-theme_override_styles/tab_hovered = SubResource("StyleBox_tab_hovered")
-theme_override_styles/tab_unselected = SubResource("StyleBox_tab_unselected")
-theme_override_styles/panel = SubResource("StyleBox_tab_panel")
-current_tab = 0
+mouse_filter = 2
+theme_override_constants/separation = 18

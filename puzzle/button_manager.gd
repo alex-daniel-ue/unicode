@@ -48,5 +48,5 @@ func _on_speed_button_pressed() -> void:
 
 func _on_frame_button_pressed() -> void:
 	Game.level.camera.frame()
-	puzzle.notif.push("Level reframed.", Notification.Type.LOG)
+	puzzle.notif.push("The room is back in view.", Notification.Type.LOG)
 	Tutorial.view_framed.emit()

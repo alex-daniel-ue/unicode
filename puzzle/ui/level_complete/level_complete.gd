@@ -18,8 +18,9 @@ const SUMMARY_WAITING := "Looking at your program..."
 @export var stars_label: Label
 ## "You used 5 blocks." What the student did.
 @export var usage_label: Label
-## The next star tier only: "★★★ takes 4 blocks or fewer." Hidden at three stars.
-@export var target_label: Label
+## The next star tier only: "For ★★★, use 4 blocks or fewer." Hidden at three
+## stars. Rich text, so the stars can be set in StarText's font.
+@export var target_label: RichTextLabel
 ## The post-win summary (design doc §8). Hidden until it has text. Rich text, so
 ## the Python in it shows as code (CodeSpans) instead of running on as English.
 ## Its code font is the scene's mono_font: swap in a monospace one there.
@@ -44,7 +45,7 @@ func _ready() -> void:
 ## one exception: it is the assistant's, it fills in afterwards, and it never
 ## carries a number the game computed.
 func present(stars: int, placed: int, par: int, slack: int, summary_expected := false) -> int:
-	stars_label.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+	stars_label.text = StarText.of(stars)
 
 	if placed == 0:
 		# A worked example: the preset was the whole program.
@@ -95,10 +96,13 @@ func _next_tier(stars: int, par: int, slack: int) -> String:
 		3:
 			return ""
 		2:
-			return "★★★ takes %d block%s or fewer." % [par, "" if par == 1 else "s"]
+			return _tier_line(3, par)
 		_:
-			var two := par + slack
-			return "★★ takes %d block%s or fewer." % [two, "" if two == 1 else "s"]
+			return _tier_line(2, par + slack)
+
+func _tier_line(stars: int, blocks: int) -> String:
+	return "[center]For %s, use %d block%s or fewer.[/center]" % [
+		StarText.bbcode(StarText.FILLED.repeat(stars)), blocks, "" if blocks == 1 else "s"]
 
 
 ## Called by Puzzle when the summary request finishes. Empty means it failed or

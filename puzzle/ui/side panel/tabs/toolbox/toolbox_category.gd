@@ -1,21 +1,34 @@
 class_name ToolboxCategory
-extends ScrollContainer
+extends VBoxContainer
 
-## One tab of the toolbox: a grid of tiles, one block on each.
+## One category of the toolbox: its name, then a grid of tiles, one block on each.
+
+## The pointer is on one of this category's blocks.
+signal pointed_at
 
 const TILE := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.tscn")
 
 @export var container: Container
+@export var heading: Label
 
-## The BlockData category this tab holds ("Iterative"); the tab's title is the
-## friendlier Toolbox.DISPLAY name for it.
+## The BlockData category this holds ("Iterative"); `title` is the friendlier
+## Toolbox.DISPLAY name, shown on its tab and its heading.
 var category_name := ""
+var title := "":
+	set(value):
+		title = value
+		if heading != null:
+			heading.text = value
 
+
+func _ready() -> void:
+	heading.text = title
 
 func add_block(block: Block) -> void:
 	var tile := TILE.instantiate() as ToolboxTile
 	container.add_child(tile)
 	tile.hold(block)
+	block.mouse_entered.connect(pointed_at.emit)
 
 func get_blocks() -> Array[Block]:
 	var blocks: Array[Block] = []

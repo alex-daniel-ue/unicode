@@ -14,24 +14,62 @@ var zoom_speed := 1.15
 var min_zoom := 0.25
 var max_zoom := 2.5
 
-var _focus_tween: Tween
-
 @export var serializer: Serializer
 
+var _dragging := false
 
-func _ready() -> void:
-	Interpreter.block_highlighted.connect(_on_block_highlighted)
 
 func _process(_delta: float) -> void:
 	# material is ShaderMaterial:
 	material.set_shader_parameter("offset", -position / scale)
+	if _dragging:
+		_update_drag_cursor()
+
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_DRAG_BEGIN:
+			_dragging = true
+		NOTIFICATION_DRAG_END:
+			_dragging = false
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+
+#region Drag cursor
+## While a block is dragged, the cursor is a "no" sign wherever letting go would
+## do nothing: over the panels, the room, the toolbox, or a block that won't take
+## it. Anywhere it can land (empty canvas, a mouth, a slot, the trash) it stays
+## an arrow.
+func _update_drag_cursor() -> void:
+	var data: Variant = get_viewport().gui_get_drag_data()
+	if not data is Block:
+		return
+	# The drop managers hide the drag preview while they show where the block
+	# will attach.
+	var attaching := is_instance_valid(drag_preview) and not drag_preview.visible
+	var lands := attaching or _accepts_drop(get_viewport().gui_get_hovered_control(), data)
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW if lands else Input.CURSOR_FORBIDDEN)
+
+## The walk Godot makes to find who takes a drop: up from the hovered control,
+## asking each, and stopping at the first that stops the mouse.
+func _accepts_drop(control: Control, data: Variant) -> bool:
+	var at := get_global_mouse_position()
+	while control != null:
+		if control.get_script() != null and control.has_method(&"_can_drop_data"):
+			var local := control.get_global_transform_with_canvas().affine_inverse() * at
+			if control.call(&"_can_drop_data", local, data):
+				return true
+		if control.mouse_filter == Control.MOUSE_FILTER_STOP:
+			return false
+		control = control.get_parent() as Control
+	return false
+#endregion
 
 func _gui_input(event: InputEvent) -> void:
 	handle_panning(event)
 	handle_zooming(event)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
-	drag_preview.scale = scale
+	if is_instance_valid(drag_preview):
+		drag_preview.scale = scale
 	return (
 		drop is Block and
 		drop.data.placeable
@@ -160,22 +198,3 @@ func _discard(block: Block) -> void:
 	block.orphan()  # out of the tree now, so nothing reads it before the free lands
 	block.queue_free()
 #endregion
-
-func _on_block_highlighted(block: Block) -> void:
-	if is_panning:
-		return
-	
-	if not Interpreter.is_running or Interpreter.is_fast:
-		return
-	
-	var screen_center := get_viewport_rect().size / 2.0
-	
-	var block_center_global := block.global_position + (block.size * scale) / 2.0
-	var offset := screen_center - block_center_global
-	
-	if _focus_tween:
-		_focus_tween.kill()
-	
-	_focus_tween = create_tween()
-	_focus_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-	_focus_tween.tween_property(self, "position", position + offset, 0.25)

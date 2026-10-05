@@ -6,6 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://bpti5nvyvdf1y" path="res://level/levels/tutorial_1.tscn" id="4_tutorial_1"]
 [ext_resource type="PackedScene" uid="uid://cjltfsx4hwic8" path="res://level/levels/it_0a.tscn" id="5_it_0a"]
 [ext_resource type="PackedScene" uid="uid://xhdv8mmxh803" path="res://level/levels/it_0b.tscn" id="6_it_0b"]
+[ext_resource type="PackedScene" uid="uid://dfygahr6nf5cb" path="res://level/levels/it_1.tscn" id="7_it_1"]
+[ext_resource type="PackedScene" uid="uid://gib6nsxvtxoj" path="res://level/levels/it_2.tscn" id="8_it_2"]
+[ext_resource type="PackedScene" uid="uid://bg88ubvlxvcqp" path="res://level/levels/it_3.tscn" id="9_it_3"]
+[ext_resource type="PackedScene" uid="uid://ch4cfogwpxysf" path="res://level/levels/it_4.tscn" id="10_it_4"]
+[ext_resource type="PackedScene" uid="uid://vvhlgp1lv2mn" path="res://level/levels/it_5.tscn" id="11_it_5"]
+[ext_resource type="PackedScene" uid="uid://dgexfaubxv3sd" path="res://level/levels/it_6.tscn" id="12_it_6"]
+[ext_resource type="PackedScene" uid="uid://dlevwf870j8pq" path="res://level/levels/it_7.tscn" id="13_it_7"]
+[ext_resource type="PackedScene" uid="uid://c3b0cw5wv4v8j" path="res://level/levels/it_8.tscn" id="14_it_8"]
+[ext_resource type="PackedScene" uid="uid://dnv7d6rbll2fk" path="res://level/levels/it_9.tscn" id="15_it_9"]
+[ext_resource type="PackedScene" uid="uid://dcr8c3qi60ygr" path="res://level/levels/it_10.tscn" id="16_it_10"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_1.tscn" id="ar_scene_1"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_2.tscn" id="ar_scene_2"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_3.tscn" id="ar_scene_3"]
@@ -17,16 +27,6 @@
 [ext_resource type="PackedScene" path="res://level/levels/ar_9.tscn" id="ar_scene_9"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_10.tscn" id="ar_scene_10"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_11.tscn" id="ar_scene_11"]
-[ext_resource type="PackedScene" uid="uid://dfygahr6nf5cb" path="res://level/levels/it_1.tscn" id="7_it_1"]
-[ext_resource type="PackedScene" uid="uid://gib6nsxvtxoj" path="res://level/levels/it_2.tscn" id="8_it_2"]
-[ext_resource type="PackedScene" uid="uid://bg88ubvlxvcqp" path="res://level/levels/it_3.tscn" id="9_it_3"]
-[ext_resource type="PackedScene" uid="uid://ch4cfogwpxysf" path="res://level/levels/it_4.tscn" id="10_it_4"]
-[ext_resource type="PackedScene" uid="uid://vvhlgp1lv2mn" path="res://level/levels/it_5.tscn" id="11_it_5"]
-[ext_resource type="PackedScene" uid="uid://dgexfaubxv3sd" path="res://level/levels/it_6.tscn" id="12_it_6"]
-[ext_resource type="PackedScene" uid="uid://dlevwf870j8pq" path="res://level/levels/it_7.tscn" id="13_it_7"]
-[ext_resource type="PackedScene" uid="uid://c3b0cw5wv4v8j" path="res://level/levels/it_8.tscn" id="14_it_8"]
-[ext_resource type="PackedScene" uid="uid://dnv7d6rbll2fk" path="res://level/levels/it_9.tscn" id="15_it_9"]
-[ext_resource type="PackedScene" uid="uid://dcr8c3qi60ygr" path="res://level/levels/it_10.tscn" id="16_it_10"]
 
 [sub_resource type="Resource" id="Res_1"]
 script = ExtResource("2_level_entry")
@@ -178,7 +178,7 @@ script = ExtResource("2_level_entry")
 id = &"ar-2"
 label = "2"
 title = "Read the board"
-concept = "Using item of on a list, in rooms where the list is different."
+concept = "Using index of on a list, in rooms where the list is different."
 scene = ExtResource("ar_scene_2")
 counts_for_progress = false
 metadata/_custom_type_script = "uid://copysdfiq2iil"

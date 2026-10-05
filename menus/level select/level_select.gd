@@ -12,8 +12,11 @@ const CONFIG_FILE := "unicode.cfg"
 ## Checked second. The codebase notes told people to put [levels] here, beside
 ## the relay settings, so honour it rather than silently ignore it.
 const AI_CONFIG_FILE := "unicode_ai.cfg"
-const STAR_FILLED := "★"
-const STAR_EMPTY := "☆"
+## MainMenuButton's disabled text colour, for the labels a level button holds.
+const DISABLED_TEXT := Color(0.5803922, 0.6392157, 0.72156864)
+## Stars on the white buttons: StarText's yellow, with a dark rim so they hold up
+## on white.
+const STAR_RIM := Color(0.42, 0.29, 0.05)
 
 @export_group("Wiring")
 @export var module_label: Label
@@ -24,7 +27,7 @@ const STAR_EMPTY := "☆"
 @export var next_button: Button
 
 @export_group("Appearance")
-@export var button_size := Vector2(120, 85)
+@export var button_size := Vector2(120, 96)
 @export var columns := 5
 
 var _catalog: LevelCatalog
@@ -175,24 +178,48 @@ func _build_button(entry: LevelEntry, furthest_slot: int) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = button_size
 	button.theme_type_variation = &"MainMenuButton"
-	button.clip_text = true
 
 	var stars := Progress.get_stars(entry.id)
-	button.text = "%s\n%s" % [entry.label, _star_text(entry, stars)]
-
 	var reason := _lock_reason(entry, furthest_slot)
 	button.disabled = not reason.is_empty()
 	button.tooltip_text = reason if not reason.is_empty() else _tooltip(entry, stars)
 
+	# Two labels instead of the button's own text: the stars need their own font
+	# (StarText), and a button's text has only one.
+	var stack := VBoxContainer.new()
+	stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	stack.offset_top = 6
+	stack.offset_bottom = -10  # clear of the button's bottom edge
+	stack.alignment = BoxContainer.ALIGNMENT_CENTER
+	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Noto's line is tall for its size; pull the stars up under the number.
+	stack.add_theme_constant_override(&"separation", -6)
+	button.add_child(stack)
+
+	var title := Label.new()
+	title.theme_type_variation = &"MainMenuButton"  # the button's font, size and colour
+	title.add_theme_stylebox_override(&"normal", StyleBoxEmpty.new())  # not its box, though
+	title.text = entry.label
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if button.disabled:
+		title.add_theme_color_override(&"font_color", DISABLED_TEXT)
+	stack.add_child(title)
+
+	if entry.counts_for_progress:
+		var star_label := StarText.style(Label.new(), 20)
+		star_label.text = StarText.of(stars)
+		star_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		star_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		star_label.add_theme_color_override(&"font_outline_color", STAR_RIM)
+		star_label.add_theme_constant_override(&"outline_size", 4)
+		if button.disabled:
+			star_label.modulate.a = 0.4
+		stack.add_child(star_label)
+
 	if not button.disabled:
 		button.pressed.connect(_on_level_pressed.bind(entry))
 	return button
-
-
-func _star_text(entry: LevelEntry, stars: int) -> String:
-	if not entry.counts_for_progress:
-		return ""
-	return STAR_FILLED.repeat(stars) + STAR_EMPTY.repeat(3 - stars)
 
 
 func _tooltip(entry: LevelEntry, stars: int) -> String:

@@ -266,7 +266,7 @@ static func same(a: Variant, b: Variant) -> bool:
 #region Operations (called by list_functions.gd; each paces itself)
 ## item {index} of {list}
 func read(index: Variant, from_this: Block) -> Variant:
-	var i: Variant = _checked_index(index, from_this, "item")
+	var i: Variant = _checked_index(index, from_this, "index of")
 	if i == null:
 		return null
 	_flash(i, index)
@@ -279,7 +279,7 @@ func read(index: Variant, from_this: Block) -> Variant:
 func write(index: Variant, value: Variant, from_this: Block) -> void:
 	if not _storable(value, from_this):
 		return
-	var i: Variant = _checked_index(index, from_this, "set item")
+	var i: Variant = _checked_index(index, from_this, "set index")
 	if i == null:
 		return
 	values[i] = value
@@ -303,7 +303,7 @@ func append_value(value: Variant, from_this: Block) -> void:
 		return
 	if values.size() >= MAX_ITEMS:
 		from_this.function.error(
-			"'%s' already has %d items. Is something being added to the list a loop is going through?"
+			"'%s' already has %d values. Is something being added to the list a loop is going through?"
 			% [get_list_name(), values.size()]
 		)
 		return
@@ -370,16 +370,16 @@ func _checked_index(index: Variant, from_this: Block, what: String) -> Variant:
 	var i: int = index
 	if i < -count or i >= count:
 		_show_ghost(i)
-		# set item on an empty list is an attempt to add an item. Past the end of
-		# a list that has items it's usually an off-by-one, where pointing at
+		# set index on an empty list is an attempt to add a value. Past the end of
+		# a list that has values it's usually an off-by-one, where pointing at
 		# append would send the student the wrong way.
-		var hint := " set item only changes items that are already there; append adds a new one." \
-				if what == "set item" and count == 0 else ""
+		var hint := " set index only changes values that are already there. append adds a new value." \
+				if what == "set index" and count == 0 else ""
 		if count == 0:
-			from_this.function.error("'%s' is empty, so it has no item %d.%s" % [list_label, i, hint])
+			from_this.function.error("'%s' is empty, so it has no index %d.%s" % [list_label, i, hint])
 		else:
 			from_this.function.error(
-				"Index %d is out of range. '%s' has %d item%s, at indexes 0 to %d.%s"
+				"Index %d is out of range. '%s' has %d value%s, at indexes 0 to %d.%s"
 				% [i, list_label, count, "" if count == 1 else "s", count - 1, hint]
 			)
 		return null

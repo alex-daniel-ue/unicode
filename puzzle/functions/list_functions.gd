@@ -31,7 +31,7 @@ func _item(this: Block) -> Variant:
 
 	var index: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return null
-	var list := resolve(this, args[1], "item of")
+	var list := resolve(this, args[1], "index of")
 	if list == null: return null
 
 	return await list.read(index, this)
@@ -47,7 +47,7 @@ func _set_item(this: Block) -> void:
 
 	var index: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return
-	var list := resolve(this, args[1], "set item")
+	var list := resolve(this, args[1], "set index")
 	if list == null: return
 	var value: Variant = this.function.unwrap(args[2])
 	if Interpreter.interrupted: return

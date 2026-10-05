@@ -35,6 +35,10 @@ const TONE_DONE := Color("#34D399")
 
 var _dirty := true
 var _status_style: StyleBoxFlat
+## Set when a run starts: this tab comes forward once the run has a variable to
+## show, and not before. A program without variables never takes the panel from
+## the level's description.
+var _focus_when_filled := false
 
 
 func _ready() -> void:
@@ -74,8 +78,21 @@ func _on_scope_changed() -> void:
 
 func _on_interpreter_running_changed() -> void:
 	if Interpreter.is_running:
-		focus_self()
+		_focus_when_filled = not _hidden_by_level()
+		# Left showing from the last run, but empty until this one makes a
+		# variable: show the description meanwhile.
+		var panel := get_parent() as SidePanel
+		if panel != null and panel.shown_content == self:
+			var info := panel.get_node_or_null(^"PuzzleInformation") as Control
+			if info != null:
+				panel.focus_content(info)
+	else:
+		_focus_when_filled = false
 	_dirty = true
+
+## A level with the minimal UI has no button for this tab, so it never opens it.
+func _hidden_by_level() -> bool:
+	return is_instance_valid(Game.level) and Game.level.minimal_ui
 
 
 ## Brings this tab forward without toggling the panel shut.
@@ -117,6 +134,9 @@ func _rebuild() -> void:
 	tree.visible = total > 0
 	if total > 0:
 		_fill_tree(frames, is_stale)
+		if _focus_when_filled and Interpreter.is_running:
+			_focus_when_filled = false
+			focus_self()
 	tree.update_minimum_size()
 
 func _set_status(message: String, tone: Color) -> void:

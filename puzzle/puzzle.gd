@@ -9,6 +9,10 @@ const NUDGE_AFTER := [1, 4, 7]
 const TUTORIAL_OVERLAY := preload("res://puzzle/ui/tutorial/tutorial_overlay.tscn")
 ## Hidden when a level asks for the minimal UI (Level.minimal_ui): the first
 ## levels show only what they use, because everything at once lost people.
+## The Information tab: the level's description. What the left panel shows when
+## a level opens, after a guide that pointed into the toolbox, and when a run has
+## no variables to show.
+const INFORMATION_TAB := "UserInterface/SideMenuLeft/Panel/PuzzleInformation"
 const EXTRA_UI := [
 	"UserInterface/SideMenuLeft/ButtonContainer/AIAssistantMenuButton",
 	"UserInterface/SideMenuLeft/ButtonContainer/VariableWatcherMenuButton",
@@ -39,7 +43,7 @@ var _guide_pages: Array = []
 @export var pause_menu: PauseMenu
 
 func _ready() -> void:
-	side_panels[0].show_menu(true)
+	side_panels[0].focus_content(get_node(INFORMATION_TAB) as Control)
 	side_panels[1].show_menu(true)
 	
 	if Game.level_scene != null:
@@ -89,7 +93,17 @@ func start_guide() -> void:
 		_guide.skip()
 	_guide = TUTORIAL_OVERLAY.instantiate() as TutorialOverlay
 	add_child(_guide)
+	_guide.finished.connect(_on_guide_finished)
 	_guide.start(self, _guide_pages)
+
+## A guide about new blocks leaves the toolbox open. The task is what to read
+## next, so the panel goes back to it.
+func _on_guide_finished() -> void:
+	if side_panels[0].shown_content == toolbox:
+		show_information()
+
+func show_information() -> void:
+	side_panels[0].focus_content(get_node(INFORMATION_TAB) as Control)
 
 func _exit_tree() -> void:
 	Interpreter.is_running = false
@@ -173,17 +187,17 @@ func run_program() -> void:
 			err.block.visual.set_error(false)
 	
 	if Interpreter.is_running:
-		notif.push("Program is already running.", Notification.Type.ERROR)
+		notif.push("The program is already running.", Notification.Type.ERROR)
 		return
 	Interpreter.clear_state()
 	
 	var begin := _get_begin()
 	if begin == null:
-		notif.push("No begin block on Canvas.", Notification.Type.ERROR)
+		notif.push("There is no begin block on the canvas.", Notification.Type.ERROR)
 		return
 	
 	if begin.get_blocks().is_empty():
-		notif.push("Begin has no blocks under it.", Notification.Type.ERROR)
+		notif.push("The begin block has no blocks under it. Attach a block to it first.", Notification.Type.ERROR)
 		return
 	
 	last_run_yaml = canvas.serializer.yaml_serialize()
@@ -272,4 +286,4 @@ func _on_interpreter_output(line: String) -> void:
 
 func _on_room_completed(index: int, total: int) -> void:
 	if total <= 1: return
-	notif.push("Room %d of %d solved." % [index + 1, total], Notification.Type.SUCCESS)
+	notif.push("You solved Room %d of %d." % [index + 1, total], Notification.Type.SUCCESS)

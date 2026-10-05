@@ -12,23 +12,42 @@ extends Control
 ## cover the toolbox or the canvas. A page can still point into the level ("level:"
 ## targets); _rect_of() works out where that is on screen.
 ##
-## Only the dim changes: no outlines. What a page points at is simply the part of
-## the screen left undimmed and clickable.
+## What a page points at is lit, and the card sits next to it with an arrow
+## (GuidePointer) running from the card to it, rather than in a fixed spot. The
+## dim alone was easy to miss on a small screen. Back goes over earlier pages
+## again; a page seen before waits for nothing.
 
 signal finished
 
 const A := Guides.Advance
-## Gap between the card and the window edge, and between the card and a target.
+## Gap between the card and the window edge.
 const CARD_MARGIN := 24.0
+## Room between the card and what its arrow points at, for the arrow.
+const ARROW_GAP := 90.0
+## A target taking less than this share of the screen gets the arrow. A whole
+## panel is plain enough lit.
+const SMALL_TARGET := 0.06
+## How quickly the card glides to a new spot.
+const GLIDE := 10.0
+## A spot has to be this much better before the card moves to it, so it doesn't
+## hop about while a panel slides open under it.
+const STAY_BIAS := 80.0
 const FADE := 0.2
 
 @export var mask: TutorialMask
 @export var card: GuideCard
+@export var pointer: GuidePointer
 
 var puzzle: Puzzle
 var pages: Array = []
 var _index := -1
+## The furthest page reached. Pages before it are being looked at again.
+var _furthest := -1
 var _closing := false
+## The card's spot: whether it has one on screen yet, and which side of its
+## target it's on.
+var _placed := false
+var _spot := ""
 
 
 func start(to: Puzzle, guide_pages: Array) -> void:
@@ -36,12 +55,14 @@ func start(to: Puzzle, guide_pages: Array) -> void:
 	pages = guide_pages
 	if mask == null: mask = get_node_or_null(^"Mask") as TutorialMask
 	if card == null: card = get_node_or_null(^"Card") as GuideCard
+	if pointer == null: pointer = get_node_or_null(^"Pointer") as GuidePointer
 	if mask == null or card == null or pages.is_empty():
 		push_error("Tutorial overlay is missing its Mask or Card, or has no pages; the guide can't run.")
 		queue_free()
 		return
 
 	card.next_pressed.connect(_on_next)
+	card.back_pressed.connect(_on_back)
 	Interpreter.running_changed.connect(_on_running_changed)
 	Interpreter.error_raised.connect(_on_error_raised)
 	Game.level.room_completed.connect(_on_room_completed)
@@ -87,6 +108,10 @@ func _on_menu_toggled(open: bool) -> void: _on_event(A.MENU_OPENED if open else 
 func _on_panel_toggled(_panel: SidePanel, open: bool) -> void: _on_event(A.PANEL_OPENED if open else A.PANEL_CLOSED)
 func _on_view_framed() -> void: _on_event(A.VIEW_FRAMED)
 
+func _on_back() -> void:
+	if _index > 0 and not _closing:
+		_go_to(_index - 1)
+
 func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
 	var page := _page()
 	if page.is_empty() or _closing:
@@ -95,6 +120,10 @@ func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
 	# that can wedge is worse than one somebody skipped.
 	if kind == A.NEXT:
 		_go_to(_index + 1)
+		return
+	# Looking at an earlier page again: it was done already, and only Next and
+	# Back move between pages until the student is back where they were.
+	if _reviewing():
 		return
 	if page.get("advance", A.NEXT) != kind:
 		return
@@ -109,20 +138,26 @@ func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
 func _page() -> Dictionary:
 	return pages[_index] if _index >= 0 and _index < pages.size() else {}
 
+func _reviewing() -> bool:
+	return _index < _furthest
+
 func _go_to(index: int) -> void:
 	_index = index
+	_furthest = maxi(_furthest, index)
 	var page := _page()
 	if page.is_empty():
 		_finish()
 		return
 	# A page that waits for an action shows no button, unless it names one: the
-	# assistant's page offers Skip, since its reply may never come.
-	var waits: bool = page.get("advance", A.NEXT) != A.NEXT and not page.has("button")
-	card.show_page(page, _index, pages.size(), waits)
+	# assistant's page offers Skip, since its reply may never come. Looked at
+	# again, every page has Next.
+	var waits: bool = not _reviewing() and page.get("advance", A.NEXT) != A.NEXT and not page.has("button")
+	card.show_page(page, _index, pages.size(), waits, _index > 0)
 	mask.dimmed = page.get("dim", true)
 	mask.block_all = page.get("block_input", false)
+	_spot = ""
 	_focus_panel(page.get("focus", ""))
-	_update()
+	_update(0.0)
 
 ## Opens the side panel tab a page names. focus_content() rather than
 ## show_content(), because show_content() closes a tab that is already open.
@@ -138,27 +173,30 @@ func _focus_panel(path: String) -> void:
 
 ## Every frame, because targets move: a tab opens, a panel scrolls, the room's
 ## camera reframes, the window is resized.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _closing:
-		_update()
+		_update(delta)
 
-func _update() -> void:
+func _update(delta: float) -> void:
 	var page := _page()
 	if page.is_empty() or puzzle == null:
 		return
 	var to_local := mask.get_global_transform().affine_inverse()
 	var rects: Array[Rect2] = []
+	var by_path := {}
 	var targets: Array = page.get("targets", [])
 	for path: String in targets:
 		var rect := _rect_of(path)
 		if rect.has_area():
-			rects.append(Rect2(to_local * rect.position, rect.size))
+			var local := Rect2(to_local * rect.position, rect.size)
+			rects.append(local)
+			by_path[path] = local
 	mask.set_holes(rects)
 	# A page whose targets all went missing would dim everything and swallow the
 	# one click it asks for. Drop the dim instead: the card still says what to do.
 	var lost := not targets.is_empty() and rects.is_empty()
 	mask.visible = (page.get("dim", true) or page.get("block_input", false)) and not lost
-	_place_card(page, rects)
+	_place_card(page, rects, _arrow_target(page, by_path), delta)
 
 ## Where a target is on screen, or an empty rect while it isn't showing.
 ##   "block:MoveBlock"   the block with that data name, in the toolbox or else on the canvas
@@ -172,13 +210,14 @@ func _rect_of(path: String) -> Rect2:
 		for where: Node in [puzzle.toolbox, puzzle.canvas]:
 			for node in where.find_children("*", "Block", true, false):
 				var block := node as Block
-				if block.data.name != wanted:
+				if block.data.name != wanted or not block.is_visible_in_tree():
 					continue
-				# A toolbox block in a tab that isn't open: open it.
-				if where == puzzle.toolbox and not block.is_visible_in_tree() and puzzle.toolbox.is_visible_in_tree():
+				if where == puzzle.toolbox:
+					# Scrolled out of sight: bring it into view, and only light
+					# the part that shows.
 					puzzle.toolbox.reveal(block)
-				if block.is_visible_in_tree():
-					return block.get_global_rect()
+					return block.get_global_rect().intersection(puzzle.toolbox.visible_rect())
+				return block.get_global_rect()
 		return Rect2()
 	if path.begins_with("level:"):
 		return _level_rect(path.trim_prefix("level:"))
@@ -195,46 +234,142 @@ func _level_rect(node_path: String) -> Rect2:
 	var container := viewport.get_parent() as Control
 	if node == null or container == null or not container.is_visible_in_tree():
 		return Rect2()
-	var world: Rect2 = (node as ListEntity).get_global_bounds() if node is ListEntity else LevelCamera.node_bounds(node)
+	var world: Rect2
+	if node is ListEntity:
+		world = (node as ListEntity).get_global_bounds()
+	elif node is Control:
+		world = (node as Control).get_global_rect()  # a room's label
+	else:
+		world = LevelCamera.node_bounds(node)
 	var to_viewport := viewport.get_canvas_transform()
 	var scale := container.size / Vector2(viewport.size)
 	var a := container.get_global_transform() * ((to_viewport * world.position) * scale)
 	var b := container.get_global_transform() * ((to_viewport * world.end) * scale)
 	return Rect2(a, b - a).intersection(container.get_global_rect())
+#endregion
 
-## Keeps the card off what the page points at: a card takes clicks, so one
-## sitting on the Play button blocks the very thing it asks for. Takes the spot
-## that covers the least of the targets, preferring the middle of the screen.
-func _place_card(page: Dictionary, rects: Array[Rect2]) -> void:
+
+#region Card and arrow
+## What the arrow points at: the page's "arrow" target if it names one ("" for
+## none), else its smallest target, when that is small enough to need pointing
+## out.
+func _arrow_target(page: Dictionary, by_path: Dictionary) -> Rect2:
+	if page.has("arrow"):
+		return by_path.get(page.arrow, Rect2())
+	var screen := mask.size.x * mask.size.y
+	var best := Rect2()
+	for path: String in by_path:
+		var rect: Rect2 = by_path[path]
+		if rect.get_area() < screen * SMALL_TARGET and (not best.has_area() or rect.get_area() < best.get_area()):
+			best = rect
+	return best
+
+func _place_card(page: Dictionary, rects: Array[Rect2], arrow_to: Rect2, delta: float) -> void:
+	var area := mask.size
+	var s := card.size
+	var goal := (area - s) / 2.0
+	var on_top: bool = page.get("card", "") == "top"
+	if on_top:
+		goal = Vector2(goal.x, CARD_MARGIN)
+	elif arrow_to.has_area():
+		goal = _spot_near(arrow_to, rects)
+	elif not rects.is_empty():
+		goal = _spot_clear_of(rects)
+
+	if not _placed or delta <= 0.0 and card.position == Vector2.ZERO:
+		card.position = goal
+		_placed = true
+	else:
+		card.position = card.position.lerp(goal, minf(1.0, delta * GLIDE))
+
+	var card_rect := Rect2(card.position, s)
+	if on_top or not arrow_to.has_area() or card_rect.grow(12.0).intersects(arrow_to):
+		pointer.shown = false
+		return
+	pointer.start = _edge_toward(card_rect, arrow_to.get_center())
+	pointer.end = _edge_toward(arrow_to.grow(mask.padding + 4.0), card_rect.get_center())
+	pointer.shown = true
+
+## The spot beside `target` that leaves the page's targets clearest, a gap away
+## so the arrow has room. Tries each side of the target itself, then each side
+## of everything lit together (a button beside a panel), and keeps the spot it
+## is in unless another is clearly better.
+func _spot_near(target: Rect2, rects: Array[Rect2]) -> Vector2:
+	var s := card.size
+	var all_lit := target
+	for rect in rects:
+		all_lit = all_lit.merge(rect)
+	var spots := {}
+	for pair in [["", target], ["all ", all_lit]]:
+		var around: Rect2 = pair[1]
+		var key: String = pair[0]
+		spots[key + "right"] = Vector2(around.end.x + ARROW_GAP, target.get_center().y - s.y / 2.0)
+		spots[key + "left"] = Vector2(around.position.x - ARROW_GAP - s.x, target.get_center().y - s.y / 2.0)
+		spots[key + "below"] = Vector2(target.get_center().x - s.x / 2.0, around.end.y + ARROW_GAP)
+		spots[key + "above"] = Vector2(target.get_center().x - s.x / 2.0, around.position.y - ARROW_GAP - s.y)
+	# The corners and edges too: on a small screen a tall card beside its
+	# target can only go over the panel the target is in.
+	var area := mask.size
+	for x in [0.0, 0.5, 1.0]:
+		for y in [0.0, 0.5, 1.0]:
+			if x != 0.5 or y != 0.5:
+				spots["screen %s %s" % [x, y]] = Vector2((area.x - s.x) * x, (area.y - s.y) * y)
+	var best_key := ""
+	var best_score := INF
+	var scores := {}
+	for key: String in spots:
+		spots[key] = _on_screen(spots[key])
+		scores[key] = _score(Rect2(spots[key], s), target, rects)
+		if scores[key] < best_score:
+			best_score = scores[key]
+			best_key = key
+	if spots.has(_spot) and scores[_spot] <= best_score + STAY_BIAS:
+		best_key = _spot
+	_spot = best_key
+	return spots[best_key]
+
+## How bad a card at `card_rect` is: far from its target is a little bad;
+## covering a small target (a button, a block) is very bad; covering a big one
+## (a panel) only somewhat; too close to its target for an arrow, bad.
+func _score(card_rect: Rect2, target: Rect2, rects: Array[Rect2]) -> float:
+	var screen := mask.size.x * mask.size.y
+	var score := card_rect.get_center().distance_to(target.get_center())
+	for rect in rects:
+		var cover := card_rect.intersection(rect.grow(mask.padding + 8.0)).get_area()
+		if cover <= 0.0:
+			continue
+		var small := rect.get_area() < screen * SMALL_TARGET
+		score += cover / maxf(rect.get_area(), 1.0) * (100000.0 if small else 3000.0)
+	if card_rect.intersects(target.grow(ARROW_GAP * 0.5)):
+		score += 20000.0
+	return score
+
+## No small target to point at: the spot that covers the least of the lit
+## parts, preferring the middle of the screen.
+func _spot_clear_of(rects: Array[Rect2]) -> Vector2:
 	var area := mask.size
 	var s := card.size
 	var centre := (area - s) / 2.0
-	var top := Vector2(centre.x, CARD_MARGIN)
-	if page.get("card", "") == "top":
-		card.position = top
-		return
-	if rects.is_empty():
-		card.position = centre
-		return
 	var right := area.x - s.x - CARD_MARGIN
 	var bottom := area.y - s.y - CARD_MARGIN
-	var spots: Array[Vector2] = [
-		centre, top, Vector2(centre.x, bottom),
-		Vector2(CARD_MARGIN, centre.y), Vector2(right, centre.y),
-		Vector2(right, CARD_MARGIN), Vector2(right, bottom),
-		Vector2(CARD_MARGIN, CARD_MARGIN), Vector2(CARD_MARGIN, bottom),
-	]
-	var best := spots[0]
+	var spots := {
+		"centre": centre, "top": Vector2(centre.x, CARD_MARGIN), "bottom": Vector2(centre.x, bottom),
+		"left": Vector2(CARD_MARGIN, centre.y), "right": Vector2(right, centre.y),
+		"top right": Vector2(right, CARD_MARGIN), "bottom right": Vector2(right, bottom),
+		"top left": Vector2(CARD_MARGIN, CARD_MARGIN), "bottom left": Vector2(CARD_MARGIN, bottom),
+	}
+	var best_key := "centre"
 	var best_cover := INF
-	for spot in spots:
-		var cover := _covered(Rect2(spot, s), rects)
-		if cover < best_cover - 1.0:
-			best = spot
-			best_cover = cover
-	# Only move when that's clearly better, so the card doesn't hop about while
-	# a panel slides open under it.
-	if _covered(Rect2(card.position, s), rects) > best_cover + 64.0 or card.position == Vector2.ZERO:
-		card.position = best
+	var covers := {}
+	for key: String in spots:
+		covers[key] = _covered(Rect2(spots[key], s), rects)
+		if covers[key] < best_cover - 1.0:
+			best_cover = covers[key]
+			best_key = key
+	if spots.has(_spot) and covers[_spot] <= best_cover + 64.0 * 64.0:
+		best_key = _spot
+	_spot = best_key
+	return spots[best_key]
 
 func _covered(card_rect: Rect2, rects: Array[Rect2]) -> float:
 	var total := 0.0
@@ -242,11 +377,29 @@ func _covered(card_rect: Rect2, rects: Array[Rect2]) -> float:
 		total += card_rect.intersection(r.grow(mask.padding + CARD_MARGIN * 0.5)).get_area()
 	return total
 
+func _on_screen(spot: Vector2) -> Vector2:
+	var area := mask.size
+	var s := card.size
+	return Vector2(
+		clampf(spot.x, CARD_MARGIN, maxf(CARD_MARGIN, area.x - s.x - CARD_MARGIN)),
+		clampf(spot.y, CARD_MARGIN, maxf(CARD_MARGIN, area.y - s.y - CARD_MARGIN)))
+
+## Where a line from the middle of `rect` towards `toward` leaves the rect.
+static func _edge_toward(rect: Rect2, toward: Vector2) -> Vector2:
+	var centre := rect.get_center()
+	var d := toward - centre
+	if d.is_zero_approx():
+		return centre
+	var tx := INF if is_zero_approx(d.x) else (rect.size.x / 2.0) / absf(d.x)
+	var ty := INF if is_zero_approx(d.y) else (rect.size.y / 2.0) / absf(d.y)
+	return centre + d * minf(minf(tx, ty), 1.0)
+
 func _finish() -> void:
 	if _closing:
 		return
 	_closing = true
 	set_process(false)
+	pointer.shown = false
 	finished.emit()
 	var tween := create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, FADE)
