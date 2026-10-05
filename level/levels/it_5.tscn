@@ -60,10 +60,10 @@ star_slack = 3
 
 [node name="LevelDescription" parent="." index="0"]
 title = "One block instead of three"
-mission = "Get the robot around the corner and onto the flag."
-twist = "No while this time: for is the only way to repeat."
+mission = "Get the robot around the corner and onto the red flag."
+twist = "There is no while block this time. The for block is the only way to repeat."
 blocks = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
-block_notes = PackedStringArray("Counts from a start up to, not including, an end, and runs its blocks each time. From 1 until 5 runs 1, 2, 3, 4.")
+block_notes = PackedStringArray("This block counts from a start number up to an end number. It runs its blocks for each number. It stops before the end number, so from 1 until 5 runs 1, 2, 3, 4.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
@@ -108,7 +108,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAAAADAAEAAQABAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAADAAIAAgAAAAAAAHA=")
+tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAAAADAAEAAQABAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAADAAIAAwAAAAAAAHA=")
 tile_set = ExtResource("15_n2d5o")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("10_robot")]

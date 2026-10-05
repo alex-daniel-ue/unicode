@@ -39,7 +39,7 @@ block: BeginBlock
       children:
         - block: SetItemBlock
           kind: statement
-          text: \"set item {} of {} to {}\"
+          text: \"set index {} of {} to {}\"
           parameters:
             - i
             - lockers
@@ -54,11 +54,11 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Number the lockers"
-mission = "Give every locker its number."
+mission = "Give each locker its number."
 rooms = PackedStringArray("Three lockers.", "Five lockers.", "Four lockers.")
-twist = "People count lockers from 1, not 0."
+twist = "People count lockers from 1, not from 0."
 blocks = Array[ExtResource("4_block_data")]([ExtResource("10_set_item")])
-block_notes = PackedStringArray("Changes the value at an index.")
+block_notes = PackedStringArray("This block changes the value at an index of a list.")
 block_values = PackedStringArray("0,list:lockers,1")
 tip = "In Python: lockers[0] = 1"
 
@@ -134,7 +134,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAAFAAIAAwAAAAAAABABAAcAAgAAAAAAABAKAAcAAAAAAAAAAAABAAwAAAAAAAAAAAAFAAwAAgAAAAAAABA=")
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAAFAAIAAwAAAAAAABABAAcAAwAAAAAAABAKAAcAAAAAAAAAAAABAAwAAAAAAAAAAAAFAAwAAwAAAAAAABA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]

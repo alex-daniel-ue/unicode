@@ -53,11 +53,11 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Passing marks"
-mission = "Copy every score of 75 or more into passed, in the same order."
+mission = "Copy every score of 75 or more into the passed list. Keep the scores in the same order."
 rooms = PackedStringArray("Five scores.", "Four scores.", "Six scores.")
-twist = "passed starts empty."
+twist = "The passed list starts empty."
 blocks = Array[ExtResource("4_block_data")]([ExtResource("10_append")])
-block_notes = PackedStringArray("Adds a value to the end of a list.")
+block_notes = PackedStringArray("This block adds a value to the end of a list.")
 block_values = PackedStringArray("82,list:passed")
 tip = "In Python: passed.append(s)"
 
@@ -151,7 +151,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAJAAIAAgAAAAAAAAAKAAIAAAAAAAAAAAAJAAQAAQAAAAAAAAAHAAkAAwAAAAAAABAJAAkAAAAAAAAAAAAHAAsAAQAAAAAAAAALABAAAAAAAAAAAAAKABEAAgAAAAAAABALABEAAQAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAJAAIAAwAAAAAAAAAKAAIAAAAAAAAAAAAJAAQAAQAAAAAAAAAHAAkAAwAAAAAAABAJAAkAAAAAAAAAAAAHAAsAAQAAAAAAAAALABAAAAAAAAAAAAAKABEAAwAAAAAAABALABEAAQAAAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]

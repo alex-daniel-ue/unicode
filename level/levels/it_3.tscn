@@ -73,12 +73,12 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
 [node name="LevelDescription" parent="." index="0"]
-title = "Around the bends"
-mission = "One program, three rooms with corners. Finish on the flag in every room."
-rooms = PackedStringArray("One bend.", "Two bends.", "A winding path.")
-twist = "Every room turns a different number of times."
+title = "Around the corners"
+mission = "One program runs in all three rooms. Each room has corners. Get the robot to the red flag in each room."
+rooms = PackedStringArray("One corner.", "Two corners.", "A path with many corners.")
+twist = "Each room turns a different number of times."
 blocks = Array[ExtResource("11_block_data")]([ExtResource("4_if"), ExtResource("5_else"), ExtResource("24_turn")])
-block_notes = PackedStringArray("Runs the blocks inside it only when its condition is True.", "Goes right under an if. Runs only when the if didn't.", "Turns the robot left, right, or back.")
+block_notes = PackedStringArray("This block runs the blocks inside it only when its condition is True.", "Put this block right under an if block. It runs only when the if block did not run.", "This block turns the robot left, right, or back.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("11_block_data")]([ExtResource("6_while"), ExtResource("4_if"), ExtResource("5_else"), ExtResource("7_not")])
@@ -173,7 +173,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAABAAgAAQAAAAAAAAACAAgAAQABAAAAAAAEAAgAAQABAAAAAAACAA0AAQAAAAAAAAACAA4AAQAAAAAAAAACABAAAQABAAAAAAACABIAAQABAAAAAAAEABIAAQABAAAAAAADABIAAQACAAAAAAAFABIAAQACAAAAAAAEABAAAQACAAAAAAAEAA8AAQABAAAAAAAEAA4AAQABAAAAAAAGAA4AAQAAAAAAAAAGABAAAQAAAAAAAAAGABIAAQABAAAAAAACAAAAAAAAAAAAAAAGAAwAAAAAAAAAAAACAA8AAgAAAAAAACAGABEAAQABAAAAAAAEABEAAwAAAAAAAHAFABAAAwAAAAAAAGACABMAAwAAAAAAAAABAA4AAwAAAAAAACADAAgAAQACAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAABAAgAAQAAAAAAAAACAAgAAQABAAAAAAAEAAgAAQABAAAAAAACAA0AAQAAAAAAAAACAA4AAQAAAAAAAAACABAAAQABAAAAAAACABIAAQABAAAAAAAEABIAAQABAAAAAAADABIAAQACAAAAAAAFABIAAQACAAAAAAAEABAAAQACAAAAAAAEAA8AAQABAAAAAAAEAA4AAQABAAAAAAAGAA4AAQAAAAAAAAAGABAAAQAAAAAAAAAGABIAAQABAAAAAAACAAAAAAAAAAAAAAAGAAwAAAAAAAAAAAACAA8AAwAAAAAAACAGABEAAQABAAAAAAAEABEAAwAAAAAAAHAFABAAAwAAAAAAAGACABMAAwAAAAAAAAABAA4AAwAAAAAAACADAAgAAQACAAAAAAA=")
 tile_set = ExtResource("15_j5fgg")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("17_robot")]

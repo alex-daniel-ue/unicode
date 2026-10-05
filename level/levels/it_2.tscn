@@ -53,11 +53,11 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Until you see it"
-mission = "One program, three rooms. Finish on the flag in every room."
-rooms = PackedStringArray("The flag is partway down the hall.", "The flag is further along.", "The flag is somewhere else again.")
-twist = "The flag isn't at the end of the hall anymore."
+mission = "One program runs in all three rooms. Stop the robot on the red flag in each room."
+rooms = PackedStringArray("The red flag is part of the way down the hallway.", "The red flag is further along.", "The red flag is in a different place again.")
+twist = "The red flag is not at the end of the hallway anymore."
 blocks = Array[ExtResource("7_block_data")]([ExtResource("4_ahead_is")])
-block_notes = PackedStringArray("It can look for the flag too: pick destination.")
+block_notes = PackedStringArray("This block can also look for the red flag. Pick destination in the block.")
 block_values = PackedStringArray("destination")
 
 [node name="GenericBlockProvider" parent="." index="2"]
@@ -161,7 +161,7 @@ speed_scale = 0.0
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="1"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAHAAAAAAAAAAAAAAAEAAUAAgAAAAAAAEAHAAkAAwAAAAAAADA=")
+tile_map_data = PackedByteArray("AAAHAAAAAAAAAAAAAAAEAAUAAwAAAAAAAEAHAAkAAwAAAAAAADA=")
 tile_set = ExtResource("17_hhgpj")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="2" instance=ExtResource("13_robot")]

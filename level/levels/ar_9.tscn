@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4]
+[gd_scene load_steps=27 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
@@ -13,7 +13,6 @@
 [ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="11_checkpoint_g"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_sensed_area"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_red_flag"]
-[ext_resource type="Texture2D" uid="uid://bwhmko7mb5rj" path="res://level/objects/flag.png" id="14_flag"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="15_robot_charac"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="16_resettable_c"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="17_sprite_frame"]
@@ -43,7 +42,7 @@ block: BeginBlock
       parameters:
         - block: ItemOfBlock
           kind: value
-          text: \"item {} of {}\"
+          text: \"index {} of {}\"
           parameters:
             - 0
             - bags
@@ -71,14 +70,14 @@ block: BeginBlock
               parameters:
                 - block: ItemOfBlock
                   kind: value
-                  text: \"item {} of {}\"
+                  text: \"index {} of {}\"
                   parameters:
                     - i
                     - bags
                 - !=
                 - block: ItemOfBlock
                   kind: value
-                  text: \"item {} of {}\"
+                  text: \"index {} of {}\"
                   parameters:
                     - block: ArithmeticBlock
                       kind: value
@@ -95,7 +94,7 @@ block: BeginBlock
               parameters:
                 - block: ItemOfBlock
                   kind: value
-                  text: \"item {} of {}\"
+                  text: \"index {} of {}\"
                   parameters:
                     - i
                     - bags
@@ -113,7 +112,7 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Tidy up"
-mission = "Copy bags into tidy, but skip a value that is the same as the one just before it. The flag is as far away as tidy is long."
+mission = "Copy the bags list into the tidy list. Skip a value when it is the same as the value right before it. The red flag is as far away as the length of tidy."
 rooms = PackedStringArray("Six bags.", "Five bags.", "Four bags.")
 twist = "A value can come back later. Then it stays."
 tip = "!= means \"is not equal to\"."
@@ -268,7 +267,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAALAAIAAAAAAAAAAAAJAAMAAgAAAAAAABAJAAQAAQACAAAAAAAJAAkAAwAAAAAAAAAKAAkAAAAAAAAAAAAKAAoAAQAAAAAAAAAHABAAAgAAAAAAAAAJABAAAAAAAAAAAAAIABEAAQAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAALAAIAAAAAAAAAAAAJAAMAAwAAAAAAABAJAAQAAQACAAAAAAAJAAkAAwAAAAAAAAAKAAkAAAAAAAAAAAAKAAoAAQAAAAAAAAAHABAAAwAAAAAAAAAJABAAAAAAAAAAAAAIABEAAQAAAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("15_robot_charac")]

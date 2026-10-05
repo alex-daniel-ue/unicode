@@ -71,10 +71,10 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Back to the question"
-mission = "One program, three winding rooms. Finish on the flag in every room."
-twist = "But there's no else block this time."
+mission = "One program runs in all three rooms. Each room has a winding path. Get the robot to the red flag in each room."
+twist = "There is no else block this time."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("5_continue")])
-block_notes = PackedStringArray("Skips the rest of this pass and checks the loop's condition again.")
+block_notes = PackedStringArray("This block skips the rest of this pass. Then the loop checks its condition again.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("6_block_data")]([ExtResource("2_while"), ExtResource("3_if"), ExtResource("4_not"), ExtResource("5_continue")])

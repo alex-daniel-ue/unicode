@@ -56,9 +56,9 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 
 [node name="LevelDescription" parent="." index="0"]
 title = "A pattern, not a step"
-mission = "Climb the staircase of desks and finish on the flag."
-twist = "But the for loop is already placed, and it's the only loop you get."
-tip = "Everything inside a loop repeats together, in order, on every pass."
+mission = "Climb the stairs of desks and stop on the red flag."
+twist = "The for loop is already on the canvas. It is the only loop that you get."
+tip = "The blocks inside a loop repeat together, in order, on every pass."
 
 [node name="ForBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("8_nested")]
 layout_mode = 2

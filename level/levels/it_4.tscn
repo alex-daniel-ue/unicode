@@ -60,11 +60,11 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Count the desks"
-mission = "Stop the robot exactly on the flag."
-twist = "But there's only one move forward block, and it's already on the canvas."
+mission = "Stop the robot right on the red flag."
+twist = "You have only one move forward block. It is already on the canvas."
 blocks = Array[ExtResource("9_block_data")]([ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
-block_notes = PackedStringArray("Makes a variable: a named box that holds a value.", "Adds 1 to a variable.", "Compares two values, like 2 < 5. Gives True or False.")
-tip = "The Variables tab shows your variables while the program runs."
+block_notes = PackedStringArray("This block makes a variable. A variable is a name that holds a value.", "This block adds 1 to a variable.", "This block compares two values, like 2 < 5. It gives True or False.")
+tip = "The Variables tab shows your variables while your program runs."
 
 [node name="MoveBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_statement")]
 layout_mode = 2
@@ -113,7 +113,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAADAAEAAQABAAAAAAAEAAEAAQACAAAAAAAFAAEAAQABAAAAAAAEAAMAAQABAAAAAAAGAAMAAQACAAAAAAAHAAAAAAAAAAAAAAAGAAIAAgAAAAAAABACAAMAAgAAAAAAAGAHAAEAAwAAAAAAAHA=")
+tile_map_data = PackedByteArray("AAACAAEAAQAAAAAAAAADAAEAAQABAAAAAAAEAAEAAQACAAAAAAAFAAEAAQABAAAAAAAEAAMAAQABAAAAAAAGAAMAAQACAAAAAAAHAAAAAAAAAAAAAAAGAAIAAwAAAAAAABACAAMAAwAAAAAAAGAHAAEAAwAAAAAAAHA=")
 tile_set = ExtResource("17_llhp4")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("14_robot")]

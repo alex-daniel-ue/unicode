@@ -51,8 +51,10 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Until the wall"
-mission = "One program runs in all three rooms. Get the robot onto the flag in each one."
-twist = "Every hallway is a different length."
+block_notes = PackedStringArray("This block repeats the blocks inside it while its condition is True.", "This block checks the tile in front of the robot. Is the tile blocked? Is it the red flag? Is it a puddle?", "This block turns True into False, and False into True.")
+rooms = PackedStringArray("A short hallway.", "A longer hallway.", "The longest hallway.")
+mission = "One program runs in all three rooms. Get the robot to the red flag in each room."
+twist = "Each hallway has a different length."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("4_while"), ExtResource("14_ahead_is"), ExtResource("5_not")])
 
 [node name="WhileBlock" parent="LevelBlockPreset/BeginBlock/Mouth" index="0" instance=ExtResource("3_nested")]
@@ -152,7 +154,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAEAAgAAAAAAAAAAAAFAAUAAgAAAAAAADADAAEAAgAAAAAAAGA=")
+tile_map_data = PackedByteArray("AAAEAAgAAAAAAAAAAAAFAAUAAwAAAAAAADADAAEAAwAAAAAAAGA=")
 tile_set = ExtResource("17_4fimd")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("12_robot")]

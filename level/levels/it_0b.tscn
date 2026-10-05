@@ -57,8 +57,9 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Rebuild it"
-mission = "Build last level's program yourself. It runs in Room 1, then again in Room 2."
-twist = "But the canvas starts empty this time."
+rooms = PackedStringArray("Stop on the red flag.", "Stop right before the puddle. Do not step in it.")
+mission = "Build the program from the last level. The program runs in Room 1. Then the same program runs again in Room 2."
+twist = "The canvas starts empty this time."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("5_block_data")]([ExtResource("3_if"), ExtResource("4_not")])

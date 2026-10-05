@@ -49,11 +49,11 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "In both"
-mission = "Put every student who is in both chess and choir into both."
-rooms = PackedStringArray("Four in chess.", "Two in chess.", "Three in chess.")
-twist = "Some rooms have nobody in both."
+mission = "Find every student who is in both chess and choir. Put each of them into the both list."
+rooms = PackedStringArray("Four students in chess.", "Two students in chess.", "Three students in chess.")
+twist = "Some rooms have no one in both."
 blocks = Array[ExtResource("4_block_data")]([ExtResource("10_contains")])
-block_notes = PackedStringArray("True if the value is somewhere in the list.")
+block_notes = PackedStringArray("This block is True when the value is somewhere in the list.")
 block_values = PackedStringArray("2,list:choir")
 tip = "In Python: s in choir"
 
@@ -165,7 +165,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAALAAIAAgAAAAAAABAPAAIAAwAAAAAAAAAMAAMAAQABAAAAAAAPAAMAAQAAAAAAAAAKAAQAAgAAAAAAABALAAQAAQACAAAAAAALAAkAAAAAAAAAAAAJAAoAAQACAAAAAAAKAAoAAwAAAAAAAAAGAAsAAQAAAAAAAAAJAAsAAwAAAAAAABAMABAAAwAAAAAAAAAPABAAAAAAAAAAAAAJABEAAQACAAAAAAAPABEAAQAAAAAAAAAKABIAAgAAAAAAAAANABIAAQABAAAAAAA=")
+tile_map_data = PackedByteArray("AAALAAIAAwAAAAAAABAPAAIAAwAAAAAAAAAMAAMAAQABAAAAAAAPAAMAAQAAAAAAAAAKAAQAAwAAAAAAABALAAQAAQACAAAAAAALAAkAAAAAAAAAAAAJAAoAAQACAAAAAAAKAAoAAwAAAAAAAAAGAAsAAQAAAAAAAAAJAAsAAwAAAAAAABAMABAAAwAAAAAAAAAPABAAAAAAAAAAAAAJABEAAQACAAAAAAAPABEAAQAAAAAAAAAKABIAAwAAAAAAAAANABIAAQABAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]

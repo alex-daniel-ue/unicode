@@ -77,8 +77,10 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Two ways out"
-mission = "One program, three rooms. In each room, stop on the flag or right before a puddle, whichever comes first."
-twist = "But the not block is missing this time."
+block_notes = PackedStringArray("This block ends the loop that it is in, right away.", "This block is always True, or always False.")
+rooms = PackedStringArray("Stop on the red flag.", "Stop right before the puddle.", "Stop on the red flag.")
+mission = "One program runs in all three rooms. In each room, stop on the red flag or right before a puddle. Stop at the one that comes first."
+twist = "The not block is missing this time."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("4_break"), ExtResource("5_boolean")])
 
 [node name="GenericBlockProvider" parent="." index="2"]

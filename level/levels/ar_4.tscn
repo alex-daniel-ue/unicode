@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="11_checkpoint_g"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_sensed_area"]
 [ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_red_flag"]
-[ext_resource type="Texture2D" uid="uid://bwhmko7mb5rj" path="res://level/objects/flag.png" id="14_flag"]
+[ext_resource type="Texture2D" uid="uid://csa5uhuw5bwuc" path="res://world/assets/objects/trash_bottle.png" id="14_flag"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="15_robot_charac"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="16_resettable_c"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="17_sprite_frame"]
@@ -53,7 +53,7 @@ block: BeginBlock
           parameters:
             - block: ItemOfBlock
               kind: value
-              text: \"item {} of {}\"
+              text: \"index {} of {}\"
               parameters:
                 - i
                 - route
@@ -66,10 +66,10 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Every stop"
-mission = "Each value is how far to drive before the next left turn. Pass over every blue flag on the way to the red flag."
+mission = "Each value in the list is how far to drive before the next left turn. Collect every bottle on the way to the red flag."
 rooms = PackedStringArray("A lap.", "A spiral.", "A U-turn.")
-twist = "Every list has a different number of stops."
-tip = "for stops before its end number, like Python's range: from 0 until 3 runs 0, 1, 2."
+twist = "Each list has a different number of stops."
+tip = "A for loop stops before its end number, like range in Python. So from 0 until 3 runs 0, 1, 2."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("4_block_data")]([ExtResource("18_for_int"), ExtResource("19_item_of"), ExtResource("20_length_of"), ExtResource("21_arithmetic")])
@@ -81,21 +81,21 @@ focus_markers = [NodePath("../../Visuals/Lists/Room1"), NodePath("../../Visuals/
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen1_1")
 detection_area = NodePath("../../../Visuals/Pen1_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen1_2")
 detection_area = NodePath("../../../Visuals/Pen1_2")
 
 [node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen1_3")
 detection_area = NodePath("../../../Visuals/Pen1_3")
 
@@ -115,28 +115,28 @@ focus_markers = [NodePath("../../Visuals/Lists/Room2"), NodePath("../../Visuals/
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen2_1")
 detection_area = NodePath("../../../Visuals/Pen2_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManagerRoom2" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen2_2")
 detection_area = NodePath("../../../Visuals/Pen2_2")
 
 [node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManagerRoom2" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen2_3")
 detection_area = NodePath("../../../Visuals/Pen2_3")
 
 [node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManagerRoom2" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen2_4")
 detection_area = NodePath("../../../Visuals/Pen2_4")
 
@@ -156,14 +156,14 @@ focus_markers = [NodePath("../../Visuals/Lists/Room3"), NodePath("../../Visuals/
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManagerRoom3" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen3_1")
 detection_area = NodePath("../../../Visuals/Pen3_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManagerRoom3" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot missed at least one blue flag."
+fail_message = "The robot didn't collect every bottle."
 camera_focus = NodePath("../../../Visuals/Pen3_2")
 detection_area = NodePath("../../../Visuals/Pen3_2")
 
@@ -205,7 +205,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_1"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen1_2" type="Area2D" parent="Visuals"]
@@ -217,7 +217,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_2"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen1_3" type="Area2D" parent="Visuals"]
@@ -229,7 +229,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_3"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Destination2" type="Area2D" parent="Visuals"]
@@ -253,7 +253,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_1"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen2_2" type="Area2D" parent="Visuals"]
@@ -265,7 +265,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_2"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen2_3" type="Area2D" parent="Visuals"]
@@ -277,7 +277,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_3"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen2_4" type="Area2D" parent="Visuals"]
@@ -289,7 +289,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_4"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Destination3" type="Area2D" parent="Visuals"]
@@ -313,7 +313,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen3_1"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Pen3_2" type="Area2D" parent="Visuals"]
@@ -325,7 +325,7 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen3_2"]
-scale = Vector2(0.055, 0.055)
+scale = Vector2(2, 2)
 texture = ExtResource("14_flag")
 
 [node name="Lists" type="Node2D" parent="Visuals"]
@@ -359,7 +359,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAIAAIAAgAAAAAAABAJAAIAAAAAAAAAAAAIAAQAAQAAAAAAAAAKAAkAAgAAAAAAABAIAAsAAQABAAAAAAAGABEAAgAAAAAAABAIABEAAAAAAAAAAAAIABMAAQACAAAAAAA=")
+tile_map_data = PackedByteArray("AAAIAAIAAwAAAAAAABAJAAIAAAAAAAAAAAAIAAQAAQAAAAAAAAAKAAkAAwAAAAAAABAIAAsAAQABAAAAAAAGABEAAwAAAAAAABAIABEAAAAAAAAAAAAIABMAAQACAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("15_robot_charac")]
