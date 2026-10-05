@@ -21,6 +21,7 @@ syntax = "elif {condition: boolean}"
 description = "Executes the blocks inside only if the if block above it did not run, and its own boolean expression evaluates to true. Must be placed directly below an if or another elif."
 text = "elif {}"
 text_blocks = Array[ExtResource("1_naw0e")]([ExtResource("4_34tds")])
+text_hints = PackedStringArray()
 Type/nested = SubResource("Resource_dnf4h")
 Function/script = ExtResource("1_34tds")
 Function/entity_name = &""

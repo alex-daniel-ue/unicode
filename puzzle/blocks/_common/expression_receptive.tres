@@ -17,6 +17,7 @@ draggable = false
 placeable = false
 top_notch = false
 text = "..."
+text_hints = PackedStringArray()
 Type/socket = SubResource("Resource_040pj")
 Function/entity_name = &""
 Function/method = &""

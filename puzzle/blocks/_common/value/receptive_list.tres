@@ -25,6 +25,7 @@ description = "A list slot. It can't be typed into: drop a list's name block (su
 draggable = false
 placeable = false
 top_notch = false
+text_hints = PackedStringArray()
 Type/value = SubResource("Resource_value")
 Type/socket = SubResource("Resource_socket")
 Function/entity_name = &""

@@ -31,6 +31,7 @@ description = "Gives how many items a list, tuple or set holds."
 top_notch = false
 text = "length of {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("list_slot")])
+text_hints = PackedStringArray()
 Type/value = SubResource("Resource_value")
 Type/socket = SubResource("Resource_socket")
 Function/script = ExtResource("5_list_funct")

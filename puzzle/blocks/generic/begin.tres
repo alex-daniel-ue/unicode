@@ -21,6 +21,7 @@ top_notch = false
 trashable = false
 copyable = false
 text = "begin code"
+text_hints = PackedStringArray()
 Type/nested = SubResource("Resource_x31hy")
 Function/script = ExtResource("1_yhi3a")
 Function/entity_name = &""

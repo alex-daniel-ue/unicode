@@ -22,6 +22,7 @@ description = "Flips a true or false value to the opposite one. Put a condition 
 top_notch = false
 text = "not {}"
 text_blocks = Array[ExtResource("1_q1wna")]([ExtResource("4_rbva5")])
+text_hints = PackedStringArray()
 Type/socket = SubResource("Resource_j3o2i")
 Function/script = ExtResource("1_xchmg")
 Function/entity_name = &""

@@ -21,6 +21,7 @@ syntax = "if {condition: boolean}"
 description = "Executes the blocks inside only once, and only if the provided boolean expression evaluates to true."
 text = "if {}"
 text_blocks = Array[ExtResource("1_xeeuv")]([ExtResource("4_42i3i")])
+text_hints = PackedStringArray()
 Type/nested = SubResource("Resource_x2wyy")
 Function/script = ExtResource("1_42i3i")
 Function/entity_name = &""

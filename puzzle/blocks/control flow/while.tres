@@ -21,6 +21,7 @@ syntax = "while {condition: boolean}"
 description = "A loop that repeatedly executes the blocks inside as long as the condition is true."
 text = "while {}"
 text_blocks = Array[ExtResource("3_oaum1")]([ExtResource("4_hma5r")])
+text_hints = PackedStringArray()
 Type/nested = SubResource("Resource_7frqf")
 Function/script = ExtResource("1_u3eyr")
 Function/entity_name = &""

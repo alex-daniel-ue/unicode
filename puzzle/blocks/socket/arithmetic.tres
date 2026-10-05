@@ -38,6 +38,7 @@ value = SubResource("Resource_14hxo")
 draggable = false
 placeable = false
 top_notch = false
+text_hints = PackedStringArray()
 Type/value = SubResource("Resource_14hxo")
 Type/socket = SubResource("Resource_7u70j")
 Function/entity_name = &""
