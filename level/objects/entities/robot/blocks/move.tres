@@ -6,12 +6,15 @@
 [resource]
 script = ExtResource("2_8ids4")
 name = "MoveBlock"
+title = "Move Forward"
 color = Color(0.92156863, 0.80784315, 0.47843137, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Robot"
 syntax = "move forward"
 description = "Moves the robot one tile forward in the direction it is currently facing. Fails if the robot hits a wall."
+note = "This block moves the robot forward by one tile."
 text = "move forward"
+text_hints = PackedStringArray()
 Function/entity_script = ExtResource("1_8ids4")
 Function/entity_name = &"RobotCharacter"
 Function/method = &"move"

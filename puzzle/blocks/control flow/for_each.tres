@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_block_data"]
 [ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="2_nested_dat"]
-[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value/editable_line_notype.tres" id="3_editable_l"]
+[ext_resource type="Resource" uid="uid://7tw3ahy2fijm" path="res://puzzle/blocks/_common/value/editable_line.tres" id="3_editable_l"]
 [ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="5_control_fl"]
 [ext_resource type="Resource" uid="uid://ba0jp5y0dd4hf" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="list_slot"]
 
@@ -13,6 +13,7 @@ type = 9
 [resource]
 script = ExtResource("1_block_data")
 name = "ForEachBlock"
+title = "For Each"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
@@ -20,6 +21,7 @@ nested = SubResource("Resource_nested")
 category = "Iterative"
 syntax = "for each {name: variable} in {list: list}"
 description = "Runs the blocks inside once for every item of a list, in order. The variable holds a copy of the item, so changing the variable doesn't change the list."
+note = "This block runs its blocks once for each value in a list. The box that it is on lights up."
 text = "for each {} in {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("3_editable_l"), ExtResource("list_slot")])
 text_hints = PackedStringArray("var", "")

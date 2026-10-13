@@ -7,11 +7,13 @@
 [resource]
 script = ExtResource("1_3syst")
 name = "DeclareBlock"
+title = "Declare"
 color = Color(0.654902, 0.54509807, 0.98039216, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "declare {name: variable}"
 description = "Creates a new variable in the current scope with an initial value of null."
+note = "This block makes a variable that has no value yet."
 text = "declare {}"
 text_blocks = Array[ExtResource("1_3syst")]([ExtResource("3_q6h8s")])
 text_hints = PackedStringArray("var")

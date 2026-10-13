@@ -11,6 +11,7 @@ type = 2
 [resource]
 script = ExtResource("1_ycgc5")
 name = "ElseBlock"
+title = "Else"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
@@ -18,6 +19,7 @@ nested = SubResource("Resource_jncwb")
 category = "Selection"
 syntax = "else"
 description = "Executes the blocks inside only if the if block above it, and any elif blocks in the same chain, did not run. Must be placed directly below an if or an elif."
+note = "Put this block right under an If block. It runs only when the If block did not run."
 text = "else"
 text_hints = PackedStringArray()
 Type/nested = SubResource("Resource_jncwb")

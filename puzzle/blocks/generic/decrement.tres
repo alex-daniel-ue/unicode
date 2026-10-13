@@ -7,11 +7,13 @@
 [resource]
 script = ExtResource("1_yquu0")
 name = "DecrementBlock"
+title = "Decrement"
 color = Color(0.654902, 0.54509807, 0.98039216, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "decrement {name: variable}"
 description = "Subtracts 1 from the value of the specified variable. The variable must contain a number."
+note = "This block takes 1 away from a variable."
 text = "decrement {}"
 text_blocks = Array[ExtResource("1_yquu0")]([ExtResource("3_gl6w5")])
 text_hints = PackedStringArray("var")

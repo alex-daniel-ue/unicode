@@ -7,11 +7,13 @@
 [resource]
 script = ExtResource("2_4vrd7")
 name = "PrintBlock"
+title = "Print"
 color = Color(0.92, 0.8096, 0.4784, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "print {message: variant}"
 description = "Outputs the value or variable content to the system log for debugging."
+note = "This block shows a value on the screen while your program runs."
 text = "print {}"
 text_blocks = Array[ExtResource("2_4vrd7")]([ExtResource("3_iectr")])
 text_hints = PackedStringArray("value")

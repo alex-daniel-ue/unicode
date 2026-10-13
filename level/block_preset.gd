@@ -28,6 +28,10 @@ const PROGRAM_BLOCKS := {
 	"if": "res://puzzle/blocks/control flow/if.tres",
 	"else": "res://puzzle/blocks/control flow/else.tres",
 	"while": "res://puzzle/blocks/control flow/while.tres",
+	"bool": "res://puzzle/blocks/socket/boolean.tres",
+	"declare": "res://puzzle/blocks/generic/initialize.tres",
+	"setitem": "res://puzzle/blocks/lists/set_item.tres",
+	"each": "res://puzzle/blocks/control flow/for_each.tres",
 }
 
 const IMMOVABLE_TOOLTIP := "This program is locked: read it, then watch it run."

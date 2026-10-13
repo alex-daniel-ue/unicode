@@ -6,11 +6,13 @@
 [resource]
 script = ExtResource("2_c18da")
 name = "BreakBlock"
+title = "Break"
 color = Color(0.3744, 0.5184, 0.72, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Iterative"
 syntax = "break"
 description = "Immediately terminates the current loop and jumps to the code following the loop."
+note = "This block ends the loop that it is in, right away."
 text = "break"
 Function/script = ExtResource("1_rcpm2")
 Function/entity_name = &""

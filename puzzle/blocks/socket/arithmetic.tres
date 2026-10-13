@@ -48,6 +48,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("4_epw5f")
 name = "ArithmeticBlock"
+title = "Math"
 color = Color(0.3764706, 0.64705884, 0.98039216, 1)
 base_path = "uid://bxqygb1ofx6ql"
 type = 3
@@ -56,6 +57,7 @@ value = SubResource("Resource_r4xr0")
 category = "Value"
 syntax = "{a: number} {op: string} {b: number}"
 description = "Performs math (+, -, *, /, //, %). If both inputs are Strings and the operator is +, it performs string concatenation."
+note = "This block does math: + - * / // %"
 top_notch = false
 text = "{} {} {}"
 text_blocks = Array[ExtResource("4_epw5f")]([ExtResource("5_sg2fk"), SubResource("Resource_epw5f"), ExtResource("5_sg2fk")])

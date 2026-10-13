@@ -6,11 +6,13 @@
 [resource]
 script = ExtResource("1_qj0o7")
 name = "ContinueBlock"
+title = "Continue"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Iterative"
 syntax = "continue"
 description = "Skips the rest of the current loop iteration and moves to the next check/increment."
+note = "This block skips the rest of this pass. Then the loop checks its condition again."
 text = "continue"
 Function/script = ExtResource("1_j8ieb")
 Function/entity_name = &""

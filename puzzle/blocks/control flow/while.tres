@@ -12,6 +12,7 @@ type = 4
 [resource]
 script = ExtResource("3_oaum1")
 name = "WhileBlock"
+title = "While"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
@@ -19,6 +20,7 @@ nested = SubResource("Resource_7frqf")
 category = "Iterative"
 syntax = "while {condition: boolean}"
 description = "A loop that repeatedly executes the blocks inside as long as the condition is true."
+note = "This block repeats the blocks inside it while its condition is True."
 text = "while {}"
 text_blocks = Array[ExtResource("3_oaum1")]([ExtResource("4_hma5r")])
 text_hints = PackedStringArray()

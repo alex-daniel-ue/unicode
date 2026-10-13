@@ -14,6 +14,7 @@ type = 5
 [resource]
 script = ExtResource("1_rp0sv")
 name = "ForBlock (Integer)"
+title = "For"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
@@ -21,6 +22,7 @@ nested = SubResource("Resource_igej2")
 category = "Iterative"
 syntax = "for {name: variable}, from {start: int/variable} until {end: int/variable}, step {increment: int}"
 description = "Counts from the start value up to, but not including, the end value, adding the step each time, like Python's range(start, end, step): from 0 until 3 runs 0, 1, 2. Creates a local variable for the count."
+note = "This block counts from a start number up to an end number. It runs its blocks for each number. It stops before the end number, so from 1 until 5 runs 1, 2, 3, 4."
 text = "for {}, from {}\\nuntil {}, at step {}"
 text_blocks = Array[ExtResource("1_rp0sv")]([ExtResource("3_c75mr"), ExtResource("5_3865f"), ExtResource("5_3865f"), ExtResource("3_c74cp")])
 text_hints = PackedStringArray("var", "start", "end", "step")

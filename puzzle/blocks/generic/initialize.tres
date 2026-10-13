@@ -8,11 +8,13 @@
 [resource]
 script = ExtResource("1_ji57x")
 name = "DeclareAsBlock"
+title = "Declare As"
 color = Color(0.654902, 0.54509807, 0.98039216, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Generic"
 syntax = "declare {name: variable} as {value: variant}"
 description = "A shorthand block that declares a new variable and assigns it a value immediately."
+note = "This block makes a variable. A variable is a name that holds a value."
 text = "declare {} as {}"
 text_blocks = Array[ExtResource("1_ji57x")]([ExtResource("3_kwrrs"), ExtResource("4_8ud6s")])
 text_hints = PackedStringArray("var", "value")

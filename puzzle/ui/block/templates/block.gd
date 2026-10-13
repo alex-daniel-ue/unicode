@@ -59,6 +59,11 @@ static func construct(from_data: BlockData) -> Block:
 func _ready() -> void:
 	assert(data != null)
 	
+	# A slot block inside a picture is part of the picture too. It's built, and
+	# ready, before its parent says it's a picture, so it asks: without this, an
+	# Ahead Is in a picture looked for a robot to talk to, outside any level.
+	if not display and _in_picture():
+		display = true
 	text.format()
 	if display:
 		visual.apply_immediately()
@@ -70,6 +75,14 @@ func _ready() -> void:
 		return
 	
 	function.initialize()
+
+func _in_picture() -> bool:
+	var node := get_parent()
+	while node != null:
+		if node is Block and (node as Block).display:
+			return true
+		node = node.get_parent()
+	return false
 
 func _process(delta: float) -> void:
 	if display or preview_type != PreviewType.NONE:
@@ -87,6 +100,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	var preview := drag.generate_preview()
 	set_drag_preview(preview)
 	Core.current_drag_preview = preview
+	SfxPlayer.play(SfxPlayer.BLOCK_PICKED_UP)
 	
 	if data.toolbox:
 		return drag.copy()

@@ -3,7 +3,7 @@ extends BlockVisualComponent
 
 const TYPE_COLORS: Dictionary[int, Color] = {
 	TYPE_NIL : Color("#CBD5E1"),
-	TYPE_STRING_NAME : Color("f57fbcff"),
+	TYPE_STRING_NAME : Color("#F5A9E1"),  # a soft pink, well clear of the red an error uses
 	TYPE_STRING : Color("#FF8F5E"),  # coral: well clear of the robot blocks' yellow
 	TYPE_INT : Color("#93C5FD"),
 	TYPE_FLOAT : Color("b19dfcff"),

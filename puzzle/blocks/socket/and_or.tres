@@ -42,6 +42,7 @@ metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
 [resource]
 script = ExtResource("4_blockdata")
 name = "AndOrBlock"
+title = "And / Or"
 color = Color(0.5058824, 0.87058824, 0.6392157, 1)
 base_path = "uid://pj76penmyeli"
 type = 2
@@ -49,6 +50,7 @@ socket = SubResource("Resource_andor_socket")
 category = "Boolean"
 syntax = "{a: boolean} {op: and/or} {b: boolean}"
 description = "Combines two conditions. With 'and' the whole thing is true only when both sides are true. With 'or' it is true when at least one side is true."
+note = "This block joins two conditions. With and, both must be True. With or, one True is enough."
 top_notch = false
 text = "{} {} {}"
 text_blocks = Array[ExtResource("4_blockdata")]([ExtResource("5_operand"), SubResource("Resource_op_block"), ExtResource("5_operand")])

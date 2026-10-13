@@ -12,6 +12,7 @@ type = 3
 [resource]
 script = ExtResource("1_naw0e")
 name = "ElifBlock"
+title = "Elif"
 color = Color(0.37254903, 0.5176471, 0.72156864, 1)
 base_path = "uid://cbwa1bqy2sbq"
 type = 1
@@ -19,6 +20,7 @@ nested = SubResource("Resource_dnf4h")
 category = "Selection"
 syntax = "elif {condition: boolean}"
 description = "Executes the blocks inside only if the if block above it did not run, and its own boolean expression evaluates to true. Must be placed directly below an if or another elif."
+note = "Put this block right under an If block. It checks its own condition only when the If block did not run."
 text = "elif {}"
 text_blocks = Array[ExtResource("1_naw0e")]([ExtResource("4_34tds")])
 text_hints = PackedStringArray()

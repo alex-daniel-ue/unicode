@@ -8,11 +8,13 @@
 [resource]
 script = ExtResource("1_block_data")
 name = "AppendBlock"
+title = "Append"
 color = Color(0.98, 0.66, 0.36, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Lists"
 syntax = "append {value: variant} to {list: list}"
 description = "Adds a value to the end of a list, which makes it one item longer. Tuples can't grow, and sets use add."
+note = "This block adds a value to the end of a list."
 text = "append {} to {}"
 text_blocks = Array[ExtResource("1_block_data")]([ExtResource("2_receptive_"), ExtResource("list_slot")])
 text_hints = PackedStringArray("value", "")
