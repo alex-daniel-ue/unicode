@@ -7,8 +7,8 @@ const DEFAULT_URL := "https://unicode-vert.vercel.app/api/hint"
 const DEFAULT_TOKEN := "i3RjY9TjdbCIkQPH4DgRDrR-kasNLBNSz0Et3iEGUPA"
 const DEFAULT_PLACEHOLDER := "Type here..."
 
-const REQUEST_TIMEOUT := 35.0
-const SUMMARY_TIMEOUT := 12.0
+const REQUEST_TIMEOUT := 55.0  # the relay gives Flash up to 45 s
+const SUMMARY_TIMEOUT := 50.0  # the win card never waits on it; it fills in when it comes
 const BLOCKED_TIMEOUT := 10
 const RATE_LIMIT_TIMEOUT := 15
 const SHOT_WIDTH := 768
@@ -51,10 +51,17 @@ var _pool_ticker: Timer
 ## Screenshot diagnostics, printed with the request in debug builds.
 var _shot_note := ""
 var _shot_bytes := 0
+## The level as it opened, before any run, as a JPEG in base64. After a run the
+## robot and the lists stay where the program left them, so the picture taken
+## when a question is asked shows the result; this one shows the start, and the
+## relay sends the model both, each labelled.
+var _start_shot := ""
 
 var _summary_http: HTTPRequest
 
-@onready var puzzle := get_node_or_null(^"/root/Puzzle") as Puzzle
+## The Puzzle this tab is in, wherever that is: /root/Puzzle in the game, under
+## a test scene in tools/.
+@onready var puzzle := _find_puzzle()
 
 
 func _ready() -> void:
@@ -206,6 +213,22 @@ func prompt_for_question() -> void:
 #endregion
 
 #region Request
+func _find_puzzle() -> Puzzle:
+	var node := get_parent()
+	while node != null and not node is Puzzle:
+		node = node.get_parent()
+	return node as Puzzle
+
+## Called once the level is on screen: keeps a picture of it as it starts.
+func capture_start() -> void:
+	_start_shot = ""
+	if puzzle == null:
+		return
+	for i in 4:
+		await get_tree().process_frame
+	var img := await _capture_level()
+	_start_shot = _encode(img) if img != null else ""
+	
 func _send_hint_request(msg: String) -> void:
 	var level: Level = Game.level if is_instance_valid(Game.level) else null
 	var screenshot := await _get_viewport_jpeg_base64()
@@ -216,6 +239,8 @@ func _send_hint_request(msg: String) -> void:
 		message = msg,
 		history = _get_conversation_history(),
 		screenshot_jpeg_b64 = screenshot,
+		# Only once something has run: before that, the room on screen is the start.
+		start_screenshot_jpeg_b64 = _start_shot if not puzzle.last_run_yaml.is_empty() else "",
 		context = {
 			instructions = level.description.get_raw() if level else "N/A",
 			blocks = _get_available_blocks_doc(),
@@ -235,6 +260,7 @@ func _send_hint_request(msg: String) -> void:
 	if OS.is_debug_build():
 		var shown := payload.duplicate(true)
 		shown.screenshot_jpeg_b64 = "<%d base64 chars, %d bytes: %s>" % [screenshot.length(), _shot_bytes, _shot_note]
+		shown.start_screenshot_jpeg_b64 = "<%d base64 chars>" % String(payload.start_screenshot_jpeg_b64).length()
 		print("-- hint request --\n", JSON.stringify(shown, "  ", false))
 	
 	_post(api_url)
@@ -379,23 +405,46 @@ func _format_block_data(all_data: Array[BlockData], include: Callable) -> Packed
 		lines.append("- %s: %s" % [s, d])
 	return lines
 
-## Where the robot ended up, in the same tile coordinates the level was authored in.
+const FACING := {
+	Vector2.UP: "up", Vector2.DOWN: "down",
+	Vector2.LEFT: "left", Vector2.RIGHT: "right",
+}
+	
+## Where the robot is, in the same tile coordinates the level was authored in,
+## and whether that is its start or where the last run left it, with the start
+## of that room to compare. Without the difference spelled out, the model read
+## the end of a run as the start of the level.
 ## Assumes the grid is anchored at the level's origin, which every level so far is.
 func _robot_state() -> String:
 	var robot := get_tree().get_first_node_in_group(&"robot") as Node2D
 	if robot == null:
 		return "N/A"
-	
-	const FACING := {
-		Vector2.UP: "up", Vector2.DOWN: "down",
-		Vector2.LEFT: "left", Vector2.RIGHT: "right",
-	}
 	var step: float = robot.get(&"step_size") if &"step_size" in robot else 32.0
+	var level: Level = Game.level if is_instance_valid(Game.level) else null
+	var room := level.current_room if level != null else 0
+	var in_room := " in Room %d" % (room + 1) if level != null and level.room_goals.size() > 1 else ""
+	var now := _tile_and_facing(robot.global_position, robot.get(&"facing_direction"), step)
+	if puzzle.last_run_yaml.is_empty():
+		return "At its start%s: %s. Nothing has run yet." % [in_room, now]
+	var line := "Now%s: %s. This is where the last run left it, not where it starts." % [in_room, now]
+	var start := _robot_start(robot, room, step)
+	if not start.is_empty():
+		line += " It starts that room at %s." % start
+	return line
 	
-	return "tile %s, facing %s" % [
-		Vector2i((robot.global_position / step).floor()),
-		FACING.get(robot.get(&"facing_direction"), "?"),
-	]
+## The robot's start in room `room`, from its Resettable snapshot, or "".
+func _robot_start(robot: Node2D, room: int, step: float) -> String:
+	var keeper := robot.get_node_or_null(^"ResettableComponent")
+	var snapshots: Array = keeper.get(&"room_snapshots") if keeper != null else []
+	if room >= snapshots.size():
+		return ""
+	var snap: Dictionary = snapshots[room]
+	if not (snap.has(&"transform") and snap.has(&"facing_direction")):
+		return ""
+	return _tile_and_facing((snap[&"transform"] as Transform2D).origin, snap[&"facing_direction"], step)
+	
+func _tile_and_facing(at: Vector2, facing: Variant, step: float) -> String:
+	return "tile %s, facing %s" % [Vector2i((at / step).floor()), FACING.get(facing, "?")]
 
 ## Every list in the level as Python writes it, room by room, because a
 ## screenshot is a poor way to read numbers. It's what each list holds now, so
@@ -430,14 +479,17 @@ func _get_viewport_jpeg_base64() -> String:
 		push_warning("AI screenshot: nothing captured (%s). The hint goes out without one." % _shot_note)
 		return ""
 	
+	var encoded := _encode(img)
+	_shot_bytes = Marshalls.base64_to_raw(encoded).size()
+	_shot_note += ", %dx%d" % [img.get_width(), img.get_height()]
+	return encoded
+	
+## `img` at most SHOT_WIDTH wide, as a JPEG in base64.
+func _encode(img: Image) -> String:
 	if img.get_width() > SHOT_WIDTH:
 		var height := roundi(SHOT_WIDTH * float(img.get_height()) / img.get_width())
 		img.resize(SHOT_WIDTH, height, Image.INTERPOLATE_BILINEAR)
-	
-	var jpeg := img.save_jpg_to_buffer(0.8)
-	_shot_bytes = jpeg.size()
-	_shot_note += ", %dx%d" % [img.get_width(), img.get_height()]
-	return Marshalls.raw_to_base64(jpeg)
+	return Marshalls.raw_to_base64(img.save_jpg_to_buffer(0.8))
 
 ## What the student sees in the environment panel, flattened onto an opaque
 ## background.
@@ -593,9 +645,16 @@ func _add_bubble(bubble: ChatBubble) -> void:
 	
 	chat_stack.add_child(bubble)
 	UiMotion.fade_in(bubble, 0.18)
-	
-	var bottom := int(scroll.get_v_scroll_bar().max_value)
-	scroll.set_deferred(&"scroll_vertical", bottom)
+	_snap_to_bottom()
+
+## Every new message scrolls the chat to its end. The new bubble is only laid out
+## a frame or two after it's added, so the scroll's end is read after that;
+## reading it straight away scrolled to the end of the chat before it.
+func _snap_to_bottom() -> void:
+	for i in 2:
+		await get_tree().process_frame
+	if is_instance_valid(scroll):
+		scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
 
 func _clear_temporary() -> void:
 	for node in chat_stack.get_children():

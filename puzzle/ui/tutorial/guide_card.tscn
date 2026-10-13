@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://6c1y4v7eoav2"]
+[gd_scene load_steps=5 format=3 uid="uid://6c1y4v7eoav2"]
 
 [ext_resource type="Script" uid="uid://bdt6jhnlpbit7" path="res://puzzle/ui/tutorial/guide_card.gd" id="1_card"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="FontFile" uid="uid://d0dw8vqho76cs" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf" id="3_regular"]
+[ext_resource type="FontFile" uid="uid://d0ifmjcc1ssmp" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Bold.ttf" id="4_bold"]
 
 [node name="GuideCard" type="PanelContainer" node_paths=PackedStringArray("title_label", "graphic_holder", "body_label", "page_label", "next_button", "back_button")]
 custom_minimum_size = Vector2(440, 0)
@@ -40,14 +42,23 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 14
 
-[node name="Body" type="Label" parent="Margin/Stack"]
+[node name="Body" type="RichTextLabel" parent="Margin/Stack"]
 custom_minimum_size = Vector2(396, 0)
 layout_mode = 2
-theme_type_variation = &"LegibleLabel"
-theme_override_font_sizes/font_size = 22
-text = "One or two short lines."
-horizontal_alignment = 1
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.49803922)
+theme_override_constants/outline_size = 1
+theme_override_constants/line_separation = 4
+theme_override_fonts/normal_font = ExtResource("3_regular")
+theme_override_fonts/bold_font = ExtResource("4_bold")
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/bold_font_size = 22
+bbcode_enabled = true
+text = "[b]Do this.[/b] One or two short lines."
+fit_content = true
+scroll_active = false
 autowrap_mode = 3
+horizontal_alignment = 1
 
 [node name="Footer" type="HBoxContainer" parent="Margin/Stack"]
 layout_mode = 2

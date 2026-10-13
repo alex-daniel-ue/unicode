@@ -13,6 +13,10 @@ const TUTORIAL_OVERLAY := preload("res://puzzle/ui/tutorial/tutorial_overlay.tsc
 ## a level opens, after a guide that pointed into the toolbox, and when a run has
 ## no variables to show.
 const INFORMATION_TAB := "UserInterface/SideMenuLeft/Panel/PuzzleInformation"
+const ROOM_TAB := "UserInterface/SideMenuRight/Panel/PuzzleEnvironment"
+const VALUE_BUBBLES := "ValueBubbles"
+## How long the value tags from a solved room stay once the next room starts.
+const ROOM_TAGS_FADE_AFTER := 0.6
 const EXTRA_UI := [
 	"UserInterface/SideMenuLeft/ButtonContainer/AIAssistantMenuButton",
 	"UserInterface/SideMenuLeft/ButtonContainer/VariableWatcherMenuButton",
@@ -44,7 +48,9 @@ var _guide_pages: Array = []
 
 func _ready() -> void:
 	side_panels[0].focus_content(get_node(INFORMATION_TAB) as Control)
-	side_panels[1].show_menu(true)
+	# focus_content, not show_menu: the panel has to know the room is what it
+	# shows, or the room button's first press only "switches" to it.
+	side_panels[1].focus_content(get_node(ROOM_TAB) as Control)
 	
 	if Game.level_scene != null:
 		Game.level = Game.level_scene.instantiate() as Level
@@ -149,6 +155,11 @@ func configure_level() -> void:
 		preset.reparent(canvas)
 		preset.position = canvas.size / 2.
 		preset.visible = true
+	
+	SfxPlayer.play(SfxPlayer.LEVEL_START)
+	# The assistant keeps a picture of the level as it starts, to send beside the
+	# one taken when a question is asked (which, after a run, shows its result).
+	ai_assistant.capture_start()
 	
 	# The guide comes first, and a worked example only runs itself once the
 	# student has been through it.
@@ -286,4 +297,8 @@ func _on_interpreter_output(line: String) -> void:
 
 func _on_room_completed(index: int, total: int) -> void:
 	if total <= 1: return
+	# The last room's sound is the level's own.
+	if index + 1 < total:
+		SfxPlayer.play(SfxPlayer.NEXT_ROOM)
+		(get_node(VALUE_BUBBLES) as ValueBubbles).fade_stale(ROOM_TAGS_FADE_AFTER)
 	notif.push("You solved Room %d of %d." % [index + 1, total], Notification.Type.SUCCESS)

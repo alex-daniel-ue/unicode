@@ -9,13 +9,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vifbn"]
 shader = ExtResource("1_c3b4b")
 shader_parameter/cell_size = 25.0
-shader_parameter/dot_size = 0.0800000038
 shader_parameter/background_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
-shader_parameter/dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
-shader_parameter/resolution = Vector2(1152, 648)
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/anti_aliasing_factor = 0.01
-shader_parameter/stochastic_samples = 16
 
 [node name="Canvas" type="ColorRect" node_paths=PackedStringArray("serializer")]
 material = SubResource("ShaderMaterial_vifbn")

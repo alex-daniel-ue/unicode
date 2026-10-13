@@ -38,11 +38,11 @@ func _drop_data(_at_position: Vector2, drop: Variant) -> void:
 func _refuse(block: Block) -> void:
 	var message := ""
 	if not block.data.trashable:
-		message = "You can't trash the \"%s\" block." % block.data.display_name()
+		message = "You can't trash the %s block." % block.data.display_name()
 	else:
 		for inner in block.get_all_blocks():
 			if not inner.data.trashable:
-				message = "You can't trash this. It holds the \"%s\" block, and that block can't be trashed." % inner.data.display_name()
+				message = "You can't trash this. It holds the %s block, and that block can't be trashed." % inner.data.display_name()
 				break
 	if not message.is_empty() and puzzle != null:
 		puzzle.notif.push(message, Notification.Type.ERROR)

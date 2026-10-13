@@ -47,6 +47,8 @@ func show_content(control: Control) -> void:
 	_switch_to(control)
 	if is_open != was_open:
 		Tutorial.panel_toggled.emit(self, is_open)
+	if is_open:
+		Tutorial.tab_shown.emit(control)
 
 ## Opens the panel on `control`. Unlike show_content(), calling this on the
 ## already-visible tab won't toggle the panel shut.

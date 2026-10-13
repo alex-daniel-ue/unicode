@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.gd" id="1_tile"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://d3cm84lguffxf" path="res://puzzle/ui/side panel/icons/pixelarticons--eye.png" id="3_eye"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_tile"]
 content_margin_left = 10.0
@@ -18,12 +20,47 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[node name="Tile" type="PanelContainer" node_paths=PackedStringArray("holder")]
+[node name="Tile" type="PanelContainer" node_paths=PackedStringArray("holder", "eye", "note")]
 mouse_filter = 2
+theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBox_tile")
 script = ExtResource("1_tile")
-holder = NodePath("Holder")
+holder = NodePath("Stack/Row/Holder")
+eye = NodePath("Stack/Row/Eye")
+note = NodePath("Stack/Note")
 
-[node name="Holder" type="CenterContainer" parent="."]
+[node name="Stack" type="VBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Row" type="HBoxContainer" parent="Stack"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Holder" type="CenterContainer" parent="Stack/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Eye" type="TextureButton" parent="Stack/Row"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Show what this block does."
+focus_mode = 0
+mouse_default_cursor_shape = 2
+toggle_mode = true
+texture_normal = ExtResource("3_eye")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Note" type="Label" parent="Stack"]
+visible = false
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme_type_variation = &"LegibleLabel"
+theme_override_font_sizes/font_size = 16
+text = "What the block does."
+autowrap_mode = 3

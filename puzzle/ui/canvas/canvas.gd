@@ -16,14 +16,73 @@ var max_zoom := 2.5
 
 @export var serializer: Serializer
 
+## Loose blocks keep this far apart, in canvas pixels (see _separate()).
+const SEPARATION_GAP := 16.0
+## How quickly an overlap closes: the share of it closed each second.
+const SEPARATION_SPEED := 9.0
+
 var _dragging := false
 
 
-func _process(_delta: float) -> void:
-	# material is ShaderMaterial:
-	material.set_shader_parameter("offset", -position / scale)
+func _process(delta: float) -> void:
+	# The grid needs nothing from here: canvas_bg.gdshader draws it in the
+	# canvas's own coordinates, so it pans and zooms with the blocks.
 	if _dragging:
 		_update_drag_cursor()
+	elif not Interpreter.is_running:
+		_separate(delta)
+
+#region Separation
+## Loose blocks that overlap drift apart until there's a small gap between
+## them. A block dropped where it can't attach used to land on top of another
+## and sit there looking attached, and students built on it; drifting off says
+## it isn't part of anything. Begin and any block that can't be dragged hold
+## still, and the loose block moves all the way. Only overlaps push, so once
+## nothing overlaps nothing moves: this is not a field that keeps blocks
+## sliding about.
+func _separate(delta: float) -> void:
+	var stacks: Array[Block] = []
+	for child in get_children():
+		if child is Block and (child as Block).visible and not (child as Block).display:
+			stacks.append(child as Block)
+	if stacks.size() < 2:
+		return
+	var pushes: Dictionary[Block, Vector2] = {}
+	for i in stacks.size():
+		for j in range(i + 1, stacks.size()):
+			var a := stacks[i]
+			var b := stacks[j]
+			var a_fixed := _anchored(a)
+			var b_fixed := _anchored(b)
+			if a_fixed and b_fixed:
+				continue
+			var ra := a.get_rect().grow(SEPARATION_GAP / 2.0)
+			var rb := b.get_rect().grow(SEPARATION_GAP / 2.0)
+			if not ra.intersects(rb):
+				continue
+			# Out along the shorter way: a block dropped across a tall stack
+			# slides off its side, not all the way down its length.
+			var overlap := ra.intersection(rb)
+			var away := ra.get_center() - rb.get_center()
+			var push := Vector2(overlap.size.x * (1.0 if away.x >= 0.0 else -1.0), 0.0) 				if overlap.size.x < overlap.size.y 				else Vector2(0.0, overlap.size.y * (1.0 if away.y >= 0.0 else -1.0))
+			if a_fixed:
+				pushes[b] = pushes.get(b, Vector2.ZERO) - push
+			elif b_fixed:
+				pushes[a] = pushes.get(a, Vector2.ZERO) + push
+			else:
+				pushes[a] = pushes.get(a, Vector2.ZERO) + push / 2.0
+				pushes[b] = pushes.get(b, Vector2.ZERO) - push / 2.0
+	var share := minf(1.0, delta * SEPARATION_SPEED)
+	for block: Block in pushes:
+		var push: Vector2 = pushes[block]
+		# The last pixel in one go, so the block comes to rest.
+		block.position += push if push.length() < 1.0 else push * share
+
+## Blocks that hold still while others make room: Begin, and anything the
+## level placed that can't be dragged.
+func _anchored(block: Block) -> bool:
+	return block is CapBlock or not block.data.draggable
+#endregion
 
 func _notification(what: int) -> void:
 	match what:

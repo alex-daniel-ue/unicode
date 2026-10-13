@@ -21,7 +21,7 @@ const DISPLAY := {
 	"Robot": "Robot",
 	"Lists": "Lists",
 	"Iterative": "Loops",
-	"Selection": "If",
+	"Selection": "Selection",
 	"Boolean": "Logic",
 	"Value": "Math",
 	"Generic": "Basics",

@@ -64,7 +64,14 @@ var frozen_scopes: Array[Frame]
 
 func step(block: Block) -> void:
 	block.visual.pulse(maxf(current_delay, BlockVisualComponent.PULSE_DURATION))
+	SfxPlayer.play_pulse()
 	steps = (steps + 1) if is_fast else 0
+	await Game.sleep(current_delay)
+
+## A beat with nothing lit, after a nested block (an if, a loop) is done and
+## before the block under it, and at the end of the program: one step's delay,
+## not counted as a step.
+func settle() -> void:
 	await Game.sleep(current_delay)
 
 func clear_state() -> void:

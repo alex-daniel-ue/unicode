@@ -196,8 +196,9 @@ layout_mode = 2
 [node name="StatusLabel" type="Label" parent="UserInterface/SideMenuLeft/Panel/VariableWatcher/ScrollContainer/VBoxContainer/MarginContainer/VBoxContainer/StatusContainer"]
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
+modulate = Color(1, 1, 1, 0.6)
 theme_type_variation = &"LegibleLabel"
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 text = "These are your variables right now."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -270,7 +271,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="TrashButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("confirm_dialog")]
+[node name="TrashButton" type="Button" parent="UserInterface/SideMenuLeft/ButtonContainer" node_paths=PackedStringArray("confirm_dialog") groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 tooltip_text = "Drag blocks onto to trash,
@@ -338,7 +339,7 @@ mouse_filter = 2
 script = ExtResource("4_8isiv")
 panel = NodePath("../Panel")
 
-[node name="MenuButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+[node name="MenuButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 tooltip_text = "Menu (Esc): resume, level select, main menu"
@@ -348,7 +349,7 @@ theme_type_variation = &"SidePanelButton"
 icon = ExtResource("10_dipl1")
 expand_icon = true
 
-[node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents")]
+[node name="EnvironmentButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" node_paths=PackedStringArray("associated_contents") groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 tooltip_text = "Hide or show the room"
@@ -361,7 +362,7 @@ associated_contents = NodePath("../../Panel/PuzzleEnvironment")
 open_icon = ExtResource("31_bar_right")
 closed_icon = ExtResource("30_bar_left")
 
-[node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+[node name="FrameButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 tooltip_text = "Reset the view (drag the level to look around, scroll to zoom)"
@@ -376,7 +377,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="SpeedButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+[node name="SpeedButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 tooltip_text = "Speed up/slow down execution"
@@ -387,7 +388,7 @@ icon = ExtResource("15_35gji")
 expand_icon = true
 script = ExtResource("16_tkwoe")
 
-[node name="PlayButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+[node name="PlayButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")
@@ -395,7 +396,7 @@ theme_type_variation = &"SidePanelButton"
 icon = ExtResource("11_vlyq7")
 expand_icon = true
 
-[node name="StopButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer"]
+[node name="StopButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme = ExtResource("2_xv3xb")

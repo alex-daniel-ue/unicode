@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://puzzle/ui/tutorial/list_graphic.gd" id="2_r"]
 [ext_resource type="PackedScene" uid="uid://cb5ve56xnp5r5" path="res://level/objects/entities/list/list_entity.tscn" id="3_r"]
 
-[node name="GoalFaded" type="Control" node_paths=PackedStringArray("list")]
+[node name="GoalEmpty" type="Control" node_paths=PackedStringArray("list")]
 custom_minimum_size = Vector2(190, 62)
 layout_mode = 3
 offset_right = 190.0

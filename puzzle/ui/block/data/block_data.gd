@@ -29,6 +29,9 @@ const GROUPS := {
 }
 
 @export var name := "Block"
+## What students call the block: "Ahead Is", "Index Of", "Begin". Guide pages and
+## messages use it; empty falls back to the block's text (display_name()).
+@export var title := ""
 @export var color := Color.WHITE
 @export_file("*.tscn") var base_path: String
 
@@ -47,6 +50,11 @@ const GROUPS := {
 @export var category := "Uncategorized"
 @export var syntax := ""
 @export_multiline var description := ""
+## The block's short tutorial text, for students: what it does, in a sentence
+## or two of plain English ("This block adds 1 to a variable."). The toolbox's
+## eye shows it, and a guide page uses it when the level gives no note of its
+## own. `description` is the precise version, for the assistant.
+@export_multiline var note := ""
 @export var draggable := true
 @export var placeable := true
 @export var top_notch := true
@@ -235,12 +243,14 @@ func get_func_type() -> FuncType:
 func has_text_blocks() -> bool:
 	return text.contains("{}")
 
-## What to call this block in a sentence: its text on one line, with "..." for
+## What to call this block: its title, or else its text on one line, with "..." for
 ## each slot ("ahead is ...", "move forward ... times", "begin code"). A block
 ## that starts with a slot ("{} in {}", "{} {} {}") would be all dots that way,
 ## so its slots are named instead, as the block shows them: "value in list",
 ## "number + number".
 func display_name() -> String:
+	if not title.is_empty():
+		return title
 	var line := text.replace("\\n", " ").strip_edges()
 	var parts := line.split("{}")
 	var shown := parts[0]

@@ -44,7 +44,7 @@ layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="OKButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="OKButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" groups=["sfx_click"]]
 modulate = Color(0.2901961, 0.87058824, 0.5019608, 1)
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
@@ -52,7 +52,7 @@ icon = ExtResource("3_foaiq")
 icon_alignment = 1
 expand_icon = true
 
-[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" groups=["sfx_click"]]
 modulate = Color(0.972549, 0.44313726, 0.44313726, 1)
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2

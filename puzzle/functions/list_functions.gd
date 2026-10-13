@@ -105,8 +105,10 @@ static func resolve(this: Block, raw: Variant, what: String) -> ListEntity:
 		return null
 	if value is ListEntity:
 		return value
+	# Named by the block's name, as students know it, not its text.
+	var block_name := this.data.display_name() if this.data != null else what
 	if value == null:
-		this.function.error("'%s' needs a list. Drop a list's name block into its empty slot." % what)
+		this.function.error("The %s block needs a list. Drop the name block of a list into its empty slot." % block_name)
 	else:
-		this.function.error("'%s' needs a list, but it got %s." % [what, Core.to_python_repr(value)])
+		this.function.error("The %s block needs a list, but it got %s." % [block_name, Core.to_python_repr(value)])
 	return null

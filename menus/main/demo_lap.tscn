@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=4]
+
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="1_floor"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="2_walls"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="3_furniture"]
+[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="4_robot"]
+
+[node name="DemoLap" type="Node2D"]
+metadata/size = Vector2(224, 192)
+
+[node name="Floor" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQADAAEAAAABAAQAAQAAAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQADAAMAAAA=")
+tile_set = ExtResource("1_floor")
+
+[node name="YSorted" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAADAAMAAQABAAAAAAAFAAQAAwAAAAAAAAA=")
+tile_set = ExtResource("3_furniture")
+
+[node name="Robot" type="Node2D" parent="YSorted"]
+position = Vector2(80, 144)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="YSorted/Robot"]
+z_index = 2
+position = Vector2(-0.125, -12)
+scale = Vector2(0.915, 0.915)
+sprite_frames = ExtResource("4_robot")
+animation = &"idle_right"
+
+[node name="Walls" type="TileMapLayer" parent="YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAGAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAGAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAGAAQAAQAAAAEAABAAAAUAAQACAAAAADABAAUAAAAAAAEAAHACAAUAAAAAAAEAAHADAAUAAAAAAAEAAHAEAAUAAAAAAAEAAHAFAAUAAAAAAAEAAHAGAAUAAQACAAAAACA=")
+tile_set = ExtResource("2_walls")

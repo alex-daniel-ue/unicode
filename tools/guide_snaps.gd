@@ -3,7 +3,7 @@ extends Node
 ## Opens a level in the real Puzzle and saves a screenshot of every page of its
 ## guide, to look over the guides without clicking through them. Not headless:
 ## headless draws nothing.
-##   godot --path . --resolution 1920x1080 res://tools/guide_snaps.tscn -- res://level/levels/ar_1.tscn [more levels]
+##   godot --path . --resolution 1920x1080 res://tools/guide_snaps.tscn -- res://level/levels/ar_t1.tscn [more levels]
 ## Pages that wait for an action are shown as they first appear. Screenshots go
 ## to user://guide_<level>_<page>.png, and the path of each is printed.
 
@@ -17,7 +17,7 @@ func _snap_level(path: String) -> void:
 	var level: Level = (load(path) as PackedScene).instantiate()
 	Game.level_scene = null
 	Game.level = level
-	Game.level_id = &"guide_snaps"
+	Game.level_id = _catalog_id(path)
 	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
 	puzzle.visible = true
 	add_child(puzzle)
@@ -42,3 +42,11 @@ func _snap(label: String) -> void:
 	var file := "user://guide_%s.png" % label
 	get_viewport().get_texture().get_image().save_png(file)
 	print("SNAP ", ProjectSettings.globalize_path(file))
+
+## The catalog's id for the level at `path`, so its brief is titled "Level n: ...".
+func _catalog_id(path: String) -> StringName:
+	for module in Progress.catalog.modules:
+		for entry in module.levels:
+			if entry != null and entry.scene != null and entry.scene.resource_path == path:
+				return entry.id
+	return &"guide_snaps"

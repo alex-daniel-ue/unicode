@@ -6,8 +6,8 @@ extends Control
 ## is set before it enters the tree; GuideGraphics builds these.
 ##
 ## `cells`, one character a tile:
-##   .  floor      P  puddle     F  red flag (the destination)
-##   B  bottle     D  desk (blocked)
+##   .  floor      P  puddle (the wet floor sign)     F  green flag (the destination)
+##   B  battery    D  desk (blocked)                 W  wall (blocked)
 ## The robot, a faded "where it ends up" robot, an arrow, a box around the tile
 ## being looked at, and small numbers on tiles all go on top.
 
@@ -18,11 +18,15 @@ const OVERHANG := 16 * SCALE
 
 const FLOOR := preload("res://world/assets/tilesets/school_floor.png")
 const FLOOR_REGION := Rect2(32, 32, 32, 32)
-const PUDDLE := preload("res://level/objects/puddle.png")
-const FLAG := preload("res://level/objects/red_flag.png")
-const BOTTLE := preload("res://world/assets/objects/trash_bottle.png")
+const PUDDLE := preload("res://level/objects/danger.png")
+const FLAG := preload("res://level/objects/green_flag.png")
+const BATTERY := preload("res://world/assets/objects/battery.png")
 const DESK := preload("res://world/assets/objects/chairs.png")
 const DESK_REGION := Rect2(0, 0, 32, 48)
+const WALLS := preload("res://world/assets/tilesets/school_walls.png")
+## The rooms' wall face, top edge to blue baseboard: two tiles tall, as the
+## rooms draw it.
+const WALL_REGION := Rect2(32, 0, 32, 64)
 const ROBOT_FRAMES := preload("res://level/objects/entities/robot/sprite_frames.tres")
 const MARK_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
 const ACCENT := Color(1.0, 0.82, 0.3)
@@ -42,7 +46,11 @@ var marks := {}
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
-	custom_minimum_size = Vector2(cells.length() * TILE, TILE + OVERHANG)
+	custom_minimum_size = Vector2(cells.length() * TILE, TILE + _overhang())
+
+## A wall is a whole tile taller than anything else drawn here.
+func _overhang() -> float:
+	return TILE if cells.contains("W") else OVERHANG
 
 func _draw() -> void:
 	for i in cells.length():
@@ -63,23 +71,22 @@ func _draw() -> void:
 		_draw_arrow(arrow_from, arrow_to)
 
 func _tile_rect(i: int) -> Rect2:
-	return Rect2(i * TILE, OVERHANG, TILE, TILE)
+	return Rect2(i * TILE, _overhang(), TILE, TILE)
 
 func _draw_thing(code: String, tile: Rect2) -> void:
 	match code:
 		"P":
 			draw_texture_rect(PUDDLE, tile, false)
 		"F":
-			var size := Vector2(28, 28) * SCALE
-			draw_texture_rect(FLAG, Rect2(tile.get_center() - size / 2.0, size), false)
+			draw_texture_rect(FLAG, tile, false)
 		"B":
-			# The bottle is small in its 32 px tile; the rooms draw it at twice
-			# that, and so does this.
-			var size := Vector2(64, 64) * SCALE
-			draw_texture_rect(BOTTLE, Rect2(tile.get_center() - size / 2.0, size), false)
+			draw_texture_rect(BATTERY, tile, false)
 		"D":
 			var size := DESK_REGION.size * SCALE
 			draw_texture_rect_region(DESK, Rect2(Vector2(tile.position.x, tile.end.y - size.y), size), DESK_REGION)
+		"W":
+			var size := WALL_REGION.size * SCALE
+			draw_texture_rect_region(WALLS, Rect2(Vector2(tile.position.x, tile.end.y - size.y), size), WALL_REGION)
 
 func _draw_robot(i: int, direction: Vector2, tint: Color) -> void:
 	var animation := &"idle_right"
@@ -97,7 +104,7 @@ func _draw_robot(i: int, direction: Vector2, tint: Color) -> void:
 
 ## Along the bottom of the tiles, under the robot's feet.
 func _draw_arrow(from: int, to: int) -> void:
-	var y := OVERHANG + TILE - 10.0
+	var y := _overhang() + TILE - 10.0
 	var a := Vector2(_tile_rect(from).get_center().x, y)
 	var b := Vector2(_tile_rect(to).get_center().x, y)
 	var direction := (b - a).normalized()

@@ -16,7 +16,7 @@ const CHOICE_COLOR := Color("#FF8F5E")
 const LABEL_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
 const LIST_SCALE := 2.0
 
-const KINDS := ["move", "move_n", "turn", "ahead_is", "length_of", "set_index", "append", "contains", "for_each"]
+const KINDS := ["move", "move_n", "turn", "ahead_is", "item_of", "length_of", "set_index", "append", "contains", "for_each"]
 
 
 static func build(kind: String) -> Control:
@@ -25,6 +25,7 @@ static func build(kind: String) -> Control:
 		"move_n": return _move_n()
 		"turn": return _turn()
 		"ahead_is": return _ahead_is()
+		"item_of": return _item_of()
 		"length_of": return _length_of()
 		"set_index": return _set_index()
 		"append": return _append()
@@ -71,28 +72,34 @@ static func _turn() -> Control:
 		row.add_child(column)
 	return row
 
-## The robot looking at the tile in front of it, then what each choice in the
-## dropdown means, as the thing in the room it looks for.
+## One panel for each thing the block can look for: the robot facing it, the
+## choice that finds it, and True. One panel a choice, so "destination" is
+## plainly the flag and "blocked" plainly a wall, instead of a legend to match up.
 static func _ahead_is() -> Control:
-	var stack := _column(14)
-	var top := _row(16)
-	var strip := _strip(".P")
-	strip.robot = 0
-	strip.looked_at = 1
-	top.add_child(strip)
-	top.add_child(_label("True", TRUE_COLOR, 22))
-	stack.add_child(top)
-	var legend := _row(22)
-	for pair in [["D", "blocked"], ["F", "destination"], ["P", "puddle"]]:
-		var item := _column(2)
-		item.add_child(_strip(pair[0]))
-		item.add_child(_label(pair[1], CHOICE_COLOR))
-		legend.add_child(item)
-	stack.add_child(legend)
-	return stack
+	var row := _row(18)
+	for pair in [["W", "blocked"], ["F", "destination"], ["P", "puddle"]]:
+		var panel := _column(4)
+		panel.alignment = BoxContainer.ALIGNMENT_END  # the words in one line, whatever stands above them
+		var strip := _strip("." + pair[0])
+		strip.robot = 0
+		strip.looked_at = 1
+		panel.add_child(strip)
+		panel.add_child(_label(pair[1], CHOICE_COLOR))
+		panel.add_child(_label("True", TRUE_COLOR, 18))
+		row.add_child(_framed(panel))
+	return row
 #endregion
 
 #region Lists
+## The box at one index, and what the block gives back for it.
+static func _item_of() -> Control:
+	var stack := _column(8)
+	var list := _list("route", [2, 5, 4])
+	list.set_meta(&"point_at", 1)
+	stack.add_child(list)
+	stack.add_child(_label("index 1 of route = 5", ACCENT, 18))
+	return stack
+
 static func _length_of() -> Control:
 	var row := _row(14)
 	row.add_child(_list("route", [3, 2, 4]))
@@ -126,7 +133,7 @@ static func _for_each() -> Control:
 	var list := _list("route", [2, 3, 1])
 	list.set_meta(&"point_at", 0)
 	stack.add_child(list)
-	stack.add_child(_label("leg = 2, then 3, then 1", ACCENT, 18))
+	stack.add_child(_label("steps = 2, then 3, then 1", ACCENT, 18))
 	return stack
 
 static func _before_after(before: Control, after: Control) -> Control:
@@ -185,6 +192,21 @@ static func _column(gap: int) -> VBoxContainer:
 	column.add_theme_constant_override(&"separation", gap)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return column
+
+## A thin frame round one panel of a picture, so a row of them reads as separate
+## cases.
+static func _framed(child: Control) -> Control:
+	var frame := PanelContainer.new()
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(1, 1, 1, 0.04)
+	box.border_color = Color(1, 1, 1, 0.18)
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(6)
+	box.set_content_margin_all(8)
+	frame.add_theme_stylebox_override(&"panel", box)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(child)
+	return frame
 
 static func _centered(children: Array) -> Control:
 	var row := _row(0)

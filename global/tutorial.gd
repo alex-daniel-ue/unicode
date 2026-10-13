@@ -21,6 +21,10 @@ signal panel_toggled(panel: SidePanel, open: bool)
 ## The reframe button put the level view back.
 @warning_ignore("unused_signal")
 signal view_framed
+## A side panel's button opened one of its tabs (the toolbox, the task...), or
+## brought it to the front.
+@warning_ignore("unused_signal")
+signal tab_shown(content: Control)
 
 
 var shift_enter_shown := false

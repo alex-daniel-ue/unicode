@@ -7,6 +7,9 @@ extends Node
 
 const A := Guides.Advance
 const RIGHT := "UserInterface/SideMenuRight/ButtonContainer/"
+const LEFT := "UserInterface/SideMenuLeft/ButtonContainer/"
+## The button that opens each left-panel tab, by the tab's node name.
+const TAB_BUTTONS := {"PuzzleToolbox": "ToolboxMenuButton", "PuzzleInformation": "InfoMenuButton"}
 
 
 func _ready() -> void:
@@ -73,6 +76,8 @@ func _do(puzzle: Puzzle, page: Dictionary) -> void:
 			(puzzle.get_node(RIGHT + "FrameButton") as Button).pressed.emit()
 		A.PANEL_CLOSED, A.PANEL_OPENED:
 			(puzzle.get_node(RIGHT + "EnvironmentButton") as Button).pressed.emit()
+		A.TAB_SHOWN:
+			(puzzle.get_node(LEFT + TAB_BUTTONS[page.get("only", "PuzzleToolbox")]) as Button).pressed.emit()
 		A.BLOCK_PLACED:
 			# A drag can't be scripted; place the block the way a drop does and
 			# say so the way drop_manager does.

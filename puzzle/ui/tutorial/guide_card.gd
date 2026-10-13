@@ -6,7 +6,8 @@ extends PanelContainer
 ## the look is all in guide_card.tscn.
 ##
 ## The picture comes first and is the biggest thing on the card, because the
-## words are the part most likely to be skipped.
+## words are the part most likely to be skipped. In the words, **this** is bold:
+## the first sentence of a page is what to do, and it is set in bold.
 
 signal next_pressed
 signal back_pressed
@@ -16,15 +17,31 @@ const VIDEO_FRAME := Color(0.3, 0.33, 0.45)
 
 @export var title_label: Label
 @export var graphic_holder: Container
-@export var body_label: Label
+@export var body_label: RichTextLabel
 @export var page_label: Label
 @export var next_button: Button
 @export var back_button: Button
+
+var _refit_queued := false
 
 
 func _ready() -> void:
 	next_button.pressed.connect(next_pressed.emit)
 	back_button.pressed.connect(back_pressed.emit)
+	# The card's parent isn't a container, so nothing shrinks it to fit. On its
+	# first page the wrapped text is measured before it has a width, one word a
+	# line, and the card came out twice as tall as its content until the next
+	# page. Refit whenever what's inside settles.
+	minimum_size_changed.connect(_refit)
+
+func _refit() -> void:
+	if not _refit_queued:
+		_refit_queued = true
+		_do_refit.call_deferred()
+
+func _do_refit() -> void:
+	_refit_queued = false
+	reset_size()
 
 ## `waits` is true when the page moves on by itself (a block placed, a button
 ## pressed), so the card says what to do instead of offering Next. `can_go_back`
@@ -32,7 +49,7 @@ func _ready() -> void:
 func show_page(page: Dictionary, index: int, count: int, waits: bool, can_go_back := false) -> void:
 	title_label.text = page.get("title", "")
 	title_label.visible = not title_label.text.is_empty()
-	body_label.text = page.get("text", "")
+	body_label.text = rich(page.get("text", ""))
 	body_label.visible = not body_label.text.is_empty()
 	page_label.text = "%d / %d" % [index + 1, count] if count > 1 else ""
 
@@ -78,8 +95,17 @@ func _graphics(page: Dictionary) -> Array[Control]:
 		var picture := BlockPicture.new()
 		picture.data = block_data as BlockData
 		picture.values = PackedStringArray(page.get("block_values", []))
-		shown.append(picture)
+		# A slot that is typed into gets samples of what can go in it.
+		var slot := SlotExamples.example_slot(picture.data, picture.values) if picture.data != null else -1
+		shown.append(SlotExamples.build(picture, slot) if slot >= 0 else picture)
 	return shown
+
+## A page's text as BBCode: **this** in bold, and any square bracket kept as
+## text rather than read as a tag.
+static func rich(text: String) -> String:
+	var escaped := text.replace("[", "[lb]")
+	var bold := RegEx.create_from_string("\\*\\*(.+?)\\*\\*")
+	return bold.sub(escaped, "[b]$1[/b]", true)
 
 func _loaded_graphic(page: Dictionary, path: String) -> Control:
 	var resource := load(path)

@@ -1,24 +1,23 @@
 class_name GuidePointer
 extends Control
 
-## The arrow from a guide's card to the thing its page is about. The dim alone
+## The arrows from a guide's card to the things its page is about. The dim alone
 ## wasn't enough: on a small screen, or at a first glance, a lit button among
-## dimmed ones didn't read as "this one". The arrow nudges towards its end and
-## back, so it reads as pointing even out of the corner of an eye.
+## dimmed ones didn't read as "this one". The arrows nudge towards their ends
+## and back, so they read as pointing even out of the corner of an eye.
 ##
-## TutorialOverlay sets `start` and `end` every frame, in this control's space;
-## `shown` false hides it.
+## TutorialOverlay sets `arrows` every frame, in this control's space: one
+## [start, end] pair an arrow. `shown` false hides them all.
 
 const COLOR := Color(1.0, 0.82, 0.3)
 const RIM := Color(0.105882354, 0.09411765, 0.13725491)
 const WIDTH := 7.0
 const HEAD := 22.0
-## How far the arrow nudges towards its end, and how fast.
+## How far an arrow nudges towards its end, and how fast.
 const NUDGE := 7.0
 const NUDGE_SPEED := 5.0
 
-var start := Vector2.ZERO
-var end := Vector2.ZERO
+var arrows: Array[PackedVector2Array] = []
 var shown := false:
 	set(value):
 		if shown == value:
@@ -43,6 +42,11 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if not shown:
 		return
+	for pair in arrows:
+		if pair.size() == 2:
+			_draw_arrow(pair[0], pair[1])
+
+func _draw_arrow(start: Vector2, end: Vector2) -> void:
 	var line := end - start
 	if line.length() < HEAD * 2.0:
 		return

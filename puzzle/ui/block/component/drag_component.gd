@@ -46,6 +46,7 @@ func handle_copying(event: InputEvent) -> void:
 		
 		var preview := generate_preview()
 		Core.current_drag_preview = preview
+		SfxPlayer.play(SfxPlayer.BLOCK_PICKED_UP)
 		
 		base.force_drag(copy(), preview)
 

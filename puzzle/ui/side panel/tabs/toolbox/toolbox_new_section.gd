@@ -10,19 +10,23 @@ extends VBoxContainer
 var category_name := ""
 
 @export var entries: Container
-## Copied per block: a holder the block moves into, and the note under it.
+## Copied per block: a holder the block's tile goes in.
 @export var entry_template: Control
 
 
 func _ready() -> void:
 	entry_template.visible = false
 
-## Moves `block` (already a toolbox block, draggable as ever) into the section.
+const TILE := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.tscn")
+
+## Moves `block` (already a toolbox block, draggable as ever) into the section,
+## on a tile like the rest of the toolbox's, so it reads as something to pick up
+## too and not as a picture of one. Its note shows from the start here; the eye
+## on the tile hides it, as it shows it everywhere else.
 func add_entry(block: Block, note: String) -> void:
 	var entry := entry_template.duplicate() as Control
 	entries.add_child(entry)
 	entry.visible = true
-	block.reparent(entry.get_node(^"Holder"))
-	var note_label := entry.get_node(^"Note") as Label
-	note_label.text = note
-	note_label.visible = not note.is_empty()
+	var tile := TILE.instantiate() as ToolboxTile
+	entry.get_node(^"Holder").add_child(tile)
+	tile.hold(block, note, true)

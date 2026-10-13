@@ -25,6 +25,10 @@ func _begin(this: NestedBlock) -> void:
 	Interpreter.clear_scopes()
 	
 	await __run_body(this)
+	# A beat before the room is checked, so the last block's work is seen
+	# before the win (or the fail) takes over.
+	if not Interpreter.interrupted:
+		await Interpreter.settle()
 
 #region Iterative
 ## text: while {boolean}
@@ -234,11 +238,18 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 		return ControlSignal.NONE
 	
 	var if_chain_succeeded := false
+	var blocks := this.get_blocks()
 	
-	for block in this.get_blocks():
+	for i in blocks.size():
+		var block := blocks[i]
 		if block is NestedBlock:
 			if block.is_type(NestedData.Type.ELSE):
 				if if_chain_succeeded:
+					# Skipped, but it may close the chain: the beat is still due.
+					if not __continues_chain(blocks, i + 1):
+						await Interpreter.settle()
+						if Interpreter.interrupted:
+							return ControlSignal.NONE
 					continue
 			elif block.is_type(NestedData.Type.IF):
 				if_chain_succeeded = false
@@ -258,8 +269,25 @@ func __iterate_children(this: NestedBlock) -> ControlSignal:
 			if not if_chain_succeeded:
 				assert(outcome is bool)
 				if_chain_succeeded = outcome as bool
+		
+		# A beat after an if or a loop, before whatever comes after it, unless
+		# that's the else or elif of the same chain. Without it, what the block
+		# looked at (Ahead Is lights the tile it checks) was still showing while
+		# the next block moved the robot.
+		if block is NestedBlock and not __continues_chain(blocks, i + 1):
+			await Interpreter.settle()
+			if Interpreter.interrupted:
+				return ControlSignal.NONE
 	
 	return ControlSignal.NONE
+
+## True when the block at `index` is an else or elif, carrying on the if chain
+## before it.
+func __continues_chain(blocks: Array, index: int) -> bool:
+	if index >= blocks.size() or not blocks[index] is NestedBlock:
+		return false
+	var next := blocks[index] as NestedBlock
+	return next.is_type(NestedData.Type.ELSE) or next.is_type(NestedData.Type.ELIF)
 
 func __find_misplaced_branch(this: NestedBlock) -> Block:
 	var previous_block: Block = null

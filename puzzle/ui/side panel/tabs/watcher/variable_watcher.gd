@@ -34,7 +34,6 @@ const TONE_DONE := Color("#34D399")
 @export var stale_color := Color(0.55, 0.55, 0.55)
 
 var _dirty := true
-var _status_style: StyleBoxFlat
 ## Set when a run starts: this tab comes forward once the run has a variable to
 ## show, and not before. A program without variables never takes the panel from
 ## the level's description.
@@ -53,8 +52,6 @@ func _ready() -> void:
 		tree.set_column_title_alignment(col, ALIGN[col])
 	tree.set_column_clip_content(COL_VALUE, true)
 	
-	_status_style = status_container.get_theme_stylebox(&"panel").duplicate() as StyleBoxFlat
-	status_container.add_theme_stylebox_override(&"panel", _status_style)
 	
 	Interpreter.scope_changed.connect(_on_scope_changed)
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
@@ -139,9 +136,10 @@ func _rebuild() -> void:
 			focus_self()
 	tree.update_minimum_size()
 
-func _set_status(message: String, tone: Color) -> void:
+## A plain subtitle under the header, as the Toolbox has. The tone is kept for
+## the callers' sake; the words carry it.
+func _set_status(message: String, _tone: Color) -> void:
 	status.text = message
-	_status_style.border_color = tone
 	status_container.show()
 
 

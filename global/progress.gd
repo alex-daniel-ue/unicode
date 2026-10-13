@@ -21,6 +21,10 @@ const CATALOG_PATH := "res://global/utils/level_catalog.tres"
 
 var catalog: LevelCatalog
 var level_stars: PackedInt32Array = PackedInt32Array()
+## Stars for the levels that own no progress slot (the tutorials), by level id.
+## Kept in the save file only: they are a reward on the level grid, not part of
+## the code or of the study's data.
+var practice_stars: Dictionary[StringName, int] = {}
 
 ## True when this machine had no save file at startup. The tutorial prompt uses
 ## this as its "first run" test.
@@ -72,16 +76,22 @@ func apply_code(code: String) -> bool:
 func record_completion(level_id: StringName, stars: int) -> void:
 	var slot := slot_of(level_id)
 	if slot < 0:
-		# A level that deliberately owns no progress slot (the tutorial) is
-		# finished quietly. An id the catalog has never heard of is a wiring
-		# mistake and has to be loud, because the symptom is a solved level
-		# that records nothing.
+		# A level that deliberately owns no progress slot (a tutorial) keeps its
+		# stars in the save file only. An id the catalog has never heard of is a
+		# wiring mistake and has to be loud, because the symptom is a solved
+		# level that records nothing.
 		var known: bool = catalog != null and catalog.entry_of(level_id) != null
 		if not known:
 			push_error(
 				"Progress: level id '%s' is not in the LevelCatalog, so this completion was not recorded. "
 				% level_id + "Add a LevelEntry for it."
 			)
+			return
+		var best := clampi(stars, 1, 3)
+		if best > practice_stars.get(level_id, 0):
+			practice_stars[level_id] = best
+			_save_to_disk()
+		progress_updated.emit()
 		return
 
 	var earned := clampi(stars, 1, 3)
@@ -96,7 +106,7 @@ func record_completion(level_id: StringName, stars: int) -> void:
 
 func get_stars(level_id: StringName) -> int:
 	var slot := slot_of(level_id)
-	return level_stars[slot] if slot >= 0 else 0
+	return level_stars[slot] if slot >= 0 else practice_stars.get(level_id, 0)
 
 
 func is_complete(level_id: StringName) -> bool:
@@ -123,6 +133,7 @@ func furthest_slot() -> int:
 
 func reset() -> void:
 	level_stars.fill(0)
+	practice_stars.clear()
 	_save_to_disk()
 	progress_updated.emit()
 #endregion
@@ -156,6 +167,9 @@ func _load_from_disk() -> void:
 	for i in mini(level_stars.size(), decoded.size()):
 		level_stars[i] = maxi(level_stars[i], decoded[i])
 
+	for key in (cfg.get_section_keys("practice") if cfg.has_section("practice") else PackedStringArray()):
+		practice_stars[StringName(key)] = clampi(int(cfg.get_value("practice", key, 0)), 0, 3)
+
 
 func _save_to_disk() -> void:
 	if not _disk_available:
@@ -165,6 +179,8 @@ func _save_to_disk() -> void:
 	cfg.set_value("progress", "code", get_code())
 	cfg.set_value("progress", "stars", total_stars())
 	cfg.set_value("progress", "saved_at", Time.get_datetime_string_from_system(true))
+	for id in practice_stars:
+		cfg.set_value("practice", String(id), practice_stars[id])
 
 	var err := cfg.save(SAVE_PATH)
 	if err != OK:
