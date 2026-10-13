@@ -181,6 +181,7 @@ func ahead_is(from_this: Block) -> bool:
 	
 	var hits := probe.get_collision_count()
 	var blocked := false
+	var found := false
 	for i in hits:
 		var collider := probe.get_collider(i)
 		if collider == null:
@@ -188,12 +189,30 @@ func ahead_is(from_this: Block) -> bool:
 		
 		if collider is SensedArea:
 			if (collider as SensedArea).tag == tag:
-				return true
+				found = true
 		elif not (collider is Area2D):
 			blocked = true
-		
 	
-	return blocked if tag == &"blocked" else false
+	if tag == &"blocked":
+		found = found or blocked
+	_scan(found)
+	return found
+
+## Lights the tile that ahead_is() just looked at (TileScan): yellow while it
+## looks, then the answer's colour. Behind the robot's own sprite, whose head
+## reaches up into the tile above.
+func _scan(found: bool) -> void:
+	var scan := TileScan.new()
+	scan.tile = step_size
+	scan.found = found
+	scan.position = facing_direction * step_size
+	scan.rotation = facing_direction.angle()
+	scan.show_behind_parent = true
+	add_child(scan)
+	# Inside one step: every block waits a step before it acts, so the scan is
+	# over before anything moves the robot (it's the robot's child, and would
+	# slide along with it).
+	scan.play(clampf(Interpreter.current_delay * 0.85, 0.02, 0.6))
 
 
 #region Juice (the sprite only; see _rest_position)

@@ -11,7 +11,7 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="9_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="10_sensed"]
 [ext_resource type="Texture2D" uid="uid://45yaet5go20t" path="res://level/objects/danger.png" id="11_08ydw"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="11_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="11_tex_dest"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="13_08ydw"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="13_robot"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="14_move"]
@@ -57,7 +57,7 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Rebuild it"
-rooms = PackedStringArray("Stop on the red flag.", "Stop right before the puddle. Do not step in it.")
+rooms = PackedStringArray("Stop on the green flag.", "Stop right before the puddle. Do not step in it.")
 mission = "Build the program from the last level. The program runs in Room 1. Then the same program runs again in Room 2."
 twist = "The canvas starts empty this time."
 
@@ -73,7 +73,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("6_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -127,7 +127,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("11_tex_dest")
 
 [node name="Plate2" type="Area2D" parent="Visuals" index="2"]
@@ -140,7 +139,6 @@ shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Plate2" index="1"]
 visible = false
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("11_tex_dest")
 
 [node name="Hazard2" type="Area2D" parent="Visuals" index="3"]

@@ -41,9 +41,15 @@ const NAME_GAP := 8.0
 ## to the list it's going through never ends, so the board stops it here.
 const MAX_ITEMS := 20
 ## Longest a value takes to fly from one board to another.
-const FLIGHT_TIME := 0.45
-## Longest an animation runs; slower speeds still leave a still frame to read.
-const ANIM_TIME := 0.25
+const FLIGHT_TIME := 0.9
+## Longest an animation runs. Long enough to catch from the corner of an eye;
+## at fast speeds they shrink with the steps (_anim_time).
+const ANIM_TIME := 1.0
+## The list's name sits on a chip drawn like its name block in the toolbox
+## (the value block's texture, the reporter's colour), so the two read as one
+## thing. Room left and right of the name inside it, and its height.
+const CHIP_PAD := 8.0
+const CHIP_HEIGHT := 26.0
 ## The ghost box for an out-of-range index is drawn at most this far past the end.
 const GHOST_REACH := 3
 ## How many recent reads a written value can fly from (see _sources).
@@ -98,6 +104,7 @@ var _written: Array = []
 @onready var _board: Panel = get_node_or_null(^"Board")
 @onready var _legs: Node2D = get_node_or_null(^"Legs")
 @onready var _name: Label = get_node_or_null(^"Name")
+@onready var _chip: Panel = get_node_or_null(^"NameChip")
 @onready var _caption: Label = get_node_or_null(^"IndexCaption")
 @onready var _slot_holder: Node2D = get_node_or_null(^"Slots")
 @onready var _cursor: Panel = get_node_or_null(^"Cursor")
@@ -106,6 +113,10 @@ var _written: Array = []
 
 
 func _ready() -> void:
+	if _chip != null:
+		var reporter := load(REPORTER_TEMPLATE) as BlockData
+		if reporter != null:
+			_chip.self_modulate = reporter.color
 	_rebuild()
 	if Engine.is_editor_hint():
 		return
@@ -329,6 +340,19 @@ func contains(value: Variant, from_this: Block) -> bool:
 	await Interpreter.step(from_this)
 	return found >= 0
 
+## For a picture of a program rather than a run (the main menu's demos): a
+## read and a write of box `i`, animated just as a program's are, with no block
+## and no step, so nothing lights up, sounds, or counts as running.
+func show_read(i: int) -> Variant:
+	_flash(i, i)
+	_remember(i)
+	return values[i]
+
+func show_write(i: int, value: Variant) -> void:
+	values[i] = value
+	_slots[i].value_label.text = _value_text(value)
+	_arrive(_slots[i], value, true)
+
 ## Outlines box `i` as the one a for each is on; a negative index clears it.
 func point_at(i: int) -> void:
 	if _cursor == null:
@@ -340,11 +364,14 @@ func point_at(i: int) -> void:
 			_remember(i)
 
 func flash_name() -> void:
-	if _name == null or Engine.is_editor_hint():
+	var lit: CanvasItem = _chip if _chip != null else _name
+	if lit == null or Engine.is_editor_hint():
 		return
+	var t := _anim_time()
 	var tween := create_tween()
-	tween.tween_property(_name, "modulate", TINT_FLASH, _anim_time() * 0.4)
-	tween.tween_property(_name, "modulate", Color.WHITE, _anim_time() * 0.6)
+	tween.tween_property(lit, "modulate", Color(1.4, 1.4, 1.4), t * 0.2)
+	tween.tween_interval(t * 0.4)
+	tween.tween_property(lit, "modulate", Color.WHITE, t * 0.4)
 
 ## Back to the contents the level was authored with. Redraws, which also clears
 ## the cursor and any ghost box left by the last run.
@@ -436,8 +463,14 @@ func _ensure_slots(count: int) -> void:
 	(_legs.get_node(^"Left") as Control).position = Vector2(rect.position.x + rect.size.x * 0.18, rect.end.y)
 	(_legs.get_node(^"Right") as Control).position = Vector2(rect.position.x + rect.size.x * 0.82 - 4.0, rect.end.y)
 	var name_width := _name_width()
-	_name.position = Vector2(-NAME_GAP - name_width, 0)
-	_name.size = Vector2(name_width, CELL)
+	var chip_width := _text_width(_name, String(get_list_name())) + CHIP_PAD * 2.0
+	var chip_at := Vector2(-NAME_GAP - chip_width, (CELL - CHIP_HEIGHT) / 2.0)
+	if _chip != null:
+		_chip.position = chip_at
+		_chip.size = Vector2(chip_width, CHIP_HEIGHT)
+	_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_name.position = Vector2(chip_at.x, 0)
+	_name.size = Vector2(chip_width, CELL)
 	# Kenney Mini's 29 px line puts its glyphs in its top half, so the caption
 	# starts a little above the index row it labels, as the slots' indexes do.
 	_caption.position = Vector2(-NAME_GAP - name_width, CELL - 5.0)
@@ -450,22 +483,22 @@ func _board_rect(count: int) -> Rect2:
 	var right := maxi(count, 1) * CELL + PAD
 	return Rect2(left, -PAD_TOP, right - left, PAD_TOP + CELL + INDEX_ROW + PAD * 0.5)
 
-## The name column: as wide as the list's name or the "index" caption.
+## The name column: as wide as the name's chip or the "index" caption.
 func _name_width() -> float:
 	var label := _name if _name != null else get_node_or_null(^"Name") as Label
 	var caption := _caption if _caption != null else get_node_or_null(^"IndexCaption") as Label
-	var width := 0.0
-	for pair in [[label, String(get_list_name())], [caption, "index"]]:
-		var l := pair[0] as Label
-		var settings: LabelSettings = l.label_settings if l != null else null
-		var font: Font = settings.font if settings != null else ThemeDB.fallback_font
-		var font_size: int = settings.font_size if settings != null else ThemeDB.fallback_font_size
-		width = maxf(width, font.get_string_size(pair[1], HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
-	return ceilf(width) + 2.0
+	var chip := _text_width(label, String(get_list_name())) + CHIP_PAD * 2.0
+	return ceilf(maxf(chip, _text_width(caption, "index"))) + 2.0
 
-## Shows the goal on the board: the wanted value faded in each empty box, a
-## green badge with the wanted value on a box that holds something else, and a
-## green or red card on each value the program wrote, by whether it's right.
+func _text_width(label: Label, text: String) -> float:
+	var settings: LabelSettings = label.label_settings if label != null else null
+	var font: Font = settings.font if settings != null else ThemeDB.fallback_font
+	var font_size: int = settings.font_size if settings != null else ThemeDB.fallback_font_size
+	return font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+
+## Shows the goal on the board: a green badge with the wanted value on each box
+## that is empty or holds something else, and a green or red card on each value
+## the program wrote, by whether it's right.
 func _refresh_marks() -> void:
 	if _slots.is_empty():
 		return
@@ -475,11 +508,8 @@ func _refresh_marks() -> void:
 		var want_known := i < _target.size()
 		var want: Variant = _target[i] if want_known else null
 
-		slot.target_label.visible = _has_target and not has_value and want_known
-		slot.target_label.text = _value_text(want) if want_known else ""
-
 		var right := has_value and want_known and same(values[i], want)
-		slot.wanted.visible = _has_target and has_value and want_known and not right
+		slot.wanted.visible = _has_target and want_known and not right
 		slot.wanted_label.text = _value_text(want) if want_known else ""
 		# A box past the end of the goal holds something that shouldn't be there.
 		var extra := _has_target and has_value and not want_known
@@ -516,7 +546,7 @@ func _value_text(value: Variant) -> String:
 
 #region Animation
 func _anim_time() -> float:
-	return minf(ANIM_TIME, Interpreter.current_delay)
+	return minf(ANIM_TIME, Interpreter.current_delay * 1.5)
 
 func _flash(i: int, asked: Variant) -> void:
 	_flash_card(_slots[i])
@@ -529,29 +559,46 @@ func _flash(i: int, asked: Variant) -> void:
 		tween.tween_interval(maxf(_anim_time(), Interpreter.current_delay))
 		tween.tween_callback(func() -> void: index.text = str(i))
 
+## Rises and glows, holds, and settles: a value being read.
 func _flash_card(slot: ListSlot, delay := 0.0) -> void:
 	var t := _anim_time()
-	var tween := create_tween()
+	var tween := _card_tween(slot)
 	if delay > 0.0:
 		tween.tween_interval(delay * t)
-	tween.tween_property(slot.card, "position:y", slot.card_rest.y - 4.0, t * 0.35)
-	tween.parallel().tween_property(slot.card, "modulate", TINT_FLASH, t * 0.35)
-	tween.tween_property(slot.card, "position:y", slot.card_rest.y, t * 0.65)
-	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.65)
+	tween.tween_property(slot.card, "position:y", slot.card_rest.y - 4.0, t * 0.2)
+	tween.parallel().tween_property(slot.card, "modulate", TINT_FLASH, t * 0.2)
+	tween.tween_interval(t * 0.4)
+	tween.tween_property(slot.card, "position:y", slot.card_rest.y, t * 0.4)
+	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.4)
 
 func _pop(slot: ListSlot) -> void:
 	var t := _anim_time()
+	var tween := _card_tween(slot)
+	tween.tween_property(slot.card, "scale", Vector2.ONE * 1.25, t * 0.2)
+	tween.parallel().tween_property(slot.card, "modulate", TINT_FLASH, t * 0.2)
+	tween.tween_interval(t * 0.4)
+	tween.tween_property(slot.card, "scale", Vector2.ONE, t * 0.4)
+	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.4)
+
+## A card's new animation, with the one before it stopped and its card put back
+## where it rests, so two quick moves on one box can't leave it halfway.
+func _card_tween(slot: ListSlot) -> Tween:
+	var old: Tween = slot.get_meta(&"card_tween") if slot.has_meta(&"card_tween") else null
+	if old != null and old.is_valid():
+		old.kill()
+	slot.card.position = slot.card_rest
+	slot.card.scale = Vector2.ONE
+	slot.card.modulate = Color.WHITE
+	slot.card.z_index = 0
 	var tween := create_tween()
-	tween.tween_property(slot.card, "scale", Vector2.ONE * 1.25, t * 0.35)
-	tween.parallel().tween_property(slot.card, "modulate", TINT_FLASH, t * 0.35)
-	tween.tween_property(slot.card, "scale", Vector2.ONE, t * 0.65)
-	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.65)
+	slot.set_meta(&"card_tween", tween)
+	return tween
 
 func _drop(slot: ListSlot) -> void:
 	var t := _anim_time()
+	var tween := _card_tween(slot)
 	slot.card.position = slot.card_rest - Vector2(0, CELL * 0.6)
 	slot.card.modulate.a = 0.0
-	var tween := create_tween()
 	tween.tween_property(slot.card, "position", slot.card_rest, t).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(slot.card, "modulate:a", 1.0, t * 0.5)
 
@@ -590,10 +637,10 @@ func _arrive(slot: ListSlot, value: Variant, in_place := false) -> void:
 			_drop(slot)
 		return
 	var flight := _flight_time()
+	var tween := _card_tween(slot)
 	slot.card.z_index = 3  # over the walls and the robot while it crosses the room
 	slot.card.modulate.a = 1.0
 	slot.card.position = from
-	var tween := create_tween()
 	tween.tween_method(_arc.bind(slot.card, from, slot.card_rest), 0.0, 1.0, flight) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_callback(func() -> void:
@@ -611,7 +658,7 @@ func _arc(k: float, card: Control, from: Vector2, to: Vector2) -> void:
 	card.position = at
 
 func _flight_time() -> float:
-	return minf(FLIGHT_TIME, Interpreter.current_delay)
+	return minf(FLIGHT_TIME, Interpreter.current_delay * 1.3)
 
 ## Marks where an out-of-range index would have been: a red box just past the
 ## end, labelled with the index that was asked for.

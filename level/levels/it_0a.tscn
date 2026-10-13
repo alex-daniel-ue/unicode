@@ -21,8 +21,8 @@
 [ext_resource type="Script" uid="uid://t2fwxym7pmr8" path="res://level/goals/hazard_goal.gd" id="19_hazard_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="20_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="21_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="22_tex_dest"]
-[ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="23_tex_puddle"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="22_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://45yaet5go20t" path="res://level/objects/danger.png" id="23_tex_puddle"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="24_i1ewq"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="24_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="25_resettable"]
@@ -170,7 +170,7 @@ auto_run = true
 [node name="LevelDescription" parent="." index="0"]
 title = "Read it first"
 mission = "This program runs by itself in both rooms. Watch where the robot stops in each room."
-rooms = PackedStringArray("Stop on the red flag.", "Stop right before the puddle.")
+rooms = PackedStringArray("Stop on the green flag.", "Stop right before the puddle.")
 twist = "The program is the same in both rooms. Only the tile in front of the robot is different."
 blocks = Array[ExtResource("12_block_data")]([ExtResource("6_ahead_is"), ExtResource("7_not"), ExtResource("9_if")])
 block_notes = PackedStringArray("This block checks the tile in front of the robot. It gives True or False.", "This block turns True into False, and False into True.", "This block runs the blocks inside it only when its condition is True.")
@@ -206,7 +206,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("17_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -254,7 +254,6 @@ tag = &"destination"
 shape = SubResource("Circle_10")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("22_tex_dest")
 
 [node name="Plate2" type="Area2D" parent="Visuals" index="2"]
@@ -267,7 +266,6 @@ shape = SubResource("Circle_10")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Plate2" index="1"]
 visible = false
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("22_tex_dest")
 
 [node name="Hazard2" type="Area2D" parent="Visuals" index="3"]

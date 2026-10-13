@@ -30,7 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="20_cuco7"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="23_u7k4g"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="24_u3i6q"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="25_7p3bf"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="25_7p3bf"]
 
 [sub_resource type="Resource" id="Resource_u7bg7"]
 script = ExtResource("4_uuttg")
@@ -114,7 +114,7 @@ focus_marker = NodePath("../../Visuals/YSorted/RobotCharacter")
 script = ExtResource("15_xe4we")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/YSorted/Destination1")
-fail_message = "You didn't reach the flag."
+fail_message = "You didn't reach the green flag."
 camera_focus = NodePath("../../../Visuals/YSorted/Destination1")
 detection_area = NodePath("../../../Visuals/YSorted/Destination1")
 
@@ -124,7 +124,7 @@ required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 is_complete = true
 permanent = false
 must_maintain = true
-fail_message = "You skipped past the flag."
+fail_message = "You skipped past the green flag."
 camera_focus = NodePath("../../../Visuals/YSorted/Hazard1")
 detection_area = NodePath("../../../Visuals/YSorted/Hazard1")
 
@@ -160,7 +160,6 @@ tag = &"destination"
 shape = SubResource("CircleShape2D_room1")
 
 [node name="Flag" type="Sprite2D" parent="Visuals/YSorted/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("25_7p3bf")
 
 [node name="Hazard1" type="Area2D" parent="Visuals/YSorted" index="3"]

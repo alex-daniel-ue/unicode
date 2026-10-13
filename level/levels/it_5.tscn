@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="6_dest_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="7_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="8_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="9_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="9_tex_dest"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="10_robot"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="11_move"]
 [ext_resource type="Resource" uid="uid://fg43dh67nibf" path="res://level/objects/entities/robot/blocks/turn.tres" id="12_turn"]
@@ -60,8 +60,8 @@ star_slack = 3
 
 [node name="LevelDescription" parent="." index="0"]
 title = "One block instead of three"
-mission = "Get the robot around the corner and onto the red flag."
-twist = "There is no while block this time. The for block is the only way to repeat."
+mission = "Get the robot around the corner and onto the green flag."
+twist = "There is no While block this time. The For block is the only way to repeat."
 blocks = Array[ExtResource("5_block_data")]([ExtResource("4_for")])
 block_notes = PackedStringArray("This block counts from a start number up to an end number. It runs its blocks for each number. It stops before the end number, so from 1 until 5 runs 1, 2, 3, 4.")
 
@@ -76,7 +76,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("6_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -100,7 +100,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("9_tex_dest")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="2"]

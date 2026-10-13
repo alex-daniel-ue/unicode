@@ -74,6 +74,7 @@ func start(to: Puzzle, guide_pages: Array) -> void:
 	Tutorial.menu_toggled.connect(_on_menu_toggled)
 	Tutorial.panel_toggled.connect(_on_panel_toggled)
 	Tutorial.view_framed.connect(_on_view_framed)
+	Tutorial.tab_shown.connect(_on_tab_shown)
 
 	for page: Dictionary in pages:
 		for path: String in page.get("targets", []):
@@ -107,6 +108,7 @@ func _on_assistant_replied(_text: String) -> void: _on_event(A.ASSISTANT_REPLIED
 func _on_menu_toggled(open: bool) -> void: _on_event(A.MENU_OPENED if open else A.MENU_CLOSED)
 func _on_panel_toggled(_panel: SidePanel, open: bool) -> void: _on_event(A.PANEL_OPENED if open else A.PANEL_CLOSED)
 func _on_view_framed() -> void: _on_event(A.VIEW_FRAMED)
+func _on_tab_shown(content: Control) -> void: _on_event(A.TAB_SHOWN, StringName(content.name))
 
 func _on_back() -> void:
 	if _index > 0 and not _closing:
@@ -196,7 +198,7 @@ func _update(delta: float) -> void:
 	# one click it asks for. Drop the dim instead: the card still says what to do.
 	var lost := not targets.is_empty() and rects.is_empty()
 	mask.visible = (page.get("dim", true) or page.get("block_input", false)) and not lost
-	_place_card(page, rects, _arrow_target(page, by_path), delta)
+	_place_card(page, rects, _arrow_targets(page, by_path), delta)
 
 ## Where a target is on screen, or an empty rect while it isn't showing.
 ##   "block:MoveBlock"   the block with that data name, in the toolbox or else on the canvas
@@ -250,29 +252,38 @@ func _level_rect(node_path: String) -> Rect2:
 
 
 #region Card and arrow
-## What the arrow points at: the page's "arrow" target if it names one ("" for
-## none), else its smallest target, when that is small enough to need pointing
-## out.
-func _arrow_target(page: Dictionary, by_path: Dictionary) -> Rect2:
+## What the arrows point at: the page's "arrow" target, or each of its list of
+## them ("" or [] for none), else its smallest target, when that is small
+## enough to need pointing out. The card sits by the first.
+func _arrow_targets(page: Dictionary, by_path: Dictionary) -> Array[Rect2]:
+	var out: Array[Rect2] = []
 	if page.has("arrow"):
-		return by_path.get(page.arrow, Rect2())
+		var named: Array = page.arrow if page.arrow is Array else [page.arrow]
+		for path: String in named:
+			var rect: Rect2 = by_path.get(path, Rect2())
+			if rect.has_area():
+				out.append(rect)
+		return out
 	var screen := mask.size.x * mask.size.y
 	var best := Rect2()
 	for path: String in by_path:
 		var rect: Rect2 = by_path[path]
 		if rect.get_area() < screen * SMALL_TARGET and (not best.has_area() or rect.get_area() < best.get_area()):
 			best = rect
-	return best
+	if best.has_area():
+		out.append(best)
+	return out
 
-func _place_card(page: Dictionary, rects: Array[Rect2], arrow_to: Rect2, delta: float) -> void:
+func _place_card(page: Dictionary, rects: Array[Rect2], arrows_to: Array[Rect2], delta: float) -> void:
 	var area := mask.size
 	var s := card.size
 	var goal := (area - s) / 2.0
 	var on_top: bool = page.get("card", "") == "top"
+	var first: Rect2 = arrows_to[0] if not arrows_to.is_empty() else Rect2()
 	if on_top:
 		goal = Vector2(goal.x, CARD_MARGIN)
-	elif arrow_to.has_area():
-		goal = _spot_near(arrow_to, rects)
+	elif first.has_area():
+		goal = _spot_near(first, rects)
 	elif not rects.is_empty():
 		goal = _spot_clear_of(rects)
 
@@ -283,12 +294,17 @@ func _place_card(page: Dictionary, rects: Array[Rect2], arrow_to: Rect2, delta: 
 		card.position = card.position.lerp(goal, minf(1.0, delta * GLIDE))
 
 	var card_rect := Rect2(card.position, s)
-	if on_top or not arrow_to.has_area() or card_rect.grow(12.0).intersects(arrow_to):
-		pointer.shown = false
-		return
-	pointer.start = _edge_toward(card_rect, arrow_to.get_center())
-	pointer.end = _edge_toward(arrow_to.grow(mask.padding + 4.0), card_rect.get_center())
-	pointer.shown = true
+	var pairs: Array[PackedVector2Array] = []
+	if not on_top:
+		for target in arrows_to:
+			if card_rect.grow(12.0).intersects(target):
+				continue
+			pairs.append(PackedVector2Array([
+				_edge_toward(card_rect, target.get_center()),
+				_edge_toward(target.grow(mask.padding + 4.0), card_rect.get_center()),
+			]))
+	pointer.arrows = pairs
+	pointer.shown = not pairs.is_empty()
 
 ## The spot beside `target` that leaves the page's targets clearest, a gap away
 ## so the arrow has room. Tries each side of the target itself, then each side

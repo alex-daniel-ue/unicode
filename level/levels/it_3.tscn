@@ -13,7 +13,7 @@
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="14_tiles_floor"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="15_j5fgg"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="15_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="16_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="16_tex_dest"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="17_robot"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="20_j5fgg"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="21_resettable"]
@@ -74,11 +74,11 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Around the corners"
-mission = "One program runs in all three rooms. Each room has corners. Get the robot to the red flag in each room."
+mission = "One program runs in all three rooms. Each room has corners. Get the robot to the green flag in each room."
 rooms = PackedStringArray("One corner.", "Two corners.", "A path with many corners.")
 twist = "Each room turns a different number of times."
 blocks = Array[ExtResource("11_block_data")]([ExtResource("4_if"), ExtResource("5_else"), ExtResource("24_turn")])
-block_notes = PackedStringArray("This block runs the blocks inside it only when its condition is True.", "Put this block right under an if block. It runs only when the if block did not run.", "This block turns the robot left, right, or back.")
+block_notes = PackedStringArray("This block runs the blocks inside it only when its condition is True.", "Put this block right under an If block. It runs only when the If block did not run.", "This block turns the robot left, right, or back.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("11_block_data")]([ExtResource("6_while"), ExtResource("4_if"), ExtResource("5_else"), ExtResource("7_not")])
@@ -91,7 +91,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("12_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -104,7 +104,7 @@ focus_marker = NodePath("../../Visuals/Destination2")
 script = ExtResource("12_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination2")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination2")
 detection_area = NodePath("../../../Visuals/Destination2")
 
@@ -117,7 +117,7 @@ focus_marker = NodePath("../../Visuals/Destination3")
 script = ExtResource("12_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination3")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination3")
 detection_area = NodePath("../../../Visuals/Destination3")
 
@@ -141,7 +141,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("16_tex_dest")
 
 [node name="Destination2" type="Area2D" parent="Visuals" index="2"]
@@ -153,7 +152,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination2" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("16_tex_dest")
 
 [node name="Destination3" type="Area2D" parent="Visuals" index="3"]
@@ -165,7 +163,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination3" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("16_tex_dest")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="4"]

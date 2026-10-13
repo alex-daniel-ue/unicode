@@ -9,13 +9,12 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bg"]
 shader = ExtResource("3_shader")
 shader_parameter/cell_size = 25.0
-shader_parameter/dot_size = 0.0800000038
 shader_parameter/background_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
 shader_parameter/dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
-shader_parameter/resolution = Vector2(1152, 648)
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/anti_aliasing_factor = 0.01
-shader_parameter/stochastic_samples = 16
+shader_parameter/dot_radius = 1.0
+shader_parameter/major_dot_radius = 1.0
+shader_parameter/major_dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
+shader_parameter/line_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
 
 [node name="LevelSelect" type="Control" node_paths=PackedStringArray("module_label", "module_subtitle", "grid", "locked_notice", "prev_button", "next_button")]
 layout_mode = 3
@@ -63,7 +62,7 @@ theme_override_constants/separation = 20
 [node name="TopBar" type="HBoxContainer" parent="Background/Margin/Root"]
 layout_mode = 2
 
-[node name="HomeButton" type="Button" parent="Background/Margin/Root/TopBar"]
+[node name="HomeButton" type="Button" parent="Background/Margin/Root/TopBar" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 4
@@ -93,7 +92,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 24
 
-[node name="PrevButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow"]
+[node name="PrevButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow" groups=["sfx_click"]]
 custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
 size_flags_vertical = 4
@@ -107,7 +106,7 @@ theme_type_variation = &"HeaderLarge"
 text = "Iteration"
 horizontal_alignment = 1
 
-[node name="NextButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow"]
+[node name="NextButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow" groups=["sfx_click"]]
 custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
 size_flags_vertical = 4

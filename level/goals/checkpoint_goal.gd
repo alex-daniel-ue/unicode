@@ -1,7 +1,7 @@
 @tool
 extends Goal
 
-## A bottle to collect: done once the robot has passed over it. The bottle pops
+## A battery to collect: done once the robot has passed over it. The battery pops
 ## and fades when picked up, and comes back when the room resets.
 
 const PICKUP_TIME := 0.25
@@ -9,7 +9,7 @@ const COLLECTED_ALPHA := 0.0
 
 @export var required_entity: PhysicsBody2D
 
-## The bottle drawn on detection_area, and its look before it was collected.
+## The battery drawn on detection_area, and its look before it was collected.
 var _sprite: CanvasItem
 var _rest_scale := Vector2.ONE
 var _tween: Tween

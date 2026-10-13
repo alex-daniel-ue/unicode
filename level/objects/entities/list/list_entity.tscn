@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cb5ve56xnp5r5"]
+[gd_scene load_steps=13 format=3 uid="uid://cb5ve56xnp5r5"]
 
 [ext_resource type="Script" uid="uid://bqmntal78tk4f" path="res://level/objects/entities/list/list_entity.gd" id="1_list"]
 [ext_resource type="Script" uid="uid://bpcx3u5ucuild" path="res://level/objects/entities/list/list_block_provider.gd" id="4_provider"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="5_font"]
+[ext_resource type="Texture2D" uid="uid://7sm8jvsmm7bh" path="res://puzzle/ui/block/templates/socket/value/value_texture.png" id="6_chip"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_board"]
 bg_color = Color(0.9137255, 0.92941177, 0.9529412, 1)
@@ -19,13 +20,21 @@ shadow_color = Color(0, 0, 0, 0.25)
 shadow_size = 2
 shadow_offset = Vector2(0, 2)
 
+[sub_resource type="StyleBoxTexture" id="StyleBox_chip"]
+texture = ExtResource("6_chip")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+region_rect = Rect2(0, 0, 21, 21)
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_cursor"]
 draw_center = false
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+border_color = Color(1, 0.82, 0.3, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -85,6 +94,15 @@ offset_right = 38.0
 offset_bottom = 49.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_board")
+
+[node name="NameChip" type="Panel" parent="."]
+self_modulate = Color(1, 0.78, 0.5, 1)
+offset_left = -52.0
+offset_top = 3.0
+offset_right = -8.0
+offset_bottom = 29.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_chip")
 
 [node name="Name" type="Label" parent="."]
 offset_left = -52.0

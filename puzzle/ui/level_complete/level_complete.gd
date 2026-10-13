@@ -14,8 +14,10 @@ extends Control
 ## screen. The summary fills in whenever it arrives, or its line goes away.
 const MIN_HOLD := 1.0
 const SUMMARY_WAITING := "Looking at your program..."
+const STAR_SIZE := 64
+const STAR_RIM := Color(0.105882354, 0.09411765, 0.13725491)
 
-@export var stars_label: Label
+@export var stars_label: HBoxContainer
 ## "You used 5 blocks." What the student did.
 @export var usage_label: Label
 ## The next star tier only: "For ★★★, use 4 blocks or fewer." Hidden at three
@@ -45,7 +47,7 @@ func _ready() -> void:
 ## one exception: it is the assistant's, it fills in afterwards, and it never
 ## carries a number the game computed.
 func present(stars: int, placed: int, par: int, slack: int, summary_expected := false) -> int:
-	stars_label.text = StarText.of(stars)
+	StarText.fill(stars_label, stars, STAR_SIZE, STAR_RIM, 8)
 
 	if placed == 0:
 		# A worked example: the preset was the whole program.

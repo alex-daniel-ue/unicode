@@ -12,7 +12,7 @@
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="10_dest_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="11_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="13_tex_dest"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="14_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="15_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="16_tiles_wall"]
@@ -60,8 +60,8 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Count the desks"
-mission = "Stop the robot right on the red flag."
-twist = "You have only one move forward block. It is already on the canvas."
+mission = "Stop the robot right on the green flag."
+twist = "You have only one Move Forward block. It is already on the canvas."
 blocks = Array[ExtResource("9_block_data")]([ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
 block_notes = PackedStringArray("This block makes a variable. A variable is a name that holds a value.", "This block adds 1 to a variable.", "This block compares two values, like 2 < 5. It gives True or False.")
 tip = "The Variables tab shows your variables while your program runs."
@@ -81,7 +81,7 @@ focus_marker = NodePath("../../Visuals/Plate1")
 script = ExtResource("10_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Plate1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Plate1")
 detection_area = NodePath("../../../Visuals/Plate1")
 
@@ -105,7 +105,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Plate1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("13_tex_dest")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="2"]

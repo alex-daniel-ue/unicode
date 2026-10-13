@@ -7,15 +7,16 @@ extends Node2D
 ## look lives in this scene.
 ##
 ## When a ListGoal checks the list, a box also shows what it should end up
-## holding: the value faded (Target) while the box is empty, or a small green
-## badge in its corner (Wanted) while it holds something else.
+## holding, as a small green badge in its corner (Wanted), whether the box is
+## empty or holds something else. The badge reaches over the next box, so it
+## draws above the boxes (z_index 1). A faded value in an empty box used to show
+## it, and read as a value already there that couldn't be changed.
 ##
 ## Origin is the box's top-left corner; the box is one tile wide.
 
 @onready var cell: Panel = $Cell
 @onready var card: Panel = $Card
 @onready var value_label: Label = $Card/Value
-@onready var target_label: Label = $Target
 @onready var wanted: Panel = $Wanted
 @onready var wanted_label: Label = $Wanted/Value
 @onready var index_label: Label = $Index

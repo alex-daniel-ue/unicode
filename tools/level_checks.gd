@@ -104,17 +104,17 @@ func cases() -> Array:
 		["IT-10 turn right", it10, [W(N(A("destination")), [I(A("blocked"), [T("right"), ["continue"]]), M()]), M()], "FAIL"],
 	] + arrays_cases()
 
-## The Arrays module, AR-1 to AR-10: each level's intended program, what it
-## accepts, and the wrong programs it's built to catch. Then checks of the list
-## operations themselves, run on AR-7's rooms with extra lists injected, where
-## only what they print matters.
+## The Arrays module, its three tutorials (AR-T1 to AR-T3) and AR-3 to AR-11:
+## each level's intended program, what it accepts, and the wrong programs it's
+## built to catch. Then checks of the list operations themselves, run on AR-7's
+## rooms with extra lists injected, where only what they print matters.
 func arrays_cases() -> Array:
 	var lv := func(n: int) -> String: return "res://level/levels/ar_%d.tscn" % n
+	var tut := func(n: int) -> String: return "res://level/levels/ar_t%d.tscn" % n
 	var ar := "res://level/levels/ar_8.tscn"
 	var length := func(list: String) -> Array: return ["len", L(list)]
 	var last := func(list: String) -> Array: return ["arith", ["len", L(list)], "-", 1]
 	var route_i := MV(["item", "i", L("route")])
-	var read_both := [MV(["item", 0, L("route")]), T("left"), MV(["item", 1, L("route")])]
 	var lockers := func(from: Variant, until: Variant, index: Variant, number: Variant) -> Array:
 		return [F("i", from, until, 1, [["setitem", index, L("lockers"), number]])]
 	var passing := func(op: String) -> Array:
@@ -126,17 +126,20 @@ func arrays_cases() -> Array:
 		return [E("s", L(loop), [I(["in", "s", L(other)], [["append", "s", L("both")]])])]
 	var days := func(check: Variant) -> Array:
 		var second: Array = [["append", "s", L("present")]] if check == null else [I(check, [["append", "s", L("present")]])]
-		return [E("s", L("mon"), [["append", "s", L("present")]]), E("s", L("tue"), second)]
-	var out_trip := E("leg", L("route"), [MV("leg"), T("left")])
+		return [E("s", L("monday"), [["append", "s", L("present")]]), E("s", L("tuesday"), second)]
+	var out_trip := E("steps", L("route"), [MV("steps"), T("left")])
 	var home := func(from: Variant, until: Variant, body: Array) -> Array: return [out_trip, T("back"), F("i", from, until, -1, body)]
 	var nums := [{name = "nums", values = [1, 2]}]
 	return [
-		["AR-1 intended", lv.call(1), read_both, "PASS"],
-		["AR-2 intended", lv.call(2), read_both, "PASS"],
-		["AR-2 numbers typed in", lv.call(2), [MV(3), T("left"), MV(2)], "FAIL Room 2 of 3"],
-		["AR-2 counting from 1", lv.call(2), [MV(["item", 1, L("route")]), T("left"), MV(["item", 2, L("route")])], "FAIL error: Index 2 is out of range. 'route' has 2 values, at indexes 0 to 1."],
-		["AR-2 items swapped", lv.call(2), [MV(["item", 1, L("route")]), T("left"), MV(["item", 0, L("route")])], "FAIL"],
-		["AR-2 turn right", lv.call(2), [MV(["item", 0, L("route")]), T("right"), MV(["item", 1, L("route")])], "FAIL"],
+		["AR-T1 intended", tut.call(1), [MV(4)], "PASS"],
+		["AR-T1 one tile short", tut.call(1), [MV(3)], "FAIL"],
+		["AR-T1 two blocks", tut.call(1), [MV(2), MV(2)], "PASS"],
+		["AR-T2 intended", tut.call(2), [MV(["item", 2, L("route")])], "PASS"],
+		["AR-T2 counting from 1", tut.call(2), [MV(["item", 3, L("route")])], "FAIL error: Index 3 is out of range. 'route' has 3 values, at indexes 0 to 2."],
+		["AR-T2 index 1", tut.call(2), [MV(["item", 1, L("route")])], "FAIL"],
+		["AR-T3 intended", tut.call(3), [MV(length.call("route"))], "PASS"],
+		["AR-T3 the last value", tut.call(3), [MV(["item", -1, L("route")])], "FAIL"],
+		["AR-T3 Room 1's length typed in", tut.call(3), [MV(4)], "FAIL Room 2 of 2"],
 		["AR-3 intended", lv.call(3), [MV(length.call("route")), T("left"), MV(["item", last.call("route"), L("route")])], "PASS"],
 		["AR-3 accepted: item -1", lv.call(3), [MV(length.call("route")), T("left"), MV(["item", -1, L("route")])], "PASS"],
 		["AR-3 item length of route", lv.call(3), [MV(length.call("route")), T("left"), MV(["item", length.call("route"), L("route")])], "FAIL error: Index 3 is out of range. 'route' has 3 values, at indexes 0 to 2."],
@@ -146,13 +149,13 @@ func arrays_cases() -> Array:
 		["AR-4 until length - 1", lv.call(4), [F("i", 0, last.call("route"), 1, [route_i, T("left")])], "FAIL"],
 		["AR-4 until length + 1", lv.call(4), [F("i", 0, ["arith", ["len", L("route")], "+", 1], 1, [route_i, T("left")])], "FAIL error: Index 4 is out of range. 'route' has 4 values, at indexes 0 to 3."],
 		["AR-4 from 1", lv.call(4), [F("i", 1, length.call("route"), 1, [route_i, T("left")])], "FAIL"],
-		["AR-4 Room 1's lap typed in", lv.call(4), [MV(4), T("left"), MV(2), T("left"), MV(4), T("left"), MV(2), T("left")], "FAIL Room 2 of 3"],
+		["AR-4 Room 1's lap typed in", lv.call(4), [MV(4), T("left"), MV(2), T("left"), MV(4), T("left"), MV(2), T("left")], "FAIL Room 2 of 2"],
 		["AR-5 intended", lv.call(5), [out_trip], "PASS"],
-		["AR-5 turn right", lv.call(5), [E("leg", L("route"), [MV("leg"), T("right")])], "FAIL"],
+		["AR-5 turn right", lv.call(5), [E("steps", L("route"), [MV("steps"), T("right")])], "FAIL"],
 		["AR-6 intended", lv.call(6), home.call(last.call("route"), -1, [T("right"), route_i]), "PASS"],
 		["AR-6 from length of route", lv.call(6), home.call(length.call("route"), -1, [T("right"), route_i]), "FAIL error: Index 3 is out of range. 'route' has 3 values, at indexes 0 to 2."],
 		["AR-6 until 0", lv.call(6), home.call(last.call("route"), 0, [T("right"), route_i]), "FAIL"],
-		["AR-6 home in forward order", lv.call(6), [out_trip, T("back"), E("leg", L("route"), [T("right"), MV("leg")])], "FAIL"],
+		["AR-6 home in forward order", lv.call(6), [out_trip, T("back"), E("steps", L("route"), [T("right"), MV("steps")])], "FAIL"],
 		["AR-6 home turning left", lv.call(6), home.call(last.call("route"), -1, [T("left"), route_i]), "FAIL"],
 		["AR-6 home moving before turning", lv.call(6), home.call(last.call("route"), -1, [route_i, T("right")]), "FAIL"],
 		["AR-7 intended", lv.call(7), lockers.call(0, length.call("lockers"), "i", ["arith", "i", "+", 1]), "PASS"],
@@ -170,7 +173,7 @@ func arrays_cases() -> Array:
 		["AR-9 from 0, first bag forgotten", lv.call(9), tidy_from.call(0, length.call("bags"), false, length.call("tidy")), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [5, 2, 3]."],
 		["AR-9 from 0 as well as the first bag", lv.call(9), tidy_from.call(0, length.call("bags"), true, length.call("tidy")), "FAIL Room 2 of 3 — 'tidy' should end up as [1, 2, 1, 4], but it's [1, 1, 2, 1, 4]."],
 		["AR-9 until length - 1", lv.call(9), tidy_from.call(1, last.call("bags"), true, length.call("tidy")), "FAIL Room 1 of 3 — 'tidy' should end up as [3, 5, 2, 3], but it's [3, 5, 2]."],
-		["AR-9 walks the length of bags", lv.call(9), tidy_from.call(1, length.call("bags"), true, length.call("bags")), "FAIL Room 1 of 3 — The robot didn't finish on the flag."],
+		["AR-9 walks the length of bags", lv.call(9), tidy_from.call(1, length.call("bags"), true, length.call("bags")), "FAIL Room 1 of 3 — The robot didn't stop on the green flag."],
 		["AR-10 intended", lv.call(10), both.call("chess", "choir"), "PASS"],
 		["AR-10 accepted: loop over choir", lv.call(10), both.call("choir", "chess"), "PASS"],
 		["AR-10 no check", lv.call(10), [E("s", L("chess"), [["append", "s", L("both")]])], "FAIL Room 1 of 3 — 'both' should end up as [2, 4], but it's [1, 2, 3, 4]."],
@@ -178,7 +181,7 @@ func arrays_cases() -> Array:
 		["AR-11 intended", lv.call(11), days.call(["not", ["in", "s", L("present")]]), "PASS"],
 		["AR-11 no check", lv.call(11), days.call(null), "FAIL Room 1 of 3 — 'present' should end up as [1, 2, 3, 4], but it's [1, 2, 3, 2, 3, 4]."],
 		["AR-11 in without not", lv.call(11), days.call(["in", "s", L("present")]), "FAIL Room 1 of 3 — 'present' should end up as [1, 2, 3, 4], but it's [1, 2, 3, 2, 3]."],
-		["AR-11 Monday only", lv.call(11), [E("s", L("mon"), [["append", "s", L("present")]])], "FAIL Room 1 of 3 — 'present' should end up as [1, 2, 3, 4], but it's [1, 2, 3]."],
+		["AR-11 Monday only", lv.call(11), [E("s", L("monday"), [["append", "s", L("present")]])], "FAIL Room 1 of 3 — 'present' should end up as [1, 2, 3, 4], but it's [1, 2, 3]."],
 		["Lists: a list prints like Python", ar, [["print", L("scores")]], "LOG [70, 82, 75, 60, 91]"],
 		["Lists: -1 is the last item", ar, [["print", ["item", -1, L("scores")]]], "LOG 91"],
 		["Lists: out of range names the list", ar, [["print", ["item", 5, L("scores")]]], "FAIL error: Index 5 is out of range. 'scores' has 5 values, at indexes 0 to 4."],
@@ -190,7 +193,7 @@ func arrays_cases() -> Array:
 		["Logic: and stops at a False left side", ar, [I(["andor", ["cmp", ["len", L("passed")], ">", 0], "and", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 1]]), ["else", [["print", 2]]]], "LOG 2"],
 		["Logic: or stops at a True left side", ar, [I(["andor", ["cmp", ["len", L("passed")], "==", 0], "or", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 3]])], "LOG 3"],
 		["Logic: and runs the right side when it must", ar, [I(["andor", ["cmp", ["len", L("scores")], ">", 0], "and", ["cmp", ["item", 0, L("scores")], "==", 71]], [["print", 4]]), ["else", [["print", 5]]]], "LOG 5"],
-		["Robot: move forward text", lv.call(2), [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only move forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
+		["Robot: move forward text", tut.call(2), [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only move forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
 	]
 
 ## `extras` adds lists to the level before it opens, so list operations can be

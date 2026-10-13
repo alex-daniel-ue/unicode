@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="7_dest_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="8_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="9_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="10_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="10_tex_dest"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="11_robot"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="12_resettable"]
 [ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="13_tiles_wall"]
@@ -32,7 +32,7 @@ minimal_ui = true
 
 [node name="LevelDescription" parent="." index="0"]
 title = "First steps"
-mission = "Get the robot to the red flag."
+mission = "Get the robot to the green flag."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("5_move")])
 block_notes = PackedStringArray("This block moves the robot forward by one tile.")
 
@@ -44,7 +44,7 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("7_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
@@ -68,7 +68,6 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("10_tex_dest")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="2"]

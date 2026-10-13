@@ -4,17 +4,18 @@ extends Control
 ## What each expression came to while the program runs, shown on the block that
 ## worked it out: a small tag at the block's top-right corner, the way Python
 ## Tutor and Thonny show values next to the code. `i + 1` shows 3, `s >= 75`
-## shows True, `item i of route` shows 4.
+## shows True, `index i of route` shows 4, and a slot with `i` typed in shows
+## what i holds right then.
 ##
-## Only blocks that work something out get one. A variable's value is the
-## Variables tab's job, and showing it here as well put the same number in two
-## places at once. Literals show nothing, since the block already says what they
-## are, and neither does a list's name, since its board is in the room.
+## Literals typed into a slot show nothing, since the block already says what
+## they are, and neither does a list's name, since its board is in the room.
 ##
 ## A block evaluating its parameters again clears what they showed last time, so
 ## nothing on screen is older than the pass it belongs to, and the right side of
 ## an and/or that never ran says so. Tags stay after the run (an error is easier
-## to read with them) until the next click, key or drag.
+## to read with them) until the next click, key or drag. When the next room
+## starts, the last room's tags fade (fade_stale()): left up, they read as
+## values the program carried from one room into the next.
 ##
 ## Sits over the canvas and under the side panels, and lays its tags out every
 ## frame from the blocks' rectangles, so they follow panning and zooming.
@@ -23,6 +24,7 @@ const MAX_CHARS := 14
 ## How far a tag reaches into its block, before scaling: enough to say whose it is.
 const OVERLAP := Vector2(6, 8)
 const FADE_IN := 0.12
+const FADE_OUT := 0.25
 const TRUE_COLOR := Color("#7dd3a0")
 const FALSE_COLOR := Color("#fb7185")
 const TEXT_COLOR := Color("#FF8F5E")  # strings, as their slots are coloured
@@ -32,6 +34,9 @@ const SKIPPED_COLOR := Color(0.62, 0.64, 0.7)
 const TAG := preload("res://puzzle/ui/canvas/value_tag.tscn")
 
 var _bubbles: Dictionary[Block, PanelContainer] = {}
+## Tags left from the room before, still waiting to fade. A block that shows a
+## new value in the meantime comes off this list.
+var _stale: Dictionary[Block, bool] = {}
 
 
 func _ready() -> void:
@@ -61,6 +66,25 @@ func clear() -> void:
 	for bubble in _bubbles.values():
 		bubble.queue_free()
 	_bubbles.clear()
+	_stale.clear()
+
+## A room was solved and the next one is starting: every tag on screen fades
+## after `delay`, unless its block shows a new value by then.
+func fade_stale(delay: float) -> void:
+	for block: Variant in _bubbles.keys():
+		if is_instance_valid(block):
+			_stale[block] = true
+	get_tree().create_timer(delay).timeout.connect(_fade_stale)
+
+func _fade_stale() -> void:
+	for block: Variant in _stale.keys():
+		var bubble: PanelContainer = _bubbles.get(block)
+		_bubbles.erase(block)
+		if is_instance_valid(bubble):
+			var tween := bubble.create_tween()
+			tween.tween_property(bubble, "modulate:a", 0.0, FADE_OUT)
+			tween.tween_callback(bubble.queue_free)
+	_stale.clear()
 
 
 #region Signals
@@ -88,8 +112,14 @@ func _on_values_cleared(block: Block) -> void:
 ## [text, colour] for a value, or empty when there's nothing to add to what the
 ## block already says.
 func _shown(block: Block, value: Variant) -> Array:
-	if block is ValueBlock or typeof(value) == TYPE_STRING_NAME:
-		return []  # a literal or a variable's name: the block already says it
+	if _typed_into(block):
+		# A literal says what it is already. A variable's name gets its value,
+		# read now, as the block using it is about to.
+		if typeof(value) != TYPE_STRING_NAME or not Interpreter.has_var(value):
+			return []
+		value = Interpreter.read_var(value)
+	elif typeof(value) == TYPE_STRING_NAME:
+		return []
 	if value == null or value is Object:
 		return []
 	var text := Core.to_python_repr(value)
@@ -102,7 +132,13 @@ func _shown(block: Block, value: Variant) -> Array:
 		color = TEXT_COLOR
 	return [text, color]
 
+## A slot the student types into or picks from, as opposed to a rounded block
+## that works something out (index of, length of, math), which shares its look.
+func _typed_into(block: Block) -> bool:
+	return block is ValueBlock and block.data.value != null and block.data.value.editable_shown
+
 func _put(block: Block, text: String, color: Color) -> void:
+	_stale.erase(block)
 	var bubble: PanelContainer = _bubbles.get(block)
 	if bubble == null:
 		bubble = TAG.instantiate() as PanelContainer

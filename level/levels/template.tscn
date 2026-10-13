@@ -14,8 +14,8 @@
 [ext_resource type="Resource" uid="uid://buc1h3ks738pt" path="res://level/objects/entities/robot/blocks/ahead_is.tres" id="12_ahead_is"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="13_resettable"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="14_sensed_area"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="15_flag"]
-[ext_resource type="Texture2D" uid="uid://crstou432xdeq" path="res://level/objects/puddle.png" id="16_puddle"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="15_flag"]
+[ext_resource type="Texture2D" uid="uid://45yaet5go20t" path="res://level/objects/danger.png" id="16_puddle"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dest"]
 radius = 12.0
@@ -146,7 +146,6 @@ tag = &"destination"
 shape = SubResource("CircleShape2D_dest")
 
 [node name="Flag" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("15_flag")
 
 [node name="Destination2" type="Area2D" parent="Visuals" index="3"]

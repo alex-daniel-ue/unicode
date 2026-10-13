@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bafuclrikj4j7"]
+[gd_scene load_steps=5 format=3 uid="uid://bafuclrikj4j7"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_m0nfs"]
 [ext_resource type="Script" uid="uid://dit0t1lwo3tuh" path="res://puzzle/ui/level_complete/level_complete.gd" id="2_orori"]
 [ext_resource type="FontFile" uid="uid://d0dw8vqho76cs" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf" id="3_body"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="4_code"]
-[ext_resource type="FontFile" uid="uid://csxkrvnanwtqj" path="res://puzzle/ui/themes/fonts/NotoSansSymbols2-Regular.ttf" id="5_stars"]
 
 [node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "stay_button", "select_button", "next_button")]
 visible = false
@@ -57,16 +56,11 @@ theme_type_variation = &"HeaderLarge"
 text = "Level complete!"
 horizontal_alignment = 1
 
-[node name="Stars" type="Label" parent="Center/Card/Margin/Stack"]
+[node name="Stars" type="HBoxContainer" parent="Center/Card/Margin/Stack"]
 layout_mode = 2
-theme_type_variation = &"HeaderLarge"
-theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
-theme_override_colors/font_outline_color = Color(0.105882354, 0.09411765, 0.13725491, 1)
-theme_override_constants/outline_size = 8
-theme_override_fonts/font = ExtResource("5_stars")
-theme_override_font_sizes/font_size = 64
-text = "★★☆"
-horizontal_alignment = 1
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
 
 [node name="Usage" type="Label" parent="Center/Card/Margin/Stack"]
 layout_mode = 2
@@ -104,13 +98,13 @@ layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="StayButton" type="Button" parent="Center/Card/Margin/Stack/Buttons"]
+[node name="StayButton" type="Button" parent="Center/Card/Margin/Stack/Buttons" groups=["sfx_click"]]
 layout_mode = 2
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 20
 text = "Try again"
 
-[node name="SelectButton" type="Button" parent="Center/Card/Margin/Stack/Buttons"]
+[node name="SelectButton" type="Button" parent="Center/Card/Margin/Stack/Buttons" groups=["sfx_click"]]
 layout_mode = 2
 theme_type_variation = &"MainMenuButton"
 theme_override_font_sizes/font_size = 20

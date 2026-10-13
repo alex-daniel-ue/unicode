@@ -12,8 +12,8 @@
 [ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="10_destination_"]
 [ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="11_checkpoint_g"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="12_sensed_area"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="13_red_flag"]
-[ext_resource type="Texture2D" uid="uid://csa5uhuw5bwuc" path="res://world/assets/objects/trash_bottle.png" id="14_flag"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="13_green_flag"]
+[ext_resource type="Texture2D" uid="uid://cetefcnjyhden" path="res://world/assets/objects/battery.png" id="14_battery"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="15_robot_charac"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="16_resettable_c"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="17_sprite_frame"]
@@ -62,40 +62,40 @@ block: BeginBlock
           text: \"turn {}\"
           parameters:
             - left"
-room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
+room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Every stop"
-mission = "Each value in the list is how far to drive before the next left turn. Collect every bottle on the way to the red flag."
-rooms = PackedStringArray("A lap.", "A spiral.", "A U-turn.")
+mission = "Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag."
+rooms = PackedStringArray("A lap.", "A U-turn.")
 twist = "Each list has a different number of stops."
-tip = "A for loop stops before its end number, like range in Python. So from 0 until 3 runs 0, 1, 2."
+tip = "The For block stops before its end number, like `range(0, 3)` in Python, which gives 0, 1, 2."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("4_block_data")]([ExtResource("18_for_int"), ExtResource("19_item_of"), ExtResource("20_length_of"), ExtResource("21_arithmetic")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
-bounds = Rect2(32.0, 3.0, 204.0, 157.0)
+bounds = Rect2(32.0, 3.0, 220.0, 157.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room1"), NodePath("../../Visuals/Destination1")]
 
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_1")
 detection_area = NodePath("../../../Visuals/Pen1_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_2")
 detection_area = NodePath("../../../Visuals/Pen1_2")
 
 [node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_3")
 detection_area = NodePath("../../../Visuals/Pen1_3")
 
@@ -103,85 +103,44 @@ detection_area = NodePath("../../../Visuals/Pen1_3")
 script = ExtResource("10_destination_")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(32.0, 227.0, 236.0, 189.0)
+bounds = Rect2(32.0, 227.0, 188.0, 157.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room2"), NodePath("../../Visuals/Destination2")]
 
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen2_1")
 detection_area = NodePath("../../../Visuals/Pen2_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManagerRoom2" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("11_checkpoint_g")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen2_2")
 detection_area = NodePath("../../../Visuals/Pen2_2")
 
-[node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManagerRoom2" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
-camera_focus = NodePath("../../../Visuals/Pen2_3")
-detection_area = NodePath("../../../Visuals/Pen2_3")
-
-[node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManagerRoom2" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
-camera_focus = NodePath("../../../Visuals/Pen2_4")
-detection_area = NodePath("../../../Visuals/Pen2_4")
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="4" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="2" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("10_destination_")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination2")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination2")
 detection_area = NodePath("../../../Visuals/Destination2")
 
-[node name="GoalManagerRoom3" type="Node" parent="RoomGoals" index="2" node_paths=PackedStringArray("focus_markers")]
-script = ExtResource("5_goal_manager")
-bounds = Rect2(32.0, 483.0, 172.0, 157.0)
-focus_markers = [NodePath("../../Visuals/Lists/Room3"), NodePath("../../Visuals/Destination3")]
-
-[node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManagerRoom3" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
-camera_focus = NodePath("../../../Visuals/Pen3_1")
-detection_area = NodePath("../../../Visuals/Pen3_1")
-
-[node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManagerRoom3" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
-camera_focus = NodePath("../../../Visuals/Pen3_2")
-detection_area = NodePath("../../../Visuals/Pen3_2")
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom3" index="2" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
-script = ExtResource("10_destination_")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination3")
-fail_message = "The robot didn't finish on the flag."
-camera_focus = NodePath("../../../Visuals/Destination3")
-detection_area = NodePath("../../../Visuals/Destination3")
-
 [node name="Camera2D" parent="." index="4"]
-level_bounds = Rect2(0.0, 0.0, 384.0, 672.0)
+level_bounds = Rect2(0.0, 0.0, 320.0, 416.0)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals"]
-tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQABAAAAAAAJAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQABAAEAAAAJAAMAAQADAAEAAAABAAQAAQAAAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQACAAMAAAAGAAQAAQABAAMAAAAHAAQAAQACAAMAAAAIAAQAAQABAAMAAAAJAAQAAQADAAMAAAABAAkAAQAAAAAAAAACAAkAAQABAAAAAAADAAkAAQACAAAAAAAEAAkAAQABAAAAAAAFAAkAAQACAAAAAAAGAAkAAQABAAAAAAAHAAkAAQACAAAAAAAIAAkAAQABAAAAAAAJAAkAAQACAAAAAAAKAAkAAQADAAAAAAABAAoAAQAAAAEAAAACAAoAAQABAAEAAAADAAoAAQACAAEAAAAEAAoAAQABAAEAAAAFAAoAAQACAAEAAAAGAAoAAQABAAEAAAAHAAoAAQACAAEAAAAIAAoAAQABAAEAAAAJAAoAAQACAAEAAAAKAAoAAQADAAEAAAABAAsAAQAAAAIAAAACAAsAAQABAAIAAAADAAsAAQACAAIAAAAEAAsAAQABAAIAAAAFAAsAAQACAAIAAAAGAAsAAQABAAIAAAAHAAsAAQACAAIAAAAIAAsAAQABAAIAAAAJAAsAAQACAAIAAAAKAAsAAQADAAIAAAABAAwAAQAAAAMAAAACAAwAAQABAAMAAAADAAwAAQACAAMAAAAEAAwAAQABAAMAAAAFAAwAAQACAAMAAAAGAAwAAQABAAMAAAAHAAwAAQACAAMAAAAIAAwAAQABAAMAAAAJAAwAAQACAAMAAAAKAAwAAQADAAMAAAABABEAAQAAAAAAAAACABEAAQABAAAAAAADABEAAQACAAAAAAAEABEAAQABAAAAAAAFABEAAQACAAAAAAAGABEAAQABAAAAAAAHABEAAQACAAAAAAAIABEAAQADAAAAAAABABIAAQAAAAEAAAACABIAAQABAAEAAAADABIAAQACAAEAAAAEABIAAQABAAEAAAAFABIAAQACAAEAAAAGABIAAQABAAEAAAAHABIAAQACAAEAAAAIABIAAQADAAEAAAABABMAAQAAAAMAAAACABMAAQABAAMAAAADABMAAQACAAMAAAAEABMAAQABAAMAAAAFABMAAQACAAMAAAAGABMAAQABAAMAAAAHABMAAQACAAMAAAAIABMAAQADAAMAAAA=")
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQADAAEAAAABAAQAAQAAAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQACAAMAAAAGAAQAAQABAAMAAAAHAAQAAQACAAMAAAAIAAQAAQADAAMAAAABAAkAAQAAAAAAAAACAAkAAQABAAAAAAADAAkAAQACAAAAAAAEAAkAAQABAAAAAAAFAAkAAQACAAAAAAAGAAkAAQABAAAAAAAHAAkAAQADAAAAAAABAAoAAQAAAAEAAAACAAoAAQABAAEAAAADAAoAAQACAAEAAAAEAAoAAQABAAEAAAAFAAoAAQACAAEAAAAGAAoAAQABAAEAAAAHAAoAAQADAAEAAAABAAsAAQAAAAMAAAACAAsAAQABAAMAAAADAAsAAQACAAMAAAAEAAsAAQABAAMAAAAFAAsAAQACAAMAAAAGAAsAAQABAAMAAAAHAAsAAQADAAMAAAA=")
 tile_set = ExtResource("7_school_tiles")
 
 [node name="Destination1" type="Area2D" parent="Visuals"]
@@ -193,8 +152,8 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("13_red_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("13_green_flag")
 
 [node name="Pen1_1" type="Area2D" parent="Visuals"]
 position = Vector2(176, 144)
@@ -205,8 +164,8 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_1"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("14_battery")
 
 [node name="Pen1_2" type="Area2D" parent="Visuals"]
 position = Vector2(176, 80)
@@ -217,8 +176,8 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_2"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("14_battery")
 
 [node name="Pen1_3" type="Area2D" parent="Visuals"]
 position = Vector2(48, 80)
@@ -229,11 +188,11 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_3"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("14_battery")
 
 [node name="Destination2" type="Area2D" parent="Visuals"]
-position = Vector2(144, 368)
+position = Vector2(48, 304)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -241,11 +200,11 @@ tag = &"destination"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination2"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("13_red_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("13_green_flag")
 
 [node name="Pen2_1" type="Area2D" parent="Visuals"]
-position = Vector2(208, 400)
+position = Vector2(144, 368)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -253,11 +212,11 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_1"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("14_battery")
 
 [node name="Pen2_2" type="Area2D" parent="Visuals"]
-position = Vector2(208, 304)
+position = Vector2(144, 304)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -265,75 +224,15 @@ tag = &"undetectable"
 shape = SubResource("Circle_1")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_2"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
-
-[node name="Pen2_3" type="Area2D" parent="Visuals"]
-position = Vector2(80, 304)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen2_3"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_3"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
-
-[node name="Pen2_4" type="Area2D" parent="Visuals"]
-position = Vector2(80, 368)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen2_4"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_4"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
-
-[node name="Destination3" type="Area2D" parent="Visuals"]
-position = Vector2(48, 560)
-script = ExtResource("12_sensed_area")
-tag = &"destination"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination3"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Destination3"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("13_red_flag")
-
-[node name="Pen3_1" type="Area2D" parent="Visuals"]
-position = Vector2(144, 624)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen3_1"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen3_1"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
-
-[node name="Pen3_2" type="Area2D" parent="Visuals"]
-position = Vector2(144, 560)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen3_2"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen3_2"]
-scale = Vector2(2, 2)
-texture = ExtResource("14_flag")
+scale = Vector2(1, 1)
+texture = ExtResource("14_battery")
 
 [node name="Lists" type="Node2D" parent="Visuals"]
 
 [node name="Room1" type="Node2D" parent="Visuals/Lists"]
 
 [node name="route" parent="Visuals/Lists/Room1" instance=ExtResource("9_list_entity")]
-position = Vector2(102, 8)
+position = Vector2(118, 8)
 z_index = 1
 room_index = 0
 values = [4, 2, 4, 2]
@@ -341,17 +240,9 @@ values = [4, 2, 4, 2]
 [node name="Room2" type="Node2D" parent="Visuals/Lists"]
 
 [node name="route" parent="Visuals/Lists/Room2" instance=ExtResource("9_list_entity")]
-position = Vector2(102, 232)
+position = Vector2(118, 232)
 z_index = 1
 room_index = 1
-values = [5, 3, 4, 2, 2]
-
-[node name="Room3" type="Node2D" parent="Visuals/Lists"]
-
-[node name="route" parent="Visuals/Lists/Room3" instance=ExtResource("9_list_entity")]
-position = Vector2(102, 488)
-z_index = 1
-room_index = 2
 values = [3, 2, 3]
 
 [node name="YSorted" type="Node2D" parent="Visuals"]
@@ -359,7 +250,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAIAAIAAwAAAAAAABAJAAIAAAAAAAAAAAAIAAQAAQAAAAAAAAAKAAkAAwAAAAAAABAIAAsAAQABAAAAAAAGABEAAwAAAAAAABAIABEAAAAAAAAAAAAIABMAAQACAAAAAAA=")
+tile_map_data = PackedByteArray("AAAIAAIAAAAAAAAAAAAHAAQAAQABAAAAAAAIAAQAAwAAAAAAABAHAAkAAwAAAAAAABAHAAoAAQACAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("15_robot_charac")]
@@ -382,61 +273,40 @@ room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"transform": Transform2D(1, 0, 0, 1, 48, 144)
 }), Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 400)
-}), Dictionary[StringName, Variant]({
-&"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 624)
+&"transform": Transform2D(1, 0, 0, 1, 48, 368)
 })])
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQABAAAAAAAKAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQABAAEAAAAKAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAKAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAKAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAKAAQAAQAAAAEAABAAAAUAAQACAAAAADABAAUAAAAAAAEAAHACAAUAAAAAAAEAAHADAAUAAAAAAAEAAHAEAAUAAAAAAAEAAHAFAAUAAAAAAAEAAHAGAAUAAAAAAAEAAHAHAAUAAAAAAAEAAHAIAAUAAAAAAAEAAHAJAAUAAAAAAAEAAHAKAAUAAQACAAAAACAAAAcAAQAAAAAAAAABAAcAAQADAAAAAAACAAcAAQABAAAAAAADAAcAAQABAAAAAAAEAAcAAQABAAAAAAAFAAcAAQABAAAAAAAGAAcAAQABAAAAAAAHAAcAAQABAAAAAAAIAAcAAQABAAAAAAAJAAcAAQABAAAAAAAKAAcAAQABAAAAAAALAAcAAQAAAAAAABAAAAgAAQAAAAEAAAABAAgAAQADAAEAAAACAAgAAQABAAEAAAADAAgAAQABAAEAAAAEAAgAAQABAAEAAAAFAAgAAQABAAEAAAAGAAgAAQABAAEAAAAHAAgAAQABAAEAAAAIAAgAAQABAAEAAAAJAAgAAQABAAEAAAAKAAgAAQABAAEAAAALAAgAAQAAAAEAABAAAAkAAQAAAAEAAAALAAkAAQAAAAEAABAAAAoAAQAAAAEAAAALAAoAAQAAAAEAABAAAAsAAQAAAAEAAAALAAsAAQAAAAEAABAAAAwAAQAAAAEAAAALAAwAAQAAAAEAABAAAA0AAQACAAAAADABAA0AAAAAAAEAAHACAA0AAAAAAAEAAHADAA0AAAAAAAEAAHAEAA0AAAAAAAEAAHAFAA0AAAAAAAEAAHAGAA0AAAAAAAEAAHAHAA0AAAAAAAEAAHAIAA0AAAAAAAEAAHAJAA0AAAAAAAEAAHAKAA0AAAAAAAEAAHALAA0AAQACAAAAACAAAA8AAQAAAAAAAAABAA8AAQADAAAAAAACAA8AAQABAAAAAAADAA8AAQABAAAAAAAEAA8AAQABAAAAAAAFAA8AAQABAAAAAAAGAA8AAQABAAAAAAAHAA8AAQABAAAAAAAIAA8AAQABAAAAAAAJAA8AAQAAAAAAABAAABAAAQAAAAEAAAABABAAAQADAAEAAAACABAAAQABAAEAAAADABAAAQABAAEAAAAEABAAAQABAAEAAAAFABAAAQABAAEAAAAGABAAAQABAAEAAAAHABAAAQABAAEAAAAIABAAAQABAAEAAAAJABAAAQAAAAEAABAAABEAAQAAAAEAAAAJABEAAQAAAAEAABAAABIAAQAAAAEAAAAJABIAAQAAAAEAABAAABMAAQAAAAEAAAAJABMAAQAAAAEAABAAABQAAQACAAAAADABABQAAAAAAAEAAHACABQAAAAAAAEAAHADABQAAAAAAAEAAHAEABQAAAAAAAEAAHAFABQAAAAAAAEAAHAGABQAAAAAAAEAAHAHABQAAAAAAAEAAHAIABQAAAAAAAEAAHAJABQAAQACAAAAACA=")
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAJAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAJAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAJAAQAAQAAAAEAABAAAAUAAQACAAAAADABAAUAAAAAAAEAAHACAAUAAAAAAAEAAHADAAUAAAAAAAEAAHAEAAUAAAAAAAEAAHAFAAUAAAAAAAEAAHAGAAUAAAAAAAEAAHAHAAUAAAAAAAEAAHAIAAUAAAAAAAEAAHAJAAUAAQACAAAAACAAAAcAAQAAAAAAAAABAAcAAQADAAAAAAACAAcAAQABAAAAAAADAAcAAQABAAAAAAAEAAcAAQABAAAAAAAFAAcAAQABAAAAAAAGAAcAAQABAAAAAAAHAAcAAQABAAAAAAAIAAcAAQAAAAAAABAAAAgAAQAAAAEAAAABAAgAAQADAAEAAAACAAgAAQABAAEAAAADAAgAAQABAAEAAAAEAAgAAQABAAEAAAAFAAgAAQABAAEAAAAGAAgAAQABAAEAAAAHAAgAAQABAAEAAAAIAAgAAQAAAAEAABAAAAkAAQAAAAEAAAAIAAkAAQAAAAEAABAAAAoAAQAAAAEAAAAIAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAIAAsAAQAAAAEAABAAAAwAAQACAAAAADABAAwAAAAAAAEAAHACAAwAAAAAAAEAAHADAAwAAAAAAAEAAHAEAAwAAAAAAAEAAHAFAAwAAAAAAAEAAHAGAAwAAAAAAAEAAHAHAAwAAAAAAAEAAHAIAAwAAQACAAAAACA=")
 tile_set = ExtResource("8_school_walls")
 
 [node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted"]
 z_index = 2
 modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 400)
-scale = Vector2(0.915, 0.915)
-sprite_frames = ExtResource("17_sprite_frame")
-animation = &"idle_right"
-speed_scale = 0.0
-
-[node name="PhantomSprite2" type="AnimatedSprite2D" parent="Visuals/YSorted"]
-z_index = 2
-modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 624)
+position = Vector2(48, 368)
 scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("17_sprite_frame")
 animation = &"idle_right"
 speed_scale = 0.0
 
 [node name="Room1Label" type="Label" parent="Visuals"]
-offset_left = 262.0
-offset_top = 18.0
-offset_right = 314.0
-offset_bottom = 41.0
+offset_left = 134.0
+offset_top = 164.0
+offset_right = 186.0
+offset_bottom = 187.0
 theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 1"
 
 [node name="Room2Label" type="Label" parent="Visuals"]
-offset_left = 294.0
-offset_top = 242.0
-offset_right = 346.0
-offset_bottom = 265.0
+offset_left = 118.0
+offset_top = 388.0
+offset_right = 170.0
+offset_bottom = 411.0
 theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 2"
-
-[node name="Room3Label" type="Label" parent="Visuals"]
-offset_left = 230.0
-offset_top = 498.0
-offset_right = 282.0
-offset_bottom = 521.0
-theme = ExtResource("3_main_theme")
-theme_type_variation = &"RoomLabel"
-text = "Room 3"
 
 [editable path="LevelBlockPreset/BeginBlock"]
 [editable path="Visuals/YSorted/RobotCharacter"]

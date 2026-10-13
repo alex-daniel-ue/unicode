@@ -206,16 +206,10 @@ func _build_button(entry: LevelEntry, furthest_slot: int) -> Button:
 		title.add_theme_color_override(&"font_color", DISABLED_TEXT)
 	stack.add_child(title)
 
-	if entry.counts_for_progress:
-		var star_label := StarText.style(Label.new(), 20)
-		star_label.text = StarText.of(stars)
-		star_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		star_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		star_label.add_theme_color_override(&"font_outline_color", STAR_RIM)
-		star_label.add_theme_constant_override(&"outline_size", 4)
-		if button.disabled:
-			star_label.modulate.a = 0.4
-		stack.add_child(star_label)
+	# Only a level that has been solved shows stars, and only the ones it earned:
+	# a row of empty stars on every new level read as a score of nothing.
+	if stars > 0:
+		stack.add_child(StarText.row(stars, 20, STAR_RIM, 4, stars))
 
 	if not button.disabled:
 		button.pressed.connect(_on_level_pressed.bind(entry))
@@ -228,7 +222,7 @@ func _tooltip(entry: LevelEntry, stars: int) -> String:
 		lines.append(entry.title)
 	if not entry.concept.is_empty():
 		lines.append(entry.concept)
-	if entry.counts_for_progress:
+	if stars > 0:
 		lines.append("Best: %d of 3 stars" % stars)
 	return "\n".join(lines)
 

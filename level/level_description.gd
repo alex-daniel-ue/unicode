@@ -24,6 +24,8 @@ const MUTED := Color(0.78, 0.8, 0.88)
 const CARD_BG := Color(1, 1, 1, 0.06)
 const BODY_SIZE := 20
 const CAPTION_SIZE := 16
+const BODY_FONT := preload("res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf")
+const CODE_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
 
 @export_group("Brief")
 @export var title := ""
@@ -165,7 +167,7 @@ func _prepare(node: Node, sanitize: bool) -> void:
 ## Controls exist.
 func _brief_text() -> String:
 	var lines: PackedStringArray = []
-	if not title.is_empty(): lines.append(title)
+	if not title.is_empty(): lines.append(heading())
 	if not mission.is_empty(): lines.append("Mission: " + mission)
 	for i in rooms.size():
 		lines.append("Room %d: %s" % [i + 1, rooms[i]])
@@ -185,12 +187,12 @@ func _build_brief() -> Control:
 	root.add_theme_constant_override(&"separation", 14)
 	
 	if not title.is_empty():
-		var heading := Label.new()
-		heading.theme_type_variation = &"HeaderMedium"
-		heading.text = title
-		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		root.add_child(heading)
+		var heading_label := Label.new()
+		heading_label.theme_type_variation = &"HeaderMedium"
+		heading_label.text = heading()
+		heading_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		heading_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		root.add_child(heading_label)
 	
 	if not mission.is_empty():
 		var card := _card(CARD_BG, ACCENT)
@@ -214,7 +216,7 @@ func _build_brief() -> Control:
 		root.add_child(card)
 
 	if not tip.is_empty():
-		var tip_label := _body(tip)
+		var tip_label := _rich_body(tip)
 		tip_label.modulate = MUTED
 		root.add_child(tip_label)
 	
@@ -238,6 +240,15 @@ func _build_brief() -> Control:
 		root.add_child(badge)
 	
 	return root
+
+## "Level 4: Every stop". The number is the level's label in its module, from
+## the catalog; a level that isn't in the catalog (a test, a scene opened on its
+## own) gets its title alone.
+func heading() -> String:
+	var entry: LevelEntry = null
+	if not Engine.is_editor_hint() and Progress.catalog != null:
+		entry = Progress.catalog.entry_of(Game.level_id)
+	return "Level %s: %s" % [entry.label, title] if entry != null and not entry.label.is_empty() else title
 
 func _note(index: int) -> String:
 	return block_notes[index] if index < block_notes.size() else ""
@@ -294,6 +305,23 @@ func _body(text: String) -> Label:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return label
+
+## Like _body(), but Python in it (`len(route)`, in backticks) is set as code,
+## the way the win card shows it (CodeSpans).
+func _rich_body(text: String) -> RichTextLabel:
+	var label := RichTextLabel.new()
+	label.bbcode_enabled = true
+	label.fit_content = true
+	label.scroll_active = false
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_override(&"normal_font", BODY_FONT)
+	label.add_theme_font_size_override(&"normal_font_size", BODY_SIZE)
+	label.add_theme_font_override(&"mono_font", CODE_FONT)
+	label.add_theme_font_size_override(&"mono_font_size", CAPTION_SIZE)
+	label.text = CodeSpans.to_bbcode(text)
 	return label
 
 func _room_row(number: int, text: String) -> Control:

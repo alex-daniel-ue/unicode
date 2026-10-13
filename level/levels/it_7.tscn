@@ -10,8 +10,8 @@
 [ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="13_check_goal"]
 [ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="14_tiles_floor"]
 [ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="15_sensed"]
-[ext_resource type="Texture2D" uid="uid://cuiikqm47033j" path="res://level/objects/red_flag.png" id="16_tex_dest"]
-[ext_resource type="Texture2D" uid="uid://csa5uhuw5bwuc" path="res://world/assets/objects/trash_bottle.png" id="17_tex_pen"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="16_tex_dest"]
+[ext_resource type="Texture2D" uid="uid://cetefcnjyhden" path="res://world/assets/objects/battery.png" id="17_tex_pen"]
 [ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="18_robot"]
 [ext_resource type="Resource" uid="uid://cwd65tj740jxa" path="res://level/objects/entities/robot/blocks/move.tres" id="19_move"]
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="20_resettable"]
@@ -102,7 +102,7 @@ star_slack = 3
 
 [node name="LevelDescription" parent="." index="0"]
 title = "Aisle by aisle"
-mission = "Drive down every aisle and collect every bottle. Then stop on the red flag."
+mission = "Move down every aisle and collect every battery. Then stop on the green flag."
 twist = "The outer loop is already on the canvas. It makes one pass for each aisle. You decide what goes inside it."
 tip = "A loop can hold another loop. Give each loop a different variable name."
 
@@ -121,70 +121,70 @@ focus_marker = NodePath("../../Visuals/Destination1")
 script = ExtResource("12_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't finish on the flag."
+fail_message = "The robot didn't stop on the green flag."
 camera_focus = NodePath("../../../Visuals/Destination1")
 detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_1")
 detection_area = NodePath("../../../Visuals/Pen1_1")
 
 [node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_2")
 detection_area = NodePath("../../../Visuals/Pen1_2")
 
 [node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_3")
 detection_area = NodePath("../../../Visuals/Pen1_3")
 
 [node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManager" index="4" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_4")
 detection_area = NodePath("../../../Visuals/Pen1_4")
 
 [node name="CheckpointGoal5" type="Node" parent="RoomGoals/GoalManager" index="5" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_5")
 detection_area = NodePath("../../../Visuals/Pen1_5")
 
 [node name="CheckpointGoal6" type="Node" parent="RoomGoals/GoalManager" index="6" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_6")
 detection_area = NodePath("../../../Visuals/Pen1_6")
 
 [node name="CheckpointGoal7" type="Node" parent="RoomGoals/GoalManager" index="7" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_7")
 detection_area = NodePath("../../../Visuals/Pen1_7")
 
 [node name="CheckpointGoal8" type="Node" parent="RoomGoals/GoalManager" index="8" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_8")
 detection_area = NodePath("../../../Visuals/Pen1_8")
 
 [node name="CheckpointGoal9" type="Node" parent="RoomGoals/GoalManager" index="9" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("13_check_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every bottle."
+fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_9")
 detection_area = NodePath("../../../Visuals/Pen1_9")
 
@@ -208,7 +208,6 @@ tag = &"destination"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
-scale = Vector2(0.055, 0.055)
 texture = ExtResource("16_tex_dest")
 
 [node name="Pen1_1" type="Area2D" parent="Visuals" index="2"]
@@ -220,7 +219,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_1" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_2" type="Area2D" parent="Visuals" index="3"]
@@ -232,7 +230,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_2" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_3" type="Area2D" parent="Visuals" index="4"]
@@ -244,7 +241,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_3" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_4" type="Area2D" parent="Visuals" index="5"]
@@ -256,7 +252,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_4" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_5" type="Area2D" parent="Visuals" index="6"]
@@ -268,7 +263,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_5" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_6" type="Area2D" parent="Visuals" index="7"]
@@ -280,7 +274,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_6" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_7" type="Area2D" parent="Visuals" index="8"]
@@ -292,7 +285,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_7" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_8" type="Area2D" parent="Visuals" index="9"]
@@ -304,7 +296,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_8" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="Pen1_9" type="Area2D" parent="Visuals" index="10"]
@@ -316,7 +307,6 @@ tag = &"undetectable"
 shape = SubResource("Circle_15")
 
 [node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_9" index="1"]
-scale = Vector2(2, 2)
 texture = ExtResource("17_tex_pen")
 
 [node name="YSorted" type="Node2D" parent="Visuals" index="11"]
