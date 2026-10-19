@@ -261,6 +261,14 @@ static func reporter_data(p_name: StringName) -> BlockData:
 func make_reporter_data() -> BlockData:
 	return reporter_data(get_list_name())
 
+## True when `data` is a list's name block, or, with `or_template`, the
+## template they're made from: a level's description names the template to
+## introduce its lists' name blocks, since the real ones only exist at runtime.
+static func is_reporter(data: BlockData, or_template := false) -> bool:
+	if data == null:
+		return false
+	return data.name.begins_with("List_") or (or_template and data.resource_path == REPORTER_TEMPLATE)
+
 ## Equality in Python's terms: numbers compare by value, anything else only
 ## against the same kind of thing.
 static func same(a: Variant, b: Variant) -> bool:

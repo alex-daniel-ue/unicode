@@ -111,6 +111,39 @@ func _on_guide_finished() -> void:
 func show_information() -> void:
 	side_panels[0].focus_content(get_node(INFORMATION_TAB) as Control)
 
+## Whether `block`, let go at `at` (global), goes back into the open toolbox:
+## a block from the canvas, over the left panel while it shows the toolbox.
+## Putting a block back where blocks come from throws it away, as the trash
+## can does (trash_button.gd); a fresh copy from the toolbox isn't on the
+## canvas yet, so letting it go there just cancels the drag.
+func returns_to_toolbox(block: Block, at: Vector2) -> bool:
+	var panel := side_panels[0]
+	return (
+		is_instance_valid(block) and block.is_inside_tree() and not block.data.toolbox
+		and panel.is_open and panel.shown_content == toolbox
+		and panel.get_global_rect().has_point(at)
+	)
+
+## The way on from the Information tab once it has been read: to the blocks.
+## The same as the toolbox's own tab button, so a guide waiting for that tab
+## moves on too, and off while a program runs, as that button is. Quiet, like
+## the tab buttons.
+func _toolbox_button() -> Button:
+	var button := Button.new()
+	button.name = "GoToToolbox"
+	button.text = "Go to Toolbox"
+	button.theme_type_variation = &"MainMenuButton"
+	button.custom_minimum_size = Vector2(200, 40)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.focus_mode = Control.FOCUS_NONE
+	button.pressed.connect(func() -> void:
+		side_panels[0].focus_content(toolbox)
+		Tutorial.tab_shown.emit(toolbox))
+	Interpreter.running_changed.connect(func() -> void:
+		if is_instance_valid(button):
+			button.disabled = Interpreter.is_running)
+	return button
+
 func _exit_tree() -> void:
 	Interpreter.is_running = false
 	Interpreter.clear_state()
@@ -134,6 +167,7 @@ func configure_level() -> void:
 			information.add_child(content)
 		else:
 			content.reparent(information)
+	information.add_child(_toolbox_button())
 	
 	for block in Game.level.get_blocks():
 		toolbox.add_block(block)

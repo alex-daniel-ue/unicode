@@ -18,12 +18,17 @@ log = logging.getLogger("unicode-ai")
 
 PROMPT_VERSION = "2026-10-13a"  # bump on ANY prompt change; report the frozen value in Chapter 3
 SUMMARY_VERSION = "2026-10-06a"  # the post-win comment prompt, versioned separately
-# Flash, thinking at MEDIUM: Flash-Lite's hints were too thin to act on. The
-# chain moves on when a model id is retired or overloaded; Flash-Lite stays last
-# so a Flash outage degrades the hints instead of ending them.
+# Hints: Flash, thinking at MEDIUM: Flash-Lite's hints were too thin to act on.
+# The chain moves on when a model id is retired or overloaded; Flash-Lite stays
+# last so a Flash outage degrades the hints instead of ending them.
 MODELS = [m.strip() for m in os.environ.get(
     "GEMINI_MODELS", "gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite").split(",") if m.strip()]
 THINKING = types.ThinkingLevel.MEDIUM
+# Win-card comments: Flash-Lite, thinking at LOW. One or two sentences about a
+# program that already works don't need Flash, and they're asked for at every win.
+SUMMARY_MODELS = [m.strip() for m in os.environ.get(
+    "GEMINI_SUMMARY_MODELS", "gemini-3.5-flash-lite,gemini-3.1-flash-lite").split(",") if m.strip()]
+SUMMARY_THINKING = types.ThinkingLevel.LOW
 CLIENT_TOKEN = os.environ.get("UNICODE_CLIENT_TOKEN", "")
 MAX_TURNS, MAX_MSG, MAX_FIELD, MAX_IMG_BYTES = 12, 600, 6000, 1_000_000
 SESSION_LIMIT, SUMMARY_LIMIT, GLOBAL_LIMIT, WINDOW_S = 8, 4, 150, 60.0
@@ -131,7 +136,7 @@ SUMMARY_CONFIG = types.GenerateContentConfig(
     system_instruction=SUMMARY_PROMPT,
     response_mime_type="application/json",
     response_schema=Summary,
-    thinking_config=types.ThinkingConfig(thinking_level=THINKING),
+    thinking_config=types.ThinkingConfig(thinking_level=SUMMARY_THINKING),
     max_output_tokens=4096,
     safety_settings=CONFIG.safety_settings,
 )
@@ -262,11 +267,11 @@ def _contents(data: dict, message: str) -> tuple[list[types.Content], int]:
     return _history(data.get("history")) + [types.Content(role="user", parts=parts)], len(image or b""), len(start or b"")
 
 
-def _generate(contents, config, kind: str):
-    """Walks MODELS with one retry per model on 429/5xx, inside DEADLINE_S.
+def _generate(contents, config, kind: str, models: list[str] = MODELS):
+    """Walks `models` with one retry per model on 429/5xx, inside DEADLINE_S.
     Returns (response, model, started) or (None, None, started)."""
     started = time.monotonic()
-    for model in MODELS:
+    for model in models:
         for attempt in (1, 2):
             if time.monotonic() - started > DEADLINE_S:
                 return None, None, started
@@ -369,7 +374,7 @@ def summary():
         text += f"\n\nTHREE-STAR REFERENCE (never reveal):\n{_field(ctx, 'intended_solution')}"
     contents = [types.Content(role="user", parts=[types.Part.from_text(text=text)])]
 
-    response, model, started = _generate(contents, SUMMARY_CONFIG, "summary:" + angle)
+    response, model, started = _generate(contents, SUMMARY_CONFIG, "summary:" + angle, SUMMARY_MODELS)
     if response is None:
         return _respond("unavailable", http=503)
     feedback = response.prompt_feedback
@@ -404,7 +409,7 @@ def game_file(name):
 
 @app.get("/healthz")
 def healthz():
-    return {"ok": True, "models": MODELS, "prompt_version": PROMPT_VERSION,
+    return {"ok": True, "models": MODELS, "summary_models": SUMMARY_MODELS, "prompt_version": PROMPT_VERSION,
             "summary_version": SUMMARY_VERSION, "reports_image_bytes": True,
             "key_configured": bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEYS"))}
 

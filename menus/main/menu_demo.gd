@@ -4,7 +4,7 @@ extends PanelContainer
 ## The main menu's demos, in the courtyard: a short program beside a little
 ## classroom where it runs, each block lighting up as it runs. A few of them
 ## take turns, so the menu shows what the game is about in more than one way:
-## a robot going round a desk, a robot checking ahead and turning back at the
+## a robot going round a desk, a robot checking ahead and turning around at the
 ## walls, a robot following the values in a list, and a list swapping two of
 ## its own values.
 ##
@@ -26,7 +26,7 @@ const DEMOS: Array[Dictionary] = [
 	},
 	{
 		room = "res://menus/main/demo_patrol.tscn", play = &"_play_patrol", cycles = 1,
-		program = '[["while", ["bool", "True"], {"body": [["if", ["ahead", "blocked"], {"body": [["turn", "back"]]}], ["else", {"body": [["move"]]}]]}]]',
+		program = '[["while", ["bool", "True"], {"body": [["if", ["ahead", "blocked"], {"body": [["turn", "around"]]}], ["else", {"body": [["move"]]}]]}]]',
 	},
 	{
 		room = "res://menus/main/demo_swap.tscn", play = &"_play_swap", cycles = 3,
@@ -187,11 +187,11 @@ func _left_limit() -> float:
 
 
 #region Demos
-## while True: move forward 2 times; turn left. Four sides of a square round
+## while True: step forward 2 times; turn left. Four sides of a square round
 ## the desk, back where it began.
 func _play_lap(t: Tween) -> void:
 	var loop := _block("While")
-	var move := _block("Move Forward N Times")
+	var move := _block("Step Forward N Times")
 	var turn := _block("Turn")
 	for side in 4:
 		_step(t, loop)
@@ -200,14 +200,14 @@ func _play_lap(t: Tween) -> void:
 		_step(t, turn)
 		_turn(t, "left")
 
-## while True: for each steps in route: move forward steps times; turn left.
+## while True: for each steps in route: step forward steps times; turn left.
 ## The board's cursor sits on the value in use; the four values make a
 ## rectangle back to the start. A beat after the for each, before the while
 ## asks again.
 func _play_route(t: Tween) -> void:
 	var loop := _block("While")
 	var each := _block("For Each")
-	var move := _block("Move Forward N Times")
+	var move := _block("Step Forward N Times")
 	var turn := _block("Turn")
 	_step(t, loop)
 	for i in _list.values.size():
@@ -220,13 +220,13 @@ func _play_route(t: Tween) -> void:
 	t.tween_callback(_list.point_at.bind(-1))
 	t.tween_interval(STEP)
 
-## while True: if ahead is blocked: turn back, else: move forward. Along the
+## while True: if ahead is blocked: turn around, else: step forward. Along the
 ## hallway and back, the tile ahead lit by each check (TileScan).
 func _play_patrol(t: Tween) -> void:
 	var loop := _block("While")
 	var check := _block("If")
 	var otherwise := _block("Else")
-	var move := _block("Move Forward")
+	var move := _block("Step Forward")
 	var turn := _block("Turn")
 	var start := _at
 	var start_facing := _facing
@@ -241,7 +241,7 @@ func _play_patrol(t: Tween) -> void:
 		t.tween_interval(STEP)
 		if blocked:
 			_step(t, turn)
-			_turn(t, "back")
+			_turn(t, "around")
 			turns += 1
 		else:
 			_step(t, otherwise)
@@ -287,12 +287,12 @@ func _move(t: Tween, tiles: int) -> void:
 		_at += _facing * TILE
 		t.tween_property(_robot, "position", _at, MOVE_TIME)
 
-## A turn as robot.gd turns: left is (y, -x), right is (-y, x), back is -1 x.
+## A turn as robot.gd turns: left is (y, -x), right is (-y, x), around is -1 x.
 func _turn(t: Tween, how: String) -> void:
 	match how:
 		"left": _facing = Vector2(_facing.y, -_facing.x)
 		"right": _facing = Vector2(-_facing.y, _facing.x)
-		"back": _facing = -_facing
+		"around": _facing = -_facing
 	t.tween_callback(_sprite.play.bind(FACING_ANIMATION[_facing]))
 	t.tween_property(_sprite, "position:y", _rest.y - HOP, TURN_TIME / 2.0) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)

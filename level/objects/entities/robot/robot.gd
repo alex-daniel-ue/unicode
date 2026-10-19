@@ -18,9 +18,9 @@ var move_duration := 0.2
 var move_tween: Tween
 var step_size := 32.0
 
-## How high the sprite hops on a turn, and on a turn all the way round.
+## How high the sprite hops on a turn, and on a turn all the way around.
 const TURN_HOP := 7.0
-const BACK_HOP := 11.0
+const AROUND_HOP := 11.0
 ## The little bob of a step.
 const STEP_BOB := 2.5
 ## The longest a turn's hop takes; faster speeds shorten it with the step.
@@ -61,7 +61,7 @@ func _update_animation() -> void:
 		Vector2.LEFT: sprite.play("idle_left")
 		Vector2.RIGHT: sprite.play("idle_right")
 
-## text: move forward
+## text: step forward
 func move(from_this: Block) -> void:
 	if Interpreter.interrupted:
 		return
@@ -69,7 +69,7 @@ func move(from_this: Block) -> void:
 	var velocity := facing_direction * step_size
 	if test_move(global_transform, velocity):
 		_bump()
-		from_this.function.error("Robot: I can't move forward.")
+		from_this.function.error("Robot: I can't step forward.")
 		return
 	
 	var target := position + velocity
@@ -92,11 +92,11 @@ func move(from_this: Block) -> void:
 	cancel_motion()
 	position = target
 
-## text: move forward {count} times
+## text: step forward {count} times
 ##
 ## Arrays' move. Repetition isn't the lesson there, and a list's values need a
-## slot to plug into: `move forward (item i of route) times`. It is n single
-## moves, each checked for a wall and paced like `move forward`, so a wrong count
+## slot to plug into: `step forward (item i of route) times`. It is n single
+## steps, each checked for a wall and paced like `step forward`, so a wrong count
 ## walks and bumps where the student can see it.
 func move_steps(from_this: Block) -> void:
 	var args := await from_this.function.eval_args([from_this.function.Argument.VARIANT])
@@ -108,13 +108,13 @@ func move_steps(from_this: Block) -> void:
 		return
 
 	if typeof(times) == TYPE_FLOAT:
-		from_this.function.error("Robot: I can only move forward a whole number of times, not %s. Use // to divide without a decimal." % times)
+		from_this.function.error("Robot: I can only step forward a whole number of times, not %s. Use // to divide without a decimal." % times)
 		return
 	if typeof(times) != TYPE_INT:
-		from_this.function.error("Robot: I can only move forward a whole number of times, but I got %s." % Core.to_python_repr(times))
+		from_this.function.error("Robot: I can only step forward a whole number of times, but I got %s." % Core.to_python_repr(times))
 		return
 	if times < 0:
-		from_this.function.error("Robot: I can't move forward %d times. I only go forward." % times)
+		from_this.function.error("Robot: I can't step forward %d times. I only go forward." % times)
 		return
 
 	if times == 0:
@@ -139,26 +139,26 @@ func _on_interpreter_running_changed() -> void:
 	else:
 		_settle()
 
-## text: turn {left/right/back}
+## text: turn {left/right/around}
 func turn(from_this: Block) -> void:
 	var args := await from_this.function.eval_args([from_this.function.Argument.STRING])
 	if Interpreter.interrupted or args.is_empty():
 		return
 	
 	var turn_dir := args[0] as String
-	if turn_dir not in ["left", "right", "back"]:
-		from_this.function.error("Robot: Turn direction must be left, right, or back.")
+	if turn_dir not in ["left", "right", "around"]:
+		from_this.function.error("Robot: Turn direction must be left, right, or around.")
 		return
 	
 	var turned := facing_direction
 	match turn_dir:
 		"left": turned = Vector2(facing_direction.y, -facing_direction.x)
 		"right": turned = Vector2(-facing_direction.y, facing_direction.x)
-		"back": turned = -facing_direction
+		"around": turned = -facing_direction
 	
 	# A hop in place, turning at the top of it, so the turn is something seen
 	# happen rather than a frame that changes.
-	_hop(BACK_HOP if turn_dir == "back" else TURN_HOP, minf(TURN_TIME, Interpreter.current_delay),
+	_hop(AROUND_HOP if turn_dir == "around" else TURN_HOP, minf(TURN_TIME, Interpreter.current_delay),
 			func() -> void: facing_direction = turned)
 	await Interpreter.step(from_this)
 	if Interpreter.interrupted:

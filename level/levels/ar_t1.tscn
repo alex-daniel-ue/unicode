@@ -31,7 +31,7 @@ block: BeginBlock
   children:
     - block: MoveTilesBlock
       kind: statement
-      text: \"move forward {} times\"
+      text: \"step forward {} times\"
       parameters:
         - 4"
 room_goals = [NodePath("RoomGoals/GoalManager")]
@@ -40,7 +40,7 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 title = "Move more at once"
 mission = "Stop the robot on the green flag. Count the tiles to the flag. Then type that number into the block."
 blocks = Array[ExtResource("4_block_data")]([ExtResource("18_move_n")])
-block_notes = PackedStringArray("This block moves the robot forward that many times. Type a number into it.")
+block_notes = PackedStringArray("This block makes the robot step forward that many times. Type a number into it.")
 tip = "The number in this block can also be a variable, or the answer of another block."
 
 [node name="GenericBlockProvider" parent="." index="2"]

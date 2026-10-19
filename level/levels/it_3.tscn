@@ -66,10 +66,10 @@ block: BeginBlock
           children:
             - block: MoveBlock
               kind: statement
-              text: \"move forward\"
+              text: \"step forward\"
     - block: MoveBlock
       kind: statement
-      text: \"move forward\""
+      text: \"step forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
 [node name="LevelDescription" parent="." index="0"]
@@ -78,7 +78,7 @@ mission = "One program runs in all three rooms. Each room has corners. Get the r
 rooms = PackedStringArray("One corner.", "Two corners.", "A path with many corners.")
 twist = "Each room turns a different number of times."
 blocks = Array[ExtResource("11_block_data")]([ExtResource("4_if"), ExtResource("5_else"), ExtResource("24_turn")])
-block_notes = PackedStringArray("This block runs the blocks inside it only when its condition is True.", "Put this block right under an If block. It runs only when the If block did not run.", "This block turns the robot left, right, or back.")
+block_notes = PackedStringArray("This block runs the blocks inside it only when its condition is True.", "Put this block right under an If block. It runs only when the If block did not run.", "This block turns the robot left, right, or around.")
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("11_block_data")]([ExtResource("6_while"), ExtResource("4_if"), ExtResource("5_else"), ExtResource("7_not")])

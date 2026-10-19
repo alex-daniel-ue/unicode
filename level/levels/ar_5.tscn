@@ -40,7 +40,7 @@ block: BeginBlock
       children:
         - block: MoveTilesBlock
           kind: statement
-          text: \"move forward {} times\"
+          text: \"step forward {} times\"
           parameters:
             - steps
         - block: TurnBlock
@@ -64,7 +64,7 @@ tip = "In Python: `for steps in route:`"
 block_data = Array[ExtResource("4_block_data")]([ExtResource("18_for_each")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
-bounds = Rect2(32.0, 3.0, 220.0, 157.0)
+bounds = Rect2(32.0, 15.0, 246.0, 177.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room1"), NodePath("../../Visuals/Destination1")]
 
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
@@ -98,7 +98,7 @@ detection_area = NodePath("../../../Visuals/Destination1")
 
 [node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_manager")
-bounds = Rect2(32.0, 227.0, 188.0, 157.0)
+bounds = Rect2(32.0, 271.0, 214.0, 177.0)
 focus_markers = [NodePath("../../Visuals/Lists/Room2"), NodePath("../../Visuals/Destination2")]
 
 [node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
@@ -124,16 +124,16 @@ camera_focus = NodePath("../../../Visuals/Destination2")
 detection_area = NodePath("../../../Visuals/Destination2")
 
 [node name="Camera2D" parent="." index="4"]
-level_bounds = Rect2(0.0, 0.0, 320.0, 416.0)
+level_bounds = Rect2(0.0, 0.0, 320.0, 480.0)
 
 [node name="Visuals" type="Node2D" parent="." index="5"]
 
 [node name="Floor" type="TileMapLayer" parent="Visuals"]
-tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQADAAEAAAABAAQAAQAAAAMAAAACAAQAAQABAAMAAAADAAQAAQACAAMAAAAEAAQAAQABAAMAAAAFAAQAAQACAAMAAAAGAAQAAQABAAMAAAAHAAQAAQACAAMAAAAIAAQAAQADAAMAAAABAAkAAQAAAAAAAAACAAkAAQABAAAAAAADAAkAAQACAAAAAAAEAAkAAQABAAAAAAAFAAkAAQACAAAAAAAGAAkAAQABAAAAAAAHAAkAAQADAAAAAAABAAoAAQAAAAEAAAACAAoAAQABAAEAAAADAAoAAQACAAEAAAAEAAoAAQABAAEAAAAFAAoAAQACAAEAAAAGAAoAAQABAAEAAAAHAAoAAQADAAEAAAABAAsAAQAAAAMAAAACAAsAAQABAAMAAAADAAsAAQACAAMAAAAEAAsAAQABAAMAAAAFAAsAAQACAAMAAAAGAAsAAQABAAMAAAAHAAsAAQADAAMAAAA=")
+tile_map_data = PackedByteArray("AAABAAMAAQAAAAAAAAACAAMAAQABAAAAAAADAAMAAQACAAAAAAAEAAMAAQABAAAAAAAFAAMAAQACAAAAAAAGAAMAAQABAAAAAAAHAAMAAQACAAAAAAAIAAMAAQADAAAAAAABAAQAAQAAAAEAAAACAAQAAQABAAEAAAADAAQAAQACAAEAAAAEAAQAAQABAAEAAAAFAAQAAQACAAEAAAAGAAQAAQABAAEAAAAHAAQAAQACAAEAAAAIAAQAAQADAAEAAAABAAUAAQAAAAMAAAACAAUAAQABAAMAAAADAAUAAQACAAMAAAAEAAUAAQABAAMAAAAFAAUAAQACAAMAAAAGAAUAAQABAAMAAAAHAAUAAQACAAMAAAAIAAUAAQADAAMAAAABAAsAAQAAAAAAAAACAAsAAQABAAAAAAADAAsAAQACAAAAAAAEAAsAAQABAAAAAAAFAAsAAQACAAAAAAAGAAsAAQABAAAAAAAHAAsAAQADAAAAAAABAAwAAQAAAAEAAAACAAwAAQABAAEAAAADAAwAAQACAAEAAAAEAAwAAQABAAEAAAAFAAwAAQACAAEAAAAGAAwAAQABAAEAAAAHAAwAAQADAAEAAAABAA0AAQAAAAMAAAACAA0AAQABAAMAAAADAA0AAQACAAMAAAAEAA0AAQABAAMAAAAFAA0AAQACAAMAAAAGAA0AAQABAAMAAAAHAA0AAQADAAMAAAA=")
 tile_set = ExtResource("7_school_tiles")
 
 [node name="Destination1" type="Area2D" parent="Visuals"]
-position = Vector2(48, 144)
+position = Vector2(48, 176)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -145,7 +145,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("13_green_flag")
 
 [node name="Pen1_1" type="Area2D" parent="Visuals"]
-position = Vector2(176, 144)
+position = Vector2(176, 176)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -157,7 +157,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
 [node name="Pen1_2" type="Area2D" parent="Visuals"]
-position = Vector2(176, 80)
+position = Vector2(176, 112)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -169,7 +169,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
 [node name="Pen1_3" type="Area2D" parent="Visuals"]
-position = Vector2(48, 80)
+position = Vector2(48, 112)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -181,7 +181,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
 [node name="Destination2" type="Area2D" parent="Visuals"]
-position = Vector2(48, 304)
+position = Vector2(48, 368)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -193,7 +193,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("13_green_flag")
 
 [node name="Pen2_1" type="Area2D" parent="Visuals"]
-position = Vector2(144, 368)
+position = Vector2(144, 432)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -205,7 +205,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
 [node name="Pen2_2" type="Area2D" parent="Visuals"]
-position = Vector2(144, 304)
+position = Vector2(144, 368)
 script = ExtResource("12_sensed_area")
 tag = &"undetectable"
 
@@ -221,7 +221,7 @@ texture = ExtResource("14_battery")
 [node name="Room1" type="Node2D" parent="Visuals/Lists"]
 
 [node name="route" parent="Visuals/Lists/Room1" instance=ExtResource("9_list_entity")]
-position = Vector2(118, 8)
+position = Vector2(144, 20)
 z_index = 1
 room_index = 0
 values = [4, 2, 4, 2]
@@ -229,7 +229,7 @@ values = [4, 2, 4, 2]
 [node name="Room2" type="Node2D" parent="Visuals/Lists"]
 
 [node name="route" parent="Visuals/Lists/Room2" instance=ExtResource("9_list_entity")]
-position = Vector2(118, 232)
+position = Vector2(144, 276)
 z_index = 1
 room_index = 1
 values = [3, 2, 3]
@@ -239,12 +239,12 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAIAAIAAAAAAAAAAAAHAAMAAQAAAAAAAAAIAAQAAwAAAAAAABAGAAkAAwAAAAAAAAAHAAkAAAAAAAAAAAAHAAsAAQACAAAAAAA=")
+tile_map_data = PackedByteArray("AAAIAAMAAAAAAAAAAAAHAAQAAQAAAAAAAAAIAAUAAwAAAAAAABAGAAsAAwAAAAAAAAAHAAsAAAAAAAAAAAAHAA0AAQACAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("15_robot_charac")]
 z_index = 2
-position = Vector2(48, 144)
+position = Vector2(48, 176)
 facing_direction = Vector2(1, 0)
 
 [node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
@@ -259,21 +259,21 @@ base = NodePath("..")
 tracked_properties = PackedStringArray("facing_direction", "transform")
 room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 144)
+&"transform": Transform2D(1, 0, 0, 1, 48, 176)
 }), Dictionary[StringName, Variant]({
 &"facing_direction": Vector2(1, 0),
-&"transform": Transform2D(1, 0, 0, 1, 48, 368)
+&"transform": Transform2D(1, 0, 0, 1, 48, 432)
 })])
 
 [node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAJAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAJAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAJAAQAAQAAAAEAABAAAAUAAQACAAAAADABAAUAAAAAAAEAAHACAAUAAAAAAAEAAHADAAUAAAAAAAEAAHAEAAUAAAAAAAEAAHAFAAUAAAAAAAEAAHAGAAUAAAAAAAEAAHAHAAUAAAAAAAEAAHAIAAUAAAAAAAEAAHAJAAUAAQACAAAAACAAAAcAAQAAAAAAAAABAAcAAQADAAAAAAACAAcAAQABAAAAAAADAAcAAQABAAAAAAAEAAcAAQABAAAAAAAFAAcAAQABAAAAAAAGAAcAAQABAAAAAAAHAAcAAQABAAAAAAAIAAcAAQAAAAAAABAAAAgAAQAAAAEAAAABAAgAAQADAAEAAAACAAgAAQABAAEAAAADAAgAAQABAAEAAAAEAAgAAQABAAEAAAAFAAgAAQABAAEAAAAGAAgAAQABAAEAAAAHAAgAAQABAAEAAAAIAAgAAQAAAAEAABAAAAkAAQAAAAEAAAAIAAkAAQAAAAEAABAAAAoAAQAAAAEAAAAIAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAIAAsAAQAAAAEAABAAAAwAAQACAAAAADABAAwAAAAAAAEAAHACAAwAAAAAAAEAAHADAAwAAAAAAAEAAHAEAAwAAAAAAAEAAHAFAAwAAAAAAAEAAHAGAAwAAAAAAAEAAHAHAAwAAAAAAAEAAHAIAAwAAQACAAAAACA=")
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAIAAAACAAEAAQABAAIAAAADAAEAAQABAAIAAAAEAAEAAQABAAIAAAAFAAEAAQABAAIAAAAGAAEAAQABAAIAAAAHAAEAAQABAAIAAAAIAAEAAQABAAIAAAAJAAEAAQAAAAEAABAAAAIAAQAAAAEAAAABAAIAAQADAAEAAAACAAIAAQABAAEAAAADAAIAAQABAAEAAAAEAAIAAQABAAEAAAAFAAIAAQABAAEAAAAGAAIAAQABAAEAAAAHAAIAAQABAAEAAAAIAAIAAQABAAEAAAAJAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAJAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAJAAQAAQAAAAEAABAAAAUAAQAAAAEAAAAJAAUAAQAAAAEAABAAAAYAAQACAAAAADABAAYAAAAAAAEAAHACAAYAAAAAAAEAAHADAAYAAAAAAAEAAHAEAAYAAAAAAAEAAHAFAAYAAAAAAAEAAHAGAAYAAAAAAAEAAHAHAAYAAAAAAAEAAHAIAAYAAAAAAAEAAHAJAAYAAQACAAAAACAAAAgAAQAAAAAAAAABAAgAAQADAAAAAAACAAgAAQABAAAAAAADAAgAAQABAAAAAAAEAAgAAQABAAAAAAAFAAgAAQABAAAAAAAGAAgAAQABAAAAAAAHAAgAAQABAAAAAAAIAAgAAQAAAAAAABAAAAkAAQAAAAEAAAABAAkAAQADAAIAAAACAAkAAQABAAIAAAADAAkAAQABAAIAAAAEAAkAAQABAAIAAAAFAAkAAQABAAIAAAAGAAkAAQABAAIAAAAHAAkAAQABAAIAAAAIAAkAAQAAAAEAABAAAAoAAQAAAAEAAAABAAoAAQADAAEAAAACAAoAAQABAAEAAAADAAoAAQABAAEAAAAEAAoAAQABAAEAAAAFAAoAAQABAAEAAAAGAAoAAQABAAEAAAAHAAoAAQABAAEAAAAIAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAIAAsAAQAAAAEAABAAAAwAAQAAAAEAAAAIAAwAAQAAAAEAABAAAA0AAQAAAAEAAAAIAA0AAQAAAAEAABAAAA4AAQACAAAAADABAA4AAAAAAAEAAHACAA4AAAAAAAEAAHADAA4AAAAAAAEAAHAEAA4AAAAAAAEAAHAFAA4AAAAAAAEAAHAGAA4AAAAAAAEAAHAHAA4AAAAAAAEAAHAIAA4AAQACAAAAACA=")
 tile_set = ExtResource("8_school_walls")
 
 [node name="PhantomSprite" type="AnimatedSprite2D" parent="Visuals/YSorted"]
 z_index = 2
 modulate = Color(1, 1, 1, 0.38039216)
-position = Vector2(48, 368)
+position = Vector2(48, 432)
 scale = Vector2(0.915, 0.915)
 sprite_frames = ExtResource("17_sprite_frame")
 animation = &"idle_right"
@@ -281,18 +281,18 @@ speed_scale = 0.0
 
 [node name="Room1Label" type="Label" parent="Visuals"]
 offset_left = 134.0
-offset_top = 164.0
+offset_top = 196.0
 offset_right = 186.0
-offset_bottom = 187.0
+offset_bottom = 219.0
 theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 1"
 
 [node name="Room2Label" type="Label" parent="Visuals"]
 offset_left = 118.0
-offset_top = 388.0
+offset_top = 452.0
 offset_right = 170.0
-offset_bottom = 411.0
+offset_bottom = 475.0
 theme = ExtResource("3_main_theme")
 theme_type_variation = &"RoomLabel"
 text = "Room 2"

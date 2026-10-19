@@ -38,9 +38,9 @@ name = "MoveBlock"
 color = Color(0.92156863, 0.80784315, 0.47843137, 1)
 base_path = "uid://demtvw17w06g5"
 category = "Robot"
-syntax = "move forward"
-description = "Moves the robot one tile forward in the direction it is currently facing. Fails if the robot hits a wall."
-text = "move forward"
+syntax = "step forward"
+description = "Steps the robot one tile forward, in the direction it is facing. Fails if the robot hits a wall."
+text = "step forward"
 Function/entity_script = ExtResource("3_jjd46")
 Function/entity_name = &""
 Function/method = &"move"
@@ -68,7 +68,7 @@ intended_solution = "block: BeginBlock
             - 3
       children:
         - block: MoveBlock
-          text: \"move forward\"
+          text: \"step forward\"
         - block: IncrementBlock
           text: \"increment {}\"
           parameters:

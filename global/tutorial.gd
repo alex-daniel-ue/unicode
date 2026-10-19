@@ -27,4 +27,4 @@ signal view_framed
 signal tab_shown(content: Control)
 
 
-var shift_enter_shown := false
+var send_keys_shown := false

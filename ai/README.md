@@ -74,12 +74,13 @@ settings page when deployed).
 | Variable | Default | Meaning |
 |---|---|---|
 | `GEMINI_API_KEY` | (required) | The Gemini API key. `GEMINI_API_KEYS` is accepted as a fallback; its first entry is used. Without either, `/healthz` still answers (`key_configured: false`) and the AI routes return `unavailable`. |
-| `GEMINI_MODELS` | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` | The models to try, in order. |
+| `GEMINI_MODELS` | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` | The models to try for hints, in order. |
+| `GEMINI_SUMMARY_MODELS` | `gemini-3.5-flash-lite,gemini-3.1-flash-lite` | The models to try for win-card comments, in order. |
 | `UNICODE_CLIENT_TOKEN` | empty | Shared secret the game sends as `X-UniCode-Token`. Empty turns the check off, for local use only. |
 | `PORT` | `3000` | Port for `python main.py`. Hosts that run gunicorn set their own. |
 
-**If `GEMINI_MODELS` is set on a host, it overrides the default list.** After
-changing models in code, update or delete it there too.
+**If `GEMINI_MODELS` or `GEMINI_SUMMARY_MODELS` is set on a host, it overrides
+the default list.** After changing models in code, update or delete it there too.
 
 Other limits are constants at the top of `main.py`:
 
@@ -100,9 +101,12 @@ summary never draws from it.
 
 ## Models and thinking
 
-- Default: **Gemini Flash with thinking at MEDIUM** (`THINKING` in `main.py`).
+- Hints: **Gemini Flash with thinking at MEDIUM** (`THINKING` in `main.py`).
   Flash-Lite at LOW gave hints that were too thin to act on.
-- `_generate()` walks `MODELS` in order. On 429/500/503/504 it waits a second
+- Win-card comments: **Flash-Lite with thinking at LOW** (`SUMMARY_MODELS`,
+  `SUMMARY_THINKING`). A sentence or two about a program that already works
+  doesn't need Flash, and one is asked for at every win.
+- `_generate()` walks the route's list (`MODELS` or `SUMMARY_MODELS`) in order. On 429/500/503/504 it waits a second
   and retries the same model once, then moves on. Any other error (for
   example a retired model id, which is a 404) moves on at once. Flash-Lite is
   last in the list so a Flash outage makes hints shorter instead of stopping
@@ -278,7 +282,7 @@ On Render, the Flask app serves `/game/` itself (`game_file()`).
 
 - Bump `PROMPT_VERSION` / `SUMMARY_VERSION` if a prompt changed.
 - Redeploy **both** hosts.
-- Check `/healthz` on each: `models`, `prompt_version` and `summary_version`
+- Check `/healthz` on each: `models`, `summary_models`, `prompt_version` and `summary_version`
   should show the new values.
 
 ---
@@ -289,7 +293,7 @@ One line per request, with no student text in it:
 
 ```
 hint status=ok model=gemini-3.8-flash ms=4210 in=1371 out=68
-summary:python status=ok model=gemini-3.8-flash ms=3594 in=776 out=33
+summary:python status=ok model=gemini-3.5-flash-lite ms=1410 in=776 out=33
 ```
 
 `in` and `out` are prompt and reply tokens: multiply by the model's price to
@@ -305,7 +309,7 @@ rate limiting, in memory, and never logged.
 curl -X POST http://127.0.0.1:3000/api/hint \
   -H "Content-Type: application/json" \
   -H "X-UniCode-Token: $UNICODE_CLIENT_TOKEN" \
-  -d '{"message": "why does it stop early?", "context": {"instructions": "Get the robot to the green flag.", "workspace": "begin:\n  - move forward", "robot": "Stopped 2 tiles before the green flag."}}'
+  -d '{"message": "why does it stop early?", "context": {"instructions": "Get the robot to the green flag.", "workspace": "begin:\n  - step forward", "robot": "Stopped 2 tiles before the green flag."}}'
 ```
 
 Or from Python, with no server running, through Flask's test client:

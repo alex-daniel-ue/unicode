@@ -49,7 +49,7 @@ block: BeginBlock
       children:
         - block: MoveBlock
           kind: statement
-          text: \"move forward\"
+          text: \"step forward\"
           locked: true
         - block: IncrementBlock
           kind: statement
@@ -61,7 +61,7 @@ room_goals = [NodePath("RoomGoals/GoalManager")]
 [node name="LevelDescription" parent="." index="0"]
 title = "Count the desks"
 mission = "Stop the robot right on the green flag."
-twist = "You have only one Move Forward block. It is already on the canvas."
+twist = "You have only one Step Forward block. It is already on the canvas."
 blocks = Array[ExtResource("9_block_data")]([ExtResource("4_initialize"), ExtResource("5_increment"), ExtResource("8_comparison")])
 block_notes = PackedStringArray("This block makes a variable. A variable is a name that holds a value.", "This block adds 1 to a variable.", "This block compares two values, like 2 < 5. It gives True or False.")
 tip = "The Variables tab shows your variables while your program runs."

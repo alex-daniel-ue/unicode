@@ -94,9 +94,9 @@ func _notification(what: int) -> void:
 
 #region Drag cursor
 ## While a block is dragged, the cursor is a "no" sign wherever letting go would
-## do nothing: over the panels, the room, the toolbox, or a block that won't take
-## it. Anywhere it can land (empty canvas, a mouth, a slot, the trash) it stays
-## an arrow.
+## do nothing: over the panels, the room, or a block that won't take it.
+## Anywhere it can land (empty canvas, a mouth, a slot, the trash, or the
+## toolbox for a block from the canvas, which throws it away) it stays an arrow.
 func _update_drag_cursor() -> void:
 	var data: Variant = get_viewport().gui_get_drag_data()
 	if not data is Block:
@@ -104,7 +104,8 @@ func _update_drag_cursor() -> void:
 	# The drop managers hide the drag preview while they show where the block
 	# will attach.
 	var attaching := is_instance_valid(drag_preview) and not drag_preview.visible
-	var lands := attaching or _accepts_drop(get_viewport().gui_get_hovered_control(), data)
+	var lands := attaching or _accepts_drop(get_viewport().gui_get_hovered_control(), data) \
+		or (owner is Puzzle and (owner as Puzzle).returns_to_toolbox(data, get_global_mouse_position()))
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW if lands else Input.CURSOR_FORBIDDEN)
 
 ## The walk Godot makes to find who takes a drop: up from the hovered control,

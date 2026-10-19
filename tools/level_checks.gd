@@ -87,7 +87,7 @@ func cases() -> Array:
 		["IT-4 intended", "res://level/levels/it_4.tscn", [["declare", "i", 0], W(["cmp", "i", "<", 3], [M(), ["inc", "i"]])], "PASS"],
 		["IT-5 intended", "res://level/levels/it_5.tscn", [F("i", 1, 4, 1, [M()]), T("left"), F("i", 1, 5, 1, [M()])], "PASS"],
 		["IT-6 intended", "res://level/levels/it_6.tscn", [F("i", 1, 5, 1, [M(), T("left"), M(), T("right")])], "PASS"],
-		["IT-7 intended", "res://level/levels/it_7.tscn", [F("a", 1, 4, 1, [T("left"), F("s", 1, 4, 1, [M()]), T("back"), F("s", 1, 4, 1, [M()]), T("left"), F("s", 1, 3, 1, [M()])]), T("left"), M()], "PASS"],
+		["IT-7 intended", "res://level/levels/it_7.tscn", [F("a", 1, 4, 1, [T("left"), F("s", 1, 4, 1, [M()]), T("around"), F("s", 1, 4, 1, [M()]), T("left"), F("s", 1, 3, 1, [M()])]), T("left"), M()], "PASS"],
 		["IT-8 intended", "res://level/levels/it_8.tscn", [F("row", 1, 5, 1, [F("seat", 0, "row", 1, [M()]), T("right"), M(), T("left")])], "PASS"],
 		["IT-9 intended", it9, [W(["bool", "True"], [I(A("puddle"), [["break"]]), I(A("destination"), [M(), ["break"]]), M()])], "PASS"],
 		["IT-9 checks swapped", it9, [W(["bool", "True"], [I(A("destination"), [M(), ["break"]]), I(A("puddle"), [["break"]]), M()])], "PASS"],
@@ -128,7 +128,7 @@ func arrays_cases() -> Array:
 		var second: Array = [["append", "s", L("present")]] if check == null else [I(check, [["append", "s", L("present")]])]
 		return [E("s", L("monday"), [["append", "s", L("present")]]), E("s", L("tuesday"), second)]
 	var out_trip := E("steps", L("route"), [MV("steps"), T("left")])
-	var home := func(from: Variant, until: Variant, body: Array) -> Array: return [out_trip, T("back"), F("i", from, until, -1, body)]
+	var home := func(from: Variant, until: Variant, body: Array) -> Array: return [out_trip, T("around"), F("i", from, until, -1, body)]
 	var nums := [{name = "nums", values = [1, 2]}]
 	return [
 		["AR-T1 intended", tut.call(1), [MV(4)], "PASS"],
@@ -155,7 +155,7 @@ func arrays_cases() -> Array:
 		["AR-6 intended", lv.call(6), home.call(last.call("route"), -1, [T("right"), route_i]), "PASS"],
 		["AR-6 from length of route", lv.call(6), home.call(length.call("route"), -1, [T("right"), route_i]), "FAIL error: Index 3 is out of range. 'route' has 3 values, at indexes 0 to 2."],
 		["AR-6 until 0", lv.call(6), home.call(last.call("route"), 0, [T("right"), route_i]), "FAIL"],
-		["AR-6 home in forward order", lv.call(6), [out_trip, T("back"), E("steps", L("route"), [T("right"), MV("steps")])], "FAIL"],
+		["AR-6 home in forward order", lv.call(6), [out_trip, T("around"), E("steps", L("route"), [T("right"), MV("steps")])], "FAIL"],
 		["AR-6 home turning left", lv.call(6), home.call(last.call("route"), -1, [T("left"), route_i]), "FAIL"],
 		["AR-6 home moving before turning", lv.call(6), home.call(last.call("route"), -1, [route_i, T("right")]), "FAIL"],
 		["AR-7 intended", lv.call(7), lockers.call(0, length.call("lockers"), "i", ["arith", "i", "+", 1]), "PASS"],
@@ -193,7 +193,7 @@ func arrays_cases() -> Array:
 		["Logic: and stops at a False left side", ar, [I(["andor", ["cmp", ["len", L("passed")], ">", 0], "and", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 1]]), ["else", [["print", 2]]]], "LOG 2"],
 		["Logic: or stops at a True left side", ar, [I(["andor", ["cmp", ["len", L("passed")], "==", 0], "or", ["cmp", ["item", 0, L("passed")], "==", 82]], [["print", 3]])], "LOG 3"],
 		["Logic: and runs the right side when it must", ar, [I(["andor", ["cmp", ["len", L("scores")], ">", 0], "and", ["cmp", ["item", 0, L("scores")], "==", 71]], [["print", 4]]), ["else", [["print", 5]]]], "LOG 5"],
-		["Robot: move forward text", tut.call(2), [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only move forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
+		["Robot: step forward text", tut.call(2), [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only step forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
 	]
 
 ## `extras` adds lists to the level before it opens, so list operations can be

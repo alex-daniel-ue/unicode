@@ -7,7 +7,8 @@ rooms (this borrows gen_arrays.py's painter), so they look like levels.
 Each room is described in ROOMS: its floor in tiles, its furniture, where the
 robot starts (if it has one) and the lists on its wall. menu_demo.gd plays a
 program in each; the robot's path there follows from the start given here.
-Every scene keeps its size in pixels as `metadata/size`.
+A room with a list gets the levels' taller wall, and is widened when its board
+needs it. Every scene keeps its size in pixels as `metadata/size`.
 """
 import os, sys
 
@@ -17,19 +18,19 @@ sys.path.insert(0, os.path.join(here, "..", "arrays"))
 sys.argv = [sys.argv[0], root]  # gen_arrays reads the root from argv when imported
 import gen_arrays as g  # noqa: E402
 
-X0, Y0 = 1, 2   # the floor's top-left tile: one wall column left, two wall rows above
+X0 = 1   # the floor's left column: one wall column left of it
 DESK, TRASH, EXT = g.DESKS, g.TRASH[0], g.EXTINGUISHER
 # Board name widths in pixels, as gen_arrays.NAME_W measures them.
 g.NAME_W.setdefault("nums", 42)
 
 ROOMS = {
-    # while True: move forward 2 times; turn left. Round the desk in the middle.
+    # while True: step forward 2 times; turn left. Round the desk in the middle.
     "lap": dict(w=5, h=3, robot=(1, 2), lists=[],
                 furniture={(2, 1): DESK[1], (0, 0): EXT, (4, 2): TRASH}),
-    # while True: if ahead is blocked: turn back, else: move forward.
+    # while True: if ahead is blocked: turn around, else: step forward.
     "patrol": dict(w=4, h=2, robot=(0, 0), lists=[],
                    furniture={(1, 1): DESK[0], (2, 1): TRASH, (3, 1): EXT}),
-    # while True: for each steps in route: move forward steps times; turn left.
+    # while True: for each steps in route: step forward steps times; turn left.
     "route": dict(w=7, h=2, robot=(1, 1), lists=[("route", [3, 1, 3, 1])],
                   furniture={(0, 0): EXT, (6, 1): DESK[1], (6, 0): TRASH}),
     # while True: swap the first and the last values of nums.
@@ -40,11 +41,17 @@ ROOMS = {
 
 def scene(name, room):
     walls, floor, furniture = {}, {}, {}
-    g.paint_room(walls, floor, X0, Y0, room["w"], room["h"])
+    # As gen_arrays.block(): a board on the wall makes the wall taller.
+    wall_rows = g.BOARD_WALL_ROWS if room["lists"] else g.WALL_ROWS
+    Y0 = wall_rows
+    w = room["w"]
+    for list_name, values in room["lists"]:
+        w = max(w, -(-(g.board_right(list_name, len(values)) + 6 - g.T) // g.T))
+    g.paint_room(walls, floor, X0, Y0, w, room["h"], wall_rows)
     for (x, y), cell in room["furniture"].items():
         flip = g.FLIP_H if cell == TRASH and x % 2 else 0
-        furniture[(X0 + x, Y0 + y)] = cell + (flip,)
-    size = ((room["w"] + 2) * g.T, (room["h"] + 3) * g.T)
+        furniture[(X0 + (w - room["w"] if x == room["w"] - 1 else 0) + x, Y0 + y)] = cell + (flip,)
+    size = ((w + 2) * g.T, (room["h"] + wall_rows + 1) * g.T)
     ext = [
         '[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="1_floor"]',
         '[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="2_walls"]',
@@ -62,9 +69,8 @@ def scene(name, room):
     for list_name, values in room["lists"]:
         # On the wall, where gen_arrays hangs a room's first list; over the
         # walls, which draw later.
-        x = g.T + 6 + 6 + g.name_col(list_name) + 8
         out += ['[node name="%s" parent="." instance=ExtResource("5_board")]' % list_name,
-                "z_index = 1", "position = Vector2(%d, 8)" % x,
+                "z_index = 1", "position = Vector2(%d, %d)" % (g.board_x(list_name), g.BOARD_Y[wall_rows]),
                 "values = [%s]" % ", ".join(str(v) for v in values), ""]
     out += ['[node name="YSorted" type="Node2D" parent="."]', "y_sort_enabled = true", "",
             '[node name="Furniture" type="TileMapLayer" parent="YSorted"]', "y_sort_enabled = true",

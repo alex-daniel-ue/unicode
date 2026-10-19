@@ -19,8 +19,10 @@ func _ready() -> void:
 	await _quit_shot()
 	get_tree().quit()
 
-## The robot's Ahead Is scan halfway across the tile in front of it (it-2), and
-## a list that starts empty, with the green numbers it should end up with (ar-8).
+## The robot's Ahead Is scan halfway across the tile in front of it (it-2), with
+## the speed button blue as in a fast run and the Information tab's Go to
+## Toolbox, and a list that starts empty, with the green numbers it should end
+## up with (ar-8).
 func _room_shots() -> void:
 	for pair in [["it_2", &"it-2"], ["ar_8", &"ar-8"]]:
 		Game.level = (load("res://level/levels/%s.tscn" % pair[0]) as PackedScene).instantiate()
@@ -34,11 +36,18 @@ func _room_shots() -> void:
 		for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
 			(guide as TutorialOverlay).skip()
 		for i in 20: await get_tree().process_frame
+		var speed := puzzle.get_node(^"UserInterface/SideMenuRight/ButtonContainer/SpeedButton") as Button
 		if pair[0] == "it_2":
 			var robot := get_tree().get_first_node_in_group(&"robot") as Robot
 			robot._scan(false)
+			# The speed button as it looks while a run goes fast: blue.
+			Interpreter.is_fast = true
+			speed.disabled = false
+			speed.call(&"_update_look")
 			for i in 14: await get_tree().process_frame
 		await _snap("room_" + pair[0])
+		Interpreter.is_fast = false
+		speed.call(&"_update_look")
 		puzzle.queue_free()
 		for i in 3: await get_tree().process_frame
 

@@ -37,7 +37,7 @@ block: BeginBlock
       children:
         - block: MoveBlock
           kind: statement
-          text: \"move forward\"
+          text: \"step forward\"
     - block: TurnBlock
       kind: statement
       text: \"turn {}\"
@@ -54,7 +54,7 @@ block: BeginBlock
       children:
         - block: MoveBlock
           kind: statement
-          text: \"move forward\""
+          text: \"step forward\""
 room_goals = [NodePath("RoomGoals/GoalManager")]
 star_slack = 3
 

@@ -30,6 +30,9 @@ BLK = {
     "move_n": "res://level/objects/entities/robot/blocks/move_n.tres",
     "turn": "res://level/objects/entities/robot/blocks/turn.tres",
     "item": "res://puzzle/blocks/lists/item_of.tres",
+    # A list's name block. Only for a brief's blocks: it stands for the level's
+    # own lists' name blocks, which exist only at runtime (ListEntity.is_reporter).
+    "list": "res://puzzle/blocks/lists/list_reporter.tres",
     "len": "res://puzzle/blocks/lists/length_of.tres",
     "setitem": "res://puzzle/blocks/lists/set_item.tres",
     "append": "res://puzzle/blocks/lists/append.tres",
@@ -57,6 +60,33 @@ CHIP_PAD = 8          # list_entity.gd: the name sits on a chip this much wider 
 
 def name_col(name):
     return max(NAME_W[name] + 2 * CHIP_PAD, INDEX_W) + 2
+
+
+# A room with a board on its wall gets a wall three tiles tall instead of two,
+# and the board hangs with plain wall under it. With the board's index row
+# right on the floor's edge, and one box per tile, the indexes read as numbers
+# for the floor's columns. For the same reason a board's boxes start half a
+# tile into a column (board_shift), so each box sits across two tiles.
+WALL_ROWS, BOARD_WALL_ROWS = 2, 3
+BOARD_Y = {2: 8, 3: 20}   # the top of a hanging board's boxes, from the top of the wall
+
+
+def board_shift(name):
+    """How far right of the usual place a board's boxes go, in pixels, so box 0
+    starts half a tile into a floor column. Never left: the board's left margin
+    is all there is between it and the side wall."""
+    usual = 6 + 6 + name_col(name) + 8   # from the floor's left edge
+    return (T // 2 - usual) % T
+
+
+def board_x(name):
+    """Where box 0 of a board goes, from the left of the room's block."""
+    return T + 6 + 6 + name_col(name) + 8 + board_shift(name)
+
+
+def board_right(name, boxes_):
+    """The right edge of a board, from the left of the room's block."""
+    return T + 6 + board_shift(name) + board_width(name, boxes_)
 
 
 def board_width(name, boxes):
@@ -127,7 +157,7 @@ def data_room(wall, standing=(), goals=(), robot_walk=None):
 
 LEVELS = {}
 
-# The tutorials: one new block each, so a student meets Move Forward N Times,
+# The tutorials: one new block each, so a student meets Step Forward N Times,
 # then a list and Index Of, then Length Of, one at a time; one room each, but
 # two for Length Of. They own no progress slot; their stars stay on this
 # computer.
@@ -137,7 +167,7 @@ LEVELS["ar_t1"] = dict(
     mission="Stop the robot on the green flag. Count the tiles to the flag. Then type that number into the block.",
     rooms_text=[], twist="",
     blocks=["move_n"],
-    notes=["This block moves the robot forward that many times. Type a number into it."],
+    notes=["This block makes the robot step forward that many times. Type a number into it."],
     tip="The number in this block can also be a variable, or the answer of another block.",
     robot=["move_n"], toolbox=[],
     rooms=[hall_room(4, 7)],
@@ -148,9 +178,10 @@ LEVELS["ar_t2"] = dict(
     concept="Reading one value from a list, by its index.",
     mission="Stop the robot on the green flag. The flag is as far away as the third value in the list.",
     rooms_text=[], twist="",
-    blocks=["item"],
-    notes=["This block gives you the value at an index of a list. The first index is 0."],
-    block_values=[",list:route"],
+    blocks=["list", "item"],
+    notes=["This is the name block of a list. Drop it into a list slot.",
+           "This block gives you the value at an index of a list. The first index is 0."],
+    block_values=["", ",list:route"],
     tip="In Python, index 0 of route is written as `route[0]`.",
     robot=["move_n"], toolbox=["item"],
     rooms=[hall_room(3, 7, [4, 1, 3])],
@@ -325,8 +356,10 @@ LEVELS["ar_11"] = dict(
 FLIP_H, FLIP_V, TRANSPOSE = 4096, 8192, 16384
 
 
-def paint_room(walls, floor, x0, y0, w, h):
-    """An open rectangle with its interior at (x0, y0), w x h tiles."""
+def paint_room(walls, floor, x0, y0, w, h, wall_rows=WALL_ROWS):
+    """An open rectangle with its interior at (x0, y0), w x h tiles, under a
+    wall `wall_rows` tiles tall: its top row, plain rows (atlas row 2), then the
+    row with the skirting."""
     x1, y1 = x0 + w - 1, y0 + h - 1
     for x in range(x0, x1 + 1):
         for y in range(y0, y1 + 1):
@@ -335,12 +368,15 @@ def paint_room(walls, floor, x0, y0, w, h):
             ax = 0 if x == x0 else (3 if x == x1 and w > 1 else 1 + (x - x0 - 1) % 2)
             ay = 0 if y == y0 else (3 if y == y1 else 1 + (y - y0 - 1) % 2)
             floor[(x, y)] = (1, ax, ay, 0)
-    for row, atlas_y in ((y0 - 2, 0), (y0 - 1, 1)):
-        walls[(x0 - 1, row)] = (1, 0, atlas_y, 0)
+    rows = [0] + [2] * (wall_rows - 2) + [1]
+    for i, atlas_y in enumerate(rows):
+        row = y0 - wall_rows + i
+        side = 1 if atlas_y == 2 else atlas_y   # the side walls' row 1 repeats as it is
+        walls[(x0 - 1, row)] = (1, 0, side, 0)
         walls[(x0, row)] = (1, 3, atlas_y, 0)
         for x in range(x0 + 1, x1 + 1):
             walls[(x, row)] = (1, 1, atlas_y, 0)
-        walls[(x1 + 1, row)] = (1, 0, atlas_y, FLIP_H)
+        walls[(x1 + 1, row)] = (1, 0, side, FLIP_H)
     for y in range(y0, y1 + 1):
         walls[(x0 - 1, y)] = (1, 0, 1, 0)
         walls[(x1 + 1, y)] = (1, 0, 1, FLIP_H)
@@ -365,8 +401,8 @@ GAP = 1               # tiles between two rooms' blocks
 
 def block(room):
     """One room laid out in pixels from its block's top-left: the top-left of the
-    left wall column, at the top of the wall face. The floor starts two rows down
-    (y0 = 2); the robot's rows come first, then a two-row band per standing board.
+    left wall column, at the top of the wall face. The floor starts wall_rows
+    rows down; the robot's rows come first, then a two-row band per standing board.
 
     The room's first list hangs on the wall; every other list stands on the
     floor below, one under the other, so the room is as wide as its widest board
@@ -374,13 +410,14 @@ def block(room):
     robot_rows = room["walk_h"]
     lists = room["wall"] + room["standing"]
     on_wall, on_floor = lists[:1], lists[1:]
-    wall_at = [(l, (T + 6 + 6 + name_col(l["name"]) + 8, 8)) for l in on_wall]
-    wall_right = max([T + 6 + board_width(l["name"], boxes(l)) for l in on_wall] or [T])
+    wall_rows = BOARD_WALL_ROWS if on_wall else WALL_ROWS
+    wall_at = [(l, (board_x(l["name"]), BOARD_Y[wall_rows])) for l in on_wall]
+    wall_right = max([board_right(l["name"], boxes(l)) for l in on_wall] or [T])
     standing_at = []
     for k, l in enumerate(on_floor):
-        top = 2 * T + robot_rows * T + k * 2 * T
-        standing_at.append((l, (T + 6 + 6 + name_col(l["name"]) + 8, top + 5)))
-    standing_right = max([T + 6 + board_width(l["name"], boxes(l)) for l in on_floor] or [0])
+        top = wall_rows * T + robot_rows * T + k * 2 * T
+        standing_at.append((l, (board_x(l["name"]), top + 5)))
+    standing_right = max([board_right(l["name"], boxes(l)) for l in on_floor] or [0])
     width_px = max(wall_right + 6, standing_right + 6, T + room["walk_w"] * T)
     w = max(room["walk_w"], int(math.ceil((width_px - T) / T)), 3)
     h = robot_rows + 2 * len(on_floor)
@@ -390,13 +427,13 @@ def block(room):
     # Floor tiles under a standing board, in room tiles.
     board_tiles = set()
     for k, l in enumerate(on_floor):
-        cols = int(math.ceil((6 + board_width(l["name"], boxes(l))) / T))
+        cols = int(math.ceil((board_right(l["name"], boxes(l)) - T) / T))
         # Its two rows, and the row below, where a desk's top would stand in
         # front of the board's legs.
         for row in (robot_rows + 2 * k, robot_rows + 2 * k + 1, robot_rows + 2 * k + 2):
             board_tiles.update((x, row) for x in range(min(cols + 1, w)))
     return dict(room=room, w=w, h=h, wall=wall_at, standing=standing_at, board_tiles=board_tiles,
-                tiles=(w + 2, 2 + h + 1),
+                wall_rows=wall_rows, tiles=(w + 2, wall_rows + h + 1),
                 # The label fits on the wall beside the board.
                 label_fits=wall_right + LABEL_W <= (w + 1) * T)
 
@@ -546,14 +583,14 @@ def build(key, spec):
     for k, b in enumerate(blocks):
         room = b["room"]
         ox, oy = at[k]
-        x0, y0 = ox + 1, oy + 2
-        paint_room(walls, floor, x0, y0, b["w"], b["h"])
+        x0, y0 = ox + 1, oy + b["wall_rows"]
+        paint_room(walls, floor, x0, y0, b["w"], b["h"], b["wall_rows"])
         for (cx, cy), cell in clutter(b, "%s-%d" % (key, k)).items():
             furniture[(x0 + cx, y0 + cy)] = cell
         tile = lambda t: (x0 + t[0], y0 + t[1])
         p = dict(boards=[(l, (ox * T + x, oy * T + y), False) for l, (x, y) in b["wall"]]
                  + [(l, (ox * T + x, oy * T + y), True) for l, (x, y) in b["standing"]],
-                 label=((x0 + b["w"]) * T - 58, oy * T + 18) if labels_on_top
+                 label=((x0 + b["w"]) * T - 58, oy * T + 18 + (b["wall_rows"] - WALL_ROWS) * T // 2) if labels_on_top
                  else ((x0 * 2 + b["w"]) * T // 2 - 26, (y0 + b["h"]) * T + 4))
         if room["robot"]:
             r = room["robot"]

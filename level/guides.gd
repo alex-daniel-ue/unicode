@@ -109,13 +109,13 @@ const SETS := {
 		{title = "Your blocks", text = "**Click this button** to show your blocks. The blocks that you can use are in the toolbox.",
 			targets = [LEFT, LEFT_BUTTONS + "ToolboxMenuButton"], arrow = LEFT_BUTTONS + "ToolboxMenuButton",
 			advance = Advance.TAB_SHOWN, only = "PuzzleToolbox"},
-		{title = "Place a block", text = "**Drag the Move Forward block.** **Drop it on the Begin block** to attach it.",
+		{title = "Place a block", text = "**Drag the Step Forward block.** **Drop it on the Begin block** to attach it.",
 			video = GRAPHICS + "place_solid_card.ogv",
 			focus = TOOLBOX, targets = [LEFT, WORKSPACE, "block:MoveBlock", "block:BeginBlock"], arrow = "block:MoveBlock",
 			advance = Advance.BLOCK_PLACED, only = "MoveBlock"},
-		{title = "Throw it away", text = "**Drag the Move Forward block onto the trash can.** This throws the block away.",
+		{title = "Throw it away", text = "**Drag the Step Forward block onto the trash can.** This throws the block away.",
 			targets = [LEFT_BUTTONS + "TrashButton", WORKSPACE], advance = Advance.BLOCK_TRASHED, only = "MoveBlock"},
-		{title = "Put it back", text = "**Attach the Move Forward block to the Begin block again.** It should look like this.",
+		{title = "Put it back", text = "**Attach the Step Forward block to the Begin block again.** It should look like this.",
 			program = '[["move"]]',
 			focus = TOOLBOX, targets = [LEFT, WORKSPACE, "block:MoveBlock", "block:BeginBlock"], arrow = "block:MoveBlock",
 			advance = Advance.BLOCK_PLACED, only = "MoveBlock"},
@@ -215,12 +215,17 @@ static func block_pages(level: Level, skip: PackedStringArray = []) -> Array:
 	# A worked example has nothing in its toolbox; its new blocks are pointed
 	# out in the program on the canvas, with the toolbox left shut.
 	var toolbox_names: PackedStringArray = []
+	var name_block: BlockData = null  # the first list's, for the template to stand for
 	for data in level.get_block_data():
 		if data != null:
 			toolbox_names.append(data.name)
+			if name_block == null and ListEntity.is_reporter(data):
+				name_block = data
 	var pages: Array = []
 	for i in description.blocks.size():
 		var data := description.blocks[i]
+		if ListEntity.is_reporter(data, true) and not ListEntity.is_reporter(data):
+			data = name_block
 		if data == null or data.name in skip:
 			continue
 		var values: PackedStringArray = []

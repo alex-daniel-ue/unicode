@@ -244,7 +244,7 @@ func has_text_blocks() -> bool:
 	return text.contains("{}")
 
 ## What to call this block: its title, or else its text on one line, with "..." for
-## each slot ("ahead is ...", "move forward ... times", "begin code"). A block
+## each slot ("ahead is ...", "step forward ... times", "begin code"). A block
 ## that starts with a slot ("{} in {}", "{} {} {}") would be all dots that way,
 ## so its slots are named instead, as the block shows them: "value in list",
 ## "number + number".

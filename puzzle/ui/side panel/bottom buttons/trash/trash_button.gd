@@ -19,12 +19,21 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_END:
 			var block := _dragged
 			_dragged = null
+			if not is_instance_valid(block) or block.is_queued_for_deletion():
+				return
+			var at := get_global_mouse_position()
 			# Let go over the can, and the can said no: say why, instead of the
 			# block just jumping back.
-			if is_instance_valid(block) and not block.is_queued_for_deletion() \
-					and is_visible_in_tree() and get_global_rect().has_point(get_global_mouse_position()) \
-					and not block.is_trashable():
-				_refuse(block)
+			if is_visible_in_tree() and get_global_rect().has_point(at):
+				if not block.is_trashable():
+					_refuse(block)
+			# Put back in the toolbox: thrown away the same way, or refused the same way.
+			elif owner is Puzzle and (owner as Puzzle).returns_to_toolbox(block, at) \
+					and not get_viewport().gui_is_drag_successful():
+				if block.is_trashable():
+					_drop_data(Vector2.ZERO, block)
+				else:
+					_refuse(block)
 
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	return drop is Block and drop.is_trashable()

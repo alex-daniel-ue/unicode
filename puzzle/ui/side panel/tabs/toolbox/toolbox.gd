@@ -74,29 +74,35 @@ func add_block(block: Block) -> void:
 	_refresh_tabs()
 
 ## Moves the blocks this level introduces into a section above the categories,
-## each with its note. A category left with nothing in it goes away.
+## each with its note. A category left with nothing in it goes away. The
+## template of a list's name block stands for the name block of every list in
+## the level.
 func mark_new(new_blocks: Array[BlockData], notes: PackedStringArray) -> void:
 	var section: ToolboxNewSection = null
 	for i in new_blocks.size():
 		var wanted := new_blocks[i]
 		if wanted == null:
 			continue
+		var every_list := ListEntity.is_reporter(wanted, true)
+		var found: Array[Block] = []
 		for category: ToolboxCategory in _categories.values():
-			var found: Block = null
 			for block in category.get_blocks():
-				if block.data.name == wanted.name:
-					found = block
-					break
-			if found == null:
-				continue
+				if (every_list and ListEntity.is_reporter(block.data)) or (not every_list and block.data.name == wanted.name):
+					found.append(block)
+		if not every_list:
+			found = found.slice(0, 1)
+		for block in found:
 			if section == null:
 				section = NEW_SECTION.instantiate() as ToolboxNewSection
 				new_holder.add_child(section)
-			var tile := category.tile_of(found)
-			section.add_entry(found, notes[i] if i < notes.size() else "")
+			var tile: ToolboxTile = null
+			for category: ToolboxCategory in _categories.values():
+				tile = category.tile_of(block)
+				if tile != null:
+					break
+			section.add_entry(block, notes[i] if i < notes.size() else "")
 			if tile != null:
 				tile.queue_free()
-			break
 
 	for key: String in _categories.keys():
 		var category := _categories[key]

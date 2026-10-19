@@ -63,10 +63,10 @@ block: BeginBlock
               text: \"continue\"
         - block: MoveBlock
           kind: statement
-          text: \"move forward\"
+          text: \"step forward\"
     - block: MoveBlock
       kind: statement
-      text: \"move forward\""
+      text: \"step forward\""
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2"), NodePath("RoomGoals/GoalManagerRoom3")]
 
 [node name="LevelDescription" parent="." index="0"]

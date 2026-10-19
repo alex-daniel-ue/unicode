@@ -2,7 +2,7 @@
 
 UniCode is a block-based puzzle game that teaches introductory programming to
 first-year college students. The student programs a robot that cleans
-classrooms. They drag blocks such as **Move Forward**, **While**, **If** and
+classrooms. They drag blocks such as **Step Forward**, **While**, **If** and
 **Index Of** into a program, press Play, and watch the robot carry it out in one
 or more rooms. The blocks behave like Python, and the game says so: tips and
 end-of-level comments show the matching Python, and lists count from 0.
@@ -84,8 +84,9 @@ export).
     and the grid moves with it.
   - **The room** on the right: the level itself, in its own view. It can be
     dragged, zoomed, reset, and hidden for more space.
-  - Buttons along the edges: menu, show/hide room, reset view, speed, Play,
-    Stop, and trash.
+  - Buttons along the edges: menu, show/hide room, reset view, speed (its
+    icon turns blue while the program runs fast), Play, Stop, and trash.
+  - The Information tab ends with a **Go to Toolbox** button.
 - **Running.** Play runs the program in every room of the level, one after
   another. The block that is running lights up. Values that blocks work out
   appear in small tags on them; when the next room starts, the last room's tags
@@ -127,7 +128,7 @@ Defined in `global/utils/level_catalog.tres`: modules in order, levels in order.
 | | 8 | Every row is longer | The inner bound is the outer counter. |
 | | 9 | Two ways out | Leaving a loop early: `break`. |
 | | 10 | Back to the question | Skipping to the next pass: `continue`. |
-| Arrays | 1 | Move more at once | Move Forward N Times: one block, many tiles (tutorial). |
+| Arrays | 1 | Move more at once | Step Forward N Times: one block, many tiles (tutorial). |
 | | 2 | Read a list | A list, its indexes, and Index Of (tutorial). |
 | | 3 | How long is a list? | Length Of (tutorial, two rooms so the length can't be typed in). |
 | | 4 | Count, then the last | Math with Length Of: where the last value sits. |
@@ -142,7 +143,7 @@ Defined in `global/utils/level_catalog.tres`: modules in order, levels in order.
 
 The Arrays tutorials have one new block each, and one room each except Length
 Of, which has two so that typing the length in doesn't pass. Three new things
-at once (Move Forward N Times, Index Of, and a list's name block inside it) was
+at once (Step Forward N Times, Index Of, and a list's name block inside it) was
 too much to take in, so each now comes on its own.
 
 Levels with `counts_for_progress = false` (the Tutorial module and the three
@@ -301,7 +302,7 @@ file-backed sub-resources, which once let one block's edit leak into every copy.
 
 | Scene | Class | Used for |
 |---|---|---|
-| `statement_block.tscn` | `StatementBlock` | Move Forward, Turn, Set, Append, ... |
+| `statement_block.tscn` | `StatementBlock` | Step Forward, Turn, Set, Append, ... |
 | `nested_block.tscn` | `NestedBlock` | While, For, For Each, If, Else |
 | `cap_block.tscn` | `CapBlock` | Begin (flashes when Play is pressed) |
 | `expression_block.tscn` | `ExpressionBlock` | Hexagonal true/false blocks: Ahead Is, Compare, Not, And/Or, In |
@@ -319,7 +320,10 @@ file-backed sub-resources, which once let one block's edit leak into every copy.
 
 - `canvas/drop_manager.gd` shows where a statement block will attach.
 - `canvas/socket_drop_manager.gd` does the same for value blocks going into slots.
-- The canvas takes free drops; the trash button takes deletions.
+- The canvas takes free drops; the trash button takes deletions. A block from
+  the canvas let go over the open toolbox is thrown away too
+  (`Puzzle.returns_to_toolbox()`, handled in `trash_button.gd`), and the drag
+  cursor shows an arrow there.
 - The canvas is one big `ColorRect` that pans and zooms with its blocks. Its
   grid (`ui/themes/shaders/canvas_bg.gdshader`) is worked out in the canvas's
   own coordinates, so it moves with the blocks: dragging the canvas reads as
@@ -431,7 +435,7 @@ room. Blocks that talk to a list find the board in the room that is running
 
 - **Move:** `move()` and `move_n()` move it by physics; a wall or desk stops it
   with an error.
-- **Turn:** turns left, right or back.
+- **Turn:** turns left, right or around.
 - **Ahead Is:** `ahead_is()` checks the tile in front with a ShapeCast probe. It
   answers `blocked` (any solid body) or matches a `SensedArea` tag
   (`destination`, `puddle`). The tile it checks lights up (`TileScan`): a yellow
@@ -487,6 +491,11 @@ A list is a whiteboard in the room (`level/objects/entities/list/`):
     Toolbox.
   - Values sit in boxes, with an index row under them.
   - A board can hang on the wall or stand on legs.
+  - A room with a board on its wall has a wall three tiles tall, so the board
+    hangs with plain wall under it, and its boxes start half a tile into a
+    floor column. Its index row once sat right on the floor's edge, one box
+    over each tile, and the indexes read as numbers for the floor's columns.
+    The middle wall tiles are row 2 of `world/assets/tilesets/school_walls.png`.
   - Each list has one board per room, all with the same name.
 - **The name block:** the board's `ListBlockProvider` gives the Toolbox the
   list's name block, a round orange reporter.
@@ -612,8 +621,9 @@ The game side is `puzzle/ui/side panel/tabs/ai assistant/ai_assistant.gd`:
   fills in when it arrives, or its line disappears.
 - **New chat** clears the history. Each message scrolls the chat to the bottom.
 
-The relay (`ai/main.py`) holds the prompts, the model list (Gemini Flash, with
-thinking at medium), safety settings and rate limits. Its hint prompt is a
+The relay (`ai/main.py`) holds the prompts, the model lists (Gemini Flash with
+thinking at medium for hints, Flash-Lite with thinking at low for the win
+card), safety settings and rate limits. Its hint prompt is a
 tutor's: answer what the student said, give one fact about their run, and end
 with one question that makes them predict, count or explain, never "press
 Play". Everything about it is in [`ai/README.md`](ai/README.md).
@@ -721,7 +731,7 @@ Deploying the relay (Vercel, plus Render as a fallback) is covered in
   short whole sentences that keep the small words ("the", "that", "of"), and one
   idea per sentence.
 - Use the same words every time:
-  - **block names** as titles (Move Forward, Index Of, Begin);
+  - **block names** as titles (Step Forward, Index Of, Begin);
   - **the green flag**, **battery**, **puddle**;
   - **list**, **value**, **index**;
   - **click** for buttons.

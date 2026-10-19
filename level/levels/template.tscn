@@ -28,9 +28,9 @@ intended_solution = "block: BeginBlock
   text: \"begin code\"
   children:
     - block: MoveBlock
-      text: \"move forward\"
+      text: \"step forward\"
     - block: MoveBlock
-      text: \"move forward\"
+      text: \"step forward\"
     - block: IfBlock
       text: \"if {}\"
       parameters:
@@ -43,7 +43,7 @@ intended_solution = "block: BeginBlock
                 - puddle
       children:
         - block: MoveBlock
-          text: \"move forward\""
+          text: \"step forward\""
 room_goals = [NodePath("RoomGoals/GoalManagerRoom1"), NodePath("RoomGoals/GoalManagerRoom2")]
 
 [node name="Header" type="Label" parent="LevelDescription" index="0"]

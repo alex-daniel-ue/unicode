@@ -128,10 +128,10 @@ func _on_submit_pressed() -> void:
 	message_field.text = ""
 	_base_placeholder = DEFAULT_PLACEHOLDER
 	
-	if not Tutorial.shift_enter_shown:
-		Tutorial.shift_enter_shown = true
+	if not Tutorial.send_keys_shown:
+		Tutorial.send_keys_shown = true
 		puzzle.notif.push(
-			"You can send messages with SHIFT+ENTER!",
+			"ENTER sends a message. SHIFT+ENTER starts a new line.",
 			Notification.Type.LOG
 		)
 	

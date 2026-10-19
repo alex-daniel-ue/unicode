@@ -30,7 +30,7 @@ signal room_completed(index: int, total: int)  ## Emitted for every Room/GoalMan
 @export var preset: LevelBlockPreset
 @export var description: LevelDescription
 
-var zoom_speed := 1.15
+var zoom_speed := 0.7
 var min_zoom := 0.5
 var max_zoom := 3.0
 ## How much of the view, per axis, the level must still fill after a pan or a

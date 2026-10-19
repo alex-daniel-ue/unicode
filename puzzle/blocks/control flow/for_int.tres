@@ -1,10 +1,9 @@
-[gd_resource type="Resource" script_class="BlockData" load_steps=8 format=3 uid="uid://pfgckt7vvvvp"]
+[gd_resource type="Resource" script_class="BlockData" load_steps=7 format=3 uid="uid://pfgckt7vvvvp"]
 
 [ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="1_3865f"]
 [ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="1_i0wp3"]
 [ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_rp0sv"]
 [ext_resource type="Resource" uid="uid://7tw3ahy2fijm" path="res://puzzle/blocks/_common/value/editable_line.tres" id="3_c74cp"]
-[ext_resource type="Resource" uid="uid://b2220qcwkipmk" path="res://puzzle/blocks/_common/value/editable_line_notype.tres" id="3_c75mr"]
 [ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="5_3865f"]
 
 [sub_resource type="Resource" id="Resource_igej2"]
@@ -24,7 +23,7 @@ syntax = "for {name: variable}, from {start: int/variable} until {end: int/varia
 description = "Counts from the start value up to, but not including, the end value, adding the step each time, like Python's range(start, end, step): from 0 until 3 runs 0, 1, 2. Creates a local variable for the count."
 note = "This block counts from a start number up to an end number. It runs its blocks for each number. It stops before the end number, so from 1 until 5 runs 1, 2, 3, 4."
 text = "for {}, from {}\\nuntil {}, at step {}"
-text_blocks = Array[ExtResource("1_rp0sv")]([ExtResource("3_c75mr"), ExtResource("5_3865f"), ExtResource("5_3865f"), ExtResource("3_c74cp")])
+text_blocks = Array[ExtResource("1_rp0sv")]([ExtResource("3_c74cp"), ExtResource("5_3865f"), ExtResource("5_3865f"), ExtResource("3_c74cp")])
 text_hints = PackedStringArray("var", "start", "end", "step")
 Type/nested = SubResource("Resource_igej2")
 Function/script = ExtResource("1_i0wp3")

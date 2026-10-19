@@ -31,3 +31,4 @@ ai/.env
 *.lnk
 
 ai/public/
+.vercel

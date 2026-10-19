@@ -57,7 +57,7 @@ static func _move_n() -> Control:
 ## The three turns, each from the same start: facing up.
 static func _turn() -> Control:
 	var row := _row(28)
-	for pair in [["left", Vector2.LEFT], ["right", Vector2.RIGHT], ["back", Vector2.DOWN]]:
+	for pair in [["left", Vector2.LEFT], ["right", Vector2.RIGHT], ["around", Vector2.DOWN]]:
 		var column := _column(4)
 		var before := _strip(".")
 		before.robot = 0
