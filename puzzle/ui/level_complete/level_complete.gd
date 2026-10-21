@@ -151,10 +151,8 @@ func _find_next() -> LevelEntry:
 			continue
 		if entry.retired or entry.scene == null:
 			continue
-		if catalog.sequential_unlock and entry.counts_for_progress:
-			var slot := catalog.slot_of(entry.id)
-			if slot > Progress.furthest_slot() + catalog.unlock_lookahead:
-				return null
+		if not Progress.is_unlocked(entry.id):
+			return null
 		return entry
 	return null
 

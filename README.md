@@ -128,32 +128,39 @@ Defined in `global/utils/level_catalog.tres`: modules in order, levels in order.
 | | 8 | Every row is longer | The inner bound is the outer counter. |
 | | 9 | Two ways out | Leaving a loop early: `break`. |
 | | 10 | Back to the question | Skipping to the next pass: `continue`. |
-| Arrays | 1 | Move more at once | Step Forward N Times: one block, many tiles (tutorial). |
-| | 2 | Read a list | A list, its indexes, and Index Of (tutorial). |
-| | 3 | How long is a list? | Length Of (tutorial, two rooms so the length can't be typed in). |
-| | 4 | Count, then the last | Math with Length Of: where the last value sits. |
-| | 5 | Every stop | Going through a list by index. |
-| | 6 | Every stop, again | Going through a list value by value: For Each. |
-| | 7 | There and back | Going through a list backwards. |
-| | 8 | Number the lockers | Changing a list's values in place (Set Index). |
-| | 9 | Passing marks | Building a new list with Append. |
-| | 10 | Tidy up | Comparing each value with the one before it. |
-| | 11 | In both | Checking whether a value is in a list (In). |
-| | 12 | Here either day | Joining two lists without repeats, using Not and In. |
+| Arrays | 1 | Read a list | A list, its indexes, and Index Of, with Step Forward N Times. |
+| | 2 | How long is a list? | Length Of, then the first value. |
+| | 3 | Last index, last value | Math with Length Of: the last index is length - 1, and the last value sits there. |
+| | 4 | Every stop | Going through a list by index. |
+| | 5 | Every stop, again | Going through a list value by value: For Each. |
+| | 6 | There and back | Going through a list backwards. |
+| | 7 | Number the lockers | Changing a list's values in place (Set Index). |
+| | 8 | Passing marks | Building a new list with Append. |
+| | 9 | In both | Checking whether a value is in a list (In). |
+| | 10 | Here either day | Joining two lists without repeats, using Not and In. |
 
-The Arrays tutorials have one new block each, and one room each except Length
-Of, which has two so that typing the length in doesn't pass. Three new things
-at once (Step Forward N Times, Index Of, and a list's name block inside it) was
-too much to take in, so each now comes on its own.
+Arrays 1 to 3 add one idea each: a value by its index, the number of values,
+then the last value. Each has two rooms with different lists, so a number typed
+in doesn't pass. Arrays 2 and 3 share one shape, move, turn, move, and Arrays 3
+changes only what is read: its first move builds the last index, length - 1, and
+its second puts that same block inside Index Of, so the nesting deepens one step
+at a time. Arrays 1 also brings Step Forward N Times, which is
+Iteration's step forward with a number. An earlier opener asked for Step
+Forward N Times, Index Of and a list's name block twice each, around a turn,
+which was too much to take in; Arrays 1 uses each once, in a one-block program.
 
-Levels with `counts_for_progress = false` (the Tutorial module and the three
-Arrays tutorials) take no slot in the progress code and don't gate unlocking.
-They still earn stars, which are kept on this computer only (see
+Every level scores except the Tutorial module's (`counts_for_progress =
+false`). Those take no slot in the progress code, but still unlock in order and
+earn stars, which are kept on this computer only (see
 [Progress and release](#progress-and-release)).
 
-**The rooms.** Each level has one to three rooms; Arrays 1 to 7 have one or
-two, since a third board and route on screen was more to look at than it
-taught. **One program runs in every room**, so it has to handle all of them. In
+Level ids never change, since the progress code and the thesis data are keyed
+by them. So Arrays 1 and 2 keep `ar-t2` and `ar-t3` from when they were
+tutorials, and there is no `ar-9`: Tidy up was cut to keep Arrays at ten
+levels.
+
+**The rooms.** Each level has one to three rooms; Arrays 1 to 6 have two,
+since a third board and route on screen was more to look at than it taught. **One program runs in every room**, so it has to handle all of them. In
 each room the robot must:
 
 - stop on the **green flag** (the destination);
@@ -212,12 +219,12 @@ level/                 Level framework
   goals/               Destination, checkpoint (batteries), hazard (puddles), list goals
   components/          LevelCamera, BlockProvider, Resettable
   objects/             Sprites, the robot, the list board
-  levels/              The level scenes: tutorial_1, it_0a/b, it_1..10, ar_t1..t3, ar_3..11
+  levels/              The level scenes: tutorial_1, it_0a/b, it_1..10, ar_t2, ar_t3, ar_3..8, ar_10, ar_11
 
 world/                 Tilesets (floor, walls, furniture) and their art
 audio/                 Sound effects
 tools/                 Test and authoring scenes (see Tools and checks)
-  arrays/              The generator for the Arrays tutorials and Arrays 4-11 (Python)
+  arrays/              The generator for the Arrays levels (Python)
   menu/                The generator for the main menu's demo rooms (Python)
   audio/               The sound measuring and retuning tool (Python)
 ai/                    The relay server and the web build it hosts
@@ -631,18 +638,26 @@ Play". Everything about it is in [`ai/README.md`](ai/README.md).
 ### Progress and release
 
 - **Saving:** `Progress` keeps the best stars per level in memory and in
-  `user://progress.cfg`. Levels without a progress slot (the tutorials) keep
-  theirs in the same file, under `[practice]`, and nowhere else: not in the
-  code, and not in the study's data.
+  `user://progress.cfg`. Levels without a progress slot (the Tutorial module)
+  keep theirs in the same file, under `[practice]`, and nowhere else: not in
+  the code, and not in the study's data. A practice level that has since
+  become a scored one brings its stars into its slot when the file loads.
 - **Progress codes:** `ProgressCode` packs all stars into a 10-character code
-  (`XXXXX-XXXXX`) with a checksum. The main menu's Progress dialog shows it and
-  takes one in; a typed code keeps the better result per level. Exit shows it
-  too, flashing, before the game closes. No progress is ever sent anywhere.
+  (`XXXXX-XXXXX`) with a format version and a checksum. The main menu's
+  Progress dialog shows it and takes one in; a typed code keeps the better
+  result per level. Exit shows it too, flashing, before the game closes. No
+  progress is ever sent anywhere. Version 2 came with the Arrays rework; a
+  version 1 code is still read, against the slots it was written with
+  (`Progress.V1_SLOTS`).
 - **The catalog:** `LevelCatalog` (`global/utils/level_catalog.tres`) holds
   every module (`LevelModule`) and level (`LevelEntry`). An entry has an id,
   label, title, concept, scene, `counts_for_progress` and `retired`.
 - **Unlocking:** with `sequential_unlock`, a level opens once the one before it
-  is solved, plus `unlock_lookahead` more.
+  in its module is solved, plus `unlock_lookahead` more. Each module is its own
+  sequence, and its first level is always open. A solved level opens every
+  level before it, so a progress code typed in on a new computer opens each
+  module up to its furthest solved level. The Tutorial module has no slots in
+  the code, so it starts over there.
 - **Release gate:** a module shows only when it is released, by
   `unicode.cfg`'s `[levels] released` or by the module's own flag.
 
@@ -667,8 +682,8 @@ Screenshots go to `user://` (on Windows,
 
 **The Arrays generator** (`tools/arrays/`, Python 3, no packages):
 
-- `gen_arrays.py` writes the Arrays scenes from the specs in its `LEVELS`: the
-  three tutorials (`ar_t1`..`ar_t3`) and `ar_4`..`ar_11`. `ar_3` is hand-made
+- `gen_arrays.py` writes the Arrays scenes from the specs in its `LEVELS`:
+  `ar_t2`, `ar_t3` and `ar_4`..`ar_11`, without `ar_9`. `ar_3` is hand-made
   (`HAND_MADE`) and never overwritten. Rooms, boards, the robot's route,
   batteries, the flag, goals and clutter all come from the spec; clutter is
   seeded, so a level comes out the same each time.
@@ -773,10 +788,12 @@ Deploying the relay (Vercel, plus Render as a fallback) is covered in
   every label in the game. So ★ is drawn with `StarText` (Noto Sans Symbols 2),
   and other symbols should be checked against Atkinson Hyperlegible and Kenney
   Mini before use.
-- **The progress code holds 20 levels**, and 19 are used. A new scored level
-  past the twentieth needs a new code format; a tutorial-style level
-  (`counts_for_progress = false`) doesn't take a slot. Never reorder or delete
-  a scored level: retire it.
+- **The progress code holds 20 levels**, and all 20 are used: ten in
+  Iteration, ten in Arrays. Another scored level needs a new code format; a
+  level with `counts_for_progress = false` doesn't take a slot. Adding,
+  reordering or cutting a scored level moves other levels' slots, so it needs
+  `ProgressCode.VERSION` bumped and the old layout kept in `Progress`, as the
+  Arrays rework did. To pull a level without that, retire it.
 - **Pixel art scales by whole numbers only.** Sprites are drawn at 1x or 2x so
   their pixels line up with the room's.
 - **Tile maps** are stored as base64 `PackedByteArray`s: a 2-byte header, then

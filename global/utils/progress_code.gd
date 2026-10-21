@@ -29,7 +29,9 @@ const PAYLOAD_CHARS := 8
 const VERSION_INDEX := 8
 const CHECK_INDEX := 9
 const LENGTH := 10
-const VERSION := 1
+## 2 since the Arrays rework scored Arrays 1 and 2 and cut Tidy up, which moved
+## every Arrays slot. Progress reads a version 1 code against its own slots.
+const VERSION := 2
 
 const ALPHABET := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"   # Crockford: no I, L, O, U
 

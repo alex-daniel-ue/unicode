@@ -18,10 +18,16 @@ signal progress_updated
 
 const SAVE_PATH := "user://progress.cfg"
 const CATALOG_PATH := "res://global/utils/level_catalog.tres"
+## The levels a version 1 code holds, in its slot order. Arrays 1 and 2 had no
+## slot then, and ar-9 (Tidy up) has since been cut, so its stars drop out.
+const V1_SLOTS: Array[StringName] = [
+	&"it-1", &"it-2", &"it-3", &"it-4", &"it-5", &"it-6", &"it-7", &"it-8", &"it-9", &"it-10",
+	&"ar-3", &"ar-4", &"ar-5", &"ar-6", &"ar-7", &"ar-8", &"ar-9", &"ar-10", &"ar-11",
+]
 
 var catalog: LevelCatalog
 var level_stars: PackedInt32Array = PackedInt32Array()
-## Stars for the levels that own no progress slot (the tutorials), by level id.
+## Stars for the levels that own no progress slot (the Tutorial module), by level id.
 ## Kept in the save file only: they are a reward on the level grid, not part of
 ## the code or of the study's data.
 var practice_stars: Dictionary[StringName, int] = {}
@@ -54,7 +60,7 @@ func get_code() -> String:
 ## Merges a typed code in, keeping the better of the two per level. False when
 ## the code is malformed, so the caller can say so rather than appearing to work.
 func apply_code(code: String) -> bool:
-	var decoded := ProgressCode.decode(code)
+	var decoded := _decode(code)
 	if decoded.is_empty():
 		return false
 
@@ -121,14 +127,31 @@ func total_stars() -> int:
 	return ProgressCode.score(level_stars)
 
 
-## Index of the furthest scored level with at least one star, or -1 for a fresh
-## save. Level select uses this for sequential unlocking.
-func furthest_slot() -> int:
-	var furthest := -1
-	for i in level_stars.size():
-		if level_stars[i] > 0:
-			furthest = i
-	return furthest
+## Whether a level is open under sequential unlock. Each module is its own
+## sequence, in the order the grid shows it, practice levels included: a level
+## opens once the furthest solved level in its module is no more than
+## `unlock_lookahead` places behind it. The first level of a module is always
+## open; whether the module shows at all is its release gate.
+func is_unlocked(level_id: StringName) -> bool:
+	if catalog == null or not catalog.sequential_unlock:
+		return true
+	var module := catalog.module_of(level_id)
+	if module == null:
+		return true
+
+	var place := -1
+	var furthest_solved := -1
+	var position := 0
+	for entry in module.levels:
+		# Skipped, not counted: a level nobody can play must not hold the rest shut.
+		if entry == null or entry.retired or entry.scene == null:
+			continue
+		if entry.id == level_id:
+			place = position
+		if is_complete(entry.id):
+			furthest_solved = position
+		position += 1
+	return place <= furthest_solved + catalog.unlock_lookahead
 
 
 func reset() -> void:
@@ -158,7 +181,7 @@ func _load_from_disk() -> void:
 	# same routine as a typed code, and a half-written file is rejected instead
 	# of loading as garbage.
 	var stored_code := str(cfg.get_value("progress", "code", ""))
-	var decoded := ProgressCode.decode(stored_code)
+	var decoded := _decode(stored_code)
 	if decoded.is_empty():
 		if not stored_code.is_empty():
 			push_warning("Progress: %s holds an unreadable code. Ignoring it." % SAVE_PATH)
@@ -168,7 +191,33 @@ func _load_from_disk() -> void:
 		level_stars[i] = maxi(level_stars[i], decoded[i])
 
 	for key in (cfg.get_section_keys("practice") if cfg.has_section("practice") else PackedStringArray()):
-		practice_stars[StringName(key)] = clampi(int(cfg.get_value("practice", key, 0)), 0, 3)
+		var id := StringName(key)
+		var stars := clampi(int(cfg.get_value("practice", key, 0)), 0, 3)
+		var slot := slot_of(id)
+		# A practice level that has since become a scored one keeps its stars,
+		# in its slot now. One that left the catalog is dropped.
+		if slot >= 0:
+			level_stars[slot] = maxi(level_stars[slot], stars)
+		elif catalog == null or catalog.entry_of(id) != null:
+			practice_stars[id] = stars
+
+
+## A code's stars by today's slots. A code from an older version is read against
+## the slots it was written with, and each level's stars move to where that
+## level sits now.
+func _decode(code: String) -> PackedInt32Array:
+	var decoded := ProgressCode.decode(code)
+	if decoded.is_empty() or ProgressCode.version_of(code) >= ProgressCode.VERSION:
+		return decoded
+
+	var moved := PackedInt32Array()
+	moved.resize(ProgressCode.LEVELS)
+	moved.fill(0)
+	for old_slot in mini(V1_SLOTS.size(), decoded.size()):
+		var slot := slot_of(V1_SLOTS[old_slot])
+		if slot >= 0:
+			moved[slot] = decoded[old_slot]
+	return moved
 
 
 func _save_to_disk() -> void:

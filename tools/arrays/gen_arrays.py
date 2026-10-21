@@ -1,7 +1,11 @@
-"""Generates the Arrays module's scenes: the three tutorials (ar_t1 .. ar_t3,
-one room and one new block each) and ar_4.tscn .. ar_11.tscn. AR-3 is hand-made
-in the editor and listed in HAND_MADE, so this never overwrites it; its spec
-stays here for the brief text and the catalog.
+"""Generates the Arrays module's scenes: ar_t2 and ar_t3 (Arrays 1 and 2) and
+ar_4.tscn .. ar_11.tscn. AR-3 is hand-made in the editor and listed in
+HAND_MADE, so this never overwrites it; its spec stays here for the brief text
+and the catalog.
+
+The ids are the progress and thesis-data keys, so they never change: Arrays 1
+and 2 keep the "t" from when they were tutorials, and there is no ar_9, since
+Tidy up was cut.
 
     python gen_arrays.py <project root> [solutions.json] [bounds.json]
 
@@ -157,62 +161,58 @@ def data_room(wall, standing=(), goals=(), robot_walk=None):
 
 LEVELS = {}
 
-# The tutorials: one new block each, so a student meets Step Forward N Times,
-# then a list and Index Of, then Length Of, one at a time; one room each, but
-# two for Length Of. They own no progress slot; their stars stay on this
-# computer.
-LEVELS["ar_t1"] = dict(
-    id="ar-t1", label="1", counts=False, root="ART1MoveMoreAtOnce", title="Move more at once",
-    concept="One block that moves the robot many tiles.",
-    mission="Stop the robot on the green flag. Count the tiles to the flag. Then type that number into the block.",
-    rooms_text=[], twist="",
-    blocks=["move_n"],
-    notes=["This block makes the robot step forward that many times. Type a number into it."],
-    tip="The number in this block can also be a variable, or the answer of another block.",
-    robot=["move_n"], toolbox=[],
-    rooms=[hall_room(4, 7)],
-)
-
+# Arrays 1 to 3 add one idea each: read a value by its index, count the values,
+# then find the last value. Arrays 1 also brings Step Forward N Times, which is
+# Iteration's step forward with a number. Every level has two rooms with
+# different lists, so no number typed in passes.
 LEVELS["ar_t2"] = dict(
-    id="ar-t2", label="2", counts=False, root="ART2ReadAList", title="Read a list",
+    id="ar-t2", label="1", root="ART2ReadAList", title="Read a list",
     concept="Reading one value from a list, by its index.",
-    mission="Stop the robot on the green flag. The flag is as far away as the third value in the list.",
-    rooms_text=[], twist="",
-    blocks=["list", "item"],
-    notes=["This is the name block of a list. Drop it into a list slot.",
+    mission="Stop the robot on the green flag in each room. The flag is as far away as the third value in the list.",
+    rooms_text=["A list with three values.", "A list with four values."],
+    twist="Each room has a different list.",
+    blocks=["move_n", "list", "item"],
+    notes=["This block makes the robot step forward that many times. A number, or the answer of another block, goes into it.",
+           "This is the name block of a list. Drop it into a list slot.",
            "This block gives you the value at an index of a list. The first index is 0."],
-    block_values=["", ",list:route"],
+    block_values=["", "", ",list:route"],
     tip="In Python, index 0 of route is written as `route[0]`.",
     robot=["move_n"], toolbox=["item"],
-    rooms=[hall_room(3, 7, [4, 1, 3])],
+    # In Room 1 the third value is also the last one; Room 2's longer list keeps
+    # "the last value" from passing as well.
+    rooms=[hall_room(3, 7, [4, 1, 3]), hall_room(5, 7, [2, 6, 5, 1])],
 )
 
 LEVELS["ar_t3"] = dict(
-    id="ar-t3", label="3", counts=False, root="ART3HowLongIsAList", title="How long is a list?",
+    id="ar-t3", label="2", root="ART3HowLongIsAList", title="How long is a list?",
     concept="Counting the values in a list.",
-    mission="Stop the robot on the green flag in each room. The flag is as far away as the number of values in the list.",
+    mission="Before the turn, move as far as the number of values in the list. After the turn, move as far as the first value in the list.",
     rooms_text=["A short list.", "A longer list."], twist="Each room has a list of a different length.",
     blocks=["len"],
-    notes=["This block counts the values in a list."],
+    # The second sentence sets up Arrays 3, where the last index is length - 1.
+    notes=["This block counts the values in a list. A list with 4 values has indexes 0 to 3."],
     block_values=["list:route"],
     tip="In Python, length of route is written as `len(route)`.",
-    robot=["move_n"], toolbox=["item", "len"],
-    # Two rooms, though it's a tutorial: with one, typing the length in passed.
-    # Neither list holds its own length, so reading one value can't pass either.
-    rooms=[hall_room(4, 8, [2, 6, 1, 3]), hall_room(6, 8, [1, 4, 2, 5, 1, 3])],
+    robot=["move_n", "turn"], toolbox=["item", "len"],
+    # Move, turn, move: Arrays 3 keeps this shape and changes only what is read.
+    # Neither list holds its own length, so reading one value can't pass the
+    # first move, and the lists differ, so no number typed in passes.
+    rooms=[route_room(c, [len(c), c[0]]) for c in ([2, 6, 1, 3], [1, 4, 2, 5, 1, 3])],
 )
 
 LEVELS["ar_3"] = dict(
-    id="ar-3", label="4", root="AR3CountThenTheLast", title="Count, then the last",
-    concept="How long a list is, and where its last item sits.",
-    mission="Before the turn, move as far as the length of the list. After the turn, move as far as the last value in the list.",
+    id="ar-3", label="3", root="AR3CountThenTheLast", title="Last index, last value",
+    concept="The last index is the length minus 1, and the last value sits there.",
+    mission="Before the turn, move as far as the last index of the list. After the turn, move as far as the last value in the list.",
     rooms_text=["A list with three values.", "A list with two values."],
     twist="Each list has a different length.",
     blocks=["arith"],
-    notes=["This block does math: + - * / // %"],
+    notes=["This block does math, like 3 + 1. Pick the sign in the middle. Either side can take a number, or the answer of another block."],
     tip="The Math block can use the answer of another block. In Python: `len(route) + 1`.",
     robot=["move_n", "turn"], toolbox=["item", "len", "arith"],
-    rooms=[route_room(c, [len(c), c[-1]]) for c in ([2, 5, 1], [4, 3])],
+    # The first move builds (length of route) - 1 alone; the second puts the same
+    # block inside Index Of, so the nesting deepens one step at a time.
+    rooms=[route_room(c, [len(c) - 1, c[-1]]) for c in ([2, 5, 1], [4, 3])],
 )
 
 
@@ -223,7 +223,7 @@ def ar4_rooms():
 
 
 LEVELS["ar_4"] = dict(
-    id="ar-4", label="5", root="AR4EveryStop", title="Every stop",
+    id="ar-4", label="4", root="AR4EveryStop", title="Every stop",
     concept="Going through a list by index.",
     mission="Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag.",
     rooms_text=["A lap.", "A U-turn."],
@@ -235,7 +235,7 @@ LEVELS["ar_4"] = dict(
 )
 
 LEVELS["ar_5"] = dict(
-    id="ar-5", label="6", root="AR5EveryStopAgain", title="Every stop, again",
+    id="ar-5", label="5", root="AR5EveryStopAgain", title="Every stop, again",
     concept="Going through a list value by value: for each.",
     mission="These are the same rooms as in the last level. Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag.",
     rooms_text=["A lap.", "A U-turn."],
@@ -249,7 +249,7 @@ LEVELS["ar_5"] = dict(
 )
 
 LEVELS["ar_6"] = dict(
-    id="ar-6", label="7", root="AR6ThereAndBack", title="There and back",
+    id="ar-6", label="6", root="AR6ThereAndBack", title="There and back",
     concept="Going through a list backwards.",
     mission="Move out and collect every battery. Then move back the same way, to the green flag where you started.",
     rooms_text=["A long way out.", "A winding way out."],
@@ -264,7 +264,7 @@ LEVELS["ar_6"] = dict(
 )
 
 LEVELS["ar_7"] = dict(
-    id="ar-7", label="8", root="AR7NumberTheLockers", title="Number the lockers",
+    id="ar-7", label="7", root="AR7NumberTheLockers", title="Number the lockers",
     concept="Changing a list's values in place.",
     mission="Give each locker its number.",
     rooms_text=["Three lockers.", "Five lockers.", "Four lockers."],
@@ -281,7 +281,7 @@ LEVELS["ar_7"] = dict(
 
 SCORES = [[70, 82, 75, 60, 91], [74, 60, 55, 90], [75, 75, 80, 99, 76, 62]]
 LEVELS["ar_8"] = dict(
-    id="ar-8", label="9", root="AR8PassingMarks", title="Passing marks",
+    id="ar-8", label="8", root="AR8PassingMarks", title="Passing marks",
     concept="Building a new list with append.",
     mission="Copy every score of 75 or more into the passed list. Keep the scores in the same order.",
     rooms_text=["Five scores.", "Four scores.", "Six scores."],
@@ -297,32 +297,9 @@ LEVELS["ar_8"] = dict(
                      goals=[("passed", [v for v in s if v >= 75])]) for s in SCORES],
 )
 
-
-def tidy(bags):
-    out = []
-    for b in bags:
-        if not out or out[-1] != b:
-            out.append(b)
-    return out
-
-
-BAGS = [[3, 3, 5, 5, 2, 3], [1, 2, 1, 1, 4], [4, 4, 4, 4]]
-LEVELS["ar_9"] = dict(
-    id="ar-9", label="10", root="AR9TidyUp", title="Tidy up",
-    concept="Comparing each value with the one before it.",
-    mission="Copy the bags list into the tidy list. Skip a value when it is the same as the value right before it. The green flag is as far away as the length of tidy.",
-    rooms_text=["Six bags.", "Five bags.", "Four bags."],
-    twist="A value can come back later. Then it stays.",
-    blocks=[], notes=[],
-    tip="`!=` means \"is not equal to\".",
-    robot=["move_n"], toolbox=["for", "each", "if", "cmp", "arith", "item", "len", "append"],
-    rooms=[data_room([dict(name="bags", values=b)], [dict(name="tidy", values=[])],
-                     goals=[("tidy", tidy(b))], robot_walk=len(tidy(b))) for b in BAGS],
-)
-
-CLUBS = [([1, 2, 3, 4], [2, 4, 5]), ([6, 7], [8]), ([1, 5, 9], [1, 5, 9, 10])]
+CLUBS =[([1, 2, 3, 4], [2, 4, 5]), ([6, 7], [8]), ([1, 5, 9], [1, 5, 9, 10])]
 LEVELS["ar_10"] = dict(
-    id="ar-10", label="11", root="AR10InBoth", title="In both",
+    id="ar-10", label="9", root="AR10InBoth", title="In both",
     concept="Checking whether a value is in a list.",
     mission="Find every student who is in both chess and choir. Put each of them into the both list.",
     rooms_text=["Four students in chess.", "Two students in chess.", "Three students in chess."],
@@ -338,7 +315,7 @@ LEVELS["ar_10"] = dict(
 
 DAYS = [([1, 2, 3], [2, 3, 4]), ([5, 6], [5, 6]), ([1, 3, 5, 7], [2, 3])]
 LEVELS["ar_11"] = dict(
-    id="ar-11", label="12", root="AR11HereEitherDay", title="Here either day",
+    id="ar-11", label="10", root="AR11HereEitherDay", title="Here either day",
     concept="Joining two lists without repeats, using not and in.",
     mission="The monday list has the students who came on Monday. The tuesday list has the students who came on Tuesday. Put every student who came on either day into the present list, and put each student in only once.",
     rooms_text=["Three on Monday, three on Tuesday.", "Two on Monday, two on Tuesday.", "Four on Monday, two on Tuesday."],
@@ -647,7 +624,7 @@ def build(key, spec):
         bounds = BOUNDS.get(key, {}).get(mgr)
         if bounds:
             add("bounds = Rect2(%s, %s, %s, %s)\n" % tuple(bounds))
-        # A room with no list (the first tutorial) frames on its flag alone.
+        # A room with no list frames on its flag alone.
         markers = ['NodePath("../../Visuals/Lists/Room%d")' % n] if room["wall"] or room["standing"] else []
         if room["robot"]:
             markers.append('NodePath("../../Visuals/Destination%d")' % n)

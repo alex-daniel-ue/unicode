@@ -19,11 +19,12 @@ extends Resource
 
 @export var modules: Array[LevelModule] = []
 
-## Levels beyond the furthest one reached stay locked. The Iteration set is a
-## scaffold-then-fade sequence, so out-of-order play breaks the teaching order.
+## Levels beyond the furthest one solved in their module stay locked, practice
+## levels included. Each module is a scaffold-then-fade sequence, so
+## out-of-order play breaks the teaching order. See Progress.is_unlocked().
 @export var sequential_unlock := true
 
-## How many levels past the last completed one stay open. 1 = the next one.
+## How many levels past the last solved one in a module stay open. 1 = the next one.
 @export var unlock_lookahead := 1
 
 

@@ -34,11 +34,17 @@ block: BeginBlock
       kind: statement
       text: \"step forward {} times\"
       parameters:
-        - block: LengthOfBlock
+        - block: ArithmeticBlock
           kind: value
-          text: \"length of {}\"
+          text: \"{} {} {}\"
           parameters:
-            - route
+            - block: LengthOfBlock
+              kind: value
+              text: \"length of {}\"
+              parameters:
+                - route
+            - -
+            - 1
     - block: TurnBlock
       kind: statement
       text: \"turn {}\"
@@ -67,10 +73,10 @@ block: BeginBlock
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
 
 [node name="LevelDescription" parent="." index="0"]
-title = "Count, then the last"
-block_notes = PackedStringArray("This block does math: + - * / // %")
+title = "Last index, last value"
+block_notes = PackedStringArray("This block does math, like 3 + 1. Pick the sign in the middle. Either side can take a number, or the answer of another block.")
 rooms = PackedStringArray("A list with three values.", "A list with two values.")
-mission = "Before the turn, move as far as the length of the list. After the turn, move as far as the last value in the list."
+mission = "Before the turn, move as far as the last index of the list. After the turn, move as far as the last value in the list."
 twist = "Each list has a different length."
 blocks = Array[ExtResource("4_block_data")]([ExtResource("19_arithmetic")])
 tip = "The Math block can use the answer of another block. In Python: `len(route) + 1`."
@@ -113,7 +119,7 @@ tile_map_data = PackedByteArray("AAABAAMAAQAAAAAAAAACAAMAAQABAAAAAAADAAMAAQACAAA
 tile_set = ExtResource("7_school_tiles")
 
 [node name="Destination1" type="Area2D" parent="Visuals" index="1"]
-position = Vector2(144, 112)
+position = Vector2(112, 112)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -124,7 +130,7 @@ shape = SubResource("Circle_1")
 texture = ExtResource("13_red_flag")
 
 [node name="Destination2" type="Area2D" parent="Visuals" index="2"]
-position = Vector2(112, 336)
+position = Vector2(80, 336)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -156,7 +162,7 @@ y_sort_enabled = true
 
 [node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted" index="0"]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAADAAMAAwAAAAAAABAGAAQAAwAAAAAAAAABAAoAAAAAAAAAAAACAAsAAQABAAAAAAAFAAsAAQAAAAAAAAACAAwAAQAAAAAAAAAFAAwAAQABAAAAAAA=")
+tile_map_data = PackedByteArray("AAAGAAMAAwAAAAAAABAGAAQAAwAAAAAAAAABAAoAAAAAAAAAAAAEAAsAAQABAAAAAAAFAAsAAQAAAAAAAAAEAAwAAQAAAAAAAAAFAAwAAQABAAAAAAA=")
 tile_set = ExtResource("2_school_chair")
 
 [node name="RobotCharacter" parent="Visuals/YSorted" index="1" instance=ExtResource("15_robot_charac")]

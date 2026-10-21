@@ -12,7 +12,7 @@ import json, os, re, subprocess, sys
 root, godot = sys.argv[1], sys.argv[2]
 here = os.path.dirname(os.path.abspath(__file__))
 tmp = os.environ["TEMP"]
-keys = ["ar_t1", "ar_t2", "ar_t3"] + ["ar_%d" % n for n in range(3, 12)]
+keys = ["ar_t2", "ar_t3"] + ["ar_%d" % n for n in (3, 4, 5, 6, 7, 8, 10, 11)]  # no ar_9: Tidy up was cut
 
 
 def run(args):
@@ -23,7 +23,7 @@ def run(args):
 
 solutions, bounds = {}, {}
 for key in keys:
-    n = key.split("_")[1].upper()  # "T1", "4": the harness calls the case "AR-T1 intended"
+    n = key.split("_")[1].upper()  # "T2", "4": the harness calls the case "AR-T2 intended"
     out = run(["--fixed-fps", "60", "res://tools/level_checks.tscn", "--", "AR-%s intended" % n, "yaml"])
     result = re.search(r"^(OK  |BAD ) AR-%s intended\s+-> (.*)$" % n, out, re.M)
     yaml = re.search(r"^(# locked: true.*?)(?=^\S*={5,}|\Z)", out, re.M | re.S)

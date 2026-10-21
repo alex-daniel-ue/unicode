@@ -100,11 +100,17 @@ static func _item_of() -> Control:
 	stack.add_child(_label("index 1 of route = 5", ACCENT, 18))
 	return stack
 
+## The boxes light up one at a time and the label counts them. No value is 4,
+## so the answer can only be the number of boxes, not one read from a box.
 static func _length_of() -> Control:
-	var row := _row(14)
-	row.add_child(_list("route", [3, 2, 4]))
-	row.add_child(_label("= 3", ACCENT, 26))
-	return row
+	var stack := _column(8)
+	var list := _list("route", [5, 2, 7, 1])
+	var label := _label("length of route = 4", ACCENT, 18)
+	list.count_boxes = true
+	list.counted.connect(func(boxes: int) -> void: label.text = "length of route = %d" % boxes)
+	stack.add_child(list)
+	stack.add_child(label)
+	return stack
 
 ## Before and after: the box at index 0 gets the new value.
 static func _set_index() -> Control:
@@ -151,7 +157,7 @@ static func _strip(cells: String) -> TileStrip:
 	return strip
 
 ## A list board as the rooms draw it, scaled up and sized to fit.
-static func _list(list_name: String, values: Array) -> Control:
+static func _list(list_name: String, values: Array) -> ListPicture:
 	var frame := ListPicture.new()
 	frame.list_name = StringName(list_name)
 	frame.values = values

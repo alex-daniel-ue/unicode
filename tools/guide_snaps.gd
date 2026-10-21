@@ -3,7 +3,7 @@ extends Node
 ## Opens a level in the real Puzzle and saves a screenshot of every page of its
 ## guide, to look over the guides without clicking through them. Not headless:
 ## headless draws nothing.
-##   godot --path . --resolution 1920x1080 res://tools/guide_snaps.tscn -- res://level/levels/ar_t1.tscn [more levels]
+##   godot --path . --resolution 1920x1080 res://tools/guide_snaps.tscn -- res://level/levels/ar_t2.tscn [more levels]
 ## Pages that wait for an action are shown as they first appear. Screenshots go
 ## to user://guide_<level>_<page>.png, and the path of each is printed.
 

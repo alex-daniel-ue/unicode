@@ -157,13 +157,11 @@ func _build_grid(module: LevelModule) -> void:
 		grid.remove_child(child)
 		child.queue_free()
 
-	var furthest := Progress.furthest_slot()
-
 	var buttons: Array = []
 	for entry in module.levels:
 		if entry == null or entry.retired:
 			continue
-		var button := _build_button(entry, furthest)
+		var button := _build_button(entry)
 		grid.add_child(button)
 		buttons.append(button)
 		# The level just played has the focus, so it's where the eye lands.
@@ -174,13 +172,13 @@ func _build_grid(module: LevelModule) -> void:
 		UiMotion.fade_in(module_label, 0.18)
 
 
-func _build_button(entry: LevelEntry, furthest_slot: int) -> Button:
+func _build_button(entry: LevelEntry) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = button_size
 	button.theme_type_variation = &"MainMenuButton"
 
 	var stars := Progress.get_stars(entry.id)
-	var reason := _lock_reason(entry, furthest_slot)
+	var reason := _lock_reason(entry)
 	button.disabled = not reason.is_empty()
 	button.tooltip_text = reason if not reason.is_empty() else _tooltip(entry, stars)
 
@@ -228,16 +226,10 @@ func _tooltip(entry: LevelEntry, stars: int) -> String:
 
 
 ## Empty when the level is playable; otherwise the message the student sees.
-func _lock_reason(entry: LevelEntry, furthest_slot: int) -> String:
+func _lock_reason(entry: LevelEntry) -> String:
 	if entry.scene == null:
 		return "This level isn't built yet."
-	if not _catalog.sequential_unlock or not entry.counts_for_progress:
-		return ""
-
-	var slot := _catalog.slot_of(entry.id)
-	if slot < 0:
-		return ""
-	if slot <= furthest_slot + _catalog.unlock_lookahead:
+	if Progress.is_unlocked(entry.id):
 		return ""
 	return "Finish the level before this one first."
 #endregion
