@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://bafuclrikj4j7"]
+[gd_scene load_steps=7 format=3 uid="uid://bafuclrikj4j7"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_m0nfs"]
 [ext_resource type="Script" uid="uid://dit0t1lwo3tuh" path="res://puzzle/ui/level_complete/level_complete.gd" id="2_orori"]
 [ext_resource type="FontFile" uid="uid://d0dw8vqho76cs" path="res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf" id="3_body"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="4_code"]
+[ext_resource type="Texture2D" uid="uid://bsvagjnynpr5h" path="res://menus/level select/art/assistant_badge.png" id="5_badge"]
+[ext_resource type="Texture2D" uid="uid://cm72ocvkpvmdl" path="res://menus/level select/art/bubble_tail.png" id="6_tail"]
 
-[node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "stay_button", "select_button", "next_button")]
+[node name="LevelComplete" type="Control" node_paths=PackedStringArray("stars_label", "usage_label", "target_label", "summary_label", "summary_row", "stay_button", "select_button", "next_button")]
 visible = false
 z_index = 2
 layout_mode = 3
@@ -19,7 +21,8 @@ script = ExtResource("2_orori")
 stars_label = NodePath("Center/Card/Margin/Stack/Stars")
 usage_label = NodePath("Center/Card/Margin/Stack/Usage")
 target_label = NodePath("Center/Card/Margin/Stack/Target")
-summary_label = NodePath("Center/Card/Margin/Stack/Summary")
+summary_label = NodePath("Center/Card/Margin/Stack/SummaryRow/Bubble/Summary")
+summary_row = NodePath("Center/Card/Margin/Stack/SummaryRow")
 stay_button = NodePath("Center/Card/Margin/Stack/Buttons/StayButton")
 select_button = NodePath("Center/Card/Margin/Stack/Buttons/SelectButton")
 next_button = NodePath("Center/Card/Margin/Stack/Buttons/NextButton")
@@ -79,9 +82,36 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="Summary" type="RichTextLabel" parent="Center/Card/Margin/Stack"]
+[node name="SummaryRow" type="HBoxContainer" parent="Center/Card/Margin/Stack"]
 visible = false
-custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Badge" type="TextureRect" parent="Center/Card/Margin/Stack/SummaryRow"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+texture = ExtResource("5_badge")
+
+[node name="Tail" type="TextureRect" parent="Center/Card/Margin/Stack/SummaryRow/Badge"]
+z_index = 1
+layout_mode = 0
+offset_left = 60.0
+offset_top = 16.0
+offset_right = 72.0
+offset_bottom = 36.0
+mouse_filter = 2
+texture = ExtResource("6_tail")
+
+[node name="Bubble" type="PanelContainer" parent="Center/Card/Margin/Stack/SummaryRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_type_variation = &"AssistantBubble"
+
+[node name="Summary" type="RichTextLabel" parent="Center/Card/Margin/Stack/SummaryRow/Bubble"]
+custom_minimum_size = Vector2(336, 0)
 layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/normal_font = ExtResource("3_body")

@@ -1,7 +1,9 @@
 """Draws level select's art into menus/level select/art/: the 9-slices its
 buttons and level tiles are skinned with (pixel_panels.png, for main_theme.tres's
-PixelButton, PixelButtonDark, LevelTile and LevelTileNext), the stars and lock
-on the tiles, the arrow over the next level to play, and the buttons' icons.
+PixelButton, PixelButtonDark, LevelTile, LevelTileNext and AssistantBubble),
+the stars and lock on the tiles, the arrow over the next level to play, and the
+buttons' icons. The win card's summary (level_complete.tscn) sits in the bubble,
+beside the assistant's badge, with the bubble's tail.
 
     python tools/menu/gen_level_select_art.py <project root>
 
@@ -38,6 +40,7 @@ DIM = rgb("4a6385")
 GOLD = rgb("ffd14d")
 GOLD_HI = rgb("ffeca0")
 GOLD_LO = rgb("e0a028")
+BUBBLE = rgb("121a2e")
 EMPTY = rgb("d6e0ee")
 
 LINE = 4
@@ -59,6 +62,7 @@ PANELS = [
     ("next_normal", PAPER, NAVY, PAPER_BAND, 8, "normal", True),
     ("next_hover", PAPER, NAVY, PAPER_BAND, 8, "hover", True),
     ("next_pressed", PAPER, NAVY, PAPER_BAND, 8, "pressed", True),
+    ("bubble", BUBBLE, DARK_LINE, BUBBLE, 0, "normal", False),
 ]
 
 # At 3x. O is the navy outline, Y gold, H its highlight, S its shade, X the
@@ -99,6 +103,23 @@ ARROW = ["OOOOOOO",
          ".OCCCO.",
          "..OCO..",
          "...O..."]
+
+
+# At 4x: the assistant, on its badge.
+ROBOT = ["....X....",
+         ".XXXXXXX.",
+         ".X.....X.",
+         "XX.X.X.XX",
+         ".X.....X.",
+         ".XXXXXXX."]
+# At 4x: the bubble's tail, pointing left at the badge. Its right column lies
+# on the bubble's outline, opening it where the tail joins.
+TAIL = ["..O",
+        ".OF",
+        "OFF",
+        ".OF",
+        "..O"]
+BADGE = 52
 
 
 def notched(img, x0, y0, w, h, color):
@@ -166,3 +187,24 @@ icon("icon_home", HOME, {"X": WHITE}, 3, even=True)
 icon("chevron_left", CHEVRON, {"X": WHITE}, 4)
 icon("chevron_right", [row[::-1] for row in CHEVRON], {"X": WHITE}, 4)
 icon("next_arrow", ARROW, {"O": NAVY, "C": CYAN}, 4)
+icon("bubble_tail", TAIL, {"O": DARK_LINE, "F": BUBBLE}, 4)
+
+
+def badge():
+    """The assistant's badge: a notched box in a cyan outline, the robot in it."""
+    img = [[CLEAR] * BADGE for _ in range(BADGE)]
+    notched(img, 0, 0, BADGE, BADGE, CYAN)
+    for y in range(LINE, BADGE - LINE):
+        for x in range(LINE, BADGE - LINE):
+            img[y][x] = BUBBLE
+    w, h = len(ROBOT[0]) * 4, len(ROBOT) * 4
+    x0, y0 = (BADGE - w) // 2, (BADGE - h) // 2
+    for y in range(h):
+        for x in range(w):
+            if ROBOT[y // 4][x // 4] == "X":
+                img[y0 + y][x0 + x] = CYAN
+    pngtool.save(os.path.join(OUT, "assistant_badge.png"), BADGE, BADGE, img)
+    print("assistant_badge.png: %dx%d px" % (BADGE, BADGE))
+
+
+badge()

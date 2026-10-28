@@ -27,6 +27,8 @@ const STAR_RIM := Color(0.105882354, 0.09411765, 0.13725491)
 ## the Python in it shows as code (CodeSpans) instead of running on as English.
 ## Its code font is the scene's mono_font: swap in a monospace one there.
 @export var summary_label: RichTextLabel
+## The assistant's badge and the bubble the summary is in: shown with it.
+@export var summary_row: Control
 @export var stay_button: Button
 @export var select_button: Button
 @export var next_button: Button
@@ -58,9 +60,9 @@ func present(stars: int, placed: int, par: int, slack: int, summary_expected := 
 		target_label.text = _next_tier(stars, par, slack)
 		target_label.visible = not target_label.text.is_empty()
 
-	summary_label.text = "[center]%s[/center]" % SUMMARY_WAITING if summary_expected else ""
+	summary_label.text = SUMMARY_WAITING if summary_expected else ""
 	summary_label.modulate.a = 0.6 if summary_expected else 1.0
-	summary_label.visible = summary_expected
+	summary_row.visible = summary_expected
 
 	_next = _find_next()
 	next_button.visible = _next != null
@@ -113,9 +115,9 @@ func show_summary(text: String, presentation: int) -> void:
 	if not is_instance_valid(self) or presentation != _presentation:
 		return
 	summary_label.modulate.a = 1.0
-	summary_label.text = "[center]%s[/center]" % CodeSpans.to_bbcode(text) if not text.is_empty() else ""
-	summary_label.visible = not text.is_empty()
-	if summary_label.visible:
+	summary_label.text = CodeSpans.to_bbcode(text) if not text.is_empty() else ""
+	summary_row.visible = not text.is_empty()
+	if summary_row.visible:
 		UiMotion.fade_in(summary_label, 0.3)
 
 

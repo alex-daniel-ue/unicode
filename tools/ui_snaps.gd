@@ -6,7 +6,8 @@ extends Node
 ## marks, level select, the main menu, and its quit popup. Not headless.
 ##   godot --path . --resolution 1920x1080 res://tools/ui_snaps.tscn
 ## Saved to user://ui_<name>.png; each path is printed. With `-- menu` after
-## the path, only the main menu's shots; with `-- levels`, only level select's.
+## the path, only the main menu's shots; with `-- levels`, only level select's;
+## with `-- win`, only the puzzle's, the win card among them.
 
 const SUMMARY := "Nice use of a loop! In Python that is for steps in route: and it reads each stop with route[0], route[1] and so on."
 
@@ -15,6 +16,8 @@ func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
 	if "levels" in args:
 		await _level_select_shot()
+	elif "win" in args:
+		await _puzzle_shots()
 	else:
 		if not "menu" in args:
 			await _puzzle_shots()

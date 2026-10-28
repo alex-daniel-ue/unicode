@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=63 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=65 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://cypqhhpk8l6ck" path="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf" id="2_hdcft"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="2_oiocf"]
@@ -512,9 +512,23 @@ expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 region_rect = Rect2(208, 0, 24, 40)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bubble"]
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+texture = ExtResource("5_panels")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(232, 0, 16, 32)
+
 [resource]
 default_font = ExtResource("2_oiocf")
 default_font_size = 16
+AssistantBubble/base_type = &"PanelContainer"
+AssistantBubble/styles/panel = SubResource("StyleBoxTexture_bubble")
 BlockLabel/base_type = &"Label"
 BlockLabel/colors/font_color = Color(0, 0, 0, 1)
 BlockLabel/font_sizes/font_size = 16
