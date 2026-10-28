@@ -1,22 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://cdilcamcaiut0"]
+[gd_scene load_steps=10 format=3 uid="uid://cdilcamcaiut0"]
 
 [ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://ghsedlyvxiel" path="res://menus/level select/home.png" id="2_home"]
-[ext_resource type="Shader" uid="uid://ln6tsmddf3vf" path="res://puzzle/ui/themes/shaders/canvas_bg.gdshader" id="3_shader"]
+[ext_resource type="Texture2D" uid="uid://c3063l7q8ujsd" path="res://menus/level select/art/icon_home.png" id="2_home"]
+[ext_resource type="Script" uid="uid://c2owe7cy41x6l" path="res://menus/main/background.gd" id="3_campus"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="4_theme"]
 [ext_resource type="Texture2D" uid="uid://c68bjhj7ntbed" path="res://menus/level select/pixelarticons--circle-question-solid.png" id="5_soyww"]
+[ext_resource type="Texture2D" uid="uid://di1cve8xjhp7j" path="res://menus/main/final_bg.jpg" id="6_campus"]
+[ext_resource type="Texture2D" uid="uid://m3sdcl381h7r" path="res://menus/level select/art/chevron_left.png" id="7_prev"]
+[ext_resource type="Texture2D" uid="uid://3l24geynq6jm" path="res://menus/level select/art/chevron_right.png" id="8_next"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bg"]
-shader = ExtResource("3_shader")
-shader_parameter/cell_size = 25.0
-shader_parameter/background_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
-shader_parameter/dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
-shader_parameter/dot_radius = 1.0
-shader_parameter/major_dot_radius = 1.0
-shader_parameter/major_dot_color = Color(0.1764706, 0.1764706, 0.25882354, 1)
-shader_parameter/line_color = Color(0.043137256, 0.043137256, 0.101960786, 1)
-
-[node name="LevelSelect" type="Control" node_paths=PackedStringArray("module_label", "module_subtitle", "grid", "locked_notice", "prev_button", "next_button")]
+[node name="LevelSelect" type="Control" node_paths=PackedStringArray("module_label", "module_subtitle", "module_dots", "grid", "locked_notice", "prev_button", "next_button", "column")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,127 +18,166 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_theme")
 script = ExtResource("1_script")
-module_label = NodePath("Background/Margin/Root/ModuleHeader/ModuleRow/ModuleLabel")
-module_subtitle = NodePath("Background/Margin/Root/ModuleHeader/ModuleSubtitle")
-grid = NodePath("Background/Margin/Root/Body/BodyStack/LevelGrid")
-locked_notice = NodePath("Background/Margin/Root/Body/BodyStack/LockedNotice")
-prev_button = NodePath("Background/Margin/Root/ModuleHeader/ModuleRow/PrevButton")
-next_button = NodePath("Background/Margin/Root/ModuleHeader/ModuleRow/NextButton")
-columns = 4
+module_label = NodePath("Column/ModuleLabel")
+module_subtitle = NodePath("Column/ModuleSubtitle")
+module_dots = NodePath("Column/ModuleDots")
+grid = NodePath("Column/LevelGrid")
+locked_notice = NodePath("Column/LockedNotice")
+prev_button = NodePath("Column/PrevButton")
+next_button = NodePath("Column/NextButton")
+column = NodePath("Column")
 
-[node name="Background" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_bg")
+[node name="Background" type="Control" parent="." node_paths=PackedStringArray("texture")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 1, 1, 0)
+mouse_filter = 2
+script = ExtResource("3_campus")
+texture = NodePath("BackgroundTexture")
+smooth_speed = 7.5
 
-[node name="Margin" type="MarginContainer" parent="Background"]
+[node name="BackgroundTexture" type="TextureRect" parent="Background"]
+layout_mode = 0
+mouse_filter = 2
+texture = ExtResource("6_campus")
+expand_mode = 1
+
+[node name="Shade" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 48
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 48
+mouse_filter = 2
+color = Color(0.03137255, 0.050980393, 0.1254902, 0.88)
 
-[node name="Root" type="VBoxContainer" parent="Background/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="TopBar" type="HBoxContainer" parent="Background/Margin/Root"]
-layout_mode = 2
-
-[node name="HomeButton" type="Button" parent="Background/Margin/Root/TopBar" groups=["sfx_click"]]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_vertical = 4
+[node name="HomeButton" type="Button" parent="." groups=["sfx_click"]]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 48.0
+offset_right = 124.0
+offset_bottom = 112.0
 tooltip_text = "Main menu"
+theme_type_variation = &"PixelButtonDark"
 icon = ExtResource("2_home")
-expand_icon = true
+icon_alignment = 1
 
-[node name="Spacer" type="Control" parent="Background/Margin/Root/TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TutorialButton" type="Button" parent="Background/Margin/Root/TopBar"]
+[node name="TutorialButton" type="Button" parent="."]
 visible = false
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_vertical = 4
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -124.0
+offset_top = 48.0
+offset_right = -60.0
+offset_bottom = 112.0
+grow_horizontal = 0
 tooltip_text = "How to play"
+theme_type_variation = &"PixelButtonDark"
 icon = ExtResource("5_soyww")
+icon_alignment = 1
 expand_icon = true
 
-[node name="ModuleHeader" type="VBoxContainer" parent="Background/Margin/Root"]
-layout_mode = 2
-theme_override_constants/separation = 4
+[node name="Column" type="Control" parent="."]
+layout_mode = 0
+offset_right = 912.0
+offset_bottom = 534.0
+mouse_filter = 2
 
-[node name="ModuleRow" type="HBoxContainer" parent="Background/Margin/Root/ModuleHeader"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 24
+[node name="PrevButton" type="Button" parent="Column" groups=["sfx_click"]]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_right = -236.0
+offset_bottom = 64.0
+theme_type_variation = &"PixelButton"
+icon = ExtResource("7_prev")
+icon_alignment = 1
 
-[node name="PrevButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow" groups=["sfx_click"]]
-custom_minimum_size = Vector2(56, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"MainMenuButton"
-text = "<"
+[node name="NextButton" type="Button" parent="Column" groups=["sfx_click"]]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 236.0
+offset_right = 300.0
+offset_bottom = 64.0
+theme_type_variation = &"PixelButton"
+icon = ExtResource("8_next")
+icon_alignment = 1
 
-[node name="ModuleLabel" type="Label" parent="Background/Margin/Root/ModuleHeader/ModuleRow"]
-custom_minimum_size = Vector2(420, 0)
-layout_mode = 2
-theme_type_variation = &"HeaderLarge"
+[node name="ModuleLabel" type="Label" parent="Column"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 1.0
+offset_bottom = 56.0
+grow_horizontal = 2
+theme_type_variation = &"ModuleTitle"
 text = "Iteration"
 horizontal_alignment = 1
 
-[node name="NextButton" type="Button" parent="Background/Margin/Root/ModuleHeader/ModuleRow" groups=["sfx_click"]]
-custom_minimum_size = Vector2(56, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"MainMenuButton"
-text = ">"
-
-[node name="ModuleSubtitle" type="Label" parent="Background/Margin/Root/ModuleHeader"]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="ModuleSubtitle" type="Label" parent="Column"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 68.0
+offset_bottom = 108.0
+grow_horizontal = 2
 theme_type_variation = &"LegibleLabel"
+theme_override_colors/font_color = Color(0.62352943, 0.7137255, 0.84705883, 1)
+theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 20
 text = "Repeat until the job is done"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Body" type="CenterContainer" parent="Background/Margin/Root"]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="ModuleDots" type="HBoxContainer" parent="Column"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 128.0
+offset_bottom = 136.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
 
-[node name="BodyStack" type="VBoxContainer" parent="Background/Margin/Root/Body"]
-layout_mode = 2
+[node name="LevelGrid" type="HFlowContainer" parent="Column"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 222.0
+offset_bottom = 534.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 48
+alignment = 1
 
-[node name="LevelGrid" type="GridContainer" parent="Background/Margin/Root/Body/BodyStack"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/h_separation = 32
-theme_override_constants/v_separation = 28
-columns = 5
-
-[node name="LockedNotice" type="Label" parent="Background/Margin/Root/Body/BodyStack"]
+[node name="LockedNotice" type="Label" parent="Column"]
 visible = false
-custom_minimum_size = Vector2(520, 0)
-layout_mode = 2
-size_flags_horizontal = 4
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 240.0
+offset_bottom = 300.0
+grow_horizontal = 2
 theme_type_variation = &"LegibleLabel"
+theme_override_colors/font_color = Color(0.62352943, 0.7137255, 0.84705883, 1)
+theme_override_constants/outline_size = 0
 text = "Opens when your instructor covers this topic."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[connection signal="pressed" from="Background/Margin/Root/TopBar/HomeButton" to="." method="_on_home_pressed"]
-[connection signal="pressed" from="Background/Margin/Root/TopBar/TutorialButton" to="." method="_on_tutorial_pressed"]
-[connection signal="pressed" from="Background/Margin/Root/ModuleHeader/ModuleRow/PrevButton" to="." method="_on_prev_pressed"]
-[connection signal="pressed" from="Background/Margin/Root/ModuleHeader/ModuleRow/NextButton" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="HomeButton" to="." method="_on_home_pressed"]
+[connection signal="pressed" from="TutorialButton" to="." method="_on_tutorial_pressed"]
+[connection signal="pressed" from="Column/PrevButton" to="." method="_on_prev_pressed"]
+[connection signal="pressed" from="Column/NextButton" to="." method="_on_next_pressed"]

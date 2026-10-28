@@ -1,48 +1,40 @@
-[gd_scene load_steps=11 format=3 uid="uid://dn6k0vavrdg2u"]
+[gd_scene load_steps=15 format=3 uid="uid://dn6k0vavrdg2u"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_7vrkn"]
 [ext_resource type="Script" uid="uid://c2owe7cy41x6l" path="res://menus/main/background.gd" id="2_6fy38"]
 [ext_resource type="Script" uid="uid://bvgs1hyva5gds" path="res://menus/main/main_menu.gd" id="2_gma2u"]
-[ext_resource type="Texture2D" uid="uid://ciawrox1ewjo3" path="res://menus/main/logo.png" id="3_6fy38"]
+[ext_resource type="Texture2D" uid="uid://rliyrdkehguj" path="res://menus/main/art/title_logo.png" id="3_logo"]
 [ext_resource type="Texture2D" uid="uid://di1cve8xjhp7j" path="res://menus/main/final_bg.jpg" id="4_j2kye"]
+[ext_resource type="Texture2D" uid="uid://l3yl27qpx53b" path="res://menus/main/art/icon_play.png" id="5_play"]
+[ext_resource type="Texture2D" uid="uid://b3w8gakif6o8i" path="res://menus/main/art/icon_star.png" id="5_star"]
+[ext_resource type="Texture2D" uid="uid://cyat50drenou2" path="res://menus/main/art/icon_exit.png" id="5_exit"]
 [ext_resource type="PackedScene" uid="uid://otyyclm1wsck" path="res://menus/main/progress_dialog.tscn" id="6_j2kye"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="7_code"]
 [ext_resource type="Script" uid="uid://b8d1t4ynysnqs" path="res://menus/main/menu_demo.gd" id="8_demo"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_45qoi"]
-bg_color = Color(0.3372549, 0.7019608, 0.9843137, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-expand_margin_left = 10.0
-expand_margin_top = 10.0
-expand_margin_right = 10.0
-expand_margin_bottom = 10.0
+[sub_resource type="Gradient" id="Gradient_shade"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.03, 0.06, 0.14, 0.62, 0.03, 0.06, 0.14, 0.4, 0.03, 0.06, 0.14, 0.06)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_shade"]
+gradient = SubResource("Gradient_shade")
+width = 256
+height = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_demo"]
-content_margin_left = 22.0
-content_margin_top = 20.0
-content_margin_right = 22.0
-content_margin_bottom = 20.0
-bg_color = Color(0.05882353, 0.07058824, 0.13333334, 0.86)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 3
-border_color = Color(0.23529412, 0.2627451, 0.36078432, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+content_margin_left = 44.0
+content_margin_top = 26.0
+content_margin_right = 30.0
+content_margin_bottom = 34.0
+bg_color = Color(0.14117648, 0.20392157, 0.30980393, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.7647059, 0.8117647, 0.87058824, 1)
 shadow_color = Color(0, 0, 0, 0.3)
 shadow_size = 12
-shadow_offset = Vector2(0, 4)
+shadow_offset = Vector2(0, 6)
 
 [node name="MainMenu" type="Control"]
 texture_filter = 1
@@ -72,83 +64,130 @@ layout_mode = 0
 texture = ExtResource("4_j2kye")
 expand_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Shade" type="TextureRect" parent="."]
+texture_filter = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 60
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_shade")
+expand_mode = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-layout_mode = 2
+[node name="Menu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.45
+anchor_bottom = 0.45
+offset_left = 60.0
+offset_right = 60.0
+grow_vertical = 2
+theme_override_constants/separation = 64
 
-[node name="PanelContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+[node name="Logo" type="TextureRect" parent="Menu"]
+custom_minimum_size = Vector2(434, 82)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
+texture = ExtResource("3_logo")
+expand_mode = 1
 
-[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/PanelContainer"]
-custom_minimum_size = Vector2(300, 0)
+[node name="Buttons" type="VBoxContainer" parent="Menu"]
+custom_minimum_size = Vector2(286, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
+theme_override_constants/separation = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/PanelContainer"]
+[node name="StartButton" type="Button" parent="Menu/Buttons" groups=["sfx_click"]]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-theme_override_constants/separation = 0
+theme_type_variation = &"TitleStartButton"
+
+[node name="Face" type="HBoxContainer" parent="Menu/Buttons/StartButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="TopEmptySpace" type="Control" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-visible = false
+[node name="Icon" type="TextureRect" parent="Menu/Buttons/StartButton/Face"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("5_play")
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Menu/Buttons/StartButton/Face"]
 layout_mode = 2
-size_flags_vertical = 6
-theme_override_styles/panel = SubResource("StyleBoxFlat_45qoi")
-
-[node name="LogoTexture" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/PanelContainer"]
-texture_filter = 1
-layout_mode = 2
-texture = ExtResource("3_6fy38")
-expand_mode = 5
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 6
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="StartButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer" groups=["sfx_click"]]
-custom_minimum_size = Vector2(200, 40)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"MainMenuButton"
+theme_type_variation = &"TitleButtonLabel"
 text = "Start"
+vertical_alignment = 1
 
-[node name="ProgressButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer" groups=["sfx_click"]]
-custom_minimum_size = Vector2(200, 40)
+[node name="ProgressButton" type="Button" parent="Menu/Buttons" groups=["sfx_click"]]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"MainMenuButton"
+theme_type_variation = &"TitleButton"
+
+[node name="Face" type="HBoxContainer" parent="Menu/Buttons/ProgressButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Menu/Buttons/ProgressButton/Face"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("5_star")
+
+[node name="Label" type="Label" parent="Menu/Buttons/ProgressButton/Face"]
+layout_mode = 2
+theme_type_variation = &"TitleButtonLabel"
 text = "Progress"
+vertical_alignment = 1
 
-[node name="ExitButton" type="Button" parent="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer" groups=["sfx_click"]]
-custom_minimum_size = Vector2(200, 40)
+[node name="ExitButton" type="Button" parent="Menu/Buttons" groups=["sfx_click"]]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"MainMenuButton"
+theme_type_variation = &"TitleButton"
+
+[node name="Face" type="HBoxContainer" parent="Menu/Buttons/ExitButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Menu/Buttons/ExitButton/Face"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("5_exit")
+
+[node name="Label" type="Label" parent="Menu/Buttons/ExitButton/Face"]
+layout_mode = 2
+theme_type_variation = &"TitleButtonLabel"
 text = "Exit"
-
-[node name="RightEmptySpace" type="Control" parent="MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
+vertical_alignment = 1
 
 [node name="Demo" type="PanelContainer" parent="." node_paths=PackedStringArray("avoid")]
 layout_mode = 1
@@ -165,7 +204,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_demo")
 script = ExtResource("8_demo")
-avoid = [NodePath("../MarginContainer/HBoxContainer/PanelContainer/Panel"), NodePath("../MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/PanelContainer")]
+avoid = [NodePath("../Menu/Logo"), NodePath("../Menu/Buttons")]
 
 [node name="PopupPanel" type="PopupPanel" parent="."]
 oversampling_override = 1.0
@@ -231,9 +270,9 @@ text = "No"
 
 [node name="ImportPopup" parent="." instance=ExtResource("6_j2kye")]
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ProgressButton" to="ImportPopup" method="popup_centered"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/ExitButton" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="Menu/Buttons/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Menu/Buttons/ProgressButton" to="ImportPopup" method="popup_centered"]
+[connection signal="pressed" from="Menu/Buttons/ExitButton" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/CodeRow/CopyButton" to="." method="_on_copy_code_pressed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/HBoxContainer/YesButton" to="." method="_on_exit_button_pressed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/HBoxContainer/NoButton" to="PopupPanel" method="hide"]

@@ -1,6 +1,13 @@
 extends Control
 
-const MENU := "MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"
+const LOGO := "Menu/Logo"
+const BUTTONS := "Menu/Buttons"
+## The logo is drawn at the whole-number scale that brings it nearest this
+## share of the window's width, so its pixels stay square; the buttons under
+## it are BUTTON_SHARE as wide as it, within BUTTON_WIDTH.
+const LOGO_SHARE := 0.28
+const BUTTON_SHARE := 0.66
+const BUTTON_WIDTH := Vector2(220, 360)
 const QUIT := "PopupPanel"
 const QUIT_CODE := "PopupPanel/VBoxContainer/CodeRow"
 ## The code flashes this colour a few times when the quit popup opens: leaving
@@ -11,11 +18,21 @@ const FLASHES := 3
 
 
 func _ready() -> void:
+	get_viewport().size_changed.connect(_fit_logo)
+	_fit_logo()
 	# The logo pops in, then the buttons arrive one after another, and the demo
 	# fades in beside them.
-	UiMotion.pop_in(get_node(MENU + "/PanelContainer"), 0.3)
-	UiMotion.stagger_in(get_node(MENU + "/VBoxContainer").get_children(), 0.06)
+	UiMotion.pop_in(get_node(LOGO), 0.3)
+	UiMotion.stagger_in(get_node(BUTTONS).get_children(), 0.06)
 	UiMotion.fade_in(get_node(^"Demo") as CanvasItem, 0.5)
+
+func _fit_logo() -> void:
+	var logo := get_node(LOGO) as TextureRect
+	var art := logo.texture.get_size()
+	var k := maxf(1.0, roundf(get_viewport_rect().size.x * LOGO_SHARE / art.x))
+	logo.custom_minimum_size = art * k
+	(get_node(BUTTONS) as Control).custom_minimum_size.x = \
+		clampf(art.x * k * BUTTON_SHARE, BUTTON_WIDTH.x, BUTTON_WIDTH.y)
 
 func _on_start_button_pressed() -> void:
 	Transition.change_scene(Core.LEVEL_SELECT)

@@ -6,17 +6,21 @@ extends Node
 ## marks, level select, the main menu, and its quit popup. Not headless.
 ##   godot --path . --resolution 1920x1080 res://tools/ui_snaps.tscn
 ## Saved to user://ui_<name>.png; each path is printed. With `-- menu` after
-## the path, only the main menu's shots.
+## the path, only the main menu's shots; with `-- levels`, only level select's.
 
 const SUMMARY := "Nice use of a loop! In Python that is for steps in route: and it reads each stop with route[0], route[1] and so on."
 
 
 func _ready() -> void:
-	if not "menu" in OS.get_cmdline_user_args():
-		await _puzzle_shots()
-		await _room_shots()
+	var args := OS.get_cmdline_user_args()
+	if "levels" in args:
 		await _level_select_shot()
-	await _quit_shot()
+	else:
+		if not "menu" in args:
+			await _puzzle_shots()
+			await _room_shots()
+			await _level_select_shot()
+		await _quit_shot()
 	get_tree().quit()
 
 ## The robot's Ahead Is scan halfway across the tile in front of it (it-2), with
@@ -127,7 +131,41 @@ func _level_select_shot() -> void:
 	add_child(select)
 	for i in 40: await get_tree().process_frame
 	await _snap("level_select")
+	# A tile under the pointer, then one held down: their bands change, and
+	# their numbers and stars stay where they were. Let go off the tile, so it
+	# doesn't open its level.
+	var tiles := (select.get(&"grid") as Container).get_children()
+	if tiles.size() >= 2:
+		_pointer((tiles[0] as Control).get_global_rect().get_center())
+		for i in 20: await get_tree().process_frame
+		await _snap("level_select_hover")
+		_pointer((tiles[1] as Control).get_global_rect().get_center(), true)
+		for i in 20: await get_tree().process_frame
+		await _snap("level_select_pressed")
+		_pointer(Vector2(2, 2), false)
+		for i in 5: await get_tree().process_frame
+	# Tutorial, the first module: fewer levels than a row holds, so its row
+	# should sit centred.
+	while not (select.get(&"prev_button") as Button).disabled:
+		select.call(&"_on_prev_pressed")
+	for i in 40: await get_tree().process_frame
+	await _snap("level_select_first")
 	select.queue_free()
+
+## The pointer moved to `at`, by events rather than the real cursor, with its
+## left button then pressed (true) or let go (false) there if `press` says.
+func _pointer(at: Vector2, press: Variant = null) -> void:
+	var motion := InputEventMouseMotion.new()
+	motion.position = at
+	motion.global_position = at
+	Input.parse_input_event(motion)
+	if press != null:
+		var click := InputEventMouseButton.new()
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.pressed = press
+		click.position = at
+		click.global_position = at
+		Input.parse_input_event(click)
 
 func _snap(label: String) -> void:
 	await RenderingServer.frame_post_draw

@@ -12,22 +12,37 @@ const CONFIG_FILE := "unicode.cfg"
 ## Checked second. The codebase notes told people to put [levels] here, beside
 ## the relay settings, so honour it rather than silently ignore it.
 const AI_CONFIG_FILE := "unicode_ai.cfg"
-## MainMenuButton's disabled text colour, for the labels a level button holds.
-const DISABLED_TEXT := Color(0.5803922, 0.6392157, 0.72156864)
-## Stars on the white buttons: StarText's yellow, with a dark rim so they hold up
-## on white.
-const STAR_RIM := Color(0.42, 0.29, 0.05)
+## A locked tile's number and lock; the module dots, lit and not.
+const DIM := Color("4a6385")
+const DOT_LIT := Color("5ef0f2")
+const DOT := Color("2e3f63")
+const STAR_FULL := preload("res://menus/level select/art/star_full.png")
+const STAR_EMPTY := preload("res://menus/level select/art/star_empty.png")
+const LOCK := preload("res://menus/level select/art/lock.png")
+const NEXT_ARROW := preload("res://menus/level select/art/next_arrow.png")
+## Down a tile, from the top of its outline: where the number's digits start,
+## and where the stars or the lock under them start.
+const NUMBER_TOP := 26.0
+const MARKS_TOP := 70.0
+const STAR_GAP := 4.0
+## How far down the space the column doesn't fill it sits: a little above the
+## middle, with more room under the tiles than over the header.
+const COLUMN_RISE := 0.355
 
 @export_group("Wiring")
 @export var module_label: Label
 @export var module_subtitle: Label
-@export var grid: GridContainer
+@export var module_dots: HBoxContainer
+@export var grid: HFlowContainer
 @export var locked_notice: Label
 @export var prev_button: Button
 @export var next_button: Button
+## The header and the tiles, kept centred as the window changes.
+@export var column: Control
 
 @export_group("Appearance")
-@export var button_size := Vector2(120, 96)
+## A tile with its outline; the next level's ring is drawn outside it.
+@export var button_size := Vector2(160, 132)
 @export var columns := 5
 
 var _catalog: LevelCatalog
@@ -49,13 +64,31 @@ func _ready() -> void:
 
 	_load_release_config()
 
-	if grid != null:
-		grid.columns = columns
+	# As wide as `columns` tiles: the flow wraps after that many, and centres a
+	# row that has fewer.
+	if grid != null and column != null:
+		var across := grid.get_theme_constant(&"h_separation")
+		column.size.x = columns * button_size.x + (columns - 1) * across
+	resized.connect(_layout)
+	_layout()
+
+	if module_dots != null:
+		for i in _catalog.modules.size():
+			var dot := ColorRect.new()
+			dot.custom_minimum_size = Vector2(8, 8)
+			dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			module_dots.add_child(dot)
 
 	Progress.progress_updated.connect(_refresh)
 
 	_module_index = _remembered_module()
 	_refresh()
+
+## The column centred across the window and COLUMN_RISE down it, on whole
+## pixels so the pixel art stays crisp.
+func _layout() -> void:
+	if column != null:
+		column.position = ((size - column.size) * Vector2(0.5, COLUMN_RISE)).round()
 
 #region Deployment gate
 ## Reuses the config file that already sits beside the executable for the relay
@@ -134,6 +167,9 @@ func _refresh() -> void:
 	if module_subtitle != null:
 		module_subtitle.text = module.subtitle
 		module_subtitle.visible = not module.subtitle.is_empty()
+	if module_dots != null:
+		for i in module_dots.get_child_count():
+			(module_dots.get_child(i) as ColorRect).color = DOT_LIT if i == _module_index else DOT
 
 	if prev_button != null:
 		prev_button.disabled = _module_index == 0
@@ -158,10 +194,14 @@ func _build_grid(module: LevelModule) -> void:
 		child.queue_free()
 
 	var buttons: Array = []
+	# The first open level not yet solved is the one to play next.
+	var next_found := false
 	for entry in module.levels:
 		if entry == null or entry.retired:
 			continue
-		var button := _build_button(entry)
+		var is_next := not next_found and _lock_reason(entry).is_empty() and not Progress.is_complete(entry.id)
+		next_found = next_found or is_next
+		var button := _build_button(entry, is_next)
 		grid.add_child(button)
 		buttons.append(button)
 		# The level just played has the focus, so it's where the eye lands.
@@ -172,46 +212,73 @@ func _build_grid(module: LevelModule) -> void:
 		UiMotion.fade_in(module_label, 0.18)
 
 
-func _build_button(entry: LevelEntry) -> Button:
+## A level's tile: its number, and under it three stars, the earned ones gold,
+## or a lock. The next level to play has a ring round it (LevelTileNext) and
+## an arrow over it. The tile's look per state is main_theme.tres's; its
+## number and marks sit in the same place in every state.
+func _build_button(entry: LevelEntry, next := false) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = button_size
-	button.theme_type_variation = &"MainMenuButton"
+	button.theme_type_variation = &"LevelTileNext" if next else &"LevelTile"
 
 	var stars := Progress.get_stars(entry.id)
 	var reason := _lock_reason(entry)
 	button.disabled = not reason.is_empty()
 	button.tooltip_text = reason if not reason.is_empty() else _tooltip(entry, stars)
 
-	# Two labels instead of the button's own text: the stars need their own font
-	# (StarText), and a button's text has only one.
-	var stack := VBoxContainer.new()
-	stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	stack.offset_top = 6
-	stack.offset_bottom = -10  # clear of the button's bottom edge
-	stack.alignment = BoxContainer.ALIGNMENT_CENTER
-	stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Noto's line is tall for its size; pull the stars up under the number.
-	stack.add_theme_constant_override(&"separation", -6)
-	button.add_child(stack)
-
-	var title := Label.new()
-	title.theme_type_variation = &"MainMenuButton"  # the button's font, size and colour
-	title.add_theme_stylebox_override(&"normal", StyleBoxEmpty.new())  # not its box, though
-	title.text = entry.label
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var number := Label.new()
+	number.theme_type_variation = &"LevelTileNumber"
+	number.text = entry.label
+	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	number.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	number.position.y = NUMBER_TOP - _digit_top()
 	if button.disabled:
-		title.add_theme_color_override(&"font_color", DISABLED_TEXT)
-	stack.add_child(title)
+		number.add_theme_color_override(&"font_color", DIM)
+	button.add_child(number)
 
-	# Only a level that has been solved shows stars, and only the ones it earned:
-	# a row of empty stars on every new level read as a score of nothing.
-	if stars > 0:
-		stack.add_child(StarText.row(stars, 20, STAR_RIM, 4, stars))
+	var marks: Array[Texture2D] = []
+	if button.disabled:
+		marks.append(LOCK)
+	else:
+		for i in 3:
+			marks.append(STAR_FULL if i < stars else STAR_EMPTY)
+	_add_marks(button, marks)
+
+	if next:
+		var arrow := TextureRect.new()
+		arrow.texture = NEXT_ARROW
+		arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# 8 px over the ring, which is 4 px outside the tile.
+		arrow.position = Vector2(floorf((button_size.x - NEXT_ARROW.get_width()) / 2.0), -12.0 - NEXT_ARROW.get_height())
+		button.add_child(arrow)
 
 	if not button.disabled:
 		button.pressed.connect(_on_level_pressed.bind(entry))
 	return button
+
+## `marks` side by side, centred across `button` at MARKS_TOP, on whole pixels.
+func _add_marks(button: Button, marks: Array[Texture2D]) -> void:
+	var width := -STAR_GAP
+	for mark in marks:
+		width += mark.get_width() + STAR_GAP
+	var x := floorf((button_size.x - width) / 2.0)
+	for mark in marks:
+		var shown := TextureRect.new()
+		shown.texture = mark
+		shown.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shown.position = Vector2(x, MARKS_TOP)
+		button.add_child(shown)
+		x += mark.get_width() + STAR_GAP
+
+## How far below the top of a tile number's line its digits start: the font's
+## ascent less the digits' height, which in Kenney Mini is five eighths of its
+## size. Asked of this scene, since a new tile isn't in the tree to have the
+## theme yet.
+func _digit_top() -> float:
+	var font := get_theme_font(&"font", &"LevelTileNumber")
+	var font_size := get_theme_font_size(&"font_size", &"LevelTileNumber")
+	return roundf(font.get_ascent(font_size) - font_size * 0.625)
 
 
 func _tooltip(entry: LevelEntry, stars: int) -> String:
