@@ -1,5 +1,5 @@
 """UniCode hint relay. The game sends facts; this server owns the prompt, model, and safety policy."""
-import base64, binascii, logging, os, random, secrets, threading, time
+import base64, binascii, logging, os, random, re, secrets, threading, time
 from collections import defaultdict, deque
 from typing import Literal
 import difflib
@@ -170,6 +170,21 @@ app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 * 1024
 
 mimetypes.add_type("application/wasm", ".wasm")  # some hosts lack it; browsers refuse wasm served as anything else
 GAME_DIR = Path(__file__).parent / "public" / "game"
+# The itch.io build runs on html-classic.itch.zone, not on this domain, so the
+# browser checks these headers before every API call. /game is same-origin and never needs them.
+ITCH_ORIGIN = re.compile(r"https://[\w-]+\.itch\.zone")
+
+
+@app.after_request
+def _cors(resp):
+    origin = flask.request.headers.get("Origin", "")
+    if flask.request.path.startswith("/api/") and ITCH_ORIGIN.fullmatch(origin):
+        resp.headers["Access-Control-Allow-Origin"] = origin
+        resp.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, X-UniCode-Token"
+        resp.headers["Access-Control-Max-Age"] = "600"
+        resp.headers.add("Vary", "Origin")
+    return resp
 
 _lock = threading.Lock()
 _hits: defaultdict[str, deque] = defaultdict(deque)
