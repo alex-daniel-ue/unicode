@@ -1,12 +1,18 @@
 class_name AIAssistant
 extends MarginContainer
-
+## The AI Assistant tab: a chat with the hint relay (ai/main.py), and the short
+## comment on the win card. The relay holds the prompts and the model; this
+## gathers what the model is told about the level, the program and the run, and
+## sends it.
+##
+## Questions come from HintPool's budget. Endpoints and the token are read from
+## unicode_ai.cfg beside the game; when the main URL can't be reached, the
+## fallback is tried once.
 
 const CONFIG_FILE := "unicode_ai.cfg"
 const DEFAULT_URL := "https://unicode-vert.vercel.app/api/hint"
 const DEFAULT_TOKEN := "i3RjY9TjdbCIkQPH4DgRDrR-kasNLBNSz0Et3iEGUPA"
 const DEFAULT_PLACEHOLDER := "Type here..."
-
 const REQUEST_TIMEOUT := 55.0  # the relay gives Flash up to 45 s
 const SUMMARY_TIMEOUT := 50.0  # the win card never waits on it; it fills in when it comes
 const BLOCKED_TIMEOUT := 10
@@ -14,6 +20,10 @@ const RATE_LIMIT_TIMEOUT := 15
 const SHOT_WIDTH := 768
 const SHOT_BACKGROUND := Color(0.11, 0.11, 0.14)
 const LOG_LINES := 40
+const FACING := {
+	Vector2.UP: "up", Vector2.DOWN: "down",
+	Vector2.LEFT: "left", Vector2.RIGHT: "right",
+}
 
 @export var chat_bubble_scene: PackedScene
 
@@ -34,12 +44,12 @@ var api_url := DEFAULT_URL
 var fallback_url := ""
 var summary_url := ""
 var client_token := DEFAULT_TOKEN
-
+## Set while the relay asked for a pause: nothing can be sent until it ends.
 var in_timeout := false
+
 var _awaiting_reply := false
 var _pending_json := ""
 var _tried_fallback := false
-
 ## The prompt shown in the empty field: the default, or the nudge's scaffolding
 ## question. The pool status is added to it, never written over it.
 var _base_placeholder := DEFAULT_PLACEHOLDER
@@ -47,7 +57,6 @@ var _base_placeholder := DEFAULT_PLACEHOLDER
 ## request that never reached the model can be refunded exactly once.
 var _charged := false
 var _pool_ticker: Timer
-
 ## Screenshot diagnostics, printed with the request in debug builds.
 var _shot_note := ""
 var _shot_bytes := 0
@@ -56,11 +65,10 @@ var _shot_bytes := 0
 ## when a question is asked shows the result; this one shows the start, and the
 ## relay sends the model both, each labelled.
 var _start_shot := ""
-
 var _summary_http: HTTPRequest
 
-## The Puzzle this tab is in, wherever that is: /root/Puzzle in the game, under
-## a test scene in tools/.
+## The Puzzle this tab is in, wherever that is: the running scene in the game,
+## under a test scene in tools/.
 @onready var puzzle := _find_puzzle()
 
 
@@ -68,129 +76,190 @@ func _ready() -> void:
 	_load_ai_config()
 	http_request.timeout = REQUEST_TIMEOUT
 	http_request.use_threads = true
-	
+
 	_reset_chat()
 	Interpreter.running_changed.connect(_refresh_busy_state)
 	Interpreter.paused_changed.connect(_refresh_busy_state)
-	
-	# The pool regenerates by the clock, so the field has to be re-read once a
-	# second while it is empty or the countdown in the placeholder would freeze.
+
+	# The pool refills by the clock, so the field has to be re-read once a
+	# second while it is empty, or the countdown in the placeholder would freeze.
 	_pool_ticker = Timer.new()
 	_pool_ticker.wait_time = 1.0
 	_pool_ticker.autostart = true
 	_pool_ticker.timeout.connect(_refresh_busy_state)
 	add_child(_pool_ticker)
-	
+
 	_summary_http = HTTPRequest.new()
 	_summary_http.timeout = SUMMARY_TIMEOUT
 	_summary_http.use_threads = true
 	add_child(_summary_http)
+
 
 func _exit_tree() -> void:
 	http_request.cancel_request()
 	if is_instance_valid(_summary_http):
 		_summary_http.cancel_request()
 
+
+## Called once the level is on screen: keeps a picture of it as it starts.
+func capture_start() -> void:
+	_start_shot = ""
+	if puzzle == null:
+		return
+	for i in 4:
+		await get_tree().process_frame
+	var img := await _capture_level()
+	_start_shot = _encode(img) if img != null else ""
+
+
+## The nudge after failed runs: the empty field asks a question that gets the
+## student to say what they expected, and takes the focus.
+func prompt_for_question() -> void:
+	_base_placeholder = "What did you expect to happen, and what happened instead?"
+	_refresh_busy_state()
+	if message_field.editable:
+		message_field.grab_focus()
+
+
+## A short comment on the student's winning program: a Python connection, a
+## real-world parallel, a what-if question, or, when the program is over par, a
+## pointer at where it could be tighter. The relay picks which (_summary_angle
+## in ai/main.py). Its own endpoint and prompt: no screenshot, no chat history,
+## and it never draws from the HintPool, because it is not a hint.
+##
+## `placed` and `par` are the game's own numbers; the relay uses them only to
+## choose the angle and never repeats them. Returns "" on any failure; the win
+## card then leaves the section out.
+func request_summary(program: String, placed := -1, par := -1) -> String:
+	if program.is_empty() or not is_instance_valid(Game.level):
+		return ""
+
+	var level := Game.level
+	var body := JSON.stringify({
+		session_id = Game.session_id,
+		level_id = level.scene_file_path.get_file().get_basename(),
+		program = program,
+		context = {
+			instructions = level.description.get_raw(),
+			blocks = _get_available_blocks_doc(),
+			placed = placed,
+			par = par,
+			intended_solution = level.intended_solution,
+		},
+	})
+
+	for url in [_sibling_url(api_url, "summary"), _sibling_url(fallback_url, "summary")]:
+		if url.is_empty():
+			continue
+		var reply: Variant = await _post_summary(url, body)
+		if reply != null:
+			return reply
+	return ""
+
+
+func _find_puzzle() -> Puzzle:
+	var node := get_parent()
+	while node != null and not node is Puzzle:
+		node = node.get_parent()
+	return node as Puzzle
+
+
 func _load_ai_config() -> void:
-	var folder := ProjectSettings.globalize_path("res://") if OS.has_feature("editor") \
-		else OS.get_executable_path().get_base_dir()
-	
 	var config := ConfigFile.new()
-	if config.load(folder.path_join(CONFIG_FILE)) != OK:
+	if config.load(Core.config_path(CONFIG_FILE)) != OK:
 		push_warning("No %s found; falling back to %s." % [CONFIG_FILE, DEFAULT_URL])
 		return
-	
 	api_url = config.get_value("ai", "url", api_url)
 	fallback_url = config.get_value("ai", "fallback_url", fallback_url)
 	client_token = config.get_value("ai", "token", client_token)
 	summary_url = config.get_value("ai", "summary_url", summary_url)
 
-#region UI interaction
+
+#region Chat
 func _on_submit_pressed() -> void:
 	if _awaiting_reply:
 		return
-	
 	var text := message_field.text.strip_edges()
 	if text.is_empty():
 		return
-	
 	if Interpreter.is_running:
 		return
 	if not HintPool.take():
-		puzzle.notif.push(
+		puzzle.notifications.push(
 			"Out of questions for now. The next one comes back in %s." % _clock(HintPool.seconds_to_next()),
 			Notification.Type.LOG
 		)
 		_refresh_busy_state()
 		return
 	_charged = true
-	
+
 	message_field.text = ""
 	_base_placeholder = DEFAULT_PLACEHOLDER
-	
+
 	if not Tutorial.send_keys_shown:
 		Tutorial.send_keys_shown = true
-		puzzle.notif.push(
+		puzzle.notifications.push(
 			"ENTER sends a message. SHIFT+ENTER starts a new line.",
 			Notification.Type.LOG
 		)
-	
+
 	var user_bubble := chat_bubble_scene.instantiate() as ChatBubble
 	user_bubble.text = text
 	user_bubble.right_aligned = true
 	_add_bubble(user_bubble)
 	Tutorial.message_sent.emit(text)
-	
+
 	_awaiting_reply = true
 	_refresh_busy_state()
-	
+
 	var thinking_bubble := chat_bubble_scene.instantiate() as ChatBubble
 	thinking_bubble.text = "Thinking..."
 	thinking_bubble.bubble_theme = bubble_theme_thinking
 	_add_bubble(thinking_bubble)
 	thinking_bubble.is_temporary = true
-	
+
 	await _send_hint_request(text)
+
 
 func _reset_chat() -> void:
 	var had_chat := not reset_button.disabled
 	http_request.cancel_request()
 	_awaiting_reply = false
 	if had_chat and is_instance_valid(puzzle):
-		puzzle.notif.push("New chat. The assistant has forgotten the old one.", Notification.Type.LOG)
-	
+		puzzle.notifications.push("New chat. The assistant has forgotten the old one.", Notification.Type.LOG)
+
 	for child in chat_stack.get_children():
 		child.queue_free()
-	
+
 	var preface := chat_bubble_scene.instantiate() as ChatBubble
 	preface.text = "Hi! I'm your AI Assistant. How can I help you with this level?"
 	preface.bubble_theme = bubble_theme_ai
 	_add_bubble(preface)
-	
+
 	reset_button.disabled = true
 	_refresh_busy_state()
+
 
 ## No chat while a program runs, paused included. A paused run is still a run:
 ## the canvas is locked, the robot is mid-program, and a hint about a program
 ## half way through executing reads the output log of something unfinished.
-## Decided with the panel's "limit the assistant" question; see HintPool for the
-## other half of that decision.
+## HintPool limits how often the assistant can be asked.
 func _refresh_busy_state() -> void:
 	if in_timeout:
 		return
-	
+
 	var busy: bool = Interpreter.is_running or _awaiting_reply
 	var left := HintPool.available()
-	
 	submit_button.disabled = busy or left == 0
 	# Typing stays open while the pool is empty, so a student can compose the next
 	# question while it refills; only sending waits.
 	message_field.editable = not busy
 	if busy:
 		reset_button.disabled = true
-	
+
 	submit_button.tooltip_text = "Send (%d of %d questions left)" % [left, HintPool.CAPACITY]
 	_update_placeholder(busy, left)
+
 
 func _update_placeholder(busy: bool, left: int) -> void:
 	if Interpreter.is_running:
@@ -202,37 +271,88 @@ func _update_placeholder(busy: bool, left: int) -> void:
 	else:
 		message_field.placeholder_text = _base_placeholder
 
+
 func _clock(seconds: int) -> String:
 	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]
 
-func prompt_for_question() -> void:
-	_base_placeholder = "What did you expect to happen, and what happened instead?"
-	_refresh_busy_state()
-	if message_field.editable:
-		message_field.grab_focus()
+
+func _flag_latest_user_message() -> void:
+	for idx in range(chat_stack.get_child_count() - 1, -1, -1):
+		var bubble := chat_stack.get_child(idx) as ChatBubble
+		if bubble == null or bubble.is_queued_for_deletion():
+			continue
+		if bubble.right_aligned:
+			# Stays on screen as red text until the next message is sent.
+			bubble.is_temporary = true
+			bubble.bubble_theme = bubble_theme_error
+			break
+
+
+func _add_ai_bubble(text: String, temporary := false) -> void:
+	var bubble := chat_bubble_scene.instantiate() as ChatBubble
+	bubble.text = text
+	bubble.bubble_theme = bubble_theme_ai if not temporary else bubble_theme_error
+	_add_bubble(bubble)
+	bubble.is_temporary = temporary
+
+
+func _add_bubble(bubble: ChatBubble) -> void:
+	_clear_temporary()
+
+	for node in chat_stack.get_children():
+		if not node.is_queued_for_deletion():
+			if reset_button.disabled:
+				# It only means something once there's a chat to clear, so it
+				# says so when it wakes up.
+				reset_button.disabled = false
+				UiMotion.pop_in(reset_button)
+			break
+
+	chat_stack.add_child(bubble)
+	UiMotion.fade_in(bubble, 0.18)
+	_snap_to_bottom()
+
+
+## Every new message scrolls the chat to its end. The new bubble is only laid out
+## a frame or two after it's added, so the scroll's end is read after that;
+## read straight away, it is the end of the chat before the new bubble.
+func _snap_to_bottom() -> void:
+	for i in 2:
+		await get_tree().process_frame
+	if is_instance_valid(scroll):
+		scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+
+
+func _clear_temporary() -> void:
+	for node in chat_stack.get_children():
+		if node is ChatBubble and (node as ChatBubble).is_temporary:
+			node.queue_free()
+
+
+func _apply_timeout(duration: int) -> void:
+	in_timeout = true
+
+	submit_button.disabled = true
+	reset_button.disabled = true
+	message_field.editable = false
+
+	for i in range(duration, 0, -1):
+		if not in_timeout:
+			return
+		message_field.placeholder_text = "Timed out. Wait %ds..." % i
+		await get_tree().create_timer(1.0).timeout
+
+	if in_timeout:
+		in_timeout = false
+		_refresh_busy_state()
 #endregion
 
-#region Request
-func _find_puzzle() -> Puzzle:
-	var node := get_parent()
-	while node != null and not node is Puzzle:
-		node = node.get_parent()
-	return node as Puzzle
 
-## Called once the level is on screen: keeps a picture of it as it starts.
-func capture_start() -> void:
-	_start_shot = ""
-	if puzzle == null:
-		return
-	for i in 4:
-		await get_tree().process_frame
-	var img := await _capture_level()
-	_start_shot = _encode(img) if img != null else ""
-	
+#region Hint requests
 func _send_hint_request(msg: String) -> void:
 	var level: Level = Game.level if is_instance_valid(Game.level) else null
 	var screenshot := await _get_viewport_jpeg_base64()
-	
+
 	var payload := {
 		session_id = Game.session_id,
 		level_id = level.scene_file_path.get_file().get_basename() if level else "",
@@ -250,29 +370,43 @@ func _send_hint_request(msg: String) -> void:
 			last_run_program = puzzle.last_run_yaml,  # the relay diffs this against workspace
 			output_log = "\n".join(Interpreter.output_log.slice(-LOG_LINES)),
 			robot = _robot_state(),
-			lists = _lists_state(),
+			lists = _room_state(),
 		},
 	}
-	
+
 	_pending_json = JSON.stringify(payload)
 	_tried_fallback = false
-	
+
 	if OS.is_debug_build():
 		var shown := payload.duplicate(true)
 		shown.screenshot_jpeg_b64 = "<%d base64 chars, %d bytes: %s>" % [screenshot.length(), _shot_bytes, _shot_note]
 		shown.start_screenshot_jpeg_b64 = "<%d base64 chars>" % String(payload.start_screenshot_jpeg_b64).length()
 		print("-- hint request --\n", JSON.stringify(shown, "  ", false))
-	
+
 	_post(api_url)
+
 
 func _post(url: String) -> void:
 	var headers := ["Content-Type: application/json"]
 	if not client_token.is_empty():
 		headers.append("X-UniCode-Token: " + client_token)
-	
+
 	if http_request.request(url, headers, HTTPClient.METHOD_POST, _pending_json) != OK:
 		_refund()
 		_on_hint_failed("Couldn't start the request. Check %s." % CONFIG_FILE)
+
+
+func _finish_request() -> void:
+	_awaiting_reply = false
+	_refresh_busy_state()
+
+
+## Gives the question back to the pool when the model never saw it. Idempotent.
+func _refund() -> void:
+	if _charged:
+		_charged = false
+		HintPool.refund()
+
 
 func _on_request_completed(
 	result: int,
@@ -283,7 +417,7 @@ func _on_request_completed(
 	var body_text := body.get_string_from_utf8() if body.size() > 0 else ""
 	var data: Variant = JSON.parse_string(body_text)
 	var spoke_protocol := typeof(data) == TYPE_DICTIONARY and (data as Dictionary).has("status")
-	
+
 	if OS.is_debug_build():
 		print("-- hint response (HTTP %d, result %d) --\n" % [response_code, result],
 			JSON.stringify(data, "  ", false) if spoke_protocol else body_text.left(500))
@@ -294,28 +428,29 @@ func _on_request_completed(
 			push_warning("AI screenshot: sent %d bytes but the relay attached none. Check the deployed relay's /healthz version." % _shot_bytes)
 		elif spoke_protocol and _shot_bytes > 0 and not (data as Dictionary).has("image_bytes"):
 			push_warning("AI screenshot: the relay doesn't report image_bytes, so it predates this client. Redeploy ai/main.py.")
-	
-	# The relay answers in our own shape even when refusing, so anything else means this host
-	# never handled the request. That's the only case worth spending on the other host.
+
+	# The relay answers in its own shape even when refusing, so anything else means
+	# this host never handled the request. That's the only case worth trying the
+	# other host for.
 	if not spoke_protocol:
 		if not _tried_fallback and not fallback_url.is_empty():
 			_tried_fallback = true
-			await get_tree().process_frame   # let HTTPRequest settle before reusing it
+			await get_tree().process_frame  # let HTTPRequest settle before reusing it
 			_post(fallback_url)
 			return
 		_refund()
 		_on_hint_failed("Couldn't reach the hint helper. Check the internet connection.")
 		return
-	
+
 	var reply := str((data as Dictionary).get("reply", ""))
 	match str((data as Dictionary).get("status", "")):
 		"ok", "off_topic":
-			_charged = false   # spent: the model answered
+			_charged = false  # spent: the model answered
 			_finish_request()
 			_add_ai_bubble(reply)
 			Tutorial.assistant_replied.emit(reply)
 		"blocked":
-			_charged = false   # spent: the model saw it, and a blocked message is the student's
+			_charged = false  # spent: the model saw it, and a blocked message is the student's
 			_on_hint_failed(reply if not reply.is_empty() else "Let's keep our chat about this level.")
 			_apply_timeout(BLOCKED_TIMEOUT)
 		"rate_limited":
@@ -329,26 +464,17 @@ func _on_request_completed(
 			_refund()
 			_on_hint_failed(reply if not reply.is_empty() else "The hint helper isn't available right now.")
 
-func _finish_request() -> void:
-	_awaiting_reply = false
-	_refresh_busy_state()
-
-## Gives the message back to the pool when the model never saw it. Idempotent.
-func _refund() -> void:
-	if _charged:
-		_charged = false
-		HintPool.refund()
 
 func _on_hint_failed(text: String) -> void:
 	_finish_request()
 	_add_ai_bubble(text, true)
-	_flag_latest_user_message()   # after the bubble, or _add_bubble would clear the red message
+	_flag_latest_user_message()  # after the bubble, or _add_bubble would clear the red message
 #endregion
 
-#region Context gathering
+
+#region What the model is told
 func _get_conversation_history() -> Array[Dictionary]:
 	var history: Array[Dictionary] = []
-	
 	for child in chat_stack.get_children():
 		var bubble := child as ChatBubble
 		if bubble == null or bubble.is_temporary or bubble.is_queued_for_deletion():
@@ -357,17 +483,16 @@ func _get_conversation_history() -> Array[Dictionary]:
 			role = "user" if bubble.right_aligned else "model",
 			text = bubble.text,
 		})
-	
 	if not history.is_empty():
-		history.pop_back()   # the current message travels in `message`
+		history.pop_back()  # the current message travels in `message`
 	return history
+
 
 func _get_available_blocks_doc() -> String:
 	if not is_instance_valid(Game.level):
 		return "N/A"
-	
+
 	var sections: PackedStringArray
-	
 	var toolbox_lines := _format_block_data(
 		Game.level.get_block_data(),
 		func(data: BlockData) -> bool: return data.toolbox
@@ -376,11 +501,11 @@ func _get_available_blocks_doc() -> String:
 		"\n".join(toolbox_lines) if not toolbox_lines.is_empty()
 		else "(none - everything this level needs is already on the canvas)"
 	)
-	
-	# Presets are filtered on syntax rather than on `toolbox`, because get_preset() sets
-	# toolbox = false on every block it hands over, and because the walk also turns up
-	# parameter sockets and the Begin block, none of which are authored vocabulary.
-	# Scaffolding has no syntax; real blocks do.
+
+	# Presets are filtered on syntax rather than on `toolbox`, because get_preset()
+	# sets toolbox = false on every block it hands over, and because the walk also
+	# turns up parameter sockets and the Begin block, none of which are authored
+	# vocabulary. Scaffolding has no syntax; real blocks do.
 	var preset_lines := _format_block_data(
 		Game.level.preset.preset_data,
 		func(data: BlockData) -> bool: return not data.syntax.is_empty()
@@ -390,8 +515,8 @@ func _get_available_blocks_doc() -> String:
 			"\nAlready on the canvas and locked (the student can't copy or delete these):\n"
 			+ "\n".join(preset_lines)
 		)
-	
 	return "\n".join(sections)
+
 
 func _format_block_data(all_data: Array[BlockData], include: Callable) -> PackedStringArray:
 	var lines: PackedStringArray
@@ -400,21 +525,17 @@ func _format_block_data(all_data: Array[BlockData], include: Callable) -> Packed
 		if seen.has(data.name) or not include.call(data):
 			continue
 		seen[data.name] = true
-		var s := data.syntax if not data.syntax.is_empty() else data.text
-		var d := data.description if not data.description.is_empty() else "No description."
-		lines.append("- %s: %s" % [s, d])
+		var syntax := data.syntax if not data.syntax.is_empty() else data.text
+		var description := data.description if not data.description.is_empty() else "No description."
+		lines.append("- %s: %s" % [syntax, description])
 	return lines
 
-const FACING := {
-	Vector2.UP: "up", Vector2.DOWN: "down",
-	Vector2.LEFT: "left", Vector2.RIGHT: "right",
-}
-	
+
 ## Where the robot is, in the same tile coordinates the level was authored in,
 ## and whether that is its start or where the last run left it, with the start
 ## of that room to compare. Without the difference spelled out, the model read
-## the end of a run as the start of the level.
-## Assumes the grid is anchored at the level's origin, which every level so far is.
+## the end of a run as the start of the level. Takes the grid as anchored at the
+## level's origin, as every level's is.
 func _robot_state() -> String:
 	var robot := get_tree().get_first_node_in_group(&"robot") as Node2D
 	if robot == null:
@@ -431,7 +552,8 @@ func _robot_state() -> String:
 	if not start.is_empty():
 		line += " It starts that room at %s." % start
 	return line
-	
+
+
 ## The robot's start in room `room`, from its Resettable snapshot, or "".
 func _robot_start(robot: Node2D, room: int, step: float) -> String:
 	var keeper := robot.get_node_or_null(^"ResettableComponent")
@@ -442,66 +564,73 @@ func _robot_start(robot: Node2D, room: int, step: float) -> String:
 	if not (snap.has(&"transform") and snap.has(&"facing_direction")):
 		return ""
 	return _tile_and_facing((snap[&"transform"] as Transform2D).origin, snap[&"facing_direction"], step)
-	
+
+
 func _tile_and_facing(at: Vector2, facing: Variant, step: float) -> String:
 	return "tile %s, facing %s" % [Vector2i((at / step).floor()), FACING.get(facing, "?")]
 
-## Every list in the level as Python writes it, room by room, because a
-## screenshot is a poor way to read numbers. It's what each list holds now, so
-## after a run it's what the program left there; a list that changed also says
-## what it started as. Empty on levels without lists, and the relay then leaves
-## the section out.
-func _lists_state() -> String:
+
+## Every terminal, file, dictionary and list in the level, room by room, as
+## Python writes it, because a screenshot is a poor way to read numbers. It's
+## what each holds now, so after a run it's what the program left there; one
+## that changed also says what it started as. Empty on levels without any, and
+## the relay then leaves the section out.
+func _room_state() -> String:
+	var terminals: Array[TerminalEntity] = []
+	var files: Array[FileEntity] = []
+	var boards: Array[DictEntity] = []
 	var lists: Array[ListEntity] = []
-	for node in get_tree().get_nodes_in_group(ListEntity.GROUP):
-		if node is ListEntity:
+	for node in get_tree().get_nodes_in_group(RoomEntity.GROUP):
+		if node is TerminalEntity:
+			terminals.append(node as TerminalEntity)
+		elif node is FileEntity:
+			files.append(node as FileEntity)
+		elif node is DictEntity:
+			boards.append(node as DictEntity)
+		elif node is ListEntity:
 			lists.append(node as ListEntity)
+	terminals.sort_custom(func(a: TerminalEntity, b: TerminalEntity) -> bool: return a.room_index < b.room_index)
 	lists.sort_custom(func(a: ListEntity, b: ListEntity) -> bool:
 		return a.room_index < b.room_index if a.room_index != b.room_index \
 				else String(a.get_list_name()) < String(b.get_list_name()))
 
 	var rooms := Game.level.room_goals.size() if is_instance_valid(Game.level) else 1
+	var room_of := func(entity: RoomEntity) -> String:
+		return "Room %d: " % (entity.room_index + 1) if rooms > 1 else ""
 	var lines: PackedStringArray = []
-	# A room's terminal goes here too: what its user types, what was printed,
-	# and what the screen should show, which a screenshot shows poorly.
-	var terminals: Array[TerminalEntity] = []
-	for node in get_tree().get_nodes_in_group(TerminalEntity.GROUP):
-		if node is TerminalEntity:
-			terminals.append(node as TerminalEntity)
-	terminals.sort_custom(func(a: TerminalEntity, b: TerminalEntity) -> bool: return a.room_index < b.room_index)
+	# A terminal: what its user types, what was printed, and what the screen
+	# should show, which a screenshot shows poorly.
 	for terminal in terminals:
-		lines.append("%sterminal: %s" % ["Room %d: " % (terminal.room_index + 1) if rooms > 1 else "", terminal.describe()])
-	for node in get_tree().get_nodes_in_group(FileEntity.GROUP):
-		var file := node as FileEntity
-		lines.append("%sfile %s holds the lines %s" % ["Room %d: " % (file.room_index + 1) if rooms > 1 else "", file.file_name, Core.to_python_repr(Array(file.lines))])
-	for node in get_tree().get_nodes_in_group(DictEntity.GROUP):
-		var board := node as DictEntity
-		var line := "%s%s = %s  (dict)" % ["Room %d: " % (board.room_index + 1) if rooms > 1 else "", board.get_dict_name(), board.repr()]
+		lines.append("%sterminal: %s" % [room_of.call(terminal), terminal.describe()])
+	for file in files:
+		lines.append("%sfile %s holds the lines %s" % [room_of.call(file), file.file_name, Core.to_python_repr(Array(file.lines))])
+	for board in boards:
+		var line := "%s%s = %s  (dict)" % [room_of.call(board), board.get_dict_name(), board.repr()]
 		if board.repr() != board.initial_repr():
 			line += "; it started as " + board.initial_repr()
 		lines.append(line)
 	for list in lists:
-		var line := "%s%s = %s  (%s)" % [
-			"Room %d: " % (list.room_index + 1) if rooms > 1 else "",
-			list.get_list_name(), list.repr(), list.kind_name(),
-		]
+		var line := "%s%s = %s  (list)" % [room_of.call(list), list.get_list_name(), list.repr()]
 		if list.repr() != list.initial_repr():
 			line += "; it started as " + list.initial_repr()
 		lines.append(line)
 	return "\n".join(lines)
+#endregion
 
+
+#region Screenshots
 func _get_viewport_jpeg_base64() -> String:
 	_shot_bytes = 0
 	var img: Image = await _capture_level()
 	if img == null:
 		push_warning("AI screenshot: nothing captured (%s). The hint goes out without one." % _shot_note)
 		return ""
-	
 	var encoded := _encode(img)
 	_shot_bytes = Marshalls.base64_to_raw(encoded).size()
 	_shot_note += ", %dx%d" % [img.get_width(), img.get_height()]
 	return encoded
-	
+
+
 ## `img` at most SHOT_WIDTH wide, as a JPEG in base64.
 func _encode(img: Image) -> String:
 	if img.get_width() > SHOT_WIDTH:
@@ -509,8 +638,8 @@ func _encode(img: Image) -> String:
 		img.resize(SHOT_WIDTH, height, Image.INTERPOLATE_BILINEAR)
 	return Marshalls.raw_to_base64(img.save_jpg_to_buffer(0.8))
 
-## What the student sees in the environment panel, flattened onto an opaque
-## background.
+
+## What the student sees in the room panel, flattened onto an opaque background.
 ##
 ## The SubViewport is transparent_bg, so its texture is transparent wherever the
 ## level draws nothing, and in some renderer/driver combinations reading it back
@@ -522,34 +651,36 @@ func _capture_level() -> Image:
 	if not (is_instance_valid(Game.level) and is_instance_valid(puzzle.level_viewport)):
 		_shot_note = "no level or no viewport"
 		return null
-	
+
 	await RenderingServer.frame_post_draw
-	
+
 	var img := puzzle.level_viewport.get_texture().get_image()
 	if _usable(img):
 		_shot_note = "from the level viewport"
 		return _flatten(img)
-	
+
 	var why := "empty" if img == null or img.is_empty() else "fully transparent"
 	var container := puzzle.level_viewport.get_parent() as Control
 	var window := get_viewport().get_texture().get_image()
 	if container == null or not _usable(window):
 		_shot_note = "level viewport was %s, window capture failed too" % why
 		return null
-	
+
 	var on_screen := container.get_screen_transform() * Rect2(Vector2.ZERO, container.size)
 	var region := Rect2i(on_screen).intersection(Rect2i(Vector2i.ZERO, window.get_size()))
 	if region.size.x < 8 or region.size.y < 8:
 		_shot_note = "level viewport was %s, environment panel is off screen" % why
 		return null
-	
+
 	_shot_note = "level viewport was %s, cropped from the window" % why
 	return _flatten(window.get_region(region))
+
 
 func _usable(img: Image) -> bool:
 	return img != null and not img.is_empty() \
 		and img.get_width() >= 8 and img.get_height() >= 8 \
 		and not img.is_invisible()
+
 
 func _flatten(img: Image) -> Image:
 	img.convert(Image.FORMAT_RGBA8)
@@ -560,55 +691,22 @@ func _flatten(img: Image) -> Image:
 	return flat
 #endregion
 
-#region Post-win comment
-## A short comment on the student's winning program: a Python connection, a
-## real-world parallel, a what-if question, or, when the program is over par, a
-## pointer at where it could be tighter. The relay picks which (see
-## _summary_angle in ai/main.py). Its own endpoint and prompt: no screenshot, no
-## chat history, and it never draws from the HintPool, because it is not a hint.
-##
-## `placed` and `par` are the game's own numbers; the relay uses them only to
-## choose the angle and never repeats them. Returns "" on any failure; the win
-## card simply leaves the section out.
-func request_summary(program: String, placed := -1, par := -1) -> String:
-	if program.is_empty() or not is_instance_valid(Game.level):
-		return ""
-	
-	var level := Game.level
-	var body := JSON.stringify({
-		session_id = Game.session_id,
-		level_id = level.scene_file_path.get_file().get_basename(),
-		program = program,
-		context = {
-			instructions = level.description.get_raw(),
-			blocks = _get_available_blocks_doc(),
-			placed = placed,
-			par = par,
-			intended_solution = level.intended_solution,
-		},
-	})
-	
-	for url in [_sibling_url(api_url, "summary"), _sibling_url(fallback_url, "summary")]:
-		if url.is_empty():
-			continue
-		var reply: Variant = await _post_summary(url, body)
-		if reply != null:
-			return reply
-	return ""
 
-## null means this host never answered in our shape, so the other is worth a try;
-## a String, even an empty one, means the relay answered and that is final.
+#region Win card comment
+## Null means this host never answered in the relay's shape, so the other is
+## worth a try; a String, even an empty one, means the relay answered and that
+## is final.
 func _post_summary(url: String, body: String) -> Variant:
 	if not is_instance_valid(_summary_http):
 		return ""
 	var headers := ["Content-Type: application/json"]
 	if not client_token.is_empty():
 		headers.append("X-UniCode-Token: " + client_token)
-	
+
 	_summary_http.cancel_request()
 	if _summary_http.request(url, headers, HTTPClient.METHOD_POST, body) != OK:
 		return null
-	
+
 	var outcome: Array = await _summary_http.request_completed
 	var raw: PackedByteArray = outcome[3]
 	if raw.is_empty():
@@ -620,6 +718,7 @@ func _post_summary(url: String, body: String) -> Variant:
 		print("-- summary response --\n", JSON.stringify(data, "  ", false))
 	return str(data.get("reply", "")).strip_edges() if str(data.get("status", "")) == "ok" else ""
 
+
 ## "https://x/api/hint" -> "https://x/api/summary". The cfg can also name one
 ## outright with summary_url, for a relay that lives somewhere else.
 func _sibling_url(url: String, endpoint: String) -> String:
@@ -628,71 +727,4 @@ func _sibling_url(url: String, endpoint: String) -> String:
 	if url == api_url and not summary_url.is_empty():
 		return summary_url
 	return url.get_base_dir().path_join(endpoint)
-#endregion
-
-#region UI helpers
-func _flag_latest_user_message() -> void:
-	for idx in range(chat_stack.get_child_count() - 1, -1, -1):
-		var bubble := chat_stack.get_child(idx) as ChatBubble
-		if bubble == null or bubble.is_queued_for_deletion():
-			continue
-		if bubble.right_aligned:
-			# Stays temporarily on screen as red text, deleted on the next submission
-			bubble.is_temporary = true
-			bubble.bubble_theme = bubble_theme_error
-			break
-
-func _add_ai_bubble(text: String, temporary := false) -> void:
-	var bubble := chat_bubble_scene.instantiate() as ChatBubble
-	bubble.text = text
-	bubble.bubble_theme = bubble_theme_ai if not temporary else bubble_theme_error
-	_add_bubble(bubble)
-	bubble.is_temporary = temporary
-
-func _add_bubble(bubble: ChatBubble) -> void:
-	_clear_temporary()
-	
-	for node in chat_stack.get_children():
-		if not node.is_queued_for_deletion():
-			if reset_button.disabled:
-				# It only means something once there's a chat to clear, so it
-				# says so when it wakes up.
-				reset_button.disabled = false
-				UiMotion.pop_in(reset_button)
-			break
-	
-	chat_stack.add_child(bubble)
-	UiMotion.fade_in(bubble, 0.18)
-	_snap_to_bottom()
-
-## Every new message scrolls the chat to its end. The new bubble is only laid out
-## a frame or two after it's added, so the scroll's end is read after that;
-## reading it straight away scrolled to the end of the chat before it.
-func _snap_to_bottom() -> void:
-	for i in 2:
-		await get_tree().process_frame
-	if is_instance_valid(scroll):
-		scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
-
-func _clear_temporary() -> void:
-	for node in chat_stack.get_children():
-		if node is ChatBubble and (node as ChatBubble).is_temporary:
-			node.queue_free()
-
-func _apply_timeout(duration: int) -> void:
-	in_timeout = true
-	
-	submit_button.disabled = true
-	reset_button.disabled = true
-	message_field.editable = false
-	
-	for i in range(duration, 0, -1):
-		if not in_timeout:
-			return
-		message_field.placeholder_text = "Timed out. Wait %ds..." % i
-		await get_tree().create_timer(1.0).timeout
-	
-	if in_timeout:
-		in_timeout = false
-		_refresh_busy_state()
 #endregion

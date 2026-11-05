@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
-[ext_resource type="Script" uid="uid://6rosxy60tqsx" path="res://puzzle/ui/side panel/panel.gd" id="2_3gr0x"]
+[ext_resource type="Script" uid="uid://6rosxy60tqsx" path="res://puzzle/ui/side panel/side_panel.gd" id="2_3gr0x"]
 [ext_resource type="Script" uid="uid://bsse2frnd4l02" path="res://puzzle/button_manager.gd" id="2_n8lp6"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_xv3xb"]
 [ext_resource type="Texture2D" uid="uid://37qy1g0vxtoi" path="res://puzzle/ui/side panel/icons/pixelarticons--pause-solid.png" id="4_1wbjf"]
@@ -28,11 +28,11 @@
 [ext_resource type="PackedScene" uid="uid://cb1n262lfmlp8" path="res://menus/pause/pause_menu.tscn" id="20_equ7n"]
 [ext_resource type="Texture2D" uid="uid://dvh7ej8j7rh2y" path="res://puzzle/ui/side panel/icons/pixelarticons--frame.png" id="24_a3a4o"]
 [ext_resource type="PackedScene" uid="uid://bafuclrikj4j7" path="res://puzzle/ui/level_complete/level_complete.tscn" id="28_88ajp"]
-[ext_resource type="PackedScene" path="res://puzzle/ui/canvas/value_bubbles.tscn" id="29_bubbles"]
+[ext_resource type="PackedScene" path="res://puzzle/ui/canvas/value_tags.tscn" id="29_tags"]
 [ext_resource type="Texture2D" uid="uid://bhetqsdff248x" path="res://puzzle/ui/side panel/icons/pixelarticons--arrow-bar-left.png" id="30_bar_left"]
 [ext_resource type="Texture2D" uid="uid://bpi4nty8o3g3f" path="res://puzzle/ui/side panel/icons/pixelarticons--arrow-bar-right.png" id="31_bar_right"]
 
-[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notif", "level_viewport", "level_complete", "pause_menu")]
+[node name="Puzzle" type="Control" node_paths=PackedStringArray("canvas", "side_panels", "information", "toolbox", "ai_assistant", "notifications", "level_viewport", "level_complete", "pause_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,13 +40,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_iy1cu")
-print_yaml = true
 canvas = NodePath("Canvas")
 side_panels = [NodePath("UserInterface/SideMenuLeft/Panel"), NodePath("UserInterface/SideMenuRight/Panel")]
 information = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleInformation/ScrollContainer/VBoxContainer")
 toolbox = NodePath("UserInterface/SideMenuLeft/Panel/PuzzleToolbox")
 ai_assistant = NodePath("UserInterface/SideMenuLeft/Panel/AIAssistant")
-notif = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
+notifications = NodePath("UserInterface/MiddleSpace/NotificationContainer/NotificationStack")
 level_viewport = NodePath("UserInterface/SideMenuRight/Panel/PuzzleEnvironment/SubViewportContainer/SubViewport")
 level_complete = NodePath("LevelComplete")
 pause_menu = NodePath("PauseMenu")
@@ -71,7 +70,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ValueBubbles" parent="." instance=ExtResource("29_bubbles")]
+[node name="ValueTags" parent="." instance=ExtResource("29_tags")]
 layout_mode = 1
 
 [node name="UserInterface" type="HBoxContainer" parent="."]
@@ -308,7 +307,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 2
 script = ExtResource("11_j1boe")
-notif_scene = ExtResource("16_e1dgq")
+notification_scene = ExtResource("16_e1dgq")
 
 [node name="Label" type="Label" parent="UserInterface/MiddleSpace"]
 layout_mode = 1

@@ -1,17 +1,15 @@
 class_name TutorialMask
 extends Control
-
 ## A full-screen dim with holes cut in it. There is no CSG for Controls, so the
 ## cut is done twice: _draw() paints the dim everywhere except the holes, and
 ## _has_point() answers "not here" inside them, which sends the click to whatever
 ## is underneath.
 ##
-## No shader. The dim is drawn as plain rectangles: the screen is cut into a grid
-## along every hole edge and each cell outside all holes is filled. Up to eight
-## holes is at most 17 x 17 cells, which is nothing to draw, and draw_rect()
-## renders the same on every renderer and driver. The previous shader version
-## drew correctly in the editor and as a flat dim with no holes in the lab
-## export; this one has no way to differ between the two.
+## No shader: a shader drew the holes in the editor and none in an exported
+## build. The dim is drawn as plain rectangles instead: the screen is cut into a
+## grid along every hole edge and each cell outside all holes is filled. Up to
+## eight holes is at most 17 x 17 cells, which is nothing to draw, and
+## draw_rect() renders the same on every renderer and driver.
 
 const MAX_HOLES := 8
 
@@ -35,16 +33,18 @@ var dimmed := true:
 		queue_redraw()
 
 
+static func _unique_sorted(values: Array) -> Array:
+	values.sort()
+	var out := []
+	for v in values:
+		if out.is_empty() or not is_equal_approx(v, out[-1]):
+			out.append(v)
+	return out
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	resized.connect(queue_redraw)
-	queue_redraw()
-
-
-func set_holes(rects: Array[Rect2]) -> void:
-	if rects == holes:
-		return
-	holes = rects
 	queue_redraw()
 
 
@@ -97,10 +97,8 @@ func _draw() -> void:
 				run_start = -1.0
 
 
-static func _unique_sorted(values: Array) -> Array:
-	values.sort()
-	var out := []
-	for v in values:
-		if out.is_empty() or not is_equal_approx(v, out[-1]):
-			out.append(v)
-	return out
+func set_holes(rects: Array[Rect2]) -> void:
+	if rects == holes:
+		return
+	holes = rects
+	queue_redraw()

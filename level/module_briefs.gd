@@ -1,8 +1,8 @@
+class_name ModuleBriefs
+extends RefCounted
 ## The briefs of the levels tools/modules/gen_modules.py writes, keyed by
 ## scene file name. Generated: change module_specs.py and run the generator.
 ## LevelBriefs.for_scene() reads this table after its own.
-class_name ModuleBriefs
-extends RefCounted
 
 const BRIEFS := {
 	"io_1": {

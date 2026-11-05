@@ -1,6 +1,5 @@
 class_name GuideCard
 extends PanelContainer
-
 ## The card a guide page is shown on: a title, a picture, a line or two of text
 ## and the buttons that move between pages. TutorialOverlay fills it per page;
 ## the look is all in guide_card.tscn.
@@ -25,6 +24,14 @@ const VIDEO_FRAME := Color(0.3, 0.33, 0.45)
 var _refit_queued := false
 
 
+## A page's text as BBCode: **this** in bold, and any square bracket kept as
+## text rather than read as a tag.
+static func rich(text: String) -> String:
+	var escaped := text.replace("[", "[lb]")
+	var bold := RegEx.create_from_string("\\*\\*(.+?)\\*\\*")
+	return bold.sub(escaped, "[b]$1[/b]", true)
+
+
 func _ready() -> void:
 	next_button.pressed.connect(next_pressed.emit)
 	back_button.pressed.connect(back_pressed.emit)
@@ -34,14 +41,6 @@ func _ready() -> void:
 	# page. Refit whenever what's inside settles.
 	minimum_size_changed.connect(_refit)
 
-func _refit() -> void:
-	if not _refit_queued:
-		_refit_queued = true
-		_do_refit.call_deferred()
-
-func _do_refit() -> void:
-	_refit_queued = false
-	reset_size()
 
 ## `waits` is true when the page moves on by itself (a block placed, a button
 ## pressed), so the card says what to do instead of offering Next. `can_go_back`
@@ -68,6 +67,7 @@ func show_page(page: Dictionary, index: int, count: int, waits: bool, can_go_bac
 	next_button.text = page.get("button", "Done" if last else "Next")
 	reset_size()
 	UiMotion.fade_in(get_node(^"Margin"), 0.15)
+
 
 ## What the page shows above its words, top to bottom: a picture of what a block
 ## does, a video, an image or scene, a small program, and last the block itself.
@@ -100,12 +100,6 @@ func _graphics(page: Dictionary) -> Array[Control]:
 		shown.append(SlotExamples.build(picture, slot) if slot >= 0 else picture)
 	return shown
 
-## A page's text as BBCode: **this** in bold, and any square bracket kept as
-## text rather than read as a tag.
-static func rich(text: String) -> String:
-	var escaped := text.replace("[", "[lb]")
-	var bold := RegEx.create_from_string("\\*\\*(.+?)\\*\\*")
-	return bold.sub(escaped, "[b]$1[/b]", true)
 
 func _loaded_graphic(page: Dictionary, path: String) -> Control:
 	var resource := load(path)
@@ -118,6 +112,7 @@ func _loaded_graphic(page: Dictionary, path: String) -> Control:
 		return image
 	push_warning("Guide page '%s': graphic '%s' is neither a scene nor an image." % [page.get("title", ""), path])
 	return null
+
 
 ## A short silent clip that loops, in a thin frame.
 func _video(path: String) -> Control:
@@ -141,6 +136,7 @@ func _video(path: String) -> Control:
 	frame.add_child(player)
 	return frame
 
+
 ## A picture drawn small (a board at the size it is in the room) can ask to be
 ## shown bigger with a "scale" metadata entry on its root: 2 doubles it. Whole
 ## numbers keep the pixel fonts crisp.
@@ -154,3 +150,14 @@ func _zoomed(graphic: Control) -> Control:
 	graphic.scale = Vector2(k, k)
 	frame.add_child(graphic)
 	return frame
+
+
+func _refit() -> void:
+	if not _refit_queued:
+		_refit_queued = true
+		_do_refit.call_deferred()
+
+
+func _do_refit() -> void:
+	_refit_queued = false
+	reset_size()

@@ -1,13 +1,13 @@
 class_name TerminalFunctions
 extends Node
+## What the terminal's blocks do, and the conversions that go with what it
+## gives: Input reads a line the user typed in the running room, as text, the
+## way Python's input() does; Convert is int(), float() and str(). Print stays
+## in generic.gd, where it writes to the terminal when the room has one.
 
-## The terminal's blocks, and the conversions that go with what it gives:
-## Input reads a line the user typed in the running room, as text, the way
-## Python's input() does; Convert is int(), float() and str(). Print stays in
-## generic.gd, where it writes to the terminal when the room has one.
 
-
-## text: input ( ). Not _input, which is Godot's own input callback on every Node.
+## input ( ). Named _read_input, not _input, which is Godot's own input
+## callback on every Node.
 func _read_input(this: Block) -> Variant:
 	var terminal := TerminalEntity.find()
 	if terminal == null:
@@ -24,7 +24,8 @@ func _read_input(this: Block) -> Variant:
 	await Interpreter.step(this)
 	return line
 
-## text: {int/float/str} ( {value} )
+
+## {int/float/str} ( {value} )
 ##
 ## Python's rules: int() of text needs a whole number written out ("12", not
 ## "12.5"), int() of a decimal number drops what's after the point, and float()

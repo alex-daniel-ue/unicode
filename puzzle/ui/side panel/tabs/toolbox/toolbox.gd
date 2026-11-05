@@ -1,6 +1,5 @@
 class_name Toolbox
 extends MarginContainer
-
 ## The blocks a level gives the student, all in one scroll: the ones it
 ## introduces first, in a section of their own, then every category as a heading
 ## and a grid of tiles. A tab bar above the scroll names the categories.
@@ -11,8 +10,8 @@ extends MarginContainer
 ## block stays in view to brainstorm with. Pointing at a block lights its
 ## category too.
 ##
-## One scroll for everything, because on a short window the new blocks section
-## used to push the tabs off the bottom, where they couldn't be reached.
+## One scroll for everything: with the new blocks in a section of their own
+## above it, a short window pushed the tabs off the bottom, out of reach.
 
 const NEW_SECTION := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_new_section.tscn")
 ## What each BlockData category is called on its tab. Short, because the tabs
@@ -38,7 +37,8 @@ const SCROLL_TIME := 0.3
 ## top of the scroll.
 const SPY_OFFSET := 48.0
 
-@export var _internal_category_order: PackedStringArray
+## The categories in the order they're shown; any other comes after, by name.
+@export var category_order: PackedStringArray
 @export var category_scene: PackedScene
 @export var new_holder: Container
 @export var tabs: TabBar
@@ -62,6 +62,7 @@ func _ready() -> void:
 	scroll.get_v_scroll_bar().value_changed.connect(_on_scrolled)
 	_refresh_tabs()
 
+
 func add_block(block: Block) -> void:
 	var name_of := block.data.category
 	var category: ToolboxCategory = _categories.get(name_of)
@@ -76,6 +77,7 @@ func add_block(block: Block) -> void:
 	category.add_block(block)
 	_sort()
 	_refresh_tabs()
+
 
 ## Moves the blocks this level introduces into a section above the categories,
 ## each with its note. A category left with nothing in it goes away. The
@@ -120,6 +122,7 @@ func mark_new(new_blocks: Array[BlockData], notes: PackedStringArray) -> void:
 	_sort()
 	_refresh_tabs()
 
+
 ## Scrolls `block` into view and lights its category, so something pointing at
 ## it (a guide page) finds it on screen. Smooth, and safe to call every frame.
 func reveal(block: Block) -> void:
@@ -138,15 +141,17 @@ func reveal(block: Block) -> void:
 			_pinned = true
 			_select(i)
 
+
 ## The part of the screen the scroll shows: blocks outside it are scrolled away.
 func visible_rect() -> Rect2:
 	return scroll.get_global_rect()
 
+
 #region Tabs and scrolling
 func _sort() -> void:
 	var order := func(a: ToolboxCategory, b: ToolboxCategory) -> bool:
-		var a_idx := _internal_category_order.find(a.category_name)
-		var b_idx := _internal_category_order.find(b.category_name)
+		var a_idx := category_order.find(a.category_name)
+		var b_idx := category_order.find(b.category_name)
 		if a_idx == -1: a_idx = 99999
 		if b_idx == -1: b_idx = 99999
 		if a_idx == b_idx:
@@ -157,6 +162,7 @@ func _sort() -> void:
 	for i in _order.size():
 		sections.move_child(_order[i], i)
 
+
 func _refresh_tabs() -> void:
 	tabs.clear_tabs()
 	for category in _order:
@@ -166,6 +172,7 @@ func _refresh_tabs() -> void:
 	_current = -1
 	if not _order.is_empty():
 		_select(0)
+
 
 ## Selects tab `index` and lights its category, without scrolling.
 func _select(index: int) -> void:
@@ -180,6 +187,7 @@ func _select(index: int) -> void:
 		var lit := i == index or not dim
 		_order[i].create_tween().tween_property(_order[i], "modulate:a", 1.0 if lit else DIMMED, DIM_TIME)
 
+
 func _on_tab_clicked(index: int) -> void:
 	if index < 0 or index >= _order.size():
 		return
@@ -187,11 +195,13 @@ func _on_tab_clicked(index: int) -> void:
 	_select(index)
 	_scroll_to(int(_content_y(_order[index]) - 8.0))
 
+
 func _on_category_pointed_at(category: ToolboxCategory) -> void:
 	var index := _order.find(category)
 	if index >= 0:
 		_pinned = true  # until the next scroll by hand
 		_select(index)
+
 
 func _scroll_to(target: int) -> void:
 	target = clampi(target, 0, maxi(int(scroll.get_v_scroll_bar().max_value - scroll.size.y), 0))
@@ -203,6 +213,7 @@ func _scroll_to(target: int) -> void:
 	_scroll_tween = create_tween()
 	_scroll_tween.tween_property(scroll, "scroll_vertical", target, SCROLL_TIME) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
 
 ## The scroll moved. By hand, the category now in view becomes the tab; while a
 ## tab press is scrolling, the pressed tab stays.
@@ -227,6 +238,7 @@ func _on_scrolled(_value: float) -> void:
 		if _content_y(_order[i]) <= line:
 			index = i
 	_select(index)
+
 
 ## Where `control` sits in the scroll's content, from its top.
 func _content_y(control: Control) -> float:

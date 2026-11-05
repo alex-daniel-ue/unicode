@@ -1,24 +1,23 @@
+class_name Guides
+extends RefCounted
 ## The guides ("dimmed tutorials"): short runs of pages shown over the puzzle
 ## when a level opens with something new in it, and again from the pause menu.
 ## TutorialOverlay shows them; this says what they are.
 ##
-## Kept in code rather than in scene files on purpose. The first tour kept its
-## behaviour in exported properties on step nodes, and the editor dropped those
-## from the scene twice (a save while a script wasn't loaded), each time leaving
-## a tour that dimmed everything and swallowed the click it asked for.
+## Kept in code rather than in scene files: a guide kept as exported properties
+## on step nodes lost them when the editor saved the scene while a script wasn't
+## loaded, which left a guide that dimmed everything and swallowed the click it
+## asked for.
 ##
 ## Write for a first-year who reads English as a second language and skims: a
 ## picture first, then one or two plain sentences, and never the answer. A page
 ## that waits for the player to do something starts with what to do, in **bold**
 ## (GuideCard draws the stars as bold), then says why. A page that is there to
 ## be read has no bold at all: it explains, and its arrow already says where to
-## look. Plain is not short. Use whole
-## sentences with the small words in them ("that", "of", "in"), one idea a
-## sentence, and the same words every time: green flag, battery, list, value,
-## index, click. Never count on the student remembering the last level; say it
-## again, or show it.
-class_name Guides
-extends RefCounted
+## look. Plain is not short. Use whole sentences with the small words in them
+## ("that", "of", "in"), one idea a sentence, and the same words every time:
+## green flag, battery, list, value, index, click. Never count on the student
+## remembering the last level; say it again, or show it.
 
 ## What moves a page on.
 enum Advance {
@@ -241,6 +240,7 @@ const LEVELS := {
 }
 
 
+## Every page `level` gets, in order.
 static func pages_for(level: Level) -> Array:
 	if level == null or level.scene_file_path.is_empty():
 		return []
@@ -254,6 +254,7 @@ static func pages_for(level: Level) -> Array:
 		else:
 			push_warning("Guides: level '%s' names a set '%s' that doesn't exist." % [key, item])
 	return pages
+
 
 ## A page per block the level introduces, from its description: the block's
 ## name, a picture of what it does when there is one, the block, its note, and
@@ -299,6 +300,7 @@ static func block_pages(level: Level, skip: PackedStringArray = []) -> Array:
 			page.picture = BLOCK_PICTURES[data.name]
 		pages.append(page)
 	return pages
+
 
 ## The blocks that `pages` already light up in the toolbox.
 static func _covered(pages: Array) -> PackedStringArray:

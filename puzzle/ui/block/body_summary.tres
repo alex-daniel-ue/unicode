@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_ewwdl")
-name = "DummyBlock"
+name = "BodySummary"
 base_path = "uid://demtvw17w06g5"
 draggable = false
 placeable = false

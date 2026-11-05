@@ -1,14 +1,15 @@
 class_name VariableWatcher
 extends Control
-
+## The Variables tab: every variable and its value while a program runs, frame
+## by frame as a tree, and after the run, the values it ended with (or had when
+## it stopped).
 
 const COL_NAME := 0
 const COL_VALUE := 1
 const COL_TYPE := 2
-
 ## Friendly type names, matching the wording Core.validate_type() uses in block
-## errors. Keep the two in sync — a student who reads "must be an integer" in a
-## red block shouldn't then see "int" here.
+## errors, so a student who reads "must be an integer" on a block sees
+## "integer" here, not "int".
 const TYPE_NAMES := {
 	TYPE_BOOL: "Boolean",
 	TYPE_INT: "integer",
@@ -17,19 +18,11 @@ const TYPE_NAMES := {
 	TYPE_STRING_NAME: "variable name",
 	TYPE_ARRAY: "list",
 }
-
-const ALIGN := [HORIZONTAL_ALIGNMENT_LEFT, HORIZONTAL_ALIGNMENT_CENTER, HORIZONTAL_ALIGNMENT_CENTER]  # NEW
-
-const TONE_INFO := Color("#38BDF8")
-const TONE_ERROR := Color("#FB7185")
-const TONE_STOPPED := Color("#94A3B8")
-const TONE_DONE := Color("#34D399")
-
+const ALIGN := [HORIZONTAL_ALIGNMENT_LEFT, HORIZONTAL_ALIGNMENT_CENTER, HORIZONTAL_ALIGNMENT_CENTER]
 
 @export var tree: Tree
 @export var status: Label
 @export var status_container: Container
-
 @export var frame_color := Color(0.62, 0.68, 0.80)
 @export var stale_color := Color(0.55, 0.55, 0.55)
 
@@ -47,16 +40,13 @@ func _ready() -> void:
 	tree.set_column_expand_ratio(COL_NAME, 4)
 	tree.set_column_expand_ratio(COL_VALUE, 4)
 	tree.set_column_expand_ratio(COL_TYPE, 3)
-	
 	for col in 3:
 		tree.set_column_title_alignment(col, ALIGN[col])
 	tree.set_column_clip_content(COL_VALUE, true)
-	
-	
+
 	Interpreter.scope_changed.connect(_on_scope_changed)
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 	Interpreter.paused_changed.connect(_on_scope_changed)
-	
 	_rebuild()
 
 
@@ -67,9 +57,122 @@ func _process(_delta: float) -> void:
 	_rebuild()
 
 
+## Brings this tab forward without toggling the panel shut.
+func focus_self() -> void:
+	var panel := get_parent() as SidePanel
+	if panel != null:
+		panel.focus_content(self)
+
+
+## A level with the minimal UI has no button for this tab, so it never opens it.
+func _hidden_by_level() -> bool:
+	return is_instance_valid(Game.level) and Game.level.minimal_ui
+
+
+func _rebuild() -> void:
+	tree.clear()
+
+	var is_stale := not Interpreter.is_running
+	var stopped := not Interpreter.frozen_scopes.is_empty()
+	# Untyped: Array[Interpreter.Frame] is an inner class, which the analyzer
+	# doesn't reliably accept as a typed array's element.
+	var frames: Array = Interpreter.frozen_scopes if (is_stale and stopped) else Interpreter.scopes
+
+	var total := 0
+	for frame in frames:
+		total += frame.vars.size()
+
+	if frames.is_empty():
+		_set_status("Press Play to watch your variables change.")
+	elif total == 0:
+		_set_status("Your last run didn't make any variables." if is_stale else "No variables yet.")
+	elif not is_stale:
+		if Interpreter.is_paused:
+			_set_status("Paused. These are the values right now.")
+		else:
+			status_container.hide()
+	elif not Interpreter.active_errors.is_empty():
+		_set_status("These are the values when the error happened.")
+	elif stopped:
+		_set_status("These are the values when the program stopped.")
+	else:
+		_set_status("These are the values at the end of your last run.")
+
+	tree.visible = total > 0
+	if total > 0:
+		_fill_tree(frames, is_stale)
+		if _focus_when_filled and Interpreter.is_running:
+			_focus_when_filled = false
+			focus_self()
+	tree.update_minimum_size()
+
+
+func _set_status(message: String) -> void:
+	status.text = message
+	status_container.show()
+
+
+func _fill_tree(frames: Array, is_stale: bool) -> void:
+	var text_color := stale_color if is_stale else frame_color
+	var parent_item := tree.create_item()
+	var frame_item: TreeItem = null
+	var previous_owner := 0
+
+	for frame in frames:
+		# A for-loop opens two frames: one holding the counter, and one per pass
+		# of the body. Both belong to the same block, so show a single heading.
+		if frame_item == null or frame.owner_id != previous_owner:
+			frame_item = tree.create_item(parent_item)
+			frame_item.set_text(COL_NAME, frame.label.replace("\n", " "))
+			frame_item.set_expand_right(COL_NAME, true)  # the heading spans all three columns
+			for col in 3:
+				frame_item.set_selectable(col, false)
+				frame_item.set_custom_color(col, text_color)
+			# Each frame nests inside the one before it, so the indentation in
+			# the tree is the scope nesting on the canvas.
+			parent_item = frame_item
+			previous_owner = frame.owner_id
+
+		for var_name in frame.vars:
+			var value: Variant = frame.vars[var_name]
+			var item := tree.create_item(frame_item)
+			item.set_text(COL_NAME, str(var_name))
+			item.set_text(COL_VALUE, _display_value(value))
+			item.set_text(COL_TYPE, _display_type(value))
+			for col in 3:
+				item.set_text_alignment(col, ALIGN[col])
+				if is_stale:
+					item.set_custom_color(col, stale_color)
+
+
+func _display_value(value: Variant) -> String:
+	# A variable holding a room's list, dictionary or file shows it as Python does.
+	if value is ListEntity or value is DictEntity or value is FileEntity:
+		return Core.to_python_repr(value)
+	match typeof(value):
+		TYPE_NIL:
+			return "not set yet"
+		TYPE_BOOL:
+			return "True" if value else "False"
+		TYPE_STRING, TYPE_STRING_NAME:
+			# Quoted so "5" and 5 don't look the same: that difference is what
+			# comparison's type errors are about.
+			return "\"%s\"" % value
+		_:
+			return str(value)
+
+
+func _display_type(value: Variant) -> String:
+	if value == null:
+		return "—"
+	if value is Object:
+		return Core.get_type_string(value)
+	return TYPE_NAMES.get(typeof(value), type_string(typeof(value)))
+
+
 func _on_scope_changed() -> void:
-	# Coalesce. In fast mode scope_changed fires several times per block, and a
-	# rebuild per emit is wasted work — one per frame is plenty.
+	# Coalesced: in fast mode scope_changed fires several times per block, and
+	# one rebuild per frame is plenty.
 	_dirty = true
 
 
@@ -86,122 +189,3 @@ func _on_interpreter_running_changed() -> void:
 	else:
 		_focus_when_filled = false
 	_dirty = true
-
-## A level with the minimal UI has no button for this tab, so it never opens it.
-func _hidden_by_level() -> bool:
-	return is_instance_valid(Game.level) and Game.level.minimal_ui
-
-
-## Brings this tab forward without toggling the panel shut.
-func focus_self() -> void:
-	var panel := get_parent() as SidePanel
-	if panel != null:
-		panel.focus_content(self)
-
-
-func _rebuild() -> void:
-	tree.clear()
-	
-	var is_stale := not Interpreter.is_running
-	var errored := not Interpreter.frozen_scopes.is_empty()
-	# Untyped on purpose: Array[Interpreter.Frame] is an inner class and the
-	# analyzer doesn't reliably accept it as a typed-array element.
-	var frames: Array = Interpreter.frozen_scopes if (is_stale and errored) else Interpreter.scopes
-	
-	var total := 0
-	for frame in frames:
-		total += frame.vars.size()
-	
-	if frames.is_empty():
-		_set_status("Press Play to watch your variables change.", TONE_INFO)
-	elif total == 0:
-		_set_status("Your last run didn't make any variables." if is_stale else "No variables yet.", TONE_INFO)
-	elif not is_stale:
-		if Interpreter.is_paused:
-			_set_status("Paused. These are the values right now.", TONE_INFO)
-		else:
-			status_container.hide()
-	elif not Interpreter.active_errors.is_empty():
-		_set_status("These are the values when the error happened.", TONE_ERROR)
-	elif errored:
-		_set_status("These are the values when the program stopped.", TONE_STOPPED)
-	else:
-		_set_status("These are the values at the end of your last run.", TONE_DONE)
-	
-	tree.visible = total > 0
-	if total > 0:
-		_fill_tree(frames, is_stale)
-		if _focus_when_filled and Interpreter.is_running:
-			_focus_when_filled = false
-			focus_self()
-	tree.update_minimum_size()
-
-## A plain subtitle under the header, as the Toolbox has. The tone is kept for
-## the callers' sake; the words carry it.
-func _set_status(message: String, _tone: Color) -> void:
-	status.text = message
-	status_container.show()
-
-
-func _fill_tree(frames: Array, is_stale: bool) -> void:
-	var text_color := stale_color if is_stale else frame_color
-	var parent_item := tree.create_item()
-	var frame_item: TreeItem = null
-	var previous_owner := 0
-	
-	for frame in frames:
-		# A for-loop opens two frames: one holding the counter, and one per pass
-		# of the body. Both belong to the same block, so show a single heading.
-		if frame_item == null or frame.owner_id != previous_owner:
-			frame_item = tree.create_item(parent_item)
-			frame_item.set_text(COL_NAME, frame.label.replace("\n", " "))
-			frame_item.set_expand_right(COL_NAME, true)  # NEW: heading spans all three columns
-			for col in 3:
-				frame_item.set_selectable(col, false)
-				frame_item.set_custom_color(col, text_color)
-			# Each frame nests inside the one before it, so the indentation in
-			# the tree is the scope nesting on the canvas.
-			parent_item = frame_item
-			previous_owner = frame.owner_id
-		
-		for var_name in frame.vars:
-			var value: Variant = frame.vars[var_name]
-			var item := tree.create_item(frame_item)
-			item.set_text(COL_NAME, str(var_name))
-			item.set_text(COL_VALUE, _display_value(value))
-			item.set_text(COL_TYPE, _display_type(value))
-			for col in 3:
-				item.set_text_alignment(col, ALIGN[col])  # NEW
-				if is_stale:
-					item.set_custom_color(col, stale_color)
-
-
-func _show_message(message: String) -> void:
-	tree.hide()
-	status_container.show()
-	status.text = message
-
-
-func _display_value(value: Variant) -> String:
-	# A variable holding a room's list, dictionary or file shows it as Python does.
-	if value is ListEntity or value is DictEntity or value is FileEntity:
-		return Core.to_python_repr(value)
-	match typeof(value):
-		TYPE_NIL:
-			return "not set yet"
-		TYPE_BOOL:
-			return "True" if value else "False"
-		TYPE_STRING, TYPE_STRING_NAME:
-			# Quoted so "5" and 5 don't look identical — that difference is
-			# exactly what comparison's type errors are about.
-			return "\"%s\"" % value
-		_:
-			return str(value)
-
-
-func _display_type(value: Variant) -> String:
-	if value == null:
-		return "—"
-	if value is Object:
-		return Core.get_type_string(value)
-	return TYPE_NAMES.get(typeof(value), type_string(typeof(value)))

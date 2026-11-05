@@ -1,6 +1,5 @@
 class_name CodeSpans
 extends RefCounted
-
 ## Turns text with bits of Python in it into BBCode where the Python stands out:
 ## a different font on a tinted chip, so `for leg in route:` reads as code and
 ## not as a sentence that suddenly stopped making sense.
@@ -13,7 +12,6 @@ extends RefCounted
 
 const CODE_COLOR := "#ffd166"
 const CHIP_COLOR := "#ffffff1a"
-
 ## Python that turns up in English sentences, most specific first.
 const PATTERNS := [
 	# for leg in route:   for i in range(1, 5):
@@ -42,6 +40,7 @@ static func mark(text: String) -> String:
 			out += _mark_prose(parts[i])
 	return out
 
+
 ## BBCode for `text`: backticked spans as code chips, everything else escaped so
 ## a bracket in it can't start a tag.
 static func to_bbcode(text: String) -> String:
@@ -54,6 +53,7 @@ static func to_bbcode(text: String) -> String:
 		else:
 			out += piece
 	return out
+
 
 static func _mark_prose(prose: String) -> String:
 	var spans: Array[Vector2i] = []

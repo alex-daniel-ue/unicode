@@ -1,6 +1,5 @@
 class_name ListPicture
 extends Control
-
 ## A list board as a Control, for guide pictures built in code: a real
 ## ListEntity, scaled by `zoom`, with this control sized around it so containers
 ## can place it. Set everything before it enters the tree. A "point_at" meta
@@ -37,7 +36,7 @@ func _ready() -> void:
 	_list.scale = Vector2(zoom, zoom)
 	add_child(_list)
 	# Where the board reaches, from its own origin: the name sits to its left.
-	var rect: Rect2 = _list._board_rect(_list.box_count())
+	var rect := _list.board_rect(_list.box_count())
 	_list.position = -rect.position * zoom
 	custom_minimum_size = rect.size * zoom
 	if has_meta(&"point_at"):
@@ -48,7 +47,7 @@ func _ready() -> void:
 
 ## The cards rise and glow the way a read lights them in a run.
 func _count() -> void:
-	var slots: Array[ListSlot] = _list._slots
+	var slots := _list.slots
 	if slots.is_empty():
 		return
 	var tween := create_tween().set_loops()

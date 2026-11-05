@@ -60,7 +60,7 @@ export).
 | File | Section | What it controls |
 |---|---|---|
 | `unicode_ai.cfg` | `[ai]` | `url`, `fallback_url`, `summary_url` and `token` for the relay. |
-| `unicode.cfg` | `[levels]` | `released="tutorial,io,values,operators,selection,functions,arrays,dicts,files"`: which modules are open in level select. While the key is there it alone decides, and each module's own `released` flag is ignored (level select warns where they disagree). Leave the key out and the flags decide. |
+| `unicode.cfg` | `[levels]` | `released="tutorial,io,values,operators,selection,functions,iteration,arrays,dicts,files"`: which modules are open in level select. While the key is there it alone decides, and each module's own `released` flag is ignored (level select warns where they disagree). Leave the key out and the flags decide. |
 
 ---
 
@@ -322,8 +322,8 @@ unicode.cfg            Release gate: which modules are open
 unicode_ai.cfg         Relay URLs and token
 
 global/                Autoloads and shared helpers
-  core.gd              Scene paths, tree helpers, type checking, Python keywords
-  game.gd              The current level, its id, the session id, sleep()
+  core.gd              Scene paths, config paths, get_block(), type checking, Python's view of values
+  game.gd              The current level, its id, the session id, play(), sleep()
   interpreter.gd       Run state, speed, scopes (variables), errors, output log
   progress.gd          Stars, saved to user://progress.cfg
   tutorial.gd          Signals the guides listen for
@@ -340,9 +340,10 @@ puzzle/                The puzzle screen
   puzzle.tscn/.gd      Wires everything for one level
   button_manager.gd    Play / pause / stop / speed / reframe
   blocks/              BlockData resources (.tres): one file per block
-  functions/           What blocks do: control_flow.gd, generic.gd, list_functions.gd, array.gd
+  functions/           What blocks do: control_flow.gd, generic.gd, list_functions.gd,
+                       dict_functions.gd, file_functions.gd, terminal_functions.gd, f_string.gd
   ui/block/            Block scenes, components, BlockData scripts
-  ui/canvas/           The canvas, drag and drop, serializer, value bubbles
+  ui/canvas/           The canvas, drag and drop, serializer, value tags
   ui/side panel/       Side panels, Toolbox, AI Assistant, Variables
   ui/tutorial/         Guide overlay, card, arrow, pictures
   ui/level_complete/   The win card
@@ -358,16 +359,20 @@ level/                 Level framework
   goal_manager.gd      One room's goals
   goals/               Destination, checkpoint (batteries), hazard (puddles), list goals
   components/          LevelCamera, BlockProvider, Resettable
-  objects/             Sprites, the robot, the list board
-  levels/              The level scenes: tutorial_1, it_0a/b, it_1..10, ar_t2, ar_t3, ar_3..8, ar_10, ar_11
+  objects/             Sprites, the robot, and what blocks read and change in a room
+                       (RoomEntity: list boards, dictionary boards, files, terminals)
+  levels/              The level scenes: tutorial_1, it_0a/b, it_1..10, ar_t2, ar_t3, ar_3..8,
+                       ar_10, ar_11, and the generated io_*, var_*, op_*, sel_*, fn_*, dict_*, files_*
 
 world/                 Tilesets (floor, walls, furniture) and their art
 audio/                 Sound effects
 tools/                 Test and authoring scenes (see Tools and checks)
+  modules/             The generator for the modules around Iteration and Arrays (Python)
   arrays/              The generator for the Arrays levels (Python)
   menu/                The generator for the main menu's demo rooms (Python)
   audio/               The sound measuring and retuning tool (Python)
 ai/                    The relay server and the web build it hosts
+archive/               Files nothing uses any more, at the paths they had (Godot skips it)
 ```
 
 ### Autoloads
@@ -376,9 +381,8 @@ Registered in `project.godot`, available everywhere by name:
 
 | Autoload | Role |
 |---|---|
-| `Core` | Paths to the main scenes, `get_block()`, recursive child walks, `validate_type()` (the "must be an integer" messages), Python's keyword list. |
-| `Debug` | Debug logging. |
-| `Game` | The running `Level`, its scene and `level_id`, a random `session_id` per launch, and `sleep()`, which pauses with the program. |
+| `Core` | Paths to the main scenes, `config_path()` (a .cfg beside the game), `get_block()`, `validate_type()` (the "must be an integer" messages), Python's keyword list and how it spells values. |
+| `Game` | The running `Level`, its scene and `level_id`, a random `session_id` per launch, `play()` (opens a level), and `sleep()`, which pauses with the program. |
 | `Interpreter` | Whether a program is running, paused or interrupted. Also the step delay (slow or fast), the variable scopes, errors, the output log, and the signals the UI follows. |
 | `SfxPlayer` | Plays sound effects from a pool of players, so they can overlap. Clicks the buttons in the `sfx_click` group, and gives the run's pulse notes their own three players. |
 | `Transition` | `change_scene()` with a fade. |
@@ -576,7 +580,8 @@ Level (level.gd)
 **One robot, several rooms.** The robot moves between rooms by snapshot:
 `ResettableComponent.room_snapshots` holds its position and facing for each
 room. Blocks that talk to a list find the board in the room that is running
-(`ListEntity.find`, by `room_index`).
+(`RoomEntity.find_named()`, by `room_index`; dictionaries, files and terminals
+work the same way).
 
 **The robot** (`level/objects/entities/robot/robot.gd`):
 
@@ -647,8 +652,8 @@ A list is a whiteboard in the room (`level/objects/entities/list/`):
 - **The name block:** the board's `ListBlockProvider` gives the Toolbox the
   list's name block, a round orange reporter.
 - **Blocks that use lists:** `puzzle/functions/list_functions.gd` implements
-  Index Of, Set Index, Length Of, Append and In. Each block calls
-  `ListFunctions.resolve()` to find its list, and names itself in any error.
+  Index Of, Set Index, Length Of, Append and In. Each block finds its list with
+  `BlockFunctionComponent.resolve()`, and names itself in any error.
 - **Animation:**
   - A value that is read rises and glows.
   - A written value flies in from the box it was read from, or drops in.
@@ -665,11 +670,11 @@ A list is a whiteboard in the room (`level/objects/entities/list/`):
 
 | Part | Where | Notes |
 |---|---|---|
-| Side panels | `ui/side panel/panel.gd` (`SidePanel`) | Slide open and closed; `focus_content()` switches tabs; emit `toggled`. |
+| Side panels | `ui/side panel/side_panel.gd` (`SidePanel`) | Slide open and closed; `focus_content()` switches tabs; emit `toggled`. |
 | Toolbox | `tabs/toolbox/` | One scroll, holding the new blocks first and then each category. Tabs and scroll follow each other; other categories dim. Each block sits on a tile (`ToolboxTile`) with an eye that shows its `note`; in the new blocks section the note shows from the start. |
 | Variables | `tabs/watcher/variable_watcher.gd` | A tree of frames and variables. It only takes the panel over once a run has a variable to show. |
 | AI Assistant | `tabs/ai assistant/` | See [The AI assistant](#the-ai-assistant). |
-| Value tags | `ui/canvas/value_bubbles.gd` | What each expression came to, on its block: results of math, Index Of, comparisons, and a typed variable's value. When a room is solved and the next starts, its tags fade after 0.6 s, unless the new room has put a value on the same block. |
+| Value tags | `ui/canvas/value_tags.gd` | What each expression came to, on its block: results of math, Index Of, comparisons, and a typed variable's value. When a room is solved and the next starts, its tags fade after 0.6 s, unless the new room has put a value on the same block. |
 | Notifications | `ui/notification/` | Errors, logs, and successes such as "You solved Room 1 of 2". |
 | Win card | `ui/level_complete/` | Stars, block count, next tier, and the assistant's comment. It holds the buttons for a second so a stray click can't skip it. |
 | Pause menu | `menus/pause/` | Resume, the level's guide (show again or skip), Level select, Main menu. Esc toggles it. |
@@ -801,7 +806,7 @@ Play". Everything about it is in [`ai/README.md`](ai/README.md).
 - **Release gate:** a module shows only when it is released: by
   `unicode.cfg`'s `[levels] released` when that key is there, otherwise by the
   module's own flag. A closed module shows its `locked_notice` in place of its
-  levels. Iteration is closed for now, in both.
+  levels.
 
 ---
 
@@ -922,9 +927,20 @@ Deploying the relay (Vercel, plus Render as a fallback) is covered in
 
 **Code style.** Follow the GDScript already there:
 
-- Comments say *why*, especially for anything learned the hard way.
+- Comments say *why*, especially for anything learned the hard way, and say
+  it as it stands now ("this happens, so this"), not as a history of changes.
+  Code that reads plainly gets no comment.
 - Use typed GDScript.
 - Exported node references, not `$` paths, for anything a scene wires.
+- Order and spacing follow the GDScript style guide: `class_name`, `extends`
+  and the class's `##` doc; then signals, enums, constants, static variables,
+  exported variables, other variables, `@onready` variables; then static
+  functions, engine callbacks (`_ready()`, `_process()`...), public methods,
+  private methods (`_` first), inner classes. Two blank lines between
+  functions.
+- A function script's block methods start with `_` (`_while`, since `while` is
+  a keyword); its helpers start with `__`, which keeps them out of the
+  inspector's list of methods a block can use.
 
 **Colours.**
 

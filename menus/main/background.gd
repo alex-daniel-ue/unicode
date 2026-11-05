@@ -1,5 +1,4 @@
 extends Control
-
 ## The main menu's picture: it covers the window, drifts a little with the
 ## pointer, and when the window's shape doesn't match the picture's, the part it
 ## crops away is chosen. `focus` is the point of the picture kept as near the
@@ -22,6 +21,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_on_viewport_size_changed()
 
+
 func _process(delta: float) -> void:
 	var mouse_position := get_viewport().get_mouse_position()
 
@@ -32,6 +32,7 @@ func _process(delta: float) -> void:
 
 	texture.position = texture.position.lerp(target_pos, delta * smooth_speed)
 
+
 func _on_viewport_size_changed() -> void:
 	viewport_size = get_viewport_rect().size
 	var picture := texture.texture.get_size() if texture.texture != null else viewport_size
@@ -39,6 +40,7 @@ func _on_viewport_size_changed() -> void:
 	texture.size = picture * cover
 	texture.position = _covering(viewport_size / 2.0 - texture.size * focus)
 	initial_pos = texture.position
+
 
 ## `at`, moved as little as needed for the picture to still cover the window.
 func _covering(at: Vector2) -> Vector2:

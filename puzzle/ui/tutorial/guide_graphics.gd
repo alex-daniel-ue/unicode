@@ -1,6 +1,5 @@
 class_name GuideGraphics
 extends RefCounted
-
 ## Pictures of what the robot's and the lists' blocks do, for the guide page
 ## that brings each one in. A guide page names one with its "picture" key. Built
 ## in code from the rooms' own sprites (TileStrip) and boards (ListEntity), so
@@ -16,9 +15,8 @@ const CHOICE_COLOR := Color("#FF8F5E")
 const LABEL_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
 const LIST_SCALE := 2.0
 
-const KINDS := ["move", "move_n", "turn", "ahead_is", "item_of", "length_of", "set_index", "append", "contains", "for_each"]
 
-
+## The picture called `kind` (Guides.BLOCK_PICTURES), or null.
 static func build(kind: String) -> Control:
 	match kind:
 		"move": return _move()
@@ -34,6 +32,7 @@ static func build(kind: String) -> Control:
 	push_warning("GuideGraphics: no picture called '%s'." % kind)
 	return null
 
+
 #region Robot
 ## One step: the robot, and where it ends up, one tile on.
 static func _move() -> Control:
@@ -44,6 +43,7 @@ static func _move() -> Control:
 	strip.arrow_to = 1
 	return _centered([strip])
 
+
 ## Three steps, counted on the tiles.
 static func _move_n() -> Control:
 	var strip := _strip("....")
@@ -53,6 +53,7 @@ static func _move_n() -> Control:
 	strip.arrow_to = 3
 	strip.marks = {1: "1", 2: "2", 3: "3"}
 	return _centered([strip])
+
 
 ## The three turns, each from the same start: facing up.
 static func _turn() -> Control:
@@ -72,6 +73,7 @@ static func _turn() -> Control:
 		row.add_child(column)
 	return row
 
+
 ## One panel for each thing the block can look for: the robot facing it, the
 ## choice that finds it, and True. One panel a choice, so "destination" is
 ## plainly the flag and "blocked" plainly a wall, instead of a legend to match up.
@@ -90,6 +92,7 @@ static func _ahead_is() -> Control:
 	return row
 #endregion
 
+
 #region Lists
 ## The box at one index, and what the block gives back for it.
 static func _item_of() -> Control:
@@ -99,6 +102,7 @@ static func _item_of() -> Control:
 	stack.add_child(list)
 	stack.add_child(_label("index 1 of route = 5", ACCENT, 18))
 	return stack
+
 
 ## The boxes light up one at a time and the label counts them. No value is 4,
 ## so the answer can only be the number of boxes, not one read from a box.
@@ -112,17 +116,20 @@ static func _length_of() -> Control:
 	stack.add_child(label)
 	return stack
 
+
 ## Before and after: the box at index 0 gets the new value.
 static func _set_index() -> Control:
 	var after := _list("lockers", [1, 0, 0])
 	after.set_meta(&"point_at", 0)
 	return _before_after(_list("lockers", [0, 0, 0]), after)
 
+
 ## Before and after: a new box at the end.
 static func _append() -> Control:
 	var after := _list("passed", [75, 90, 82])
 	after.set_meta(&"point_at", 2)
 	return _before_after(_list("passed", [75, 90]), after)
+
 
 static func _contains() -> Control:
 	var row := _row(14)
@@ -131,6 +138,7 @@ static func _contains() -> Control:
 	row.add_child(list)
 	row.add_child(_label("True", TRUE_COLOR, 26))
 	return row
+
 
 ## The first pass: the loop is on the first box, and its variable holds that
 ## value.
@@ -142,6 +150,7 @@ static func _for_each() -> Control:
 	stack.add_child(_label("steps = 2, then 3, then 1", ACCENT, 18))
 	return stack
 
+
 static func _before_after(before: Control, after: Control) -> Control:
 	var stack := _column(2)
 	stack.add_child(before)
@@ -150,11 +159,13 @@ static func _before_after(before: Control, after: Control) -> Control:
 	return stack
 #endregion
 
+
 #region Parts
 static func _strip(cells: String) -> TileStrip:
 	var strip := TileStrip.new()
 	strip.cells = cells
 	return strip
+
 
 ## A list board as the rooms draw it, scaled up and sized to fit.
 static func _list(list_name: String, values: Array) -> ListPicture:
@@ -163,6 +174,7 @@ static func _list(list_name: String, values: Array) -> ListPicture:
 	frame.values = values
 	frame.zoom = LIST_SCALE
 	return frame
+
 
 static func _label(text: String, color: Color, size := 16) -> Label:
 	var label := Label.new()
@@ -177,6 +189,7 @@ static func _label(text: String, color: Color, size := 16) -> Label:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label
 
+
 static func _arrow_down() -> Control:
 	var arrow := GuideArrow.new()
 	arrow.custom_minimum_size = Vector2(24, 26)
@@ -185,6 +198,7 @@ static func _arrow_down() -> Control:
 	arrow.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	return arrow
 
+
 static func _row(gap: int) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -192,12 +206,14 @@ static func _row(gap: int) -> HBoxContainer:
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return row
 
+
 static func _column(gap: int) -> VBoxContainer:
 	var column := VBoxContainer.new()
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
 	column.add_theme_constant_override(&"separation", gap)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return column
+
 
 ## A thin frame round one panel of a picture, so a row of them reads as separate
 ## cases.
@@ -213,6 +229,7 @@ static func _framed(child: Control) -> Control:
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(child)
 	return frame
+
 
 static func _centered(children: Array) -> Control:
 	var row := _row(0)

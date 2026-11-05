@@ -1,6 +1,5 @@
 class_name LevelLint
 extends RefCounted
-
 ## The level lint's checks, shared by the two ways to run it: the editor script
 ## (tools/level_lint.gd, Ctrl+Shift+X in the script editor) and a headless scene
 ## (tools/level_lint.tscn), so it can run from a terminal too:

@@ -1,5 +1,4 @@
 extends Node
-
 ## Opens a level in the real Puzzle and saves a screenshot of every page of its
 ## guide, to look over the guides without clicking through them. Not headless:
 ## headless draws nothing.
@@ -12,6 +11,7 @@ func _ready() -> void:
 	for path in OS.get_cmdline_user_args():
 		await _snap_level(path)
 	get_tree().quit()
+
 
 func _snap_level(path: String) -> void:
 	var level: Level = (load(path) as PackedScene).instantiate()
@@ -37,11 +37,13 @@ func _snap_level(path: String) -> void:
 	puzzle.queue_free()
 	for i in 3: await get_tree().process_frame
 
+
 func _snap(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var file := "user://guide_%s.png" % label
 	get_viewport().get_texture().get_image().save_png(file)
 	print("SNAP ", ProjectSettings.globalize_path(file))
+
 
 ## The catalog's id for the level at `path`, so its brief is titled "Level n: ...".
 func _catalog_id(path: String) -> StringName:

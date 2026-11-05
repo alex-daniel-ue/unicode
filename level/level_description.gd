@@ -1,15 +1,14 @@
 class_name LevelDescription
 extends Node
-
-## The level's instructions, shown in the Information tab and sent to the
-## assistant as the level text.
+## The level's brief, shown in the Information tab and sent to the assistant as
+## the level text.
 ##
 ## Two ways to author it:
 ##
 ## 1. The brief (preferred). Fill the "Brief" fields in the inspector and the
-##    panel is built from them in one consistent style: a mission card, one row
-##    per room, the twist, a tip, and the star target computed from par, so it
-##    can never drift. Nothing to lay out per level.
+##    panel is built from them in one style: a mission card, one row per room,
+##    the twist, a tip, and the star target worked out from par, so it can never
+##    drift. Nothing to lay out per level.
 ##
 ##    Keep it short and keep the answer out of it. New blocks aren't shown here:
 ##    they and their notes go to the top of the Toolbox (Toolbox.mark_new) and
@@ -17,8 +16,12 @@ extends Node
 ##    on entry was the part students skipped.
 ## 2. Controls. Any Labels, TextureRects, inert Blocks or containers added as
 ##    children are shown too, after the brief. Use this for pictures.
+##
+## Its fields are exported on a script that isn't @tool, and the editor has
+## dropped them from scenes before, so any field left empty is filled from
+## LevelBriefs, the copy of every brief kept in code.
 
-const ACCENT := Color(1.0, 0.82, 0.3)       # the tutorial ring colour: "this matters"
+const ACCENT := Color(1.0, 0.82, 0.3)  # the guide's colour: "this matters"
 const TWIST := Color(1.0, 0.5, 0.38)
 const MUTED := Color(0.78, 0.8, 0.88)
 const CARD_BG := Color(1, 1, 1, 0.06)
@@ -48,17 +51,55 @@ const CODE_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
 ## Off for worked examples, where the preset is the whole program.
 @export var show_stars := true
 
-## Populated by take_content(). Puzzle reparents these into the side panel, so
-## after that point this node is childless and get_raw() has to walk the handed-
-## over Controls instead of get_children().
-var content: Array[Control]
-
-
+## What take_content() handed out. Puzzle moves these into the side panel, so
+## after that this node has no children and get_raw() reads these instead.
+var _content: Array[Control]
 var _filled := false
 
 
 func _enter_tree() -> void:
 	_prepare(self, false)
+
+
+func has_brief() -> bool:
+	_fill_from_table()
+	return not (title.is_empty() and mission.is_empty() and twist.is_empty() and blocks.is_empty())
+
+
+## The brief and any authored Controls, for the Information tab.
+func take_content() -> Array[Control]:
+	_fill_from_table()
+	_content.clear()
+	if has_brief():
+		_content.append(_build_brief())
+	for child in get_children():
+		if child is Control:
+			_prepare(child, true)
+			child.visible = true
+			_content.append(child as Control)
+	return _content
+
+
+## The brief as plain text, for the assistant and the lint.
+func get_raw() -> String:
+	var lines: PackedStringArray
+	var roots := _roots()
+	if roots.is_empty() and has_brief():
+		return _brief_text()
+	for node in roots:
+		lines.append_array(_collect_raw(node))
+	return "\n".join(lines)
+
+
+## "Level 4: Every stop". The number is the level's label in its module, from
+## the catalog; a level that isn't in the catalog (a test, a scene opened on its
+## own) gets its title alone.
+func heading() -> String:
+	var entry: LevelEntry = null
+	if not Engine.is_editor_hint() and Progress.catalog != null:
+		entry = Progress.catalog.entry_of(Game.level_id)
+	return "Level %s: %s" % [entry.label, title] if entry != null and not entry.label.is_empty() else title
+
 
 ## Fills any brief field the scene left empty from LevelBriefs. The scene values
 ## win when present; this only covers values the editor dropped from the file.
@@ -73,61 +114,44 @@ func _fill_from_table() -> void:
 	if t.is_empty():
 		return
 	var patched: PackedStringArray = []
-	if title.is_empty() and t.has("title"): title = t.title; patched.append("title")
-	if mission.is_empty() and t.has("mission"): mission = t.mission; patched.append("mission")
-	if twist.is_empty() and t.has("twist"): twist = t.twist; patched.append("twist")
-	if tip.is_empty() and t.has("tip"): tip = t.tip; patched.append("tip")
-	if rooms.is_empty() and t.has("rooms"): rooms = PackedStringArray(t.rooms); patched.append("rooms")
+	if title.is_empty() and t.has("title"):
+		title = t.title
+		patched.append("title")
+	if mission.is_empty() and t.has("mission"):
+		mission = t.mission
+		patched.append("mission")
+	if twist.is_empty() and t.has("twist"):
+		twist = t.twist
+		patched.append("twist")
+	if tip.is_empty() and t.has("tip"):
+		tip = t.tip
+		patched.append("tip")
+	if rooms.is_empty() and t.has("rooms"):
+		rooms = PackedStringArray(t.rooms)
+		patched.append("rooms")
 	if blocks.is_empty() and t.has("blocks"):
 		for path in t.blocks:
 			blocks.append(load(path) as BlockData)
 		patched.append("blocks")
 	if block_notes.size() < blocks.size() and t.has("block_notes"):
-		block_notes = PackedStringArray(t.block_notes); patched.append("block_notes")
+		block_notes = PackedStringArray(t.block_notes)
+		patched.append("block_notes")
 	if block_values.is_empty() and t.has("block_values"):
-		block_values = PackedStringArray(t.block_values); patched.append("block_values")
+		block_values = PackedStringArray(t.block_values)
+		patched.append("block_values")
 	if t.has("show_stars"):
 		show_stars = t.show_stars
 	if not patched.is_empty():
 		push_warning("Level '%s': brief fields missing from the scene, filled from LevelBriefs: %s"
 			% [level.name, ", ".join(patched)])
 
-func has_brief() -> bool:
-	_fill_from_table()
-	return not (title.is_empty() and mission.is_empty() and twist.is_empty() and blocks.is_empty())
 
-func take_content() -> Array[Control]:
-	_fill_from_table()
-	content.clear()
-	
-	if has_brief():
-		content.append(_build_brief())
-	
-	for child in get_children():
-		if child is Control:
-			_prepare(child, true)
-			child.visible = true
-			content.append(child as Control)
-	
-	return content
-
-func get_raw() -> String:
-	var lines: PackedStringArray
-	var roots := _roots()
-	if roots.is_empty() and has_brief():
-		return _brief_text()
-	for node in roots:
-		lines.append_array(_collect_raw(node))
-	return "\n".join(lines)
-
-## Mirrors _prepare()'s walk. Without the recursion, wrapping instruction copy in
-## a VBox or HBox for layout silently removes it from the assistant's context.
+## Mirrors _prepare()'s walk, so text wrapped in a container for layout still
+## reaches the assistant.
 func _collect_raw(node: Node) -> PackedStringArray:
 	var lines: PackedStringArray
-	
 	if node is CanvasItem and not (node as CanvasItem).visible:
 		return lines
-	
 	# Leaves. A Block renders its own parameter blocks into its raw text, so
 	# don't descend into one.
 	if node is Block:
@@ -139,53 +163,62 @@ func _collect_raw(node: Node) -> PackedStringArray:
 	if node is RichTextLabel:
 		lines.append((node as RichTextLabel).get_parsed_text())
 		return lines
-	
 	for child in node.get_children():
 		lines.append_array(_collect_raw(child))
 	return lines
 
+
 func _roots() -> Array[Node]:
 	var roots: Array[Node]
-	for node in content:
+	for node in _content:
 		if is_instance_valid(node):
 			roots.append(node)
 	return roots if not roots.is_empty() else get_children()
 
+
+## Blocks in the brief are pictures; once handed to the panel (`sanitize`) they
+## don't take the pointer or the focus either.
 func _prepare(node: Node, sanitize: bool) -> void:
 	if node is Block:
 		var block := node as Block
-		block.display = true
+		block.is_picture = true
 		if sanitize:
 			block.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			block.focus_mode = Control.FOCUS_NONE
-	
 	for child in node.get_children():
 		_prepare(child, sanitize)
+
 
 #region The brief
 ## The same text the panel shows, for the assistant and the lint, before any
 ## Controls exist.
 func _brief_text() -> String:
 	var lines: PackedStringArray = []
-	if not title.is_empty(): lines.append(heading())
-	if not mission.is_empty(): lines.append("Mission: " + mission)
+	if not title.is_empty():
+		lines.append(heading())
+	if not mission.is_empty():
+		lines.append("Mission: " + mission)
 	for i in rooms.size():
 		lines.append("Room %d: %s" % [i + 1, rooms[i]])
-	if not twist.is_empty(): lines.append("Twist: " + twist)
+	if not twist.is_empty():
+		lines.append("Twist: " + twist)
 	for i in blocks.size():
 		if blocks[i] != null:
 			lines.append("%s: %s" % [blocks[i].text.replace("{}", "...").replace("\\n", " "), _note(i)])
-	if not tip.is_empty(): lines.append(tip)
+	if not tip.is_empty():
+		lines.append(tip)
 	var stars := _star_line()
-	if not stars.is_empty(): lines.append(stars)
+	if not stars.is_empty():
+		lines.append(stars)
 	return "\n".join(lines)
+
 
 func _build_brief() -> Control:
 	var root := VBoxContainer.new()
 	root.name = "Brief"
 	root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	root.add_theme_constant_override(&"separation", 14)
-	
+
 	if not title.is_empty():
 		var heading_label := Label.new()
 		heading_label.theme_type_variation = &"HeaderMedium"
@@ -193,21 +226,21 @@ func _build_brief() -> Control:
 		heading_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		heading_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		root.add_child(heading_label)
-	
+
 	if not mission.is_empty():
 		var card := _card(CARD_BG, ACCENT)
 		var stack := _stack(card)
 		stack.add_child(_caption("YOUR MISSION", ACCENT))
 		stack.add_child(_body(mission))
 		root.add_child(card)
-	
+
 	if not rooms.is_empty():
 		var list := VBoxContainer.new()
 		list.add_theme_constant_override(&"separation", 6)
 		for i in rooms.size():
 			list.add_child(_room_row(i + 1, rooms[i]))
 		root.add_child(list)
-	
+
 	if not twist.is_empty():
 		var card := _card(Color(TWIST, 0.1), TWIST)
 		var stack := _stack(card)
@@ -219,7 +252,7 @@ func _build_brief() -> Control:
 		var tip_label := _rich_body(tip)
 		tip_label.modulate = MUTED
 		root.add_child(tip_label)
-	
+
 	var par := _star_par()
 	if par >= 0:
 		# The stars and the words are separate labels: only StarText's font has ★.
@@ -238,20 +271,13 @@ func _build_brief() -> Control:
 		row.add_child(words)
 		badge.add_child(row)
 		root.add_child(badge)
-	
+
 	return root
 
-## "Level 4: Every stop". The number is the level's label in its module, from
-## the catalog; a level that isn't in the catalog (a test, a scene opened on its
-## own) gets its title alone.
-func heading() -> String:
-	var entry: LevelEntry = null
-	if not Engine.is_editor_hint() and Progress.catalog != null:
-		entry = Progress.catalog.entry_of(Game.level_id)
-	return "Level %s: %s" % [entry.label, title] if entry != null and not entry.label.is_empty() else title
 
 func _note(index: int) -> String:
 	return block_notes[index] if index < block_notes.size() else ""
+
 
 func _star_line() -> String:
 	var par := _star_par()
@@ -259,12 +285,14 @@ func _star_line() -> String:
 		return ""
 	return "★★★  %d block%s or fewer" % [par, "" if par == 1 else "s"]
 
+
 ## The three-star block count, or -1 when this level shows no stars.
 func _star_par() -> int:
 	var level := get_parent() as Level
 	if not show_stars or level == null or Engine.is_editor_hint():
 		return -1
 	return level.get_star_par()
+
 
 func _card(bg: Color, border: Color) -> PanelContainer:
 	var card := PanelContainer.new()
@@ -282,6 +310,7 @@ func _card(bg: Color, border: Color) -> PanelContainer:
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return card
 
+
 func _stack(card: PanelContainer) -> VBoxContainer:
 	var stack := VBoxContainer.new()
 	stack.add_theme_constant_override(&"separation", 4)
@@ -289,13 +318,15 @@ func _stack(card: PanelContainer) -> VBoxContainer:
 	card.add_child(stack)
 	return stack
 
+
 func _caption(text: String, color: Color) -> Label:
 	var label := Label.new()
 	label.text = text
-	label.theme_type_variation = &"BlockLabel"   # Kenney Mini
+	label.theme_type_variation = &"BlockLabel"  # Kenney Mini
 	label.add_theme_font_size_override(&"font_size", CAPTION_SIZE)
 	label.add_theme_color_override(&"font_color", color)
 	return label
+
 
 func _body(text: String) -> Label:
 	var label := Label.new()
@@ -306,6 +337,7 @@ func _body(text: String) -> Label:
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return label
+
 
 ## Like _body(), but Python in it (`len(route)`, in backticks) is set as code,
 ## the way the win card shows it (CodeSpans).
@@ -323,6 +355,7 @@ func _rich_body(text: String) -> RichTextLabel:
 	label.add_theme_font_size_override(&"mono_font_size", CAPTION_SIZE)
 	label.text = CodeSpans.to_bbcode(text)
 	return label
+
 
 func _room_row(number: int, text: String) -> Control:
 	var row := HBoxContainer.new()
@@ -345,5 +378,4 @@ func _room_row(number: int, text: String) -> Control:
 	row.add_child(badge)
 	row.add_child(_body(text))
 	return row
-
 #endregion

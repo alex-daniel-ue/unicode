@@ -1,7 +1,8 @@
 extends Label
+## The small word on a value slot that says what its value is: int, float,
+## string, bool, or var for a variable's name.
 
-
-const type_names: Dictionary[Variant.Type, String] = {
+const TYPE_NAMES: Dictionary[Variant.Type, String] = {
 	TYPE_NIL: "",
 	TYPE_BOOL: "bool",
 	TYPE_INT: "int",
@@ -16,4 +17,4 @@ const type_names: Dictionary[Variant.Type, String] = {
 func update_type() -> void:
 	var type := typeof(base.typecast(base.text.get_raw()))
 	visible = type != TYPE_NIL
-	text = type_names[type]
+	text = TYPE_NAMES.get(type, "")

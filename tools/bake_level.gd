@@ -1,5 +1,4 @@
 extends Node
-
 ## Measures a level the way the editor's bake buttons do, without opening the
 ## editor: the whole-level camera bounds and every room's bounds, printed as
 ## JSON. For levels generated outside the editor (the Arrays sample). A scene
@@ -17,6 +16,7 @@ func _ready() -> void:
 		for path in paths:
 			print("BOUNDS_FOR %s %s" % [path, JSON.stringify(await _measure(path))])
 	get_tree().quit()
+
 
 func _measure(path: String) -> Dictionary:
 	var level: Level = (load(path) as PackedScene).instantiate()

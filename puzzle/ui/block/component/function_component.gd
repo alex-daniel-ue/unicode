@@ -1,91 +1,111 @@
 class_name BlockFunctionComponent
 extends BlockBaseComponent
+## What a block does when it runs, and what its function uses to do it:
+## evaluating its parameters, looking names up, raising errors.
+##
+## The block's data says where its function is (BlockData.func_type):
+## - STANDARD: a method on a script in puzzle/functions/. The script is put on
+##   a Node of this component's, and the method is called with the block.
+## - ENTITY: a method on something in the level (the robot, a list), called
+##   with the block. The entity is `object`, or is found by the data's entity
+##   name or script (_find_entity()).
+## - LAMBDA: nothing to look up. The block's own script sets the callable (a
+##   slot's socket_function()).
 
-
-## Determines the function type based on the presence of `func_script` and
-## `func_method` in the BlockData:
-## 1. STANDARD: Both script and method exist. A dummy Node is created, the
-##    script is attached to it, and `_function` is assigned to
-##    Callable(dummy_node, func_method).
-## 2. ENTITY: Only the method is present. The `object` property must be
-##    explicitly set before initialization.
-## 3. LAMBDA: Neither script nor method is present. Relies on manually assigning
-##    the `_function` Callable, typically done inside the overridden _ready()
-##    method of the specific Block script.
-## Note: Providing only a script without a method is invalid and has no designated type.
-
-@export var _function: Callable:
-	set = set_func
+## The entity an ENTITY block talks to. A BlockProvider sets it on the blocks it
+## hands out; a preset block authored as a scene node can set it by NodePath.
 @export var object: Node
 
+var _callable: Callable
 
+
+## Runs the block: what it does, and what it gives back.
 func run() -> Variant:
-	assert(_function != null and not _function.is_null())
-	
-	var value: Variant = await _function.call()
-	return value
+	assert(not _callable.is_null())
+	return await _callable.call()
+
 
 func initialize() -> void:
-	var type := base.data.func_type
-	if type != BlockData.FuncType.LAMBDA:
-		if type == BlockData.FuncType.ENTITY:
+	match base.data.func_type:
+		BlockData.FuncType.ENTITY:
 			if object == null:
 				object = _find_entity()
 			if object == null:
 				push_error("(%s) No entity found for '%s'. Is there one in the level?" % [base.name, base.data.func_method])
 			assert(object != null)
-			_function = Callable(object, base.data.func_method).bind(base)
-		
-		elif object == null:
+			_callable = Callable(object, base.data.func_method).bind(base)
+		BlockData.FuncType.STANDARD:
+			assert(object == null)
 			var node := Node.new()
 			add_child(node)
 			node.set_script(base.data.func_script)
-			
-			_function = Callable(node, base.data.func_method).bind(base)
-		
-		else: assert(false)
+			_callable = Callable(node, base.data.func_method).bind(base)
 
-func is_initialized() -> bool:
-	return not _function.is_null()
 
+func set_callable(callable: Callable) -> void:
+	_callable = callable
+
+
+## `value` itself, or, for a name, what the name means: a variable's value, else
+## the room's list, dictionary or file of that name (Python's lists are names
+## too, and a variable of the same name wins, as it would in Python). Raises
+## the error and gives null for a name that means nothing.
 func unwrap(value: Variant) -> Variant:
 	if typeof(value) != TYPE_STRING_NAME:
 		return value
-	
-	if not Interpreter.has_var(value):
-		# The room's lists aren't variables, but in Python their names are just
-		# names, so a list's name typed into a slot means that list. A variable
-		# of the same name still wins, as it would in Python.
-		var list := ListEntity.find(value)
-		if list != null:
-			return list
-		var board := DictEntity.find(value)
-		if board != null:
-			return board
-		var file := FileEntity.find(value)
-		if file != null:
-			return file
+	if Interpreter.has_var(value):
+		return Interpreter.read_var(value)
 
-		var var_name := str(value)
-		var hint := " Python spells it %s." % var_name.capitalize() if var_name in ["true", "false"] else ""
-		error("Variable '%s' doesn't exist.%s" % [value, hint])
+	var list := ListEntity.find(value)
+	if list != null:
+		return list
+	var board := DictEntity.find(value)
+	if board != null:
+		return board
+	var file := FileEntity.find(value)
+	if file != null:
+		return file
+
+	var var_name := str(value)
+	var hint := " Python spells it %s." % var_name.capitalize() if var_name in ["true", "false"] else ""
+	error("Variable '%s' doesn't exist.%s" % [value, hint])
+	return null
+
+
+## The room entity of `kind` (ListEntity, DictEntity, FileEntity) that an
+## argument names, or null after raising the error. A name block arrives as the
+## entity itself; a typed-in name is looked up by unwrap(), a variable first.
+## `noun` is what the block needs, for the message: "a list".
+func resolve(raw: Variant, kind: Script, noun: String) -> RoomEntity:
+	var value: Variant = unwrap(raw)
+	if Interpreter.interrupted:
 		return null
-	
-	return Interpreter.read_var(value)
+	if value is RoomEntity and (value as RoomEntity).get_script() == kind:
+		return value
+	# Named by the block's name, as students know it, not its text.
+	var block_name := base.data.display_name()
+	if value == null:
+		error("The %s block needs %s. Drop the name block of %s into its empty slot." % [block_name, noun, noun])
+	else:
+		error("The %s block needs %s, but it got %s." % [block_name, noun, Core.to_python_repr(value)])
+	return null
 
+
+## Every parameter, evaluated in order, each type checked against `types` (one
+## entry per parameter; an empty entry takes anything). Empty after an error.
 func eval_args(types: Array[PackedInt32Array]) -> Array:
 	var evaluated: Array
 	var arg_count := types.size()
 	Interpreter.values_cleared.emit(base)
 
 	for block in base.text.get_blocks():
-		if not block.visible: continue
-
 		await Interpreter.step(block)
-		if Interpreter.interrupted: return []
+		if Interpreter.interrupted:
+			return []
 
 		var value: Variant = await block.function.run()
-		if Interpreter.interrupted: return []
+		if Interpreter.interrupted:
+			return []
 
 		# A slot that names the variable being set (set, for, for each) isn't
 		# read, so its value would only be the old one.
@@ -93,18 +113,19 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 		if index >= arg_count or types[index] != Argument.STRING_NAME:
 			Interpreter.value_shown.emit(block, value)
 		evaluated.append(value)
-		
+
 	if evaluated.size() < arg_count:
 		var plurality := " is" if arg_count == 1 else "s are"
 		error("%d argument%s required." % [arg_count, plurality])
-		return[]
-		
+		return []
+
+	var params := base.text.get_blocks()
 	for i in range(arg_count):
 		# A name slot whose text isn't a name Python would accept says which
 		# name, and why. Core.validate_type() would say "1st argument must be a
 		# variable name", which reads oddly when the name typed was "1st".
 		if types[i] == Argument.STRING_NAME and evaluated[i] == null:
-			var typed: String = (_visible_params()[i] as Block).text.get_raw() if i < _visible_params().size() else ""
+			var typed: String = params[i].text.get_raw() if i < params.size() else ""
 			if not typed.strip_edges().is_empty():
 				error("'%s' isn't a valid variable name. A name starts with a letter or _, and has no spaces." % typed)
 				return []
@@ -112,16 +133,17 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 			var err := Core.validate_type(evaluated[i], types[i], i)
 			if not err.is_empty():
 				error(err)
-				return[]
-				
+				return []
+
 	return evaluated
+
 
 ## One parameter, evaluated on its own and only when asked for. eval_args() runs
 ## every parameter up front; a short-circuiting `and`/`or` must not run its right
 ## side at all when the left side already decides the answer. Null after an
 ## error, so check Interpreter.interrupted.
 func eval_arg(index: int) -> Variant:
-	var params := _visible_params()
+	var params := base.text.get_blocks()
 	if index >= params.size():
 		error("%d arguments are required." % (index + 1))
 		return null
@@ -130,25 +152,27 @@ func eval_arg(index: int) -> Variant:
 		Interpreter.values_cleared.emit(base)
 	var block: Block = params[index]
 	await Interpreter.step(block)
-	if Interpreter.interrupted: return null
+	if Interpreter.interrupted:
+		return null
 	var value: Variant = await block.function.run()
 	if not Interpreter.interrupted:
 		Interpreter.value_shown.emit(block, value)
 	return value
 
-## Marks parameter `index` as not evaluated this time, for the value bubbles, as
+
+## Marks parameter `index` as not evaluated this time, for the value tags, as
 ## when the left side of an and/or has already decided the answer.
 func skip_arg(index: int) -> void:
-	var params := _visible_params()
+	var params := base.text.get_blocks()
 	if index < params.size():
 		Interpreter.value_skipped.emit(params[index])
 
-func _visible_params() -> Array:
-	return base.text.get_blocks().filter(func(block: Block) -> bool: return block.visible)
 
+## Stops the run with `message`, on this block: it flashes red, and the message
+## goes to the student, the output log and the assistant.
 func error(message: String) -> void:
 	Interpreter.interrupted = true
-	
+
 	var current_scope := Interpreter.flatten_scopes()
 	var trace: PackedStringArray
 	var current := base.get_parent_block()
@@ -156,37 +180,33 @@ func error(message: String) -> void:
 		trace.append(current.text.get_raw())
 		current = current.get_parent_block()
 	trace.reverse()
-	
-	var err := Interpreter.Error.new(message, base, trace, current_scope)
+
+	var err := Interpreter.BlockError.new(message, base, trace, current_scope)
 	Interpreter.active_errors.append(err)
 	Interpreter.output_log.append(str(err))
-	
+
 	base.visual.set_error(true)
 	base.visual.start_error_timer()
-	
+
 	Interpreter.error_raised.emit(err)
 
-func set_func(new_func: Callable) -> void:
-	_function = new_func
 
 ## Blocks handed out by a BlockProvider arrive already bound to their entity, and a
-## preset block authored as a scene node can have `object` set by NodePath in the
-## inspector. Neither reaches a block that text.format() built from data -- anything
-## inside a socket pre-filled through BlockData -- so those resolve here.
+## preset block authored as a scene node can have `object` set by NodePath. Neither
+## reaches a block that text.format() built from data (anything inside a socket
+## pre-filled through BlockData), so those resolve here.
 ##
-## By name first, because a name is the honour-system handle: the author types
-## "RobotCharacter" into the block data, names the node that in the scene dock, and
-## the two agree or the level says so on startup. No group to remember to join, no
-## path to keep valid when a node moves.
+## By name first: the author types "RobotCharacter" into the block data, names
+## the node that in the scene dock, and the two agree or the level says so on
+## startup. No group to remember to join, no path to keep valid when a node moves.
 ##
 ## The script match is the fallback, and it is only right while the level holds
-## exactly one node of that script. It now errors on two rather than silently taking
-## the first, which is what made two robots or two lists unauthorable.
+## exactly one node of that script, so two is an error rather than a guess.
 func _find_entity() -> Node:
 	var root := _level_root()
 	if root == null:
 		return null
-	
+
 	var wanted_name := base.data.func_entity_name
 	if not wanted_name.is_empty():
 		var named := root.find_children(String(wanted_name), "", true, false)
@@ -203,11 +223,11 @@ func _find_entity() -> Node:
 				% [base.name, named.size(), wanted_name, root.name]
 			)
 		return null
-	
+
 	var wanted := base.data.func_entity_script
 	if wanted == null:
 		return null
-	
+
 	var matches: Array[Node] = []
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
@@ -219,7 +239,7 @@ func _find_entity() -> Node:
 				break
 			script = script.get_base_script()
 		stack.append_array(node.get_children())
-	
+
 	if matches.size() == 1:
 		return matches[0]
 	if matches.size() > 1:
@@ -229,6 +249,7 @@ func _find_entity() -> Node:
 		)
 	return null
 
+
 func _level_root() -> Node:
 	var root: Node = base
 	while root != null and not (root is Level):
@@ -236,6 +257,7 @@ func _level_root() -> Node:
 	return root if root != null else Game.level
 
 
+## The type checks eval_args() takes, one per parameter.
 class Argument:
 	static var VARIANT := PackedInt32Array()
 	static var BOOL := PackedInt32Array([TYPE_BOOL])

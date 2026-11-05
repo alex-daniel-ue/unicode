@@ -1,17 +1,8 @@
 class_name LevelBlockPreset
 extends Node
-
-
-## Preset blocks can't be dragged at all, not just not deleted. For worked
-## examples, where the program on the canvas is the thing being studied.
-@export var immovable := false
-## A program to put under begin, written out instead of built in the editor,
-## for presets whose slots hold other blocks (a level generator writes these).
-## JSON: a list of blocks, each [name, slot, slot...], where a slot is typed in
-## or is a block itself, and ["list", "route"] is route's name block:
-##   [["moven", ["index", 0, ["list", "route"]]], ["turn", "left"]]
-## Only used while begin is empty, so blocks authored in the editor win.
-@export_multiline var program := ""
+## The Begin block the level starts with, and any program already under it.
+## Puzzle takes it onto the canvas (get_preset()); its blocks are locked there:
+## a student can't trash or copy them.
 
 ## The block names `program` can use.
 const PROGRAM_BLOCKS := {
@@ -19,7 +10,7 @@ const PROGRAM_BLOCKS := {
 	"moven": "res://level/objects/entities/robot/blocks/move_n.tres",
 	"turn": "res://level/objects/entities/robot/blocks/turn.tres",
 	"index": "res://puzzle/blocks/lists/item_of.tres",
-	"item": "res://puzzle/blocks/lists/item_of.tres",  # the old name, for presets written before
+	"item": "res://puzzle/blocks/lists/item_of.tres",  # the same block as "index"
 	"len": "res://puzzle/blocks/lists/length_of.tres",
 	"arith": "res://puzzle/blocks/socket/arithmetic.tres",
 	"cmp": "res://puzzle/blocks/socket/comparison.tres",
@@ -42,13 +33,56 @@ const PROGRAM_BLOCKS := {
 	"elif": "res://puzzle/blocks/control flow/elif.tres",
 	"andor": "res://puzzle/blocks/socket/and_or.tres",
 }
-
 const IMMOVABLE_TOOLTIP := "This program is locked: read it, then watch it run."
 
-var root_block: Block
+## Preset blocks can't be dragged at all, not just not deleted. For worked
+## examples, where the program on the canvas is the thing being studied.
+@export var immovable := false
+## A program to put under begin, written out instead of built in the editor,
+## for presets whose slots hold other blocks (the level generators write these).
+## JSON: a list of blocks, each [name, slot, slot...], where a slot is typed in
+## or is a block itself, and ["list", "route"] is route's name block:
+##   [["moven", ["index", 0, ["list", "route"]]], ["turn", "left"]]
+## A nested block's last entry can be {"body": [...]}. Only used while begin is
+## empty, so blocks authored in the editor win.
+@export_multiline var program := ""
+
+## The data of every block get_preset() handed over, for the assistant.
 var preset_data: Array[BlockData]
 
 
+## The block `spec` describes, as data: slots filled by typing into them, or by
+## putting another block's data in their place, the way a preset authored
+## through data nests blocks.
+static func data_for(spec: Variant) -> BlockData:
+	if not spec is Array or (spec as Array).is_empty():
+		push_error("LevelBlockPreset: '%s' isn't a block." % str(spec))
+		return null
+	var parts := spec as Array
+	if parts[0] == "list":
+		return ListEntity.reporter_data(StringName(parts[1]))
+	if not PROGRAM_BLOCKS.has(parts[0]):
+		push_error("LevelBlockPreset: no block called '%s' (see PROGRAM_BLOCKS)." % parts[0])
+		return null
+	var data := (load(PROGRAM_BLOCKS[parts[0]]) as BlockData).deep_copy()
+	for i in range(1, parts.size()):
+		var value: Variant = parts[i]
+		if i - 1 >= data.text_blocks.size():
+			break
+		if value is Array:
+			var inner := data_for(value)
+			if inner != null:
+				data.text_blocks[i - 1] = inner
+		else:
+			# JSON numbers arrive as floats; a whole one is typed as an int.
+			if value is float and is_equal_approx(value, roundf(value)):
+				value = int(value)
+			data.text_blocks[i - 1].text = str(value)
+	return data
+
+
+## The Begin block with its program under it, locked, ready to go on the canvas.
+## Null when the level has no Begin block.
 func get_preset() -> Block:
 	var root: Block
 	for child in get_children():
@@ -78,9 +112,8 @@ func get_preset() -> Block:
 
 	if immovable:
 		_mark_immovable(root)
-
-	root_block = root
 	return root
+
 
 ## Immovable blocks look like every other block, so they say so on hover: the
 ## "not allowed" cursor and a tooltip, instead of a drag that silently does
@@ -96,41 +129,13 @@ func _mark_immovable(root: Block) -> void:
 		if control is Block:
 			control.tooltip_text = IMMOVABLE_TOOLTIP
 
+
 func _build_program(root: NestedBlock) -> void:
 	var parsed: Variant = JSON.parse_string(program)
 	if not parsed is Array:
 		push_error("LevelBlockPreset: program isn't a JSON list of blocks.")
 		return
 	for spec: Variant in parsed:
-		var data := _data_for(spec)
+		var data := data_for(spec)
 		if data != null:
 			root.mouth.add_child(Block.construct(data))
-
-## The block `spec` describes, as data: slots filled by typing into them, or by
-## putting another block's data in their place, the way a preset authored
-## through data nests blocks.
-static func _data_for(spec: Variant) -> BlockData:
-	if not spec is Array or (spec as Array).is_empty():
-		push_error("LevelBlockPreset: '%s' isn't a block." % str(spec))
-		return null
-	var parts := spec as Array
-	if parts[0] == "list":
-		return ListEntity.reporter_data(StringName(parts[1]))
-	if not PROGRAM_BLOCKS.has(parts[0]):
-		push_error("LevelBlockPreset: no block called '%s' (see PROGRAM_BLOCKS)." % parts[0])
-		return null
-	var data := (load(PROGRAM_BLOCKS[parts[0]]) as BlockData).deep_copy()
-	for i in range(1, parts.size()):
-		var value: Variant = parts[i]
-		if i - 1 >= data.text_blocks.size():
-			break
-		if value is Array:
-			var inner := _data_for(value)
-			if inner != null:
-				data.text_blocks[i - 1] = inner
-		else:
-			# JSON numbers arrive as floats; a whole one is typed as an int.
-			if value is float and is_equal_approx(value, roundf(value)):
-				value = int(value)
-			data.text_blocks[i - 1].text = str(value)
-	return data

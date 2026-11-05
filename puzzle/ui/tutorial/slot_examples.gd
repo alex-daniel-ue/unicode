@@ -1,10 +1,9 @@
 class_name SlotExamples
 extends VBoxContainer
-
 ## A block on a guide page with sample values floating above it, and an arrow
 ## from each to the slot they could go in: "this slot takes a number, or a
-## variable". Without them, a slot that is typed into read as part of the
-## block's picture, and a student didn't know what could go there.
+## variable". Without them, a slot that is typed into reads as part of the
+## block's picture, and a student doesn't know what could go there.
 ##
 ## Above the block, not under it: the page's words sit under its graphics, and
 ## samples between the block and the words read as what the words were about.
@@ -65,6 +64,7 @@ static func example_slot(data: BlockData, values: PackedStringArray) -> int:
 		return i
 	return -1
 
+
 ## `picture` with samples floating above its slot number `slot_index`, or above
 ## every slot SLOTS_FOR names for it.
 static func build(picture: BlockPicture, slot_index: int) -> SlotExamples:
@@ -86,7 +86,7 @@ func _ready() -> void:
 	for value: Variant in SAMPLES_FOR.get(_picture.data.name, SAMPLES):
 		var sample := BlockPicture.new()
 		if value is Array:
-			sample.data = LevelBlockPreset._data_for(value)
+			sample.data = LevelBlockPreset.data_for(value)
 		else:
 			var data := SLOT.deep_copy()
 			data.text = value
@@ -101,8 +101,10 @@ func _ready() -> void:
 	_arrows.draw.connect(_draw_arrows)
 	add_child(_arrows)
 
+
 func _process(_delta: float) -> void:
 	_arrows.queue_redraw()
+
 
 func _draw_arrows() -> void:
 	var root := _root()
@@ -120,6 +122,7 @@ func _draw_arrows() -> void:
 			var start := to_local * Vector2(rect.get_center().x, rect.end.y - 4.0)
 			_arrow(start, end)
 
+
 func _arrow(a: Vector2, b: Vector2) -> void:
 	var direction := (b - a).normalized()
 	if direction == Vector2.ZERO:
@@ -131,12 +134,14 @@ func _arrow(a: Vector2, b: Vector2) -> void:
 	_arrows.draw_line(a, base, COLOR, WIDTH, true)
 	_arrows.draw_colored_polygon(PackedVector2Array([b, base + side, base - side]), COLOR)
 
+
 ## The pictured block.
 func _root() -> Block:
 	for child in _picture.get_children():
 		if child is Block:
 			return child as Block
 	return null
+
 
 ## The slot block the samples point at: the `index`th block directly in `root`,
 ## not one inside another slot.
