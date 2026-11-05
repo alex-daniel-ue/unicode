@@ -59,6 +59,16 @@ func _length(this: Block) -> Variant:
 	var args := await this.function.eval_args([this.function.Argument.VARIANT])
 	if Interpreter.interrupted: return null
 
+	# len() of a dictionary counts its keys, and of text its characters.
+	var target: Variant = this.function.unwrap(args[0])
+	if Interpreter.interrupted: return null
+	if target is DictEntity:
+		return await (target as DictEntity).size(this)
+	if target is FileEntity:
+		return await (target as FileEntity).size(this)
+	if typeof(target) == TYPE_STRING:
+		await Interpreter.step(this)
+		return (target as String).length()
 	var list := resolve(this, args[0], "length of")
 	if list == null: return null
 
@@ -89,6 +99,18 @@ func _contains(this: Block) -> Variant:
 
 	var value: Variant = this.function.unwrap(args[0])
 	if Interpreter.interrupted: return null
+	# `in` looks among a dictionary's keys, and inside text for a piece of it,
+	# as Python's does.
+	var target: Variant = this.function.unwrap(args[1])
+	if Interpreter.interrupted: return null
+	if target is DictEntity:
+		return await (target as DictEntity).has(value, this)
+	if typeof(target) == TYPE_STRING:
+		if typeof(value) != TYPE_STRING:
+			this.function.error("Only text can be looked for inside text, but this looks for %s." % Core.to_python_repr(value))
+			return null
+		await Interpreter.step(this)
+		return (target as String).contains(value)
 	var list := resolve(this, args[1], "in")
 	if list == null: return null
 

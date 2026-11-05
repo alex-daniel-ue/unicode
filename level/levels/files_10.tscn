@@ -1,0 +1,216 @@
+[gd_scene load_steps=22 format=4]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_main_theme"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_block_data"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="5_goal_manager"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="6_school_tiles"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="7_school_walls"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/file/file_entity.tscn" id="8_file_entity"]
+[ext_resource type="Script" path="res://level/goals/file_goal.gd" id="9_file_goal"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/terminal/terminal_entity.tscn" id="10_terminal_ent"]
+[ext_resource type="Script" path="res://level/goals/terminal_goal.gd" id="11_terminal_goa"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/print.tres" id="12_print"]
+[ext_resource type="Resource" path="res://puzzle/blocks/terminal/input.tres" id="13_input"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/initialize.tres" id="14_initialize"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/set_var.tres" id="15_set_var"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/if.tres" id="16_if"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/else.tres" id="17_else"]
+[ext_resource type="Resource" path="res://puzzle/blocks/socket/comparison.tres" id="18_comparison"]
+[ext_resource type="Resource" path="res://puzzle/blocks/socket/boolean.tres" id="19_boolean"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_each.tres" id="20_for_each"]
+[ext_resource type="Resource" path="res://puzzle/blocks/files/write.tres" id="21_write"]
+
+[node name="FILES10TheGuestBook" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - name
+        - \"input ( )\"  # not a readable value
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - found
+        - False
+    - block: ForEachBlock
+      kind: nested
+      text: \"for each {} in {}\"
+      parameters:
+        - line
+        - \"guests.txt\"  # not a readable value
+      children:
+        - block: IfBlock
+          kind: nested
+          text: \"if {}\"
+          parameters:
+            - block: ComparisonBlock
+              kind: expression
+              text: \"{} {} {}\"
+              parameters:
+                - line
+                - ==
+                - name
+          children:
+            - block: SetBlock
+              kind: statement
+              text: \"set {} to {}\"
+              parameters:
+                - found
+                - True
+    - block: IfBlock
+      kind: nested
+      text: \"if {}\"
+      parameters:
+        - block: ComparisonBlock
+          kind: expression
+          text: \"{} {} {}\"
+          parameters:
+            - found
+            - ==
+            - True
+      children:
+        - block: PrintBlock
+          kind: statement
+          text: \"print {}\"
+          parameters:
+            - \"Welcome back, {name}!\"
+    - block: ElseBlock
+      kind: nested
+      text: \"else\"
+      children:
+        - block: WriteBlock
+          kind: statement
+          text: \"write {} to {}\"
+          parameters:
+            - name
+            - \"guests.txt\"  # not a readable value
+        - block: PrintBlock
+          kind: statement
+          text: \"print {}\"
+          parameters:
+            - \"Welcome, {name}!\""
+room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
+
+[node name="LevelDescription" parent="." index="0"]
+title = "The guest book"
+mission = "guests.txt has the names of everyone who came before. The user types a name. When the name is already in the file, show Welcome back, and the name. When it isn't, write it in the file and show Welcome, and the name."
+rooms = PackedStringArray("The user types Ben.", "The user types Zoe.")
+twist = "One user came before, and one is new."
+tip = "A variable like `found = False` can remember what a loop saw. Compare it with True afterwards."
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("4_block_data")]([ExtResource("12_print"), ExtResource("13_input"), ExtResource("14_initialize"), ExtResource("15_set_var"), ExtResource("16_if"), ExtResource("17_else"), ExtResource("18_comparison"), ExtResource("19_boolean"), ExtResource("20_for_each"), ExtResource("21_write")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
+bounds = Rect2(40.0, 70.0, 298.0, 74.0)
+focus_markers = [NodePath("../../Visuals/Terminals/Room1"), NodePath("../../Visuals/Files/Room1")]
+
+[node name="TerminalGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("terminal")]
+script = ExtResource("11_terminal_goa")
+terminal = NodePath("../../../Visuals/Terminals/Room1/Terminal")
+expected = PackedStringArray("Welcome back, Ben!")
+
+[node name="GuestsTxtGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("file")]
+script = ExtResource("9_file_goal")
+file = NodePath("../../../Visuals/Files/Room1/guests_txt")
+expected = PackedStringArray("Ana", "Ben")
+
+[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
+script = ExtResource("5_goal_manager")
+bounds = Rect2(40.0, 326.0, 254.0, 94.0)
+focus_markers = [NodePath("../../Visuals/Terminals/Room2"), NodePath("../../Visuals/Files/Room2")]
+
+[node name="TerminalGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("terminal")]
+script = ExtResource("11_terminal_goa")
+terminal = NodePath("../../../Visuals/Terminals/Room2/Terminal")
+expected = PackedStringArray("Welcome, Zoe!")
+
+[node name="GuestsTxtGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="1" node_paths=PackedStringArray("file")]
+script = ExtResource("9_file_goal")
+file = NodePath("../../../Visuals/Files/Room2/guests_txt")
+expected = PackedStringArray("Ana", "Ben", "Zoe")
+
+[node name="Camera2D" parent="." index="4"]
+level_bounds = Rect2(0.0, 0.0, 384.0, 512.0)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals"]
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQABAAAAAAAJAAIAAQACAAAAAAAKAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQABAAEAAAAJAAMAAQACAAEAAAAKAAMAAQADAAEAAAABAAQAAQAAAAIAAAACAAQAAQABAAIAAAADAAQAAQACAAIAAAAEAAQAAQABAAIAAAAFAAQAAQACAAIAAAAGAAQAAQABAAIAAAAHAAQAAQACAAIAAAAIAAQAAQABAAIAAAAJAAQAAQACAAIAAAAKAAQAAQADAAIAAAABAAUAAQAAAAMAAAACAAUAAQABAAMAAAADAAUAAQACAAMAAAAEAAUAAQABAAMAAAAFAAUAAQACAAMAAAAGAAUAAQABAAMAAAAHAAUAAQACAAMAAAAIAAUAAQABAAMAAAAJAAUAAQACAAMAAAAKAAUAAQADAAMAAAABAAoAAQAAAAAAAAACAAoAAQABAAAAAAADAAoAAQACAAAAAAAEAAoAAQABAAAAAAAFAAoAAQACAAAAAAAGAAoAAQABAAAAAAAHAAoAAQACAAAAAAAIAAoAAQABAAAAAAAJAAoAAQADAAAAAAABAAsAAQAAAAEAAAACAAsAAQABAAEAAAADAAsAAQACAAEAAAAEAAsAAQABAAEAAAAFAAsAAQACAAEAAAAGAAsAAQABAAEAAAAHAAsAAQACAAEAAAAIAAsAAQABAAEAAAAJAAsAAQADAAEAAAABAAwAAQAAAAIAAAACAAwAAQABAAIAAAADAAwAAQACAAIAAAAEAAwAAQABAAIAAAAFAAwAAQACAAIAAAAGAAwAAQABAAIAAAAHAAwAAQACAAIAAAAIAAwAAQABAAIAAAAJAAwAAQADAAIAAAABAA0AAQAAAAEAAAACAA0AAQABAAEAAAADAA0AAQACAAEAAAAEAA0AAQABAAEAAAAFAA0AAQACAAEAAAAGAA0AAQABAAEAAAAHAA0AAQACAAEAAAAIAA0AAQABAAEAAAAJAA0AAQADAAEAAAABAA4AAQAAAAMAAAACAA4AAQABAAMAAAADAA4AAQACAAMAAAAEAA4AAQABAAMAAAAFAA4AAQACAAMAAAAGAA4AAQABAAMAAAAHAA4AAQACAAMAAAAIAA4AAQABAAMAAAAJAA4AAQADAAMAAAA=")
+tile_set = ExtResource("6_school_tiles")
+
+[node name="Terminals" type="Node2D" parent="Visuals"]
+
+[node name="Room1" type="Node2D" parent="Visuals/Terminals"]
+
+[node name="Terminal" parent="Visuals/Terminals/Room1" instance=ExtResource("10_terminal_ent")]
+position = Vector2(40, 70)
+room_index = 0
+inputs = PackedStringArray("Ben")
+
+[node name="Room2" type="Node2D" parent="Visuals/Terminals"]
+
+[node name="Terminal" parent="Visuals/Terminals/Room2" instance=ExtResource("10_terminal_ent")]
+position = Vector2(40, 326)
+room_index = 1
+inputs = PackedStringArray("Zoe")
+
+[node name="Files" type="Node2D" parent="Visuals"]
+
+[node name="Room1" type="Node2D" parent="Visuals/Files"]
+
+[node name="guests_txt" parent="Visuals/Files/Room1" instance=ExtResource("8_file_entity")]
+position = Vector2(228, 70)
+file_name = "guests.txt"
+room_index = 0
+lines = PackedStringArray("Ana", "Ben")
+
+[node name="Room2" type="Node2D" parent="Visuals/Files"]
+
+[node name="guests_txt" parent="Visuals/Files/Room2" instance=ExtResource("8_file_entity")]
+position = Vector2(184, 326)
+file_name = "guests.txt"
+room_index = 1
+lines = PackedStringArray("Ana", "Ben")
+
+[node name="YSorted" type="Node2D" parent="Visuals"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAHAAUAAwAAAAAAAAAIAAUAAQAAAAAAAAAJAAUAAQABAAAAAAAHAA4AAQABAAAAAAAJAA4AAwAAAAAAAAA=")
+tile_set = ExtResource("2_school_chair")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQABAAAAAAAKAAAAAQABAAAAAAALAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQABAAEAAAAKAAEAAQABAAEAAAALAAEAAQAAAAEAABAAAAIAAQAAAAEAAAALAAIAAQAAAAEAABAAAAMAAQAAAAEAAAALAAMAAQAAAAEAABAAAAQAAQAAAAEAAAALAAQAAQAAAAEAABAAAAUAAQAAAAEAAAALAAUAAQAAAAEAABAAAAYAAQACAAAAADABAAYAAAAAAAEAAHACAAYAAAAAAAEAAHADAAYAAAAAAAEAAHAEAAYAAAAAAAEAAHAFAAYAAAAAAAEAAHAGAAYAAAAAAAEAAHAHAAYAAAAAAAEAAHAIAAYAAAAAAAEAAHAJAAYAAAAAAAEAAHAKAAYAAAAAAAEAAHALAAYAAQACAAAAACAAAAgAAQAAAAAAAAABAAgAAQADAAAAAAACAAgAAQABAAAAAAADAAgAAQABAAAAAAAEAAgAAQABAAAAAAAFAAgAAQABAAAAAAAGAAgAAQABAAAAAAAHAAgAAQABAAAAAAAIAAgAAQABAAAAAAAJAAgAAQABAAAAAAAKAAgAAQAAAAAAABAAAAkAAQAAAAEAAAABAAkAAQADAAEAAAACAAkAAQABAAEAAAADAAkAAQABAAEAAAAEAAkAAQABAAEAAAAFAAkAAQABAAEAAAAGAAkAAQABAAEAAAAHAAkAAQABAAEAAAAIAAkAAQABAAEAAAAJAAkAAQABAAEAAAAKAAkAAQAAAAEAABAAAAoAAQAAAAEAAAAKAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAKAAsAAQAAAAEAABAAAAwAAQAAAAEAAAAKAAwAAQAAAAEAABAAAA0AAQAAAAEAAAAKAA0AAQAAAAEAABAAAA4AAQAAAAEAAAAKAA4AAQAAAAEAABAAAA8AAQACAAAAADABAA8AAAAAAAEAAHACAA8AAAAAAAEAAHADAA8AAAAAAAEAAHAEAA8AAAAAAAEAAHAFAA8AAAAAAAEAAHAGAA8AAAAAAAEAAHAHAA8AAAAAAAEAAHAIAA8AAAAAAAEAAHAJAA8AAAAAAAEAAHAKAA8AAQACAAAAACA=")
+tile_set = ExtResource("7_school_walls")
+
+[node name="Room1Label" type="Label" parent="Visuals"]
+offset_left = 166.0
+offset_top = 196.0
+offset_right = 218.0
+offset_bottom = 219.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 1"
+
+[node name="Room2Label" type="Label" parent="Visuals"]
+offset_left = 150.0
+offset_top = 484.0
+offset_right = 202.0
+offset_bottom = 507.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 2"
+
+[editable path="LevelBlockPreset/BeginBlock"]

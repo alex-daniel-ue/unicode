@@ -19,7 +19,11 @@ const NEW_SECTION := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_ne
 ## share one row in a narrow panel.
 const DISPLAY := {
 	"Robot": "Robot",
+	"Terminal": "Terminal",
+	"Functions": "Functions",
 	"Lists": "Lists",
+	"Dicts": "Dicts",
+	"Files": "Files",
 	"Iterative": "Loops",
 	"Selection": "Selection",
 	"Boolean": "Logic",
@@ -83,11 +87,14 @@ func mark_new(new_blocks: Array[BlockData], notes: PackedStringArray) -> void:
 		var wanted := new_blocks[i]
 		if wanted == null:
 			continue
-		var every_list := ListEntity.is_reporter(wanted, true)
+		# A template (a list's name block, a function's call block) stands for
+		# every block made from it in this level.
+		var family := RuntimeBlocks.family_of(wanted)
+		var every_list := not family.is_empty()
 		var found: Array[Block] = []
 		for category: ToolboxCategory in _categories.values():
 			for block in category.get_blocks():
-				if (every_list and ListEntity.is_reporter(block.data)) or (not every_list and block.data.name == wanted.name):
+				if (every_list and RuntimeBlocks.in_family(block.data, family)) or (not every_list and block.data.name == wanted.name):
 					found.append(block)
 		if not every_list:
 			found = found.slice(0, 1)

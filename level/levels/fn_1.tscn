@@ -1,0 +1,189 @@
+[gd_scene load_steps=20 format=4]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_main_theme"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_block_data"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="5_goal_manager"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="6_school_tiles"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="7_school_walls"]
+[ext_resource type="Script" uid="uid://q6bakhqg0ln6" path="res://level/goals/destination_goal.gd" id="8_destination_"]
+[ext_resource type="Script" uid="uid://dpdkg6h24nyxe" path="res://level/goals/checkpoint_goal.gd" id="9_checkpoint_g"]
+[ext_resource type="Script" uid="uid://o1ylv1wr01a7" path="res://level/goals/sensed_area.gd" id="10_sensed_area"]
+[ext_resource type="Texture2D" uid="uid://b3ebyhau47md8" path="res://level/objects/green_flag.png" id="11_green_flag"]
+[ext_resource type="Texture2D" uid="uid://cetefcnjyhden" path="res://world/assets/objects/battery.png" id="12_battery"]
+[ext_resource type="PackedScene" uid="uid://cmxfefkbr2y3a" path="res://level/objects/entities/robot/robot_character.tscn" id="13_robot_charac"]
+[ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="14_resettable_c"]
+[ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="15_sprite_frame"]
+[ext_resource type="Resource" path="res://puzzle/blocks/functions/call.tres" id="16_call"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_int.tres" id="17_for_int"]
+[ext_resource type="Script" path="res://level/function_definitions.gd" id="18_function_def"]
+
+[sub_resource type="CircleShape2D" id="Circle_1"]
+radius = 12.0
+
+[node name="FN1CallIt" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: Call_zigzag
+      kind: statement
+      text: \"zigzag ( )\"
+    - block: Call_zigzag
+      kind: statement
+      text: \"zigzag ( )\"
+    - block: Call_zigzag
+      kind: statement
+      text: \"zigzag ( )\"
+functions:  # define blocks: their blocks run when a call to them runs
+    - block: Define_zigzag
+      kind: nested
+      text: \"define zigzag (  )\"
+      locked: true
+      children:
+        - block: MoveBlock
+          kind: statement
+          text: \"step forward\"
+          locked: true
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          locked: true
+          parameters:
+            - left
+        - block: MoveBlock
+          kind: statement
+          text: \"step forward\"
+          locked: true
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          locked: true
+          parameters:
+            - right"
+room_goals = [NodePath("RoomGoals/GoalManager")]
+
+[node name="LevelDescription" parent="." index="0"]
+title = "Call it"
+mission = "The robot climbs the stairs. Get it to the green flag, and collect every battery on the way."
+twist = "The define zigzag block already holds the blocks for one stair."
+blocks = Array[ExtResource("4_block_data")]([ExtResource("16_call")])
+block_notes = PackedStringArray("This block runs the blocks under define zigzag.")
+tip = "In Python, `zigzag()` runs the function called zigzag."
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("4_block_data")]([ExtResource("17_for_int")])
+
+[node name="Functions" type="Node" parent="."]
+script = ExtResource("18_function_def")
+functions = "[{\"name\": \"zigzag\", \"params\": [], \"body\": [[\"move\"], [\"turn\", \"left\"], [\"move\"], [\"turn\", \"right\"]], \"locked\": true}]"
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
+bounds = Rect2(32.0, 64.0, 128.0, 128.0)
+focus_markers = [NodePath("../../Visuals/Destination1")]
+
+[node name="CheckpointGoal1" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("9_checkpoint_g")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot didn't collect every battery."
+camera_focus = NodePath("../../../Visuals/Pen1_1")
+detection_area = NodePath("../../../Visuals/Pen1_1")
+
+[node name="CheckpointGoal2" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+script = ExtResource("9_checkpoint_g")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+fail_message = "The robot didn't collect every battery."
+camera_focus = NodePath("../../../Visuals/Pen1_2")
+detection_area = NodePath("../../../Visuals/Pen1_2")
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("8_destination_")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination1")
+fail_message = "The robot didn't stop on the green flag."
+camera_focus = NodePath("../../../Visuals/Destination1")
+detection_area = NodePath("../../../Visuals/Destination1")
+
+[node name="Camera2D" parent="." index="4"]
+level_bounds = Rect2(0.0, 0.0, 224.0, 256.0)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals"]
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQADAAEAAAABAAQAAQAAAAIAAAACAAQAAQABAAIAAAADAAQAAQACAAIAAAAEAAQAAQABAAIAAAAFAAQAAQADAAIAAAABAAUAAQAAAAEAAAACAAUAAQABAAEAAAADAAUAAQACAAEAAAAEAAUAAQABAAEAAAAFAAUAAQADAAEAAAABAAYAAQAAAAMAAAACAAYAAQABAAMAAAADAAYAAQACAAMAAAAEAAYAAQABAAMAAAAFAAYAAQADAAMAAAA=")
+tile_set = ExtResource("6_school_tiles")
+
+[node name="Destination1" type="Area2D" parent="Visuals"]
+position = Vector2(144, 80)
+script = ExtResource("10_sensed_area")
+tag = &"destination"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1"]
+scale = Vector2(1, 1)
+texture = ExtResource("11_green_flag")
+
+[node name="Pen1_1" type="Area2D" parent="Visuals"]
+position = Vector2(80, 144)
+script = ExtResource("10_sensed_area")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_1"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_1"]
+scale = Vector2(1, 1)
+texture = ExtResource("12_battery")
+
+[node name="Pen1_2" type="Area2D" parent="Visuals"]
+position = Vector2(112, 112)
+script = ExtResource("10_sensed_area")
+tag = &"undetectable"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_2"]
+shape = SubResource("Circle_1")
+
+[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_2"]
+scale = Vector2(1, 1)
+texture = ExtResource("12_battery")
+
+[node name="YSorted" type="Node2D" parent="Visuals"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAIAAAAAAAAAAAABAAMAAwAAAAAAABAFAAYAAQAAAAAAAAA=")
+tile_set = ExtResource("2_school_chair")
+
+[node name="RobotCharacter" parent="Visuals/YSorted" instance=ExtResource("13_robot_charac")]
+z_index = 2
+position = Vector2(48, 176)
+facing_direction = Vector2(1, 0)
+
+[node name="AnimatedSprite2D" parent="Visuals/YSorted/RobotCharacter" index="0"]
+animation = &"idle_right"
+
+[node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
+block_data = Array[ExtResource("4_block_data")]([])
+
+[node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
+script = ExtResource("14_resettable_c")
+base = NodePath("..")
+tracked_properties = PackedStringArray("facing_direction", "transform")
+room_snapshots = Array[Dictionary]([Dictionary[StringName, Variant]({
+&"facing_direction": Vector2(1, 0),
+&"transform": Transform2D(1, 0, 0, 1, 48, 176)
+})])
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAGAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAGAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAGAAQAAQAAAAEAABAAAAUAAQAAAAEAAAAGAAUAAQAAAAEAABAAAAYAAQAAAAEAAAAGAAYAAQAAAAEAABAAAAcAAQACAAAAADABAAcAAAAAAAEAAHACAAcAAAAAAAEAAHADAAcAAAAAAAEAAHAEAAcAAAAAAAEAAHAFAAcAAAAAAAEAAHAGAAcAAQACAAAAACA=")
+tile_set = ExtResource("7_school_walls")
+
+[editable path="LevelBlockPreset/BeginBlock"]
+[editable path="Visuals/YSorted/RobotCharacter"]

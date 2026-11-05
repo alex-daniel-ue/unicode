@@ -158,6 +158,13 @@ func run_rooms(begin: CapBlock) -> bool:
 	# what the program wrote into it, so a student can read what went wrong.
 	for list in get_tree().get_nodes_in_group(ListEntity.GROUP):
 		(list as ListEntity).restore()
+	# Terminals too: nothing printed and nothing read yet, in every room.
+	for terminal in get_tree().get_nodes_in_group(TerminalEntity.GROUP):
+		(terminal as TerminalEntity).restore()
+	for board in get_tree().get_nodes_in_group(DictEntity.GROUP):
+		(board as DictEntity).restore()
+	for file in get_tree().get_nodes_in_group(FileEntity.GROUP):
+		(file as FileEntity).restore()
 
 	for room_index in range(room_count):
 		current_room = room_index

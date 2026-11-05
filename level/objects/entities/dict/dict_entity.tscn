@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://level/objects/entities/dict/dict_entity.gd" id="1_dict"]
+[ext_resource type="Script" path="res://level/objects/entities/dict/dict_block_provider.gd" id="2_provider"]
+
+[node name="DictEntity" type="Node2D"]
+z_index = 1
+script = ExtResource("1_dict")
+
+[node name="DictBlockProvider" type="Node" parent="."]
+script = ExtResource("2_provider")

@@ -490,6 +490,24 @@ func _lists_state() -> String:
 
 	var rooms := Game.level.room_goals.size() if is_instance_valid(Game.level) else 1
 	var lines: PackedStringArray = []
+	# A room's terminal goes here too: what its user types, what was printed,
+	# and what the screen should show, which a screenshot shows poorly.
+	var terminals: Array[TerminalEntity] = []
+	for node in get_tree().get_nodes_in_group(TerminalEntity.GROUP):
+		if node is TerminalEntity:
+			terminals.append(node as TerminalEntity)
+	terminals.sort_custom(func(a: TerminalEntity, b: TerminalEntity) -> bool: return a.room_index < b.room_index)
+	for terminal in terminals:
+		lines.append("%sterminal: %s" % ["Room %d: " % (terminal.room_index + 1) if rooms > 1 else "", terminal.describe()])
+	for node in get_tree().get_nodes_in_group(FileEntity.GROUP):
+		var file := node as FileEntity
+		lines.append("%sfile %s holds the lines %s" % ["Room %d: " % (file.room_index + 1) if rooms > 1 else "", file.file_name, Core.to_python_repr(Array(file.lines))])
+	for node in get_tree().get_nodes_in_group(DictEntity.GROUP):
+		var board := node as DictEntity
+		var line := "%s%s = %s  (dict)" % ["Room %d: " % (board.room_index + 1) if rooms > 1 else "", board.get_dict_name(), board.repr()]
+		if board.repr() != board.initial_repr():
+			line += "; it started as " + board.initial_repr()
+		lines.append(line)
 	for list in lists:
 		var line := "%s%s = %s  (%s)" % [
 			"Room %d: " % (list.room_index + 1) if rooms > 1 else "",

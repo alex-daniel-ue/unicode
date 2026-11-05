@@ -30,7 +30,7 @@ static func count_solid_blocks(yaml: String, skip_locked := true) -> int:
 		
 		if body.begins_with("children:"):
 			sections.append(Vector2i(indent, 1))
-		elif body.begins_with("parameters:") or body.begins_with("detached:"):
+		elif body.begins_with("parameters:") or body.begins_with("detached:") or body.begins_with("functions:"):
 			sections.append(Vector2i(indent, 0))
 	
 	return total
@@ -52,12 +52,16 @@ static func _item_is_locked(lines: PackedStringArray, item_index: int, item_inde
 func yaml_serialize() -> String:
 	var begin: CapBlock = null
 	var detached: Array[Block]
-	
+	var defines: Array[Block]
+
 	for child in canvas.get_children():
 		if not (child is Block):
 			continue
 		if begin == null and child is CapBlock and (child as CapBlock).is_type(NestedData.Type.BEGIN):
 			begin = child as CapBlock
+			continue
+		if child is NestedBlock and (child as NestedBlock).is_type(NestedData.Type.FUNCTION):
+			defines.append(child as Block)
 			continue
 		detached.append(child as Block)
 	
@@ -69,6 +73,11 @@ func yaml_serialize() -> String:
 	else:
 		lines.append(_serialize_block(begin))
 	
+	if not defines.is_empty():
+		lines.append("functions:  # define blocks: their blocks run when a call to them runs")
+		for block in defines:
+			lines.append(_serialize_list_item(block))
+
 	if not detached.is_empty():
 		lines.append("detached:  # loose on the canvas, not part of the program")
 		for block in detached:

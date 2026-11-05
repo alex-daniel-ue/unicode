@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=53 format=3 uid="uid://dyc1t3vgb4y2h"]
+[gd_resource type="Resource" script_class="LevelCatalog" load_steps=200 format=3 uid="uid://dyc1t3vgb4y2h"]
 
 [ext_resource type="Script" uid="uid://bosuufgg1ovh8" path="res://global/utils/level_module.gd" id="1_level_module"]
 [ext_resource type="Script" uid="uid://copysdfiq2iil" path="res://global/utils/level_entry.gd" id="2_level_entry"]
@@ -16,16 +16,86 @@
 [ext_resource type="PackedScene" uid="uid://c3b0cw5wv4v8j" path="res://level/levels/it_8.tscn" id="14_it_8"]
 [ext_resource type="PackedScene" uid="uid://dnv7d6rbll2fk" path="res://level/levels/it_9.tscn" id="15_it_9"]
 [ext_resource type="PackedScene" uid="uid://dcr8c3qi60ygr" path="res://level/levels/it_10.tscn" id="16_it_10"]
-[ext_resource type="PackedScene" path="res://level/levels/ar_t2.tscn" id="ar_scene_t2"]
-[ext_resource type="PackedScene" path="res://level/levels/ar_t3.tscn" id="ar_scene_t3"]
-[ext_resource type="PackedScene" path="res://level/levels/ar_3.tscn" id="ar_scene_3"]
+[ext_resource type="PackedScene" uid="uid://cl87a1qgt7eki" path="res://level/levels/ar_3.tscn" id="ar_scene_3"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_4.tscn" id="ar_scene_4"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_5.tscn" id="ar_scene_5"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_6.tscn" id="ar_scene_6"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_7.tscn" id="ar_scene_7"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_8.tscn" id="ar_scene_8"]
 [ext_resource type="PackedScene" path="res://level/levels/ar_10.tscn" id="ar_scene_10"]
-[ext_resource type="PackedScene" path="res://level/levels/ar_11.tscn" id="ar_scene_11"]
+[ext_resource type="PackedScene" uid="uid://1qhllv7odpv6" path="res://level/levels/ar_11.tscn" id="ar_scene_11"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_t2.tscn" id="ar_scene_t2"]
+[ext_resource type="PackedScene" path="res://level/levels/ar_t3.tscn" id="ar_scene_t3"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_1.tscn" id="gen_dicts_dict_1"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_2.tscn" id="gen_dicts_dict_2"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_3.tscn" id="gen_dicts_dict_3"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_4.tscn" id="gen_dicts_dict_4"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_5.tscn" id="gen_dicts_dict_5"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_6.tscn" id="gen_dicts_dict_6"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_7.tscn" id="gen_dicts_dict_7"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_8.tscn" id="gen_dicts_dict_8"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_9.tscn" id="gen_dicts_dict_9"]
+[ext_resource type="PackedScene" path="res://level/levels/dict_10.tscn" id="gen_dicts_dict_10"]
+[ext_resource type="PackedScene" path="res://level/levels/files_1.tscn" id="gen_files_files_1"]
+[ext_resource type="PackedScene" path="res://level/levels/files_2.tscn" id="gen_files_files_2"]
+[ext_resource type="PackedScene" path="res://level/levels/files_3.tscn" id="gen_files_files_3"]
+[ext_resource type="PackedScene" path="res://level/levels/files_4.tscn" id="gen_files_files_4"]
+[ext_resource type="PackedScene" path="res://level/levels/files_5.tscn" id="gen_files_files_5"]
+[ext_resource type="PackedScene" path="res://level/levels/files_6.tscn" id="gen_files_files_6"]
+[ext_resource type="PackedScene" path="res://level/levels/files_7.tscn" id="gen_files_files_7"]
+[ext_resource type="PackedScene" path="res://level/levels/files_8.tscn" id="gen_files_files_8"]
+[ext_resource type="PackedScene" path="res://level/levels/files_9.tscn" id="gen_files_files_9"]
+[ext_resource type="PackedScene" path="res://level/levels/files_10.tscn" id="gen_files_files_10"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_1.tscn" id="gen_functions_fn_1"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_2.tscn" id="gen_functions_fn_2"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_3.tscn" id="gen_functions_fn_3"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_4.tscn" id="gen_functions_fn_4"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_5.tscn" id="gen_functions_fn_5"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_6.tscn" id="gen_functions_fn_6"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_7.tscn" id="gen_functions_fn_7"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_8.tscn" id="gen_functions_fn_8"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_9.tscn" id="gen_functions_fn_9"]
+[ext_resource type="PackedScene" path="res://level/levels/fn_10.tscn" id="gen_functions_fn_10"]
+[ext_resource type="PackedScene" path="res://level/levels/io_1.tscn" id="gen_io_io_1"]
+[ext_resource type="PackedScene" path="res://level/levels/io_2.tscn" id="gen_io_io_2"]
+[ext_resource type="PackedScene" path="res://level/levels/io_3.tscn" id="gen_io_io_3"]
+[ext_resource type="PackedScene" path="res://level/levels/io_4.tscn" id="gen_io_io_4"]
+[ext_resource type="PackedScene" path="res://level/levels/io_5.tscn" id="gen_io_io_5"]
+[ext_resource type="PackedScene" path="res://level/levels/io_6.tscn" id="gen_io_io_6"]
+[ext_resource type="PackedScene" path="res://level/levels/io_7.tscn" id="gen_io_io_7"]
+[ext_resource type="PackedScene" path="res://level/levels/io_8.tscn" id="gen_io_io_8"]
+[ext_resource type="PackedScene" path="res://level/levels/io_9.tscn" id="gen_io_io_9"]
+[ext_resource type="PackedScene" path="res://level/levels/io_10.tscn" id="gen_io_io_10"]
+[ext_resource type="PackedScene" path="res://level/levels/op_1.tscn" id="gen_operators_op_1"]
+[ext_resource type="PackedScene" path="res://level/levels/op_2.tscn" id="gen_operators_op_2"]
+[ext_resource type="PackedScene" path="res://level/levels/op_3.tscn" id="gen_operators_op_3"]
+[ext_resource type="PackedScene" path="res://level/levels/op_4.tscn" id="gen_operators_op_4"]
+[ext_resource type="PackedScene" path="res://level/levels/op_5.tscn" id="gen_operators_op_5"]
+[ext_resource type="PackedScene" path="res://level/levels/op_6.tscn" id="gen_operators_op_6"]
+[ext_resource type="PackedScene" path="res://level/levels/op_7.tscn" id="gen_operators_op_7"]
+[ext_resource type="PackedScene" path="res://level/levels/op_8.tscn" id="gen_operators_op_8"]
+[ext_resource type="PackedScene" path="res://level/levels/op_9.tscn" id="gen_operators_op_9"]
+[ext_resource type="PackedScene" path="res://level/levels/op_10.tscn" id="gen_operators_op_10"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_1.tscn" id="gen_selection_sel_1"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_2.tscn" id="gen_selection_sel_2"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_3.tscn" id="gen_selection_sel_3"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_4.tscn" id="gen_selection_sel_4"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_5.tscn" id="gen_selection_sel_5"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_6.tscn" id="gen_selection_sel_6"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_7.tscn" id="gen_selection_sel_7"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_8.tscn" id="gen_selection_sel_8"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_9.tscn" id="gen_selection_sel_9"]
+[ext_resource type="PackedScene" path="res://level/levels/sel_10.tscn" id="gen_selection_sel_10"]
+[ext_resource type="PackedScene" path="res://level/levels/var_1.tscn" id="gen_values_var_1"]
+[ext_resource type="PackedScene" path="res://level/levels/var_2.tscn" id="gen_values_var_2"]
+[ext_resource type="PackedScene" path="res://level/levels/var_3.tscn" id="gen_values_var_3"]
+[ext_resource type="PackedScene" path="res://level/levels/var_4.tscn" id="gen_values_var_4"]
+[ext_resource type="PackedScene" path="res://level/levels/var_5.tscn" id="gen_values_var_5"]
+[ext_resource type="PackedScene" path="res://level/levels/var_6.tscn" id="gen_values_var_6"]
+[ext_resource type="PackedScene" path="res://level/levels/var_7.tscn" id="gen_values_var_7"]
+[ext_resource type="PackedScene" path="res://level/levels/var_8.tscn" id="gen_values_var_8"]
+[ext_resource type="PackedScene" path="res://level/levels/var_9.tscn" id="gen_values_var_9"]
+[ext_resource type="PackedScene" path="res://level/levels/var_10.tscn" id="gen_values_var_10"]
 
 [sub_resource type="Resource" id="Res_1"]
 script = ExtResource("2_level_entry")
@@ -63,6 +133,434 @@ display_name = "Tutorial"
 subtitle = "How to play."
 levels = Array[ExtResource("2_level_entry")]([SubResource("Res_1"), SubResource("Res_2"), SubResource("Res_3")])
 locked_notice = ""
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_io_io_1"]
+script = ExtResource("2_level_entry")
+id = &"io-1"
+title = "Hello, World!"
+concept = "Showing text on the terminal with Print."
+scene = ExtResource("gen_io_io_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_2"]
+script = ExtResource("2_level_entry")
+id = &"io-2"
+label = "2"
+title = "Line by line"
+concept = "One Print block for each line, from the top down."
+scene = ExtResource("gen_io_io_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_3"]
+script = ExtResource("2_level_entry")
+id = &"io-3"
+label = "3"
+title = "Starry steps"
+concept = "A pattern, line by line."
+scene = ExtResource("gen_io_io_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_4"]
+script = ExtResource("2_level_entry")
+id = &"io-4"
+label = "4"
+title = "One block, many lines"
+concept = "The control code \\n starts a new line inside text."
+scene = ExtResource("gen_io_io_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_5"]
+script = ExtResource("2_level_entry")
+id = &"io-5"
+label = "5"
+title = "Echo"
+concept = "Input reads what the user typed."
+scene = ExtResource("gen_io_io_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_6"]
+script = ExtResource("2_level_entry")
+id = &"io-6"
+label = "6"
+title = "Two answers"
+concept = "Each Input reads the next line the user typed."
+scene = ExtResource("gen_io_io_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_7"]
+script = ExtResource("2_level_entry")
+id = &"io-7"
+label = "7"
+title = "Steps from the keyboard"
+concept = "Input gives text; int( ) makes it a number the robot can use."
+scene = ExtResource("gen_io_io_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_8"]
+script = ExtResource("2_level_entry")
+id = &"io-8"
+label = "8"
+title = "Around the corner"
+concept = "Two numbers from the user, read in order."
+scene = ExtResource("gen_io_io_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_9"]
+script = ExtResource("2_level_entry")
+id = &"io-9"
+label = "9"
+title = "Here I am"
+concept = "Input and Print in the same program, in the order the user typed."
+scene = ExtResource("gen_io_io_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io_io_10"]
+script = ExtResource("2_level_entry")
+id = &"io-10"
+label = "10"
+title = "The delivery"
+concept = "Everything from this module in one program."
+scene = ExtResource("gen_io_io_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_io"]
+script = ExtResource("1_level_module")
+id = &"io"
+display_name = "Input and Output"
+subtitle = "Talk with the user."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_io_io_1"), SubResource("gen_io_io_2"), SubResource("gen_io_io_3"), SubResource("gen_io_io_4"), SubResource("gen_io_io_5"), SubResource("gen_io_io_6"), SubResource("gen_io_io_7"), SubResource("gen_io_io_8"), SubResource("gen_io_io_9"), SubResource("gen_io_io_10")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_values_var_1"]
+script = ExtResource("2_level_entry")
+id = &"var-1"
+title = "Remember it"
+concept = "A variable keeps a value until you need it."
+scene = ExtResource("gen_values_var_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_2"]
+script = ExtResource("2_level_entry")
+id = &"var-2"
+label = "2"
+title = "Say it three times"
+concept = "A variable can be used again and again."
+scene = ExtResource("gen_values_var_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_3"]
+script = ExtResource("2_level_entry")
+id = &"var-3"
+label = "3"
+title = "Make a sentence"
+concept = "An f-string puts a variable's value into text."
+scene = ExtResource("gen_values_var_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_4"]
+script = ExtResource("2_level_entry")
+id = &"var-4"
+label = "4"
+title = "There and back"
+concept = "One f-string can use the same variable twice."
+scene = ExtResource("gen_values_var_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_5"]
+script = ExtResource("2_level_entry")
+id = &"var-5"
+label = "5"
+title = "Swap"
+concept = "Set gives a variable a new value; a third variable helps two of them swap."
+scene = ExtResource("gen_values_var_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_6"]
+script = ExtResource("2_level_entry")
+id = &"var-6"
+label = "6"
+title = "Count your steps"
+concept = "A number kept in a variable can move the robot and go into text."
+scene = ExtResource("gen_values_var_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_7"]
+script = ExtResource("2_level_entry")
+id = &"var-7"
+label = "7"
+title = "A decimal point"
+concept = "float( ) makes a number with a decimal point."
+scene = ExtResource("gen_values_var_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_8"]
+script = ExtResource("2_level_entry")
+id = &"var-8"
+label = "8"
+title = "Good names"
+concept = "A variable's name follows Python's rules."
+scene = ExtResource("gen_values_var_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_9"]
+script = ExtResource("2_level_entry")
+id = &"var-9"
+label = "9"
+title = "Name and age"
+concept = "\\n and an f-string together: two lines from one block."
+scene = ExtResource("gen_values_var_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values_var_10"]
+script = ExtResource("2_level_entry")
+id = &"var-10"
+label = "10"
+title = "Here you go"
+concept = "Variables, types and f-strings in one program."
+scene = ExtResource("gen_values_var_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_values"]
+script = ExtResource("1_level_module")
+id = &"values"
+display_name = "Values and Variables"
+subtitle = "Keep what you need."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_values_var_1"), SubResource("gen_values_var_2"), SubResource("gen_values_var_3"), SubResource("gen_values_var_4"), SubResource("gen_values_var_5"), SubResource("gen_values_var_6"), SubResource("gen_values_var_7"), SubResource("gen_values_var_8"), SubResource("gen_values_var_9"), SubResource("gen_values_var_10")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_operators_op_1"]
+script = ExtResource("2_level_entry")
+id = &"op-1"
+title = "Twice as far"
+concept = "The Math block, inside another block."
+scene = ExtResource("gen_operators_op_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_2"]
+script = ExtResource("2_level_entry")
+id = &"op-2"
+label = "2"
+title = "Add and subtract"
+concept = "+ and - on two numbers the user typed."
+scene = ExtResource("gen_operators_op_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_3"]
+script = ExtResource("2_level_entry")
+id = &"op-3"
+label = "3"
+title = "Show your work"
+concept = "Work an answer out into a variable, then put it in an f-string."
+scene = ExtResource("gen_operators_op_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_4"]
+script = ExtResource("2_level_entry")
+id = &"op-4"
+label = "4"
+title = "Halfway there"
+concept = "// divides and drops the part after the decimal point."
+scene = ExtResource("gen_operators_op_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_5"]
+script = ExtResource("2_level_entry")
+id = &"op-5"
+label = "5"
+title = "Share the snacks"
+concept = "// for how many each, % for what is left over."
+scene = ExtResource("gen_operators_op_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_6"]
+script = ExtResource("2_level_entry")
+id = &"op-6"
+label = "6"
+title = "Around the garden"
+concept = "A Math block inside another one works first, like ( ) in Python."
+scene = ExtResource("gen_operators_op_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_7"]
+script = ExtResource("2_level_entry")
+id = &"op-7"
+label = "7"
+title = "Squares and cubes"
+concept = "** raises a number to a power."
+scene = ExtResource("gen_operators_op_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_8"]
+script = ExtResource("2_level_entry")
+id = &"op-8"
+label = "8"
+title = "Keep a total"
+concept = "+= adds to a variable: total += 5 is total = total + 5."
+scene = ExtResource("gen_operators_op_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_9"]
+script = ExtResource("2_level_entry")
+id = &"op-9"
+label = "9"
+title = "Kilometers to miles"
+concept = "Decimal numbers, and an f-string that shows three decimal places."
+scene = ExtResource("gen_operators_op_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators_op_10"]
+script = ExtResource("2_level_entry")
+id = &"op-10"
+label = "10"
+title = "Minutes and seconds"
+concept = "// and % together."
+scene = ExtResource("gen_operators_op_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_operators"]
+script = ExtResource("1_level_module")
+id = &"operators"
+display_name = "Operators and Expressions"
+subtitle = "Work it out."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_operators_op_1"), SubResource("gen_operators_op_2"), SubResource("gen_operators_op_3"), SubResource("gen_operators_op_4"), SubResource("gen_operators_op_5"), SubResource("gen_operators_op_6"), SubResource("gen_operators_op_7"), SubResource("gen_operators_op_8"), SubResource("gen_operators_op_9"), SubResource("gen_operators_op_10")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_selection_sel_1"]
+script = ExtResource("2_level_entry")
+id = &"sel-1"
+title = "Only sometimes"
+concept = "If runs its blocks only when its condition is True."
+scene = ExtResource("gen_selection_sel_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_2"]
+script = ExtResource("2_level_entry")
+id = &"sel-2"
+label = "2"
+title = "Left or right"
+concept = "Else runs when If did not."
+scene = ExtResource("gen_selection_sel_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_3"]
+script = ExtResource("2_level_entry")
+id = &"sel-3"
+label = "3"
+title = "Even or odd"
+concept = "% 2 tells even numbers from odd ones."
+scene = ExtResource("gen_selection_sel_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_4"]
+script = ExtResource("2_level_entry")
+id = &"sel-4"
+label = "4"
+title = "Three bins"
+concept = "Elif checks another condition when the one above it was False."
+scene = ExtResource("gen_selection_sel_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_5"]
+script = ExtResource("2_level_entry")
+id = &"sel-5"
+label = "5"
+title = "Letter grades"
+concept = "In a chain of If and Elif, the first True condition wins."
+scene = ExtResource("gen_selection_sel_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_6"]
+script = ExtResource("2_level_entry")
+id = &"sel-6"
+label = "6"
+title = "Both at once"
+concept = "And is True only when both conditions are True."
+scene = ExtResource("gen_selection_sel_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_7"]
+script = ExtResource("2_level_entry")
+id = &"sel-7"
+label = "7"
+title = "No school today"
+concept = "Or is True when at least one condition is True."
+scene = ExtResource("gen_selection_sel_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_8"]
+script = ExtResource("2_level_entry")
+id = &"sel-8"
+label = "8"
+title = "An if inside an if"
+concept = "A decision inside another decision."
+scene = ExtResource("gen_selection_sel_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_9"]
+script = ExtResource("2_level_entry")
+id = &"sel-9"
+label = "9"
+title = "Triangle types"
+concept = "And, or and elif together."
+scene = ExtResource("gen_selection_sel_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection_sel_10"]
+script = ExtResource("2_level_entry")
+id = &"sel-10"
+label = "10"
+title = "Book finder"
+concept = "Decisions inside decisions, to choose one of many answers."
+scene = ExtResource("gen_selection_sel_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_selection"]
+script = ExtResource("1_level_module")
+id = &"selection"
+display_name = "Selection"
+subtitle = "Choose what to do."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_selection_sel_1"), SubResource("gen_selection_sel_2"), SubResource("gen_selection_sel_3"), SubResource("gen_selection_sel_4"), SubResource("gen_selection_sel_5"), SubResource("gen_selection_sel_6"), SubResource("gen_selection_sel_7"), SubResource("gen_selection_sel_8"), SubResource("gen_selection_sel_9"), SubResource("gen_selection_sel_10")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [sub_resource type="Resource" id="Res_5"]
@@ -160,13 +658,119 @@ id = &"iteration"
 display_name = "Iteration"
 subtitle = "Don't repeat yourself."
 levels = Array[ExtResource("2_level_entry")]([SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12"), SubResource("Res_13"), SubResource("Res_14")])
-locked_notice = ""
+locked_notice = "Focus on Arrays for now."
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_functions_fn_1"]
+script = ExtResource("2_level_entry")
+id = &"fn-1"
+title = "Call it"
+concept = "A function is a set of steps with a name; calling it runs them."
+scene = ExtResource("gen_functions_fn_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_2"]
+script = ExtResource("2_level_entry")
+id = &"fn-2"
+label = "2"
+title = "Write it"
+concept = "Writing a function's steps once, and using them many times."
+scene = ExtResource("gen_functions_fn_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_3"]
+script = ExtResource("2_level_entry")
+id = &"fn-3"
+label = "3"
+title = "Hand it a number"
+concept = "A parameter: a name in the function that each call gives a value."
+scene = ExtResource("gen_functions_fn_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_4"]
+script = ExtResource("2_level_entry")
+id = &"fn-4"
+label = "4"
+title = "Stripes"
+concept = "A function with two parameters."
+scene = ExtResource("gen_functions_fn_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_5"]
+script = ExtResource("2_level_entry")
+id = &"fn-5"
+label = "5"
+title = "Give it back"
+concept = "Return gives a value back to the block that called the function."
+scene = ExtResource("gen_functions_fn_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_6"]
+script = ExtResource("2_level_entry")
+id = &"fn-6"
+label = "6"
+title = "How far apart"
+concept = "A function that decides what to give back."
+scene = ExtResource("gen_functions_fn_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_7"]
+script = ExtResource("2_level_entry")
+id = &"fn-7"
+label = "7"
+title = "The biggest"
+concept = "A call inside a call: the answer of one call goes into the next."
+scene = ExtResource("gen_functions_fn_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_8"]
+script = ExtResource("2_level_entry")
+id = &"fn-8"
+label = "8"
+title = "Even or not"
+concept = "A function that gives back True or False, used as a condition."
+scene = ExtResource("gen_functions_fn_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_9"]
+script = ExtResource("2_level_entry")
+id = &"fn-9"
+label = "9"
+title = "A receipt"
+concept = "Top-down design: a big job made of small functions."
+scene = ExtResource("gen_functions_fn_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions_fn_10"]
+script = ExtResource("2_level_entry")
+id = &"fn-10"
+label = "10"
+title = "Spiral"
+concept = "A function, a loop and a parameter together."
+scene = ExtResource("gen_functions_fn_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_functions"]
+script = ExtResource("1_level_module")
+id = &"functions"
+display_name = "Functions"
+subtitle = "Name a set of steps."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_functions_fn_1"), SubResource("gen_functions_fn_2"), SubResource("gen_functions_fn_3"), SubResource("gen_functions_fn_4"), SubResource("gen_functions_fn_5"), SubResource("gen_functions_fn_6"), SubResource("gen_functions_fn_7"), SubResource("gen_functions_fn_8"), SubResource("gen_functions_fn_9"), SubResource("gen_functions_fn_10")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [sub_resource type="Resource" id="Res_art2"]
 script = ExtResource("2_level_entry")
 id = &"ar-t2"
-label = "1"
 title = "Read a list"
 concept = "Reading one value from a list, by its index."
 scene = ExtResource("ar_scene_t2")
@@ -261,6 +865,220 @@ subtitle = "Zero to hero."
 levels = Array[ExtResource("2_level_entry")]([SubResource("Res_art2"), SubResource("Res_art3"), SubResource("Res_ar3"), SubResource("Res_ar4"), SubResource("Res_ar5"), SubResource("Res_ar6"), SubResource("Res_ar7"), SubResource("Res_ar8"), SubResource("Res_ar10"), SubResource("Res_ar11")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
+[sub_resource type="Resource" id="gen_dicts_dict_1"]
+script = ExtResource("2_level_entry")
+id = &"dict-1"
+title = "Look it up"
+concept = "A dictionary finds a value by its key."
+scene = ExtResource("gen_dicts_dict_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_2"]
+script = ExtResource("2_level_entry")
+id = &"dict-2"
+label = "2"
+title = "Where to?"
+concept = "A dictionary's values can be numbers the robot uses."
+scene = ExtResource("gen_dicts_dict_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_3"]
+script = ExtResource("2_level_entry")
+id = &"dict-3"
+label = "3"
+title = "New price"
+concept = "Set Key gives a key a new value."
+scene = ExtResource("gen_dicts_dict_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_4"]
+script = ExtResource("2_level_entry")
+id = &"dict-4"
+label = "4"
+title = "A new name"
+concept = "Set Key adds a key that isn't there yet."
+scene = ExtResource("gen_dicts_dict_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_5"]
+script = ExtResource("2_level_entry")
+id = &"dict-5"
+label = "5"
+title = "Do we sell it?"
+concept = "In checks whether a key is in a dictionary."
+scene = ExtResource("gen_dicts_dict_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_6"]
+script = ExtResource("2_level_entry")
+id = &"dict-6"
+label = "6"
+title = "Count the votes"
+concept = "A dictionary as a tally: one count for each key."
+scene = ExtResource("gen_dicts_dict_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_7"]
+script = ExtResource("2_level_entry")
+id = &"dict-7"
+label = "7"
+title = "New words"
+concept = "A tally that starts empty: a new key starts at 1."
+scene = ExtResource("gen_dicts_dict_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_8"]
+script = ExtResource("2_level_entry")
+id = &"dict-8"
+label = "8"
+title = "The price list"
+concept = "For Each goes through a dictionary's keys, in order."
+scene = ExtResource("gen_dicts_dict_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_9"]
+script = ExtResource("2_level_entry")
+id = &"dict-9"
+label = "9"
+title = "The bill"
+concept = "Two dictionaries with the same keys, used together."
+scene = ExtResource("gen_dicts_dict_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts_dict_10"]
+script = ExtResource("2_level_entry")
+id = &"dict-10"
+label = "10"
+title = "Sold out"
+concept = "Remove Key takes a key out; a dictionary changes as things happen."
+scene = ExtResource("gen_dicts_dict_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_dicts"]
+script = ExtResource("1_level_module")
+id = &"dicts"
+display_name = "Dictionaries"
+subtitle = "Find things by name."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_dicts_dict_1"), SubResource("gen_dicts_dict_2"), SubResource("gen_dicts_dict_3"), SubResource("gen_dicts_dict_4"), SubResource("gen_dicts_dict_5"), SubResource("gen_dicts_dict_6"), SubResource("gen_dicts_dict_7"), SubResource("gen_dicts_dict_8"), SubResource("gen_dicts_dict_9"), SubResource("gen_dicts_dict_10")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
+[sub_resource type="Resource" id="gen_files_files_1"]
+script = ExtResource("2_level_entry")
+id = &"files-1"
+title = "Read every line"
+concept = "Reading a text file, one line at a time."
+scene = ExtResource("gen_files_files_1")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_2"]
+script = ExtResource("2_level_entry")
+id = &"files-2"
+label = "2"
+title = "How long is it?"
+concept = "Length Of counts a file's lines."
+scene = ExtResource("gen_files_files_2")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_3"]
+script = ExtResource("2_level_entry")
+id = &"files-3"
+label = "3"
+title = "Write it down"
+concept = "Write adds a line to a file."
+scene = ExtResource("gen_files_files_3")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_4"]
+script = ExtResource("2_level_entry")
+id = &"files-4"
+label = "4"
+title = "Copy a file"
+concept = "Reading one file and writing another."
+scene = ExtResource("gen_files_files_4")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_5"]
+script = ExtResource("2_level_entry")
+id = &"files-5"
+label = "5"
+title = "Find a word"
+concept = "Searching through a file: In finds a piece of text inside a line."
+scene = ExtResource("gen_files_files_5")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_6"]
+script = ExtResource("2_level_entry")
+id = &"files-6"
+label = "6"
+title = "Add up the scores"
+concept = "Reading numbers from a file: each line is text."
+scene = ExtResource("gen_files_files_6")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_7"]
+script = ExtResource("2_level_entry")
+id = &"files-7"
+label = "7"
+title = "Write the squares"
+concept = "Writing numbers to a file: they have to become text first."
+scene = ExtResource("gen_files_files_7")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_8"]
+script = ExtResource("2_level_entry")
+id = &"files-8"
+label = "8"
+title = "Passing scores"
+concept = "Reading, choosing, and writing: a filter from one file to another."
+scene = ExtResource("gen_files_files_8")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_9"]
+script = ExtResource("2_level_entry")
+id = &"files-9"
+label = "9"
+title = "Number the lines"
+concept = "A counter while reading, and f-strings while writing."
+scene = ExtResource("gen_files_files_9")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files_files_10"]
+script = ExtResource("2_level_entry")
+id = &"files-10"
+label = "10"
+title = "The guest book"
+concept = "Search a file, then write to it: everything from this module."
+scene = ExtResource("gen_files_files_10")
+counts_for_progress = false
+metadata/_custom_type_script = "uid://copysdfiq2iil"
+
+[sub_resource type="Resource" id="gen_files"]
+script = ExtResource("1_level_module")
+id = &"files"
+display_name = "Text Files"
+subtitle = "Keep it for later."
+levels = Array[ExtResource("2_level_entry")]([SubResource("gen_files_files_1"), SubResource("gen_files_files_2"), SubResource("gen_files_files_3"), SubResource("gen_files_files_4"), SubResource("gen_files_files_5"), SubResource("gen_files_files_6"), SubResource("gen_files_files_7"), SubResource("gen_files_files_8"), SubResource("gen_files_files_9"), SubResource("gen_files_files_10")])
+metadata/_custom_type_script = "uid://bosuufgg1ovh8"
+
 [resource]
 script = ExtResource("3_level_catalog")
-modules = Array[ExtResource("1_level_module")]([SubResource("Res_4"), SubResource("Res_15"), SubResource("Res_16")])
+modules = Array[ExtResource("1_level_module")]([SubResource("Res_4"), SubResource("gen_io"), SubResource("gen_values"), SubResource("gen_operators"), SubResource("gen_selection"), SubResource("Res_15"), SubResource("gen_functions"), SubResource("Res_16"), SubResource("gen_dicts"), SubResource("gen_files")])

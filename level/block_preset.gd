@@ -32,6 +32,15 @@ const PROGRAM_BLOCKS := {
 	"declare": "res://puzzle/blocks/generic/initialize.tres",
 	"setitem": "res://puzzle/blocks/lists/set_item.tres",
 	"each": "res://puzzle/blocks/control flow/for_each.tres",
+	"print": "res://puzzle/blocks/generic/print.tres",
+	"input": "res://puzzle/blocks/terminal/input.tres",
+	"convert": "res://puzzle/blocks/terminal/convert.tres",
+	"set": "res://puzzle/blocks/generic/set_var.tres",
+	"update": "res://puzzle/blocks/generic/update.tres",
+	"return": "res://puzzle/blocks/functions/return.tres",
+	"for": "res://puzzle/blocks/control flow/for_int.tres",
+	"elif": "res://puzzle/blocks/control flow/elif.tres",
+	"andor": "res://puzzle/blocks/socket/and_or.tres",
 }
 
 const IMMOVABLE_TOOLTIP := "This program is locked: read it, then watch it run."

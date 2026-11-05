@@ -47,6 +47,9 @@ const ROOM := "UserInterface/SideMenuRight/Panel"
 const WORKSPACE := "UserInterface/MiddleSpace"
 const TOOLBOX := LEFT + "/PuzzleToolbox"
 const GRAPHICS := "res://puzzle/ui/tutorial/graphics/"
+## The terminals of a level's first two rooms (gen_modules.py puts them here).
+const TERMINAL_1 := "level:Visuals/Terminals/Room1/Terminal"
+const TERMINAL_2 := "level:Visuals/Terminals/Room2/Terminal"
 
 ## The program of the worked example, for the level after it, where the student
 ## builds it: "this is what you watched". BlockPicture's program format.
@@ -169,6 +172,44 @@ const SETS := {
 		{title = "Right or wrong?", text = "When your program changes a value, the box turns green if the value is right. The box turns red if the value is wrong.",
 			graphic = GRAPHICS + "goal_checked.tscn", targets = ["level:Visuals/Lists/Room1/lockers"], button = "Got it"},
 	],
+	&"terminal": [
+		{title = "The terminal", text = "This is a terminal. A program shows text on it. The faded line is what the terminal should show when your program is done.",
+			targets = [ROOM, TERMINAL_1], arrow = TERMINAL_1},
+	],
+	&"typing": [
+		{title = "What the user types", text = "Under the screen is what the user types, one line in each box. A program reads these lines in order, from the left.",
+			targets = [ROOM, TERMINAL_1], arrow = TERMINAL_1},
+		{title = "One program, many users", text = "Each room has a different user, who types different lines. Your one program has to work for all of them.",
+			targets = [ROOM, TERMINAL_1, TERMINAL_2], arrow = [TERMINAL_1, TERMINAL_2]},
+	],
+	&"newline": [
+		{title = "A new line inside text", text = "Text can start a new line in the middle. Type \\n where the new line starts: `\"a\\nb\"` shows a, and b under it.",
+			button = "Got it"},
+	],
+	&"fstring": [
+		{title = "Fill in a value", text = "Put f in front of the quotes, and a variable's name between { and }. When name holds Ana, `f\"Hello, {name}!\"` is Hello, Ana!",
+			button = "Got it"},
+	],
+	&"decimals": [
+		{title = "Decimal places", text = "In an f-string, :.2f after a name shows the number with two digits after the decimal point. When x is 3.14159, `f\"{x:.2f}\"` is 3.14.",
+			button = "Got it"},
+	],
+	&"functions": [
+		{title = "A function", text = "This define block holds the steps of a function called zigzag. The steps run each time a zigzag ( ) block runs.",
+			button = "Got it"},
+	],
+	&"parameters": [
+		{title = "A parameter", text = "A function can take a value. side ( n ) has a parameter called n. The call side ( 4 ) runs the steps of side with n as 4.",
+			button = "Got it"},
+	],
+	&"dictionary": [
+		{title = "A dictionary", text = "This is a dictionary called prices. Each row has a key and its value. The key pen holds the value 15.",
+			targets = [ROOM, "level:Visuals/Dicts/Room1/prices"], arrow = "level:Visuals/Dicts/Room1/prices"},
+	],
+	&"text_file": [
+		{title = "A text file", text = "This is a text file called notes.txt. It holds lines of text, and it keeps them after the program ends.",
+			targets = [ROOM, "level:Visuals/Files/Room1/notes_txt"], arrow = "level:Visuals/Files/Room1/notes_txt"},
+	],
 	&"empty_list": [
 		{title = "An empty list", text = "This list starts empty. The small green numbers show the values that the list should have at the end.",
 			graphic = GRAPHICS + "goal_empty.tscn", targets = ["level:Visuals/Lists/Room1/passed"], button = "Got it"},
@@ -188,6 +229,15 @@ const LEVELS := {
 	"ar_t2": [&"lists", &"list_names", &"blocks"],
 	"ar_7": [&"blocks", &"goal_marks"],
 	"ar_8": [&"empty_list", &"blocks"],
+	"io_1": [&"terminal", &"blocks"],
+	"io_4": [&"newline"],
+	"io_5": [&"typing", &"blocks"],
+	"var_3": [&"fstring"],
+	"op_9": [&"decimals"],
+	"fn_1": [&"functions", &"blocks"],
+	"fn_3": [&"parameters"],
+	"dict_1": [&"dictionary", &"blocks"],
+	"files_1": [&"text_file", &"blocks"],
 }
 
 
@@ -215,17 +265,21 @@ static func block_pages(level: Level, skip: PackedStringArray = []) -> Array:
 	# A worked example has nothing in its toolbox; its new blocks are pointed
 	# out in the program on the canvas, with the toolbox left shut.
 	var toolbox_names: PackedStringArray = []
-	var name_block: BlockData = null  # the first list's, for the template to stand for
+	# The first block made from each template (a list's name block, a call
+	# block), for a template named in the description to stand for.
+	var first_made := {}
 	for data in level.get_block_data():
 		if data != null:
 			toolbox_names.append(data.name)
-			if name_block == null and ListEntity.is_reporter(data):
-				name_block = data
+			for family: String in RuntimeBlocks.FAMILIES.values():
+				if RuntimeBlocks.in_family(data, family) and not first_made.has(family):
+					first_made[family] = data
 	var pages: Array = []
 	for i in description.blocks.size():
 		var data := description.blocks[i]
-		if ListEntity.is_reporter(data, true) and not ListEntity.is_reporter(data):
-			data = name_block
+		var family := RuntimeBlocks.family_of(data)
+		if not family.is_empty():
+			data = first_made.get(family)
 		if data == null or data.name in skip:
 			continue
 		var values: PackedStringArray = []

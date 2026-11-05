@@ -57,6 +57,8 @@ var current_delay := SLOW_DELAY:
 var is_fast := false
 
 var output_log: Array[String]
+## What the last `return` gave, for the call that is waiting for it.
+var return_value: Variant = null
 var active_errors: Array[Interpreter.Error]
 var scopes: Array[Frame]
 var frozen_scopes: Array[Frame]
@@ -81,8 +83,10 @@ func clear_state() -> void:
 	steps = 0
 
 #region Scope stack
-func push_scope(label: String, owner_id: int) -> void:
-	scopes.append(Frame.new(label, owner_id))
+func push_scope(label: String, owner_id: int, is_function := false) -> void:
+	var frame := Frame.new(label, owner_id)
+	frame.is_function = is_function
+	scopes.append(frame)
 	scope_changed.emit()
 
 func pop_scope() -> void:
@@ -95,11 +99,15 @@ func clear_scopes() -> void:
 	frozen_scopes.clear()
 	scope_changed.emit()
 
-## Innermost frame already holding `name`, or null.
+## Innermost frame already holding `name`, or null. A function's frames end
+## at its call: past that, only the program's own first frame is seen, as a
+## Python function sees its local names and the module's, not its caller's.
 func find_frame(var_name: StringName) -> Frame:
 	for i in range(scopes.size() - 1, -1, -1):
 		if scopes[i].vars.has(var_name):
 			return scopes[i]
+		if scopes[i].is_function:
+			return scopes[0] if i > 0 and scopes[0].vars.has(var_name) else null
 	return null
 
 func has_var(var_name: StringName) -> bool:
@@ -143,6 +151,8 @@ func freeze_scopes() -> void:
 class Frame:
 	var label: String
 	var owner_id: int
+	## The frame a function call opens: names below it are the caller's.
+	var is_function := false
 	var vars: Dictionary[StringName, Variant]
 	
 	func _init(frame_label: String, frame_owner_id: int) -> void:

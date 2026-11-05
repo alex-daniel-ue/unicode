@@ -1,0 +1,209 @@
+[gd_scene load_steps=17 format=4]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_main_theme"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_block_data"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="5_goal_manager"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="6_school_tiles"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="7_school_walls"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/terminal/terminal_entity.tscn" id="8_terminal_ent"]
+[ext_resource type="Script" path="res://level/goals/terminal_goal.gd" id="9_terminal_goa"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/print.tres" id="10_print"]
+[ext_resource type="Resource" path="res://puzzle/blocks/terminal/input.tres" id="11_input"]
+[ext_resource type="Resource" path="res://puzzle/blocks/terminal/convert.tres" id="12_convert"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/initialize.tres" id="13_initialize"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/update.tres" id="14_update"]
+[ext_resource type="Resource" path="res://puzzle/blocks/socket/arithmetic.tres" id="15_arithmetic"]
+[ext_resource type="Script" path="res://level/function_definitions.gd" id="16_function_def"]
+
+[node name="FN9AReceipt" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: Call_line
+      kind: statement
+      text: \"line ( )\"
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - a
+        - \"input ( )\"  # not a readable value
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - pa
+        - block: ConvertBlock
+          kind: value
+          text: \"{} ( {} )\"
+          parameters:
+            - int
+            - \"input ( )\"  # not a readable value
+    - block: Call_row
+      kind: statement
+      text: \"row ( {}, {} )\"
+      parameters:
+        - a
+        - pa
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - b
+        - \"input ( )\"  # not a readable value
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - pb
+        - block: ConvertBlock
+          kind: value
+          text: \"{} ( {} )\"
+          parameters:
+            - int
+            - \"input ( )\"  # not a readable value
+    - block: Call_row
+      kind: statement
+      text: \"row ( {}, {} )\"
+      parameters:
+        - b
+        - pb
+    - block: Call_line
+      kind: statement
+      text: \"line ( )\"
+    - block: DeclareAsBlock
+      kind: statement
+      text: \"declare {} as {}\"
+      parameters:
+        - total
+        - block: ArithmeticBlock
+          kind: value
+          text: \"{} {} {}\"
+          parameters:
+            - pa
+            - +
+            - pb
+    - block: PrintBlock
+      kind: statement
+      text: \"print {}\"
+      parameters:
+        - \"Total: {total}\"
+functions:  # define blocks: their blocks run when a call to them runs
+    - block: Define_line
+      kind: nested
+      text: \"define line (  )\"
+      locked: true
+      children:
+        - block: PrintBlock
+          kind: statement
+          text: \"print {}\"
+          parameters:
+            - \"----------\"
+    - block: Define_row
+      kind: nested
+      text: \"define row ( item, price )\"
+      locked: true
+      children:
+        - block: PrintBlock
+          kind: statement
+          text: \"print {}\"
+          parameters:
+            - \"{item}: {price}\""
+room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
+star_slack = 2
+
+[node name="LevelDescription" parent="." index="0"]
+title = "A receipt"
+mission = "The user types two things to buy, each one followed by its price. Print a receipt: a line, each thing with its price, a line again, and the total."
+rooms = PackedStringArray("The user types Pen, 15, Book and 120.", "The user types Cap, 50, Bag and 300.")
+twist = "The line is printed twice, and so is a thing with its price."
+tip = "In Python, a function can print: `def line(): print(\"----------\")`"
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("4_block_data")]([ExtResource("10_print"), ExtResource("11_input"), ExtResource("12_convert"), ExtResource("13_initialize"), ExtResource("14_update"), ExtResource("15_arithmetic")])
+
+[node name="Functions" type="Node" parent="."]
+script = ExtResource("16_function_def")
+functions = "[{\"name\": \"line\", \"params\": []}, {\"name\": \"row\", \"params\": [\"item\", \"price\"]}]"
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
+bounds = Rect2(40.0, 70.0, 204.0, 154.0)
+focus_markers = [NodePath("../../Visuals/Terminals/Room1")]
+
+[node name="TerminalGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("terminal")]
+script = ExtResource("9_terminal_goa")
+terminal = NodePath("../../../Visuals/Terminals/Room1/Terminal")
+expected = PackedStringArray("----------", "Pen: 15", "Book: 120", "----------", "Total: 135")
+
+[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
+script = ExtResource("5_goal_manager")
+bounds = Rect2(40.0, 422.0, 202.0, 154.0)
+focus_markers = [NodePath("../../Visuals/Terminals/Room2")]
+
+[node name="TerminalGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("terminal")]
+script = ExtResource("9_terminal_goa")
+terminal = NodePath("../../../Visuals/Terminals/Room2/Terminal")
+expected = PackedStringArray("----------", "Cap: 50", "Bag: 300", "----------", "Total: 350")
+
+[node name="Camera2D" parent="." index="4"]
+level_bounds = Rect2(0.0, 0.0, 288.0, 672.0)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals"]
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQADAAEAAAABAAQAAQAAAAIAAAACAAQAAQABAAIAAAADAAQAAQACAAIAAAAEAAQAAQABAAIAAAAFAAQAAQACAAIAAAAGAAQAAQABAAIAAAAHAAQAAQADAAIAAAABAAUAAQAAAAEAAAACAAUAAQABAAEAAAADAAUAAQACAAEAAAAEAAUAAQABAAEAAAAFAAUAAQACAAEAAAAGAAUAAQABAAEAAAAHAAUAAQADAAEAAAABAAYAAQAAAAIAAAACAAYAAQABAAIAAAADAAYAAQACAAIAAAAEAAYAAQABAAIAAAAFAAYAAQACAAIAAAAGAAYAAQABAAIAAAAHAAYAAQADAAIAAAABAAcAAQAAAAEAAAACAAcAAQABAAEAAAADAAcAAQACAAEAAAAEAAcAAQABAAEAAAAFAAcAAQACAAEAAAAGAAcAAQABAAEAAAAHAAcAAQADAAEAAAABAAgAAQAAAAMAAAACAAgAAQABAAMAAAADAAgAAQACAAMAAAAEAAgAAQABAAMAAAAFAAgAAQACAAMAAAAGAAgAAQABAAMAAAAHAAgAAQADAAMAAAABAA0AAQAAAAAAAAACAA0AAQABAAAAAAADAA0AAQACAAAAAAAEAA0AAQABAAAAAAAFAA0AAQACAAAAAAAGAA0AAQABAAAAAAAHAA0AAQADAAAAAAABAA4AAQAAAAEAAAACAA4AAQABAAEAAAADAA4AAQACAAEAAAAEAA4AAQABAAEAAAAFAA4AAQACAAEAAAAGAA4AAQABAAEAAAAHAA4AAQADAAEAAAABAA8AAQAAAAIAAAACAA8AAQABAAIAAAADAA8AAQACAAIAAAAEAA8AAQABAAIAAAAFAA8AAQACAAIAAAAGAA8AAQABAAIAAAAHAA8AAQADAAIAAAABABAAAQAAAAEAAAACABAAAQABAAEAAAADABAAAQACAAEAAAAEABAAAQABAAEAAAAFABAAAQACAAEAAAAGABAAAQABAAEAAAAHABAAAQADAAEAAAABABEAAQAAAAIAAAACABEAAQABAAIAAAADABEAAQACAAIAAAAEABEAAQABAAIAAAAFABEAAQACAAIAAAAGABEAAQABAAIAAAAHABEAAQADAAIAAAABABIAAQAAAAEAAAACABIAAQABAAEAAAADABIAAQACAAEAAAAEABIAAQABAAEAAAAFABIAAQACAAEAAAAGABIAAQABAAEAAAAHABIAAQADAAEAAAABABMAAQAAAAMAAAACABMAAQABAAMAAAADABMAAQACAAMAAAAEABMAAQABAAMAAAAFABMAAQACAAMAAAAGABMAAQABAAMAAAAHABMAAQADAAMAAAA=")
+tile_set = ExtResource("6_school_tiles")
+
+[node name="Terminals" type="Node2D" parent="Visuals"]
+
+[node name="Room1" type="Node2D" parent="Visuals/Terminals"]
+
+[node name="Terminal" parent="Visuals/Terminals/Room1" instance=ExtResource("8_terminal_ent")]
+position = Vector2(40, 70)
+room_index = 0
+inputs = PackedStringArray("Pen", "15", "Book", "120")
+
+[node name="Room2" type="Node2D" parent="Visuals/Terminals"]
+
+[node name="Terminal" parent="Visuals/Terminals/Room2" instance=ExtResource("8_terminal_ent")]
+position = Vector2(40, 422)
+room_index = 1
+inputs = PackedStringArray("Cap", "50", "Bag", "300")
+
+[node name="YSorted" type="Node2D" parent="Visuals"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAABAAgAAwAAAAAAAAAFAAgAAQACAAAAAAABABMAAwAAAAAAAAACABMAAQACAAAAAAA=")
+tile_set = ExtResource("2_school_chair")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAIAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAIAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAIAAQAAQAAAAEAABAAAAUAAQAAAAEAAAAIAAUAAQAAAAEAABAAAAYAAQAAAAEAAAAIAAYAAQAAAAEAABAAAAcAAQAAAAEAAAAIAAcAAQAAAAEAABAAAAgAAQAAAAEAAAAIAAgAAQAAAAEAABAAAAkAAQACAAAAADABAAkAAAAAAAEAAHACAAkAAAAAAAEAAHADAAkAAAAAAAEAAHAEAAkAAAAAAAEAAHAFAAkAAAAAAAEAAHAGAAkAAAAAAAEAAHAHAAkAAAAAAAEAAHAIAAkAAQACAAAAACAAAAsAAQAAAAAAAAABAAsAAQADAAAAAAACAAsAAQABAAAAAAADAAsAAQABAAAAAAAEAAsAAQABAAAAAAAFAAsAAQABAAAAAAAGAAsAAQABAAAAAAAHAAsAAQABAAAAAAAIAAsAAQAAAAAAABAAAAwAAQAAAAEAAAABAAwAAQADAAEAAAACAAwAAQABAAEAAAADAAwAAQABAAEAAAAEAAwAAQABAAEAAAAFAAwAAQABAAEAAAAGAAwAAQABAAEAAAAHAAwAAQABAAEAAAAIAAwAAQAAAAEAABAAAA0AAQAAAAEAAAAIAA0AAQAAAAEAABAAAA4AAQAAAAEAAAAIAA4AAQAAAAEAABAAAA8AAQAAAAEAAAAIAA8AAQAAAAEAABAAABAAAQAAAAEAAAAIABAAAQAAAAEAABAAABEAAQAAAAEAAAAIABEAAQAAAAEAABAAABIAAQAAAAEAAAAIABIAAQAAAAEAABAAABMAAQAAAAEAAAAIABMAAQAAAAEAABAAABQAAQACAAAAADABABQAAAAAAAEAAHACABQAAAAAAAEAAHADABQAAAAAAAEAAHAEABQAAAAAAAEAAHAFABQAAAAAAAEAAHAGABQAAAAAAAEAAHAHABQAAAAAAAEAAHAIABQAAQACAAAAACA=")
+tile_set = ExtResource("7_school_walls")
+
+[node name="Room1Label" type="Label" parent="Visuals"]
+offset_left = 118.0
+offset_top = 292.0
+offset_right = 170.0
+offset_bottom = 315.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 1"
+
+[node name="Room2Label" type="Label" parent="Visuals"]
+offset_left = 118.0
+offset_top = 644.0
+offset_right = 170.0
+offset_bottom = 667.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 2"
+
+[editable path="LevelBlockPreset/BeginBlock"]
