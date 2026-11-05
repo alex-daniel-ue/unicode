@@ -21,7 +21,8 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			visual.start_drag_feedback(Core.current_drag_preview.get_child(0))
+			if get_viewport().gui_get_drag_data() is Block:
+				visual.start_drag_feedback(Core.current_drag_preview.get_child(0))
 		NOTIFICATION_DRAG_END:
 			visual.stop_drag_feedback()
 

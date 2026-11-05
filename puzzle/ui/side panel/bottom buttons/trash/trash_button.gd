@@ -5,7 +5,7 @@ const TRASH_SOUND := preload("res://audio/block_trash.mp3")
 
 @export var confirm_dialog: PopupPanel
 
-@onready var puzzle := $"/root/Puzzle"
+@onready var puzzle := owner as Puzzle
 
 ## The block being dragged, kept from the start of the drag: by the time the drag
 ## ends, the viewport no longer hands it out.

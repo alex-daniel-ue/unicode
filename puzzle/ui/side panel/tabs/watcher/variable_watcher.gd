@@ -183,8 +183,8 @@ func _show_message(message: String) -> void:
 
 
 func _display_value(value: Variant) -> String:
-	# A variable holding a room's list (x = scores) shows the list's contents.
-	if value is ListEntity:
+	# A variable holding a room's list, dictionary or file shows it as Python does.
+	if value is ListEntity or value is DictEntity or value is FileEntity:
 		return Core.to_python_repr(value)
 	match typeof(value):
 		TYPE_NIL:
@@ -202,6 +202,6 @@ func _display_value(value: Variant) -> String:
 func _display_type(value: Variant) -> String:
 	if value == null:
 		return "—"
-	if value is ListEntity:
-		return (value as ListEntity).kind_name()
+	if value is Object:
+		return Core.get_type_string(value)
 	return TYPE_NAMES.get(typeof(value), type_string(typeof(value)))

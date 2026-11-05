@@ -29,6 +29,7 @@ var last_run_result := "The student hasn't pressed Play on this level yet."
 var current_run_placed_blocks := 0
 
 var _paused_before_menu := false
+var _go_to_toolbox: Button
 ## The guide on screen, if any, and the pages this level's guide has.
 var _guide: TutorialOverlay
 var _guide_pages: Array = []
@@ -58,6 +59,7 @@ func _ready() -> void:
 	
 	Interpreter.error_raised.connect(_on_interpreter_error)
 	Interpreter.output_logged.connect(_on_interpreter_output)
+	Interpreter.running_changed.connect(_on_interpreter_running_changed)
 	
 	pause_menu.visibility_changed.connect(_on_pause_menu_visibility_changed)
 	pause_menu.tutorials_requested.connect(_on_tutorials_requested)
@@ -152,9 +154,7 @@ func _toolbox_button() -> Button:
 	button.pressed.connect(func() -> void:
 		side_panels[0].focus_content(toolbox)
 		Tutorial.tab_shown.emit(toolbox))
-	Interpreter.running_changed.connect(func() -> void:
-		if is_instance_valid(button):
-			button.disabled = Interpreter.is_running)
+	_go_to_toolbox = button
 	return button
 
 func _exit_tree() -> void:
@@ -339,6 +339,10 @@ func _report_failure() -> void:
 func _on_interpreter_error(error: Interpreter.Error) -> void:
 	SfxPlayer.play(ERROR_SOUND)
 	notif.push(error.message, Notification.Type.ERROR)
+
+func _on_interpreter_running_changed() -> void:
+	if is_instance_valid(_go_to_toolbox):
+		_go_to_toolbox.disabled = Interpreter.is_running
 
 func _on_interpreter_output(line: String) -> void:
 	notif.push(line, Notification.Type.LOG)

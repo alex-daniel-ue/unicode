@@ -131,13 +131,13 @@ func restore() -> void:
 
 ## f.write(text): a new line at the end.
 func write_line(text: String, from_this: Block) -> void:
-	if lines.size() >= MAX_LINES:
-		from_this.function.error("%s already has %d lines. Is something writing again and again?" % [file_name, MAX_LINES])
+	var added := text.split("\n")
+	if lines.size() + added.size() > MAX_LINES:
+		from_this.function.error("%s can hold %d lines. Is something writing again and again?" % [file_name, MAX_LINES])
 		return
 	if _written_from < 0:
 		_written_from = lines.size()
-	for line in text.split("\n"):
-		lines.append(line)
+	lines.append_array(added)
 	_light(lines.size() - 1)
 	await Interpreter.step(from_this)
 

@@ -122,6 +122,7 @@ func _comparison(this: Block) -> Variant:
 	var value2: Variant = args[2]
 	
 	await Interpreter.step(this)
+	if Interpreter.interrupted: return null
 	
 	var kind_a := __kind(value1)
 	var kind_b := __kind(value2)
@@ -153,6 +154,7 @@ func _arithmetic(this: Block) -> Variant:
 	if not __can_compute(this, args[0], str(args[1]), args[2]):
 		return null
 	await Interpreter.step(this)
+	if Interpreter.interrupted: return null
 	return __compute(this, args[0], str(args[1]), args[2])
 
 ## text: {variable} {+=, -=, ...} {value/variable}

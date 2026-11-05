@@ -37,8 +37,9 @@ static func resolve(this: Block, raw: Variant) -> FileEntity:
 		return null
 	if value is FileEntity:
 		return value
+	var block_name := this.data.display_name() if this.data != null else "this"
 	if value == null:
-		this.function.error("The Write block needs a file. Drop the name block of a file into its empty slot.")
+		this.function.error("The %s block needs a file. Drop the name block of a file into its empty slot." % block_name)
 	else:
-		this.function.error("The Write block needs a file, but it got %s." % Core.to_python_repr(value))
+		this.function.error("The %s block needs a file, but it got %s." % [block_name, Core.to_python_repr(value)])
 	return null

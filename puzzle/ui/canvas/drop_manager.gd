@@ -31,12 +31,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			current_block = get_viewport().gui_get_drag_data()
-			
-			# Socket Blocks handled inside socket_drop_manager.gd 
-			if current_block is SocketBlock:
-				current_block = null
+			current_block = null
+			var dragged: Variant = get_viewport().gui_get_drag_data()
+			# Socket blocks are socket_drop_manager.gd's, and text selected in a
+			# chat bubble can be dragged too.
+			if not dragged is Block or dragged is SocketBlock:
 				return
+			current_block = dragged
 			
 			# Cannot merely duplicate, as preview_idx checks whether hovered
 			# Blocks are Block.PreviewType.DROP. Drop previews can be hovered.
