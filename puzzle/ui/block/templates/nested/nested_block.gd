@@ -29,9 +29,9 @@ func within_mouth(global_pos: Vector2) -> bool:
 	var clipped_width := l_rect.end.x - m_rect.position.x
 	
 	var begin := Vector2(l_rect.position.x, m_rect.position.y)
-	var end := Vector2(clipped_width, m_rect.position.y)
+	var zone_size := Vector2(clipped_width, m_rect.size.y)
 	
-	var drop_zone := Rect2(begin, end)
+	var drop_zone := Rect2(begin, zone_size)
 	return drop_zone.has_point(global_pos)
 
 func get_all_blocks(include_self := false) -> Array[Block]:

@@ -15,7 +15,9 @@ var _dragged: Block
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
-			_dragged = get_viewport().gui_get_drag_data() as Block
+			# Text selected in a chat bubble can be dragged too.
+			var dragged: Variant = get_viewport().gui_get_drag_data()
+			_dragged = dragged if dragged is Block else null
 		NOTIFICATION_DRAG_END:
 			var block := _dragged
 			_dragged = null
