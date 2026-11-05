@@ -5,6 +5,8 @@ extends HBoxContainer
 @export_group("Children")
 @export var panel: PanelContainer
 @export var label: RichTextLabel
+## The assistant's robot, beside its messages; not beside the student's.
+@export var avatar: TextureRect
 
 var bubble_theme := BubbleTheme.new():
 	set(value):
@@ -32,6 +34,7 @@ func _ready() -> void:
 
 func _update_alignment() -> void:
 	alignment = BoxContainer.ALIGNMENT_END if right_aligned else BoxContainer.ALIGNMENT_BEGIN
+	avatar.visible = not right_aligned
 
 func _update_bubble() -> void:
 	label.text = text
@@ -42,4 +45,6 @@ func _update_bubble() -> void:
 	text_width += label.get_theme_stylebox(&"normal").get_minimum_size().x
 	
 	var max_label_width := size.x * max_width_ratio - panel.get_theme_stylebox(&"panel").get_minimum_size().x
+	if avatar.visible:
+		max_label_width -= avatar.get_combined_minimum_size().x + get_theme_constant(&"separation")
 	label.custom_minimum_size.x = clampf(ceilf(text_width) + 2.0, 0.0, maxf(max_label_width, 0.0))

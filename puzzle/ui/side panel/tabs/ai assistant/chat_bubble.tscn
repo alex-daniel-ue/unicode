@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://c71q4icny10pb"]
+[gd_scene load_steps=6 format=3 uid="uid://c71q4icny10pb"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_x0ows"]
 [ext_resource type="Script" uid="uid://nu0sx40wt3xk" path="res://puzzle/ui/side panel/tabs/ai assistant/chat_bubble.gd" id="2_xuyyj"]
 [ext_resource type="Texture2D" uid="uid://cgbux3a3yqg6t" path="res://puzzle/ui/block/templates/socket/value/debug_texture.png" id="3_pl706"]
+[ext_resource type="Texture2D" uid="uid://q7qrg52rg6u6" path="res://menus/level select/art/chat_avatar.png" id="4_avatar"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvcr2"]
 content_margin_left = 16.0
@@ -15,12 +16,20 @@ texture_margin_top = 24.0
 texture_margin_right = 24.0
 texture_margin_bottom = 24.0
 
-[node name="ChatBubble" type="HBoxContainer" node_paths=PackedStringArray("panel", "label")]
+[node name="ChatBubble" type="HBoxContainer" node_paths=PackedStringArray("panel", "label", "avatar")]
 theme = ExtResource("1_x0ows")
+theme_override_constants/separation = 8
 alignment = 2
 script = ExtResource("2_xuyyj")
 panel = NodePath("BubbleTexture")
 label = NodePath("BubbleTexture/RichTextLabel")
+avatar = NodePath("Avatar")
+
+[node name="Avatar" type="TextureRect" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+texture = ExtResource("4_avatar")
 
 [node name="BubbleTexture" type="PanelContainer" parent="."]
 layout_mode = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://conmg5k2eihou"]
+[gd_scene load_steps=12 format=3 uid="uid://conmg5k2eihou"]
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_rgus7"]
 [ext_resource type="Script" uid="uid://damydrm37ap1p" path="res://puzzle/ui/side panel/tabs/ai assistant/ai_assistant.gd" id="2_kmgf6"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://chm2mpgr2ts7n" path="res://puzzle/ui/side panel/tabs/ai assistant/bubble_theme.gd" id="4_ujnjh"]
 [ext_resource type="Texture2D" uid="uid://bvwuhodvkfqsy" path="res://puzzle/ui/side panel/icons/pixelarticons--undo.png" id="5_q1e47"]
 [ext_resource type="Script" uid="uid://chc4oneoy4ywl" path="res://puzzle/ui/side panel/tabs/ai assistant/user_message_field.gd" id="6_7mq5g"]
+[ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="7_mini"]
 
 [sub_resource type="Resource" id="Resource_q1e47"]
 script = ExtResource("4_ujnjh")
@@ -26,7 +27,7 @@ background = Color(0.11764706, 0.16078432, 0.23137255, 1)
 font = Color(0.5803922, 0.6392157, 0.72156864, 1)
 metadata/_custom_type_script = "uid://chm2mpgr2ts7n"
 
-[node name="AIAssistant" type="MarginContainer" node_paths=PackedStringArray("chat_stack", "message_field", "submit_button", "reset_button", "http_request", "scroll")]
+[node name="AIAssistant" type="MarginContainer" node_paths=PackedStringArray("chat_stack", "message_field", "submit_button", "reset_button", "http_request", "scroll", "limit_pips", "limit_count", "limit_refill")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -48,6 +49,9 @@ submit_button = NodePath("VBoxContainer/HBoxContainer/SubmitButton")
 reset_button = NodePath("VBoxContainer/TopBar/ResetButton")
 http_request = NodePath("HTTPRequest")
 scroll = NodePath("VBoxContainer/ScrollContainer")
+limit_pips = NodePath("VBoxContainer/LimitBar/Pips")
+limit_count = NodePath("VBoxContainer/LimitBar/Count")
+limit_refill = NodePath("VBoxContainer/LimitBar/Refill")
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 use_threads = true
@@ -114,6 +118,43 @@ theme_override_constants/separation = 16
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="LimitBar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Questions you can ask the assistant. One comes back every minute."
+theme_override_constants/separation = 8
+
+[node name="Caption" type="Label" parent="VBoxContainer/LimitBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
+theme_override_fonts/font = ExtResource("7_mini")
+theme_override_font_sizes/font_size = 16
+text = "Questions"
+vertical_alignment = 1
+
+[node name="Pips" type="HBoxContainer" parent="VBoxContainer/LimitBar"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 1
+theme_override_constants/separation = 3
+
+[node name="Count" type="Label" parent="VBoxContainer/LimitBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.972549, 0.98039216, 0.9882353, 1)
+theme_override_fonts/font = ExtResource("7_mini")
+theme_override_font_sizes/font_size = 16
+text = "10/10"
+vertical_alignment = 1
+
+[node name="Refill" type="Label" parent="VBoxContainer/LimitBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.5803922, 0.6392157, 0.72156864, 1)
+theme_override_fonts/font = ExtResource("7_mini")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+vertical_alignment = 1
+clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

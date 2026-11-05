@@ -107,9 +107,13 @@ func _puzzle_shots() -> void:
 	for i in 30: await get_tree().process_frame
 	await _snap("toolbox_and_slots")
 
-	# The assistant with a short chat, so New chat is awake.
+	# The assistant with a short chat, so New chat is awake, and three questions
+	# spent, so the limit bar shows used pips and its countdown.
 	var assistant := puzzle.ai_assistant
 	puzzle.side_panels[0].focus_content(assistant)
+	for i in 3:
+		HintPool.take()
+	assistant._refresh_busy_state()
 	var asked := assistant.chat_bubble_scene.instantiate() as ChatBubble
 	asked.text = "why does it stop early?"
 	asked.right_aligned = true

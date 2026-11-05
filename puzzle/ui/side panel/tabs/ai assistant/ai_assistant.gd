@@ -14,6 +14,12 @@ const RATE_LIMIT_TIMEOUT := 15
 const SHOT_WIDTH := 768
 const SHOT_BACKGROUND := Color(0.11, 0.11, 0.14)
 const LOG_LINES := 40
+## The limit bar's pips: a question left, one used, and the count at none left.
+const PIP_LEFT := Color(0.388, 0.7954, 0.97)
+const PIP_USED := Color(0.2, 0.25490198, 0.33333334)
+const PIP_SIZE := Vector2(7, 14)
+const COUNT_COLOR := Color(0.972549, 0.98039216, 0.9882353)
+const COUNT_EMPTY := Color(0.99215686, 0.6431373, 0.6862745)
 
 @export var chat_bubble_scene: PackedScene
 
@@ -29,6 +35,11 @@ const LOG_LINES := 40
 @export var reset_button: Button
 @export var http_request: HTTPRequest
 @export var scroll: ScrollContainer
+## The limit bar: a pip a question in the HintPool, how many are left, and
+## when the next comes back. In a narrow panel the last is what gets cut.
+@export var limit_pips: HBoxContainer
+@export var limit_count: Label
+@export var limit_refill: Label
 
 var api_url := DEFAULT_URL
 var fallback_url := ""
@@ -65,6 +76,11 @@ var _summary_http: HTTPRequest
 
 
 func _ready() -> void:
+	for i in HintPool.CAPACITY:
+		var pip := ColorRect.new()
+		pip.custom_minimum_size = PIP_SIZE
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		limit_pips.add_child(pip)
 	_load_ai_config()
 	http_request.timeout = REQUEST_TIMEOUT
 	http_request.use_threads = true
@@ -176,6 +192,7 @@ func _reset_chat() -> void:
 ## Decided with the panel's "limit the assistant" question; see HintPool for the
 ## other half of that decision.
 func _refresh_busy_state() -> void:
+	_update_limit()
 	if in_timeout:
 		return
 	
@@ -201,6 +218,17 @@ func _update_placeholder(busy: bool, left: int) -> void:
 		message_field.placeholder_text = "%s (%d left)" % [_base_placeholder, left]
 	else:
 		message_field.placeholder_text = _base_placeholder
+
+## The limit bar, from the pool as it is now; the pool's ticker calls this
+## every second, so the countdown moves.
+func _update_limit() -> void:
+	var left := HintPool.available()
+	for i in limit_pips.get_child_count():
+		(limit_pips.get_child(i) as ColorRect).color = PIP_LEFT if i < left else PIP_USED
+	var wait := HintPool.seconds_to_next()
+	limit_count.text = "%d/%d" % [left, HintPool.CAPACITY]
+	limit_refill.text = "+1 in %s" % _clock(wait) if wait > 0 else ""
+	limit_count.add_theme_color_override(&"font_color", COUNT_EMPTY if left == 0 else COUNT_COLOR)
 
 func _clock(seconds: int) -> String:
 	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]

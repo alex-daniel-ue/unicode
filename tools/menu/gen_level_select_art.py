@@ -208,3 +208,36 @@ def badge():
 
 
 badge()
+
+
+# The assistant beside its messages in the chat, at 3x: a notched box in the
+# blue of its bubbles (ai_assistant.tscn's bubble_theme_ai), the robot in it.
+CHAT_BLUE = rgb("63cbf7")
+CHAT_ROBOT = ["....X....",
+              ".XXXXXXX.",
+              ".X.....X.",
+              "XX.X.X.XX",
+              ".X.....X.",
+              ".X.XXX.X.",
+              ".XXXXXXX."]
+
+
+def chat_avatar():
+    side = 13
+    art = [["F"] * side for _ in range(side)]
+    for y in range(side):
+        for x in range(side):
+            edge_x, edge_y = x in (0, side - 1), y in (0, side - 1)
+            if edge_x and edge_y:
+                art[y][x] = "."
+            elif edge_x or edge_y:
+                art[y][x] = "O"
+    x0, y0 = (side - len(CHAT_ROBOT[0])) // 2, (side - len(CHAT_ROBOT)) // 2
+    for y, row in enumerate(CHAT_ROBOT):
+        for x, cell in enumerate(row):
+            if cell == "X":
+                art[y0 + y][x0 + x] = "O"
+    icon("chat_avatar", ["".join(row) for row in art], {"O": CHAT_BLUE, "F": BUBBLE}, 3)
+
+
+chat_avatar()
