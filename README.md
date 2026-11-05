@@ -60,7 +60,7 @@ export).
 | File | Section | What it controls |
 |---|---|---|
 | `unicode_ai.cfg` | `[ai]` | `url`, `fallback_url`, `summary_url` and `token` for the relay. |
-| `unicode.cfg` | `[levels]` | `released="tutorial,iteration,arrays"`: which modules are open in level select. Leave the key out and each module's own `released` flag decides. |
+| `unicode.cfg` | `[levels]` | `released="tutorial,io,values,operators,selection,functions,arrays,dicts,files"`: which modules are open in level select. While the key is there it alone decides, and each module's own `released` flag is ignored (level select warns where they disagree). Leave the key out and the flags decide. |
 
 ---
 
@@ -68,7 +68,9 @@ export).
 
 **Main menu → Level select → a level.**
 
-- **Level select** shows one module at a time (Tutorial, Iteration, Arrays) as a
+- **Level select** shows one module at a time, in the course's order (Tutorial,
+  Input and Output, Values and Variables, Operators and Expressions, Selection,
+  Iteration, Functions, Arrays, Dictionaries, Text Files) as a
   grid of numbered buttons. A solved level shows the stars it earned; an
   unsolved one shows none. Levels unlock in order. It reopens on the module of
   the level just played.
@@ -148,6 +150,144 @@ at a time. Arrays 1 also brings Step Forward N Times, which is
 Iteration's step forward with a number. An earlier opener asked for Step
 Forward N Times, Index Of and a list's name block twice each, around a turn,
 which was too much to take in; Arrays 1 uses each once, in a one-block program.
+
+**The modules around Iteration and Arrays** follow the course syllabus
+(CCP 1101) in its order, with CodeChum's exercises as the model for many
+levels (Starry Ascension, Two String Input, Addition and Subtraction, Calculate
+Distance, Is the Triangle Equilateral?, Book Recommendation). They are written
+as data in `tools/modules/module_specs.py` and generated (see Tools and checks).
+Each is ten levels, and none uses a block from a module after it.
+
+| Module | Level | Title | Concept |
+|---|---|---|---|
+| Input and Output | 1 | Hello, World! | Showing text on the terminal with Print. |
+|  | 2 | Line by line | One Print block for each line, from the top down. |
+|  | 3 | Starry steps | A pattern, line by line. |
+|  | 4 | One block, many lines | The control code \n starts a new line inside text. |
+|  | 5 | Echo | Input reads what the user typed. |
+|  | 6 | Two answers | Each Input reads the next line the user typed. |
+|  | 7 | Steps from the keyboard | Input gives text; int( ) makes it a number the robot can use. |
+|  | 8 | Around the corner | Two numbers from the user, read in order. |
+|  | 9 | Here I am | Input and Print in the same program, in the order the user typed. |
+|  | 10 | The delivery | Everything from this module in one program. |
+| Values and Variables | 1 | Remember it | A variable keeps a value until you need it. |
+|  | 2 | Say it three times | A variable can be used again and again. |
+|  | 3 | Make a sentence | An f-string puts a variable's value into text. |
+|  | 4 | There and back | One f-string can use the same variable twice. |
+|  | 5 | Swap | Set gives a variable a new value; a third variable helps two of them swap. |
+|  | 6 | Count your steps | A number kept in a variable can move the robot and go into text. |
+|  | 7 | A decimal point | float( ) makes a number with a decimal point. |
+|  | 8 | Good names | A variable's name follows Python's rules. |
+|  | 9 | Name and age | \n and an f-string together: two lines from one block. |
+|  | 10 | Here you go | Variables, types and f-strings in one program. |
+| Operators and Expressions | 1 | Twice as far | The Math block, inside another block. |
+|  | 2 | Add and subtract | + and - on two numbers the user typed. |
+|  | 3 | Show your work | Work an answer out into a variable, then put it in an f-string. |
+|  | 4 | Halfway there | // divides and drops the part after the decimal point. |
+|  | 5 | Share the snacks | // for how many each, % for what is left over. |
+|  | 6 | Around the garden | A Math block inside another one works first, like ( ) in Python. |
+|  | 7 | Squares and cubes | ** raises a number to a power. |
+|  | 8 | Keep a total | += adds to a variable: total += 5 is total = total + 5. |
+|  | 9 | Kilometers to miles | Decimal numbers, and an f-string that shows three decimal places. |
+|  | 10 | Minutes and seconds | // and % together. |
+| Selection | 1 | Only sometimes | If runs its blocks only when its condition is True. |
+|  | 2 | Left or right | Else runs when If did not. |
+|  | 3 | Even or odd | % 2 tells even numbers from odd ones. |
+|  | 4 | Three bins | Elif checks another condition when the one above it was False. |
+|  | 5 | Letter grades | In a chain of If and Elif, the first True condition wins. |
+|  | 6 | Both at once | And is True only when both conditions are True. |
+|  | 7 | No school today | Or is True when at least one condition is True. |
+|  | 8 | An if inside an if | A decision inside another decision. |
+|  | 9 | Triangle types | And, or and elif together. |
+|  | 10 | Book finder | Decisions inside decisions, to choose one of many answers. |
+| Functions | 1 | Call it | A function is a set of steps with a name; calling it runs them. |
+|  | 2 | Write it | Writing a function's steps once, and using them many times. |
+|  | 3 | Hand it a number | A parameter: a name in the function that each call gives a value. |
+|  | 4 | Stripes | A function with two parameters. |
+|  | 5 | Give it back | Return gives a value back to the block that called the function. |
+|  | 6 | How far apart | A function that decides what to give back. |
+|  | 7 | The biggest | A call inside a call: the answer of one call goes into the next. |
+|  | 8 | Even or not | A function that gives back True or False, used as a condition. |
+|  | 9 | A receipt | Top-down design: a big job made of small functions. |
+|  | 10 | Spiral | A function, a loop and a parameter together. |
+| Dictionaries | 1 | Look it up | A dictionary finds a value by its key. |
+|  | 2 | Where to? | A dictionary's values can be numbers the robot uses. |
+|  | 3 | New price | Set Key gives a key a new value. |
+|  | 4 | A new name | Set Key adds a key that isn't there yet. |
+|  | 5 | Do we sell it? | In checks whether a key is in a dictionary. |
+|  | 6 | Count the votes | A dictionary as a tally: one count for each key. |
+|  | 7 | New words | A tally that starts empty: a new key starts at 1. |
+|  | 8 | The price list | For Each goes through a dictionary's keys, in order. |
+|  | 9 | The bill | Two dictionaries with the same keys, used together. |
+|  | 10 | Sold out | Remove Key takes a key out; a dictionary changes as things happen. |
+| Text Files | 1 | Read every line | Reading a text file, one line at a time. |
+|  | 2 | How long is it? | Length Of counts a file's lines. |
+|  | 3 | Write it down | Write adds a line to a file. |
+|  | 4 | Copy a file | Reading one file and writing another. |
+|  | 5 | Find a word | Searching through a file: In finds a piece of text inside a line. |
+|  | 6 | Add up the scores | Reading numbers from a file: each line is text. |
+|  | 7 | Write the squares | Writing numbers to a file: they have to become text first. |
+|  | 8 | Passing scores | Reading, choosing, and writing: a filter from one file to another. |
+|  | 9 | Number the lines | A counter while reading, and f-strings while writing. |
+|  | 10 | The guest book | Search a file, then write to it: everything from this module. |
+
+**How they teach.** Each module builds its idea from parts first, the way
+Iteration builds `for` from a counted `while`: Functions calls a function that
+is written before writing one, writes `abs()` and `max()` before naming the
+built-ins, and the Arrays-style "one program, every room" rule is what makes
+the terminal levels work. **A room is one run of the program with one user**,
+as a CodeChum exercise has Sample Output 1, 2 and 3: the user types different
+lines in each room, so typing a room's answer in fails the next room, and the
+first wrong room is named.
+
+**What they add.** At most one new feature per module, each because the
+module's idea has nothing to be seen with otherwise:
+
+- **Input and Output: the terminal** (`TerminalEntity`). Python's console as
+  an object in the room: what the program prints, line by line, and under it
+  what the user types, as coral chips (the colour of text, because `input()`
+  always gives text). A `TerminalGoal` shows the lines it should end with,
+  faded, and colours each printed line green or red. Values and Variables,
+  Operators and Selection use it too, with no feature of their own:
+  - **strings** need nothing new. A typed slot already took "text"; it now
+    reads Python's escape codes (`\n`, `\t`, `\"`) and **f-strings**
+    (`f"Hello, {name}!"`, with `{x:.2f}` and `{n:d}`), filled in when the block
+    runs (`FString`). An f-string holds names only, not math: `{x + y}` says to
+    work the answer out into a variable first.
+  - **Convert** is `int()`, `float()` and `str()`, with Python's rules and
+    messages that say why ("int() can't turn '7.5' into a whole number. It
+    has a decimal point, so use float().").
+  - **Math** gained `**`, and text `*` a whole number (`"*" * 3`). **Update**
+    is `+=`, `-=`, `*=`, `/=`, `//=` and `%=`.
+  - **Selection** gets no feature: decisions are made interesting by the
+    rooms. The same program meets a different user (or a different bin, in
+    Three bins) in each room, so the student has to find the rule that tells
+    the rooms apart, which is the constructivist part, and the robot's path
+    shows a wrong branch at once.
+- **Functions: define and call** (`FunctionDefinitions`). A level names its
+  functions and their parameters; each gets a `define name ( a, b )` block on
+  the canvas beside Begin and a call block in the Toolbox (round when it gives
+  back a value, six-sided when it gives back True or False, so it fits an If).
+  The student writes what it does. Naming is the level's, as a list's name is:
+  a name typed by the student would have to rename call blocks already on the
+  canvas. A call gets its own variables and sees the program's top-level ones,
+  as Python's local and global names; `return` ends it from inside any loop
+  (`ControlSignal.RETURN`).
+- **Dictionaries: the dictionary board** (`DictEntity`). One row per key,
+  `key : value`, in insertion order. The list board's boxes are a tile wide,
+  which a key like "library" isn't, so it is drawn like the terminal. Its blocks
+  are written as Python writes them: `prices [ "pen" ]`, `set prices [ "pen" ]
+  to 20`, `remove "pen" from prices`; In, Length Of and For Each take a
+  dictionary as Python's `in`, `len()` and `for` do. A `DictGoal` compares as
+  `==` does, in any order.
+- **Text Files: the file** (`FileEntity`). A sheet with a name tab
+  (notes.txt) and numbered lines; its name block is the opened file. For Each
+  reads its lines, Length Of counts them, Write adds one at the end, and In
+  finds a word in a line (In now takes text, as Python's does, and its right
+  side can be typed into). Write takes text only, as `f.write()` does, so
+  writing numbers teaches `str()`.
+
+Tuples and sets, from the same weeks as dictionaries, have no levels.
 
 Every level scores except the Tutorial module's (`counts_for_progress =
 false`). Those take no slot in the progress code, but still unlock in order and
@@ -658,8 +798,10 @@ Play". Everything about it is in [`ai/README.md`](ai/README.md).
   level before it, so a progress code typed in on a new computer opens each
   module up to its furthest solved level. The Tutorial module has no slots in
   the code, so it starts over there.
-- **Release gate:** a module shows only when it is released, by
-  `unicode.cfg`'s `[levels] released` or by the module's own flag.
+- **Release gate:** a module shows only when it is released: by
+  `unicode.cfg`'s `[levels] released` when that key is there, otherwise by the
+  module's own flag. A closed module shows its `locked_notice` in place of its
+  levels. Iteration is closed for now, in both.
 
 ---
 
@@ -679,6 +821,24 @@ three after any change to levels, blocks or the interpreter.
 
 Screenshots go to `user://` (on Windows,
 `%APPDATA%/Godot/app_userdata/unicode/`); each path is printed.
+
+**The module generator** (`tools/modules/`, Python 3, no packages) writes
+the levels of the seven modules around Iteration and Arrays:
+
+- `module_specs.py` is every level as data: its rooms (`module_rooms.py`
+  helpers: `screen()`, `hall()`, `route()`, `walk()`, `junction()`, with a
+  terminal, dictionaries and files in a band of their own), its brief, its
+  blocks, its intended program and the wrong programs it is built to catch.
+- `gen_modules.py` writes the scenes with the Arrays generator's painter and
+  clutter, `level/module_briefs.gd` (LevelBriefs reads it), and
+  `tools/modules/cases.json` (level_checks reads it).
+- `finish_modules.py` runs every intended program for its YAML and bakes
+  every level's bounds, then regenerates with both and runs `add_catalog.py`,
+  which puts the modules into the catalog (rerunnable).
+
+```bash
+python tools/modules/finish_modules.py . "$GODOT"
+```
 
 **The Arrays generator** (`tools/arrays/`, Python 3, no packages):
 
@@ -789,7 +949,9 @@ Deploying the relay (Vercel, plus Render as a fallback) is covered in
   and other symbols should be checked against Atkinson Hyperlegible and Kenney
   Mini before use.
 - **The progress code holds 20 levels**, and all 20 are used: ten in
-  Iteration, ten in Arrays. Another scored level needs a new code format; a
+  Iteration, ten in Arrays. So the generated modules' levels are practice
+  levels (`counts_for_progress = false`): their stars stay on this computer,
+  and they aren't in a code or the study's data. Another scored level needs a new code format; a
   level with `counts_for_progress = false` doesn't take a slot. Adding,
   reordering or cutting a scored level moves other levels' slots, so it needs
   `ProgressCode.VERSION` bumped and the old layout kept in `Progress`, as the

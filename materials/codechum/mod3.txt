@@ -1,0 +1,68 @@
+Topic 1
+String Handling
+In Python, strings are sequences of characters enclosed in single (' ') or double (" ") quotes. They are widely used for storing and manipulating text-based data. String handling involves various operations such as concatenation, comparison, copying, and more. This guide provides an overview of strings in Python, explores common string operations, and introduces built-in string methods.
+
+Definition and Properties of Strings
+In Python, strings are immutable sequences of Unicode characters. This means once defined, the contents of a string cannot be changed. To modify a string, you need to create a new string.
+
+String Operations
+String Input
+String input is the process of obtaining a sequence of characters (a string) from a user or an input source. In Python, you can use the input() function to read user input as a string. Here's an example:
+
+script.py
+
+
+
+Execute code
+String Concatenation
+String concatenation is the process of combining two or more strings into a single string. In Python, you can concatenate strings using the + operator or by using formatted string literals (f-strings). Here's an example:
+
+script.py
+
+
+
+Execute code
+The output will be: Concatenated string: HelloWorld Hello, John!
+
+String Comparison
+String comparison is used to determine the order or equality of two strings. In Python, you can compare strings using comparison operators such as ==, !=, <, >, <=, and >=. These operators return True or False based on the comparison result. Here's an example:
+
+script.py
+
+
+
+Execute code
+String Copying
+String copying involves copying the contents of one string to another. In Python, since strings are immutable, you can create a copy of a string simply by assigning it to a new variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+The output will be: "Hello"
+
+Conclusion
+Strings in Python are powerful and versatile. They are a fundamental part of text-based data handling in Python programming. By using built-in string methods and operators, you can perform various string operations efficiently. Understanding these concepts will enable you to write robust programs that involve string processing.
+
+---
+
+Two String Input
+by CodeChum Admin
+
+Write a program that asks for two string inputs, first and second, and prints the strings in the following format: "{first} {second} {first}"
+Sample Output 1
+
+Enter the first string: Hello
+Enter the second string: World
+Hello World Hello
+Sample Output 2
+
+Enter the first string: Code
+Enter the second string: Chum
+Code Chum Code
+Sample Output 3
+
+Enter the first string: First
+Enter the second string: Second
+First Second First

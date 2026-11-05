@@ -59,6 +59,12 @@ func unwrap(value: Variant) -> Variant:
 		var list := ListEntity.find(value)
 		if list != null:
 			return list
+		var board := DictEntity.find(value)
+		if board != null:
+			return board
+		var file := FileEntity.find(value)
+		if file != null:
+			return file
 
 		var var_name := str(value)
 		var hint := " Python spells it %s." % var_name.capitalize() if var_name in ["true", "false"] else ""
@@ -94,6 +100,14 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 		return[]
 		
 	for i in range(arg_count):
+		# A name slot whose text isn't a name Python would accept says which
+		# name, and why. Core.validate_type() would say "1st argument must be a
+		# variable name", which reads oddly when the name typed was "1st".
+		if types[i] == Argument.STRING_NAME and evaluated[i] == null:
+			var typed: String = (_visible_params()[i] as Block).text.get_raw() if i < _visible_params().size() else ""
+			if not typed.strip_edges().is_empty():
+				error("'%s' isn't a valid variable name. A name starts with a letter or _, and has no spaces." % typed)
+				return []
 		if not types[i].is_empty():
 			var err := Core.validate_type(evaluated[i], types[i], i)
 			if not err.is_empty():

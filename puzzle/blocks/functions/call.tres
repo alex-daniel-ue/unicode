@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value"]
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="4_script"]
+
+[resource]
+script = ExtResource("1_data")
+name = "CallBlock"
+title = "Call"
+color = Color(0.93333334, 0.5137255, 0.6431373, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Functions"
+syntax = "{name}({args})"
+description = "Calls a function: runs the blocks under its define block, with each parameter set to the value in the matching slot."
+note = "This block runs the blocks under the define block with the same name."
+text = "call"
+text_hints = PackedStringArray()
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_call"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

@@ -40,7 +40,18 @@ const DATA := {
 	"len": "res://puzzle/blocks/lists/length_of.tres",
 	"append": "res://puzzle/blocks/lists/append.tres",
 	"in": "res://puzzle/blocks/lists/contains.tres",
+	"input": "res://puzzle/blocks/terminal/input.tres",
+	"convert": "res://puzzle/blocks/terminal/convert.tres",
+	"update": "res://puzzle/blocks/generic/update.tres",
+	"return": "res://puzzle/blocks/functions/return.tres",
+	"get": "res://puzzle/blocks/dicts/dict_get.tres",
+	"setkey": "res://puzzle/blocks/dicts/dict_set.tres",
+	"remove": "res://puzzle/blocks/dicts/dict_remove.tres",
+	"write": "res://puzzle/blocks/files/write.tres",
 }
+## The levels tools/modules/gen_modules.py writes: each one's intended program
+## and the wrong ones it is built to catch, as the generator wrote them.
+const MODULE_CASES := "res://tools/modules/cases.json"
 const RUN_LIMIT_S := 90.0
 
 var report: PackedStringArray = []
@@ -102,7 +113,26 @@ func cases() -> Array:
 		["IT-10 nested while", it10, [W(N(A("destination")), [W(A("blocked"), [T("left")]), M()]), M()], "FAIL"],
 		["IT-10 no trailing move", it10, [W(N(A("destination")), [I(A("blocked"), [T("left"), ["continue"]]), M()])], "FAIL"],
 		["IT-10 turn right", it10, [W(N(A("destination")), [I(A("blocked"), [T("right"), ["continue"]]), M()]), M()], "FAIL"],
-	] + arrays_cases()
+	] + arrays_cases() + module_cases()
+
+## The generated modules' cases, from MODULE_CASES. JSON numbers arrive as
+## floats; a whole one is typed as an int, as a student would type it.
+func module_cases() -> Array:
+	var file := FileAccess.open(MODULE_CASES, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Array:
+		push_error("level_checks: %s isn't a JSON list." % MODULE_CASES)
+		return []
+	return _whole_numbers(parsed)
+
+func _whole_numbers(value: Variant) -> Variant:
+	if value is Array:
+		return (value as Array).map(_whole_numbers)
+	if value is float and is_equal_approx(value, roundf(value)):
+		return int(value)
+	return value
 
 ## The Arrays module, named by level id: AR-T2 and AR-T3 (Arrays 1 and 2), then
 ## AR-3 to AR-11, with no AR-9 (Tidy up was cut): each level's intended program,
@@ -217,7 +247,20 @@ func run_case(title: String, path: String, program: Array, expect: String, extra
 		begin.mouth.remove_child(child); child.queue_free()
 	await get_tree().process_frame
 	typed_into_locked.clear()
-	await build_into(begin, program)
+	# ["def", name, body] builds the body of that function's define block,
+	# which the level put on the canvas; the rest goes under Begin.
+	var main: Array = []
+	for spec: Array in program:
+		if spec[0] != "def":
+			main.append(spec)
+			continue
+		for child in puzzle.canvas.get_children():
+			if child is NestedBlock and (child as NestedBlock).is_type(NestedData.Type.FUNCTION) \
+					and String((child as NestedBlock).data.func_entity_name) == spec[1]:
+				for old in (child as NestedBlock).mouth.get_children():
+					(child as NestedBlock).mouth.remove_child(old); old.queue_free()
+				await build_into(child as NestedBlock, spec[2])
+	await build_into(begin, main)
 	for i in 2: await get_tree().process_frame
 	if expect == "LOCKED" or not typed_into_locked.is_empty():
 		var locked := not typed_into_locked.is_empty()
@@ -277,6 +320,21 @@ func make(kind: String) -> Block:
 	return Block.construct(data)
 
 func make_spec(spec: Array) -> Block:
+	if spec[0] == "call":
+		# A level's own function: its call block comes from the level.
+		var data := FunctionDefinitions.call_data_for(spec[1])
+		assert(data != null, "no function " + str(spec[1]))
+		return Block.construct(data)
+	if spec[0] == "file":
+		var original_file := Block.construct(FileBlockProvider.reporter_data(spec[1]))
+		var copied_file := original_file.drag.copy()
+		original_file.free()
+		return copied_file
+	if spec[0] == "dict":
+		var original_dict := Block.construct(DictBlockProvider.reporter_data(StringName(spec[1])))
+		var copied_dict := original_dict.drag.copy()
+		original_dict.free()
+		return copied_dict
 	if spec[0] == "list":
 		# Through copy(), the pack-and-instantiate a toolbox drag goes through, so
 		# the name block is checked the way a student gets one.
@@ -311,7 +369,13 @@ func fill(block: Block, spec: Array) -> void:
 			await build_into(block, spec[5])
 		"declare":
 			var slots := block.text.get_blocks()
-			type_into(slots[0], str(spec[1])); type_into(slots[1], str(spec[2]))
+			type_into(slots[0], str(spec[1])); await put(slots[1], spec[2])
+		"convert":
+			var slots := block.text.get_blocks()
+			await choose(slots[0], spec[1]); await put(slots[1], spec[2])
+		"update":
+			var slots := block.text.get_blocks()
+			type_into(slots[0], str(spec[1])); await choose(slots[1], spec[2]); await put(slots[2], spec[3])
 		"inc":
 			type_into(block.text.get_blocks()[0], str(spec[1]))
 		"cmp", "arith", "andor":
@@ -320,12 +384,16 @@ func fill(block: Block, spec: Array) -> void:
 		"set":
 			var slots := block.text.get_blocks()
 			type_into(slots[0], str(spec[1])); await put(slots[1], spec[2])
-		"print", "moven", "len":
+		"print", "moven", "len", "return":
 			await put(block.text.get_blocks()[0], spec[1])
-		"item", "append", "add", "in":
+		"call":
+			var slots := block.text.get_blocks()
+			for k in range(2, spec.size()):
+				await put(slots[k - 2], spec[k])
+		"item", "append", "add", "in", "get", "remove", "write":
 			var slots := block.text.get_blocks()
 			await put(slots[0], spec[1]); await put(slots[1], spec[2])
-		"setitem":
+		"setitem", "setkey":
 			var slots := block.text.get_blocks()
 			await put(slots[0], spec[1]); await put(slots[1], spec[2]); await put(slots[2], spec[3])
 		"each":

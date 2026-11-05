@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://level/objects/entities/terminal/terminal_entity.gd" id="1_terminal"]
+
+[node name="TerminalEntity" type="Node2D"]
+z_index = 1
+script = ExtResource("1_terminal")

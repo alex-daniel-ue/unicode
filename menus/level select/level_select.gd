@@ -51,7 +51,8 @@ var _module_index := 0
 ## Opening on the module of the level just played comes first; this covers
 ## paging to a module and leaving through Home without playing.
 static var _last_module_id: StringName = &""
-## Module ids force-opened by unicode.cfg, overriding LevelModule.released.
+## The module ids unicode.cfg opens. While its key is there, it alone decides:
+## a module it leaves out is closed whatever LevelModule.released says.
 var _released_override: PackedStringArray = []
 var _override_active := false
 
@@ -104,18 +105,24 @@ func _load_release_config() -> void:
 		else OS.get_executable_path().get_base_dir()
 
 	var config := ConfigFile.new()
-	var found := false
+	var found := ""
 	for file in [CONFIG_FILE, AI_CONFIG_FILE]:
 		config = ConfigFile.new()
 		if config.load(folder.path_join(file)) == OK and config.has_section_key("levels", "released"):
-			found = true
+			found = file
 			break
-	if not found:
+	if found.is_empty():
 		return
 
 	_override_active = true
 	for piece in str(config.get_value("levels", "released", "")).split(",", false):
 		_released_override.append(piece.strip_edges().to_lower())
+	# Changing a module's flag in the catalog does nothing while the file has
+	# the key, so say so where the two disagree.
+	for module in _catalog.modules:
+		if module != null and module.released != _is_released(module):
+			push_warning("LevelSelect: %s %s module '%s', so its released = %s in the catalog is ignored. Edit [levels] released in %s, or take the key out to let the catalog decide."
+				% [found, "opens" if _is_released(module) else "leaves out", module.id, module.released, found])
 
 
 func _is_released(module: LevelModule) -> bool:

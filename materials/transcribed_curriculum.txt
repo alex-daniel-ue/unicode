@@ -1,0 +1,120 @@
+## COURSE SYLLABUS IN COMPUTER PROGRAMMING 1
+**Academic Year:** 2023 to 2024
+* **Course Code:** CCP 1101
+* **Course Title:** COMPUTER PROGRAMMING 1 (PYTHON)
+* **Credit Units:** Lecture 2 units, Laboratory / Studio 1 unit
+* **Course Type:** PURE ONSITE [ ], PURE OFFSITE [ ], HYBRID [x] (Onsite + Offsite), Others [ ]
+* **Pre-requisite(s):** Course Code, Course Title
+### Course Description
+Procedural programming, algorithm design, and language constructs to high level programming language.
+### Course Outcomes
+Upon completion of the course, the learner will be able to:
+* Implement a given algorithm as a computer program in Python.
+* Adapt and combine standard algorithms to solve a given problem (includes numerical as well as non-numerical algorithms).
+* Adequately use standard programming constructs: repetition, selection, functions, composition, modules, aggregated data (such as arrays and lists).
+* Explain what a given Python program does.
+* Identify and repair coding errors in a program.
+*(CCP 1101 - COMPUTER PROGRAMMING 1 (PYTHON), MANILA - COLLEGE OF COMPUTER STUDIES AND SYSTEMS, Page 1 of 7)*
+---
+## LEARNING MATRIX
+### 1st Week
+* **Hours:** Lecture: 4 hours; Laboratory: 6 hours.
+* **Content:**
+* Orientation and overview of the course.
+* Introduction.
+* Discuss classroom policy (Class Performance, Attendance Monitoring, and Grading System).
+* Overview of computing.
+* Flowcharting/Pseudocode.
+* Environment and Compiler.
+* **Learning Outcomes:**
+* Use flowcharts and pseudocodes to represent program structure.
+* I/O statements.
+* **Teaching-Learning Activity:**
+* Flowcharting activity.
+* Modality: Offsite Asynchronous (A S ☑ ☐).
+* Resources: PowerPoint presentation, Multimedia.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation.
+### 2nd Week
+* **Content & Learning Outcomes:**
+* Compose and run a simple Python program that accepts input and displays output.
+* **Teaching-Learning Activity:**
+* Presentation, Lecture, Code Demonstration, Research (Modality: ☑).
+### 3rd to 6th Week
+* **Hours:** Lecture: 8 hours; Laboratory: 12 hours.
+* **Content:**
+* Values, Identifiers, Variables, Integer, String, Floating-Point Control Codes and Variables and Assignment.
+* Operators and Expressions (Expressions, Operators).
+* **Learning Outcomes:**
+* Initialize and use variables with appropriate names.
+* Use the appropriate data type.
+* Perform string formatting.
+* Construct arithmetic expressions.
+* Construct a simple Python program that performs inputs, calculations, and outputs.
+* **Teaching-Learning Activity:**
+* Programming Activity, Multimedia Presentation, Lecture, Code Demonstration (Modality: ☑ ☑ ☑).
+* Resources: PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation, Major Exam.
+**PRELIMINARY EXAMINATION**
+---
+### 7th to 9th Week
+* **Hours:** Lecture: 6 hours; Laboratory: 9 hours.
+* **Content:**
+* Loops (While statement, For statement, While/Else and For/Else).
+* Functions (Functions and Modules, Built-in Functions, Standard Mathematical Functions, Parameter Passing).
+* **Learning Outcomes:**
+* Write a loop to repeat a sequence of actions a fixed number of times.
+* Write a loop that counts down and a loop that counts up.
+* Write an entry-controlled loop that halts when a condition becomes false.
+* Construct appropriate conditions for condition-controlled loops and selection statements.
+* Explain why functions are useful in structuring code in a program.
+* Employ top-down design to assign tasks to functions.
+* Define a function with required and optional parameters.
+* **Teaching-Learning Activity:**
+* Programming Activity, Multimedia Presentation, Lecture, Code Demonstration (Modality: A S O ☑ ☑ ☑ ☑ ✓).
+* Resources: PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation.
+### 10th to 11th Week
+* **Hours:** Lecture: 4 hours; Laboratory: 6 hours.
+* **Resources:** PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation.
+### 12th Week
+* **Hours:** Lecture: 2 hours; Laboratory: 3 hours.
+* **Content:**
+* Lists (List and List Traversal, Building Lists, List Membership, Line Assignment and Equivalence, List Bounds Slicing, List Element Removal, List and Functions, List Methods, List Comprehensions, Multidimensional Lists, Lists vs Generators).
+* **Learning Outcomes:**
+* Construct lists and access items in those lists.
+* Use methods to manipulate lists.
+* Perform traversals of lists to process items in the lists.
+* Define simple functions that expect parameters and return values.
+* **Teaching-Learning Activity:**
+* Programming Activity, Multimedia Presentation, Lecture, Code Demonstration (Modality: ✓).
+* Resources: PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation, Major Exam.
+**MIDTERM EXAMINATION**
+---
+### 13th to 15th Week
+* **Hours:** Lecture: 2 hours; Laboratory: 3 hours.
+* **Content:**
+* Tuples, Dictionaries and Sets (Tuples, Dictionaries, Sets).
+* **Learning Outcomes:**
+* Construct dictionaries and access entries in those dictionaries.
+* Use methods to manipulate dictionaries.
+* Decide whether a list or a dictionary is an appropriate data structure for a given application.
+* **Teaching-Learning Activity:**
+* Programming Activity, Multimedia Presentation, Lecture, Code Demonstration (Modality: A S O ☑ ☑ ☑).
+* Resources: PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation.
+### 16th to 18th Week
+* **Hours:** Lecture: 2 hours; Laboratory: 3 hours.
+* **Content:**
+* Text Files (Opening Files, Text Files and Lines, Writing Files, Reading Files, Searching through a file).
+* **Learning Outcomes:**
+* Open a text file for output and write strings or numbers to the file.
+* Open a text for input and read strings or numbers from the file.
+* Use library functions to access and navigate a file system.
+* **Teaching-Learning Activity:**
+* Programming Activity, Multimedia Presentation, Lecture, Code Demonstration (Modality: ☑ ☑ ✓ ☑ ✓).
+* Resources: PowerPoint presentation.
+* **Assessment:** Seatwork, Quiz, Assignment, Class Participation, Major Exam.
+**FINAL EXAMINATION**
+*(CCP 1101 - COMPUTER PROGRAMMING 1 (PYTHON), MANILA - COLLEGE OF COMPUTER STUDIES AND SYSTEMS)*

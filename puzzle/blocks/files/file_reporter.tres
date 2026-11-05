@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=7 format=3 uid="uid://kpknhbschnw4"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value"]
+[ext_resource type="Script" uid="uid://dns6724u106wa" path="res://puzzle/functions/file_functions.gd" id="4_script"]
+
+[sub_resource type="Resource" id="Resource_socket"]
+script = ExtResource("2_socket")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_value"]
+script = ExtResource("3_value")
+show_type = false
+editable = false
+editable_shown = false
+_socket_ref = SubResource("Resource_socket")
+
+[resource]
+script = ExtResource("1_data")
+name = "FileReporter"
+color = Color(0.6039216, 0.81960785, 1, 1)
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_socket")
+value = SubResource("Resource_value")
+category = "Files"
+syntax = "open({file name})"
+description = "A text file in the room, by its name. Levels make one of these per file; this file is the template they copy."
+note = "This is the name block of a file. It is the file, opened. Drop it into a file slot, or into For Each to read its lines."
+top_notch = false
+text = "file"
+text_hints = PackedStringArray()
+Type/value = SubResource("Resource_value")
+Type/socket = SubResource("Resource_socket")
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_file_reporter"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

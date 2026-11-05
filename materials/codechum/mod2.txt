@@ -1,0 +1,233 @@
+Topic 1
+Arithmetic Operators
+Arithmetic operators are fundamental elements of any programming language, including Python. They allow you to perform mathematical operations on numeric values. In Python, the basic arithmetic operators include addition (+), subtraction (-), multiplication (*), division (/), and modulus (%). Understanding how to use these operators correctly and being aware of operator precedence and associativity is crucial for writing effective and accurate mathematical expressions in your programs. This guide will cover the usage of basic arithmetic operators and provide an overview of operator precedence and associativity in Python.
+
+Basic Arithmetic Operators
+The basic arithmetic operators in Python are used to perform common mathematical calculations. Here's a brief description of each operator:
+
+Addition (+): Adds two values together.
+Subtraction (-): Subtracts one value from another.
+Multiplication (*): Multiplies two values.
+Division (/): Divides one value by another.
+Modulus (%): Computes the remainder after division.
+Floor Division (//): Divides one value by another and returns the integer quotient.
+Exponentiation (**): Raises one value to the power of another.
+Here are some examples that demonstrate the usage of these operators:
+
+script.py
+
+
+
+Execute code
+In the above code, the arithmetic operators are used to perform calculations on the variables a and b, and the results are stored in different variables.
+
+Operator Precedence and Associativity
+Operator precedence determines the order in which operators are evaluated in an expression. Operators with higher precedence are evaluated first. When multiple operators have the same precedence, the associativity of the operators comes into play. Associativity determines the order in which operators of the same precedence are evaluated, either from left to right or right to left.
+
+Here's a summary of the operator precedence and associativity for the basic arithmetic operators in Python, from highest to lowest:
+
+Exponentiation (**)
+Unary operators (e.g., -x, +x)
+Multiplication (*), Division (/), Floor Division (//), Modulus (%)
+Addition (+), Subtraction (-)
+To avoid confusion and ensure the correct evaluation of expressions, you can use parentheses to explicitly specify the desired order of operations.
+
+Conclusion
+Understanding and utilizing the basic arithmetic operators in Python, such as addition, subtraction, multiplication, division, modulus, floor division, and exponentiation, allows you to perform mathematical computations in your programs. By considering operator precedence and associativity, you can write expressions that produce the expected results. Being aware of these concepts enhances your ability to create accurate and efficient mathematical calculations in your code.
+
+---
+
+Addition and Subtraction
+by CodeChum Admin
+
+Write a program that accepts two integer inputs, x, and y. Show the output when x is added by y, and also, when x is subtracted by y.
+Sample Output 1
+
+Enter x: 10
+Enter y: 5
+10 + 5 = 15
+10 - 5 = 5
+Sample Output 2
+
+Enter x: 18
+Enter y: 7
+18 + 7 = 25
+18 - 7 = 11
+Sample Output 3
+
+Enter x: 37
+Enter y: 66
+37 + 66 = 103
+37 - 66 = -29
+
+---
+
+Topic 2
+Assignment Operators
+Assignment operators are used to assign values to variables in programming languages, including Python. They provide a concise and efficient way to update the value of a variable based on a computation or another variable's value. In Python, there are different assignment operators available, including the basic assignment operator (=) and compound assignment operators (+=, -=, *=, /=, %=). This guide will explain the usage of different assignment operators in Python and provide examples to illustrate their functionality.
+
+Different Assignment Operators
+Basic Assignment Operator (=): The basic assignment operator is used to assign a value to a variable. It assigns the value on the right-hand side to the variable on the left-hand side. Here's an example:
+script.py
+
+
+
+Execute code
+Compound Assignment Operators:
+
+Addition Assignment Operator (+=): It adds the value on the right-hand side to the variable on the left-hand side and assigns the result to the left-hand side variable. Here's an example.
+
+script.py
+
+
+
+Execute code
+Subtraction Assignment Operator (-=): It subtracts the value on the right-hand side from the variable on the left-hand side and assigns the result to the left-hand side variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+Multiplication Assignment Operator (*=): It multiplies the variable on the left-hand side by the value on the right-hand side and assigns the result to the left-hand side variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+Division Assignment Operator (/=): It divides the variable on the left-hand side by the value on the right-hand side and assigns the result to the left-hand side variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+Floor Division Assignment Operator (//=): It performs floor division on the variable on the left-hand side by the value on the right-hand side and assigns the integer quotient to the left-hand side variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+Modulus Assignment Operator (%=): It computes the remainder when the variable on the left-hand side is divided by the value on the right-hand side and assigns the result to the left-hand side variable. Here's an example:
+
+script.py
+
+
+
+Execute code
+Usage and Examples
+Here are some examples that demonstrate the usage of different assignment operators in Python:
+
+script.py
+
+ 
+
+
+Execute code
+In the above code, different assignment operators are used to modify the value of num1 based on num2, and the updated values are printed.
+
+Conclusion
+Assignment operators in Python provide a convenient way to assign values to variables and perform arithmetic operations simultaneously. By using different assignment operators, you can update variable values in a concise and efficient manner. Understanding and utilizing these operators effectively contributes to writing clean and expressive code.
+
+---
+
+Calculate Distance
+by CodeChum Admin
+
+Write a program that asks for a float input kmph that stands for kilometers per hour. Also, ask for an integer input hour which is the number of hours traveled. Get the distance in km by multiplying kmph by hour then assigning it to a variable distance. Convert the distance into miles by applying the appropriate operation. In this problem, 1 kilometer is equal to 0.621371 miles. Print the distance in miles in three decimal places.
+Sample Output 1
+
+Enter kilometers per hour: 60
+Enter number of hours traveled: 5
+Distance in miles: 186.411
+Sample Output 2
+
+Enter kilometers per hour: 20
+Enter number of hours traveled: 7
+Distance in miles: 86.992
+Sample Output 3
+
+Enter kilometers per hour: 37.77
+Enter number of hours traveled: 5
+Distance in miles: 117.346
+
+---
+
+Topic 3
+Bitwise Operators
+Bitwise operators are used to manipulate individual bits of binary numbers in computer programming. They operate on the binary representation of numbers at a bit-level, allowing you to perform operations like bit manipulation, bit testing, and shifting. In Python, there are several bitwise operators available, including the AND operator (&), OR operator (|), XOR operator (^), complement operator (~), left shift operator (<<), and right shift operator (>>). This guide provides an overview of these operators and demonstrates their usage for manipulating binary representations of numbers.
+
+Bitwise Operators
+AND Operator (&): The AND operator compares two bits and returns 1 if both bits are 1, otherwise returns 0. Here's an example:
+1	    1010
+2	&   0110
+3	---------
+4	    0010
+5	
+OR Operator (|): The OR operator compares two bits and returns 1 if at least one of the bits is 1, otherwise returns 0. Here's an example:
+1	    1010
+2	|   0110
+3	---------
+4	    1110
+5	
+XOR Operator (^): The XOR operator compares two bits and returns 1 if the bits are different (one 0 and the other 1), otherwise returns 0. Here's an example:
+1	    1010
+2	^   0110
+3	---------
+4	    1100
+5	
+Complement Operator (~): The complement operator flips the bits, turning 0 to 1 and 1 to 0. Here's an example:
+1	~  1010
+2	---------
+3	   0101
+4	
+Left Shift Operator (<<): The left shift operator shifts the bits of a number to the left by a specified number of positions, effectively multiplying the number by a power of 2. Here's an example:
+1	    1010 << 2
+2	---------
+3	    101000
+4	
+Right Shift Operator (>>): The right shift operator shifts the bits of a number to the right by a specified number of positions, effectively dividing the number by a power of 2. Here's an example:
+1	    1010 >> 1
+2	---------
+3	    0101
+4	
+Manipulating Binary Representations
+Bitwise operators are often used to manipulate binary representations of numbers, enabling operations at the individual bit level. Here are some examples demonstrating the usage of bitwise operators in Python:
+
+1	num1 = 10    # Binary: 0000 1010
+2	num2 = 6     # Binary: 0000 0110
+3	
+4	result = num1 & num2     # Bitwise AND: 0000 0010 (2 in decimal)
+5	print("AND Result:", result)
+6	
+7	result = num1 | num2     # Bitwise OR: 0000 1110 (14 in decimal)
+8	print("OR Result:", result)
+9	
+10	result = num1 ^ num2     # Bitwise XOR: 0000 1100 (12 in decimal)
+11	print("XOR Result:", result)
+12	
+13	result = ~num1           # Bitwise complement: 1111 0101 (245 in decimal)
+14	print("Complement Result:", result)
+15	
+16	result = num1 << 2       # Left shift by 2: 0010 1000 (40 in decimal)
+17	print("Left Shift Result:", result)
+18	
+19	result = num2 >> 1       # Right shift by 1: 0000 0011 (3 in decimal)
+20	print("Right Shift Result:", result)
+21	
+In the above code, bitwise operators are used to perform various operations such as AND, OR, XOR, complement, left shift, and right shift. The results are then displayed.
+
+Conclusion
+Bitwise operators provide powerful tools for manipulating binary representations of numbers at the bit-level. They are commonly used in areas such as low-level programming, embedded systems, and working with hardware interfaces. Understanding and utilizing bitwise operators enables you to perform advanced operations on individual bits, leading to more efficient and precise programming in Python.
+
+---
+
+12 OR 25
+by CodeChum Admin
+
+Write a program that prints the result of 12 OR 25. Print the result only.
+Sample Output 1
+
+29

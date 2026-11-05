@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=11 format=3 uid="uid://byf60hk883lal"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value"]
+[ext_resource type="Script" uid="uid://d104wjdq8a40b" path="res://puzzle/functions/terminal_functions.gd" id="4_script"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="5_slot"]
+
+[sub_resource type="Resource" id="Resource_socket"]
+script = ExtResource("2_socket")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_value"]
+script = ExtResource("3_value")
+show_type = false
+editable = false
+editable_shown = false
+_socket_ref = SubResource("Resource_socket")
+
+[sub_resource type="Resource" id="Resource_kind_socket"]
+script = ExtResource("2_socket")
+receptive = false
+
+[sub_resource type="Resource" id="Resource_kind_value"]
+script = ExtResource("3_value")
+show_type = false
+enum_flag = true
+enum_as_string = true
+enum_values = PackedStringArray("int", "float", "str")
+_socket_ref = SubResource("Resource_kind_socket")
+
+[sub_resource type="Resource" id="Resource_kind"]
+script = ExtResource("1_data")
+name = "ValueEditableEnumBlock"
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_kind_socket")
+value = SubResource("Resource_kind_value")
+draggable = false
+placeable = false
+top_notch = false
+text_hints = PackedStringArray()
+Type/value = SubResource("Resource_kind_value")
+Type/socket = SubResource("Resource_kind_socket")
+Function/entity_name = &""
+Function/method = &""
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"
+
+[resource]
+script = ExtResource("1_data")
+name = "ConvertBlock"
+title = "Convert"
+color = Color(0.3019608, 0.7529412, 0.61960787, 1)
+base_path = "uid://bxqygb1ofx6ql"
+type = 3
+socket = SubResource("Resource_socket")
+value = SubResource("Resource_value")
+category = "Value"
+syntax = "{type: int/float/str}({value: variant})"
+description = "Python's int(), float() and str(). int() makes a whole number from text like \"12\" (not \"12.5\") or drops a decimal number's fraction; float() makes a decimal number, so float(\"3\") is 3.0; str() makes text, the way print() writes the value."
+note = "This block changes a value to another type. int makes a whole number, float makes a number with a decimal point, and str makes text."
+top_notch = false
+text = "{} ( {} )"
+text_blocks = Array[ExtResource("1_data")]([SubResource("Resource_kind"), ExtResource("5_slot")])
+text_hints = PackedStringArray("", "value")
+Type/value = SubResource("Resource_value")
+Type/socket = SubResource("Resource_socket")
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_convert"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

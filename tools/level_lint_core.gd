@@ -127,7 +127,9 @@ func _check_goals(where: String, level: Level) -> void:
 
 			# A list's goal is a room's win as much as a flag is: a list level
 			# with no robot is finished when its lists are right.
-			if (goal.has_method("check_condition") and goal.get("destination_area") != null) or goal is ListGoal:
+			# So is a terminal's, a dictionary's or a file's, in levels with no robot.
+			if (goal.has_method("check_condition") and goal.get("destination_area") != null) or goal is ListGoal \
+					or goal is TerminalGoal or goal is DictGoal or goal is FileGoal:
 				has_win = true
 			if goal.get("required_entity") == null and ("required_entity" in goal):
 				_error(where, "%s has no required_entity." % tag)
@@ -137,7 +139,7 @@ func _check_goals(where: String, level: Level) -> void:
 
 			# A ListGoal writes its own message from the two lists, and its list
 			# is measured for the camera through the board rather than a focus.
-			if goal is ListGoal:
+			if goal is ListGoal or goal is TerminalGoal or goal is DictGoal or goal is FileGoal:
 				continue
 
 			if goal.fail_message.strip_edges().is_empty():
@@ -155,7 +157,8 @@ func _check_resettables(where: String, level: Level) -> void:
 	var robots := _find_all(level, "Robot")
 	# A level that is only lists needs no robot, and its lists put themselves
 	# back (ListEntity.restore) without a Resettable.
-	var lists_only := robots.is_empty() and _walk(level).any(func(node: Node) -> bool: return node is ListEntity)
+	var lists_only := robots.is_empty() and _walk(level).any(func(node: Node) -> bool:
+		return node is ListEntity or node is TerminalEntity or node is DictEntity or node is FileEntity)
 	if lists_only:
 		return
 

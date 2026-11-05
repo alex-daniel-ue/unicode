@@ -43,8 +43,11 @@ func typecast(string: String) -> Variant:
 	
 	const quotes := ['"', "'"]
 	var last := len(string)-1
+	# f"Hello, {name}!": text, filled in when the block runs (socket_function).
+	if FString.is_f_string(string):
+		return FString.template_of(string)
 	if string[last] in quotes and string[0] in quotes and last >= 1:
-		return string.substr(1, last-1)
+		return FString.unescape(string.substr(1, last-1))
 	
 	if string.is_valid_ascii_identifier(): return StringName(string)
 	
@@ -57,7 +60,10 @@ func socket_function() -> Variant:
 	if data.value == null and data.socket != null and data.socket.receptive:
 		function.error("This slot is empty. Drop a condition into it.")
 		return null
-	return typecast(text.get_raw())
+	var raw := text.get_raw()
+	if FString.is_f_string(raw):
+		return FString.format(self, raw)
+	return typecast(raw)
 
 func _has_top_notch(block: Block) -> bool:
 	return block.data.top_notch

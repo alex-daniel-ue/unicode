@@ -200,4 +200,6 @@ const BRIEFS := {
 
 
 static func for_scene(scene_path: String) -> Dictionary:
-	return BRIEFS.get(scene_path.get_file().get_basename(), {})
+	var key := scene_path.get_file().get_basename()
+	# The generated modules' briefs live in their own table (module_briefs.gd).
+	return BRIEFS.get(key, ModuleBriefs.BRIEFS.get(key, {}))

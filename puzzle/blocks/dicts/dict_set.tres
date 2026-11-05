@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=7 format=3]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value"]
+[ext_resource type="Script" path="res://puzzle/functions/dict_functions.gd" id="4_script"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="5_slot"]
+[ext_resource type="Resource" uid="uid://ba0jp5y0dd4hf" path="res://puzzle/blocks/_common/value/receptive_list.tres" id="6_dict"]
+
+[resource]
+script = ExtResource("1_data")
+name = "DictSetBlock"
+title = "Set Key"
+color = Color(0.76862746, 0.64705884, 1, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Dicts"
+syntax = "{dict}[{key}] = {value}"
+description = "Python's d[key] = value: gives a key a new value, or adds the key with that value when the dictionary doesn't have it yet."
+note = "This block gives a key a value. When the key isn't there yet, it adds it."
+text = "set {} [ {} ] to {}"
+text_blocks = Array[ExtResource("1_data")]([ExtResource("6_dict"), ExtResource("5_slot"), ExtResource("5_slot")])
+text_hints = PackedStringArray("dict", "key", "value")
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_set_value"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

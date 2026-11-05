@@ -5,10 +5,20 @@ extends Node
 ## JSON. For levels generated outside the editor (the Arrays sample). A scene
 ## rather than a --script, because --script runs without the autoloads.
 ##   godot --headless --path . res://tools/bake_level.tscn -- res://level/levels/ar_sample.tscn
+## Given several levels, it measures each in turn and prints BOUNDS_FOR, the
+## level's path, then its JSON, one line per level (tools/modules/finish_modules.py).
 
 
 func _ready() -> void:
-	var path: String = OS.get_cmdline_user_args()[0]
+	var paths := OS.get_cmdline_user_args()
+	if paths.size() == 1:
+		print("BOUNDS " + JSON.stringify(await _measure(paths[0])))
+	else:
+		for path in paths:
+			print("BOUNDS_FOR %s %s" % [path, JSON.stringify(await _measure(path))])
+	get_tree().quit()
+
+func _measure(path: String) -> Dictionary:
 	var level: Level = (load(path) as PackedScene).instantiate()
 	Game.level = level
 	var out := {}
@@ -29,5 +39,7 @@ func _ready() -> void:
 		manager.bake_bounds()
 		var b: Rect2 = manager.bounds
 		out[String(manager.name)] = [b.position.x, b.position.y, b.size.x, b.size.y]
-	print("BOUNDS " + JSON.stringify(out))
-	get_tree().quit()
+	level.queue_free()
+	await get_tree().process_frame
+	Game.level = null
+	return out

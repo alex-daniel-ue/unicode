@@ -1,0 +1,499 @@
+Topic 1
+Selection Structure
+In programming, selection structures allow you to make decisions and execute different code blocks based on certain conditions. These structures enable your program to choose between alternative paths of execution, making it possible to create dynamic and responsive programs. In Python, the most common selection structure is the conditional statement, which evaluates a condition and executes different code blocks based on the result. This guide provides an overview of selection structures and explains how to make decisions using conditional statements in Python.
+
+Conditional Statements
+Conditional statements, also known as decision-making statements, evaluate a condition and execute different sets of statements based on the result. The condition can be a comparison, logical expression, or any expression that evaluates to either True or False. There are three main types of conditional statements: if statement, if-else statement, and if-elif-else statement.
+
+The if Statement
+The if statement allows you to execute a block of code only if a specified condition is True. The syntax of the if statement in Python is as follows:
+
+1	if condition:
+2	    # Code block to be executed if the condition is True
+3	
+The if-else Statement
+The if-else statement extends the if statement by providing an alternative code block to be executed when the condition is False. The syntax of the if-else statement in Python is as follows:
+
+1	if condition:
+2	    # Code block to be executed if the condition is True
+3	else:
+4	    # Code block to be executed if the condition is False
+5	
+The if-elif-else Statement
+The if-elif-else statement allows you to evaluate multiple conditions in a sequential manner. It is used when you have more than two possible outcomes. The syntax of the if-elif-else statement in Python is as follows:
+
+1	if condition1:
+2	    # Code block to be executed if condition1 is True
+3	elif condition2:
+4	    # Code block to be executed if condition2 is True
+5	else:
+6	    # Code block to be executed if none of the conditions are True
+7	
+Conclusion
+Selection structures, such as conditional statements, provide essential decision-making capabilities in Python programming. By using conditional statements, you can control the flow of your program and execute different code blocks based on specific conditions. This allows you to create more flexible and dynamic applications. Understanding how to make decisions using conditional statements is a fundamental skill for every Python programmer.
+
+---
+
+Topic 2
+Relational Operators
+Relational operators are used in programming to compare values and determine the relationship between them. In Python, there are several comparison operators that allow you to perform comparisons and make decisions based on the results. These operators are commonly used in conditional statements to control the flow of the program. This guide provides an overview of the comparison operators in Python and demonstrates their usage in conditional statements for decision making.
+
+Comparison Operators
+The following are the commonly used comparison operators in Python:
+
+== (equal to): Checks if two values are equal.
+!= (not equal to): Checks if two values are not equal.
+> (greater than): Checks if the left operand is greater than the right operand.
+< (less than): Checks if the left operand is less than the right operand.
+>= (greater than or equal to): Checks if the left operand is greater than or equal to the right operand.
+<= (less than or equal to): Checks if the left operand is less than or equal to the right operand.
+Usage in Conditional Statements
+Comparison operators are commonly used in conditional statements to make decisions based on the result of a comparison. Conditional statements, such as if, if-else, and if-elif-else, evaluate a condition and execute different code blocks based on the result. Here are some examples of how comparison operators can be used in conditional statements:
+
+Example 1: Using the == Operator
+1	a = 10
+2	b = 20
+3	
+4	equal = (a == b)  # The `==` operator compares the values of `a` and `b`
+5	
+6	print("Are `a` and `b` equal?", equal)
+7	
+In this example, we have two variables a and b with values 10 and 20, respectively. The == operator is used to compare the values of a and b. The result of the comparison is then stored in the equal variable.
+
+The print statement will output the result of the comparison, indicating whether a and b are equal (True or False).
+
+Output:
+
+1	Are `a` and `b` equal? False
+2	
+The output shows that a and b are not equal, as the value of equal is False.
+
+Example 2: Using the != Operator
+1	number = 10
+2	
+3	not_zero = (number != 0)  # The `!=` operator checks if `number` is not equal to zero
+4	
+5	print("Is the number not zero?", not_zero)
+6	
+In this example, we have a variable number with a value of 10. The != operator is used to check if the value of number is not equal to zero. The result of the comparison is then stored in the not_zero variable.
+
+The print statement will output the result of the comparison, indicating whether the number is not zero (True) or zero (False).
+
+Output:
+
+1	Is the number not zero? True
+2	
+The output shows that the number is not zero, as the value of not_zero is True.
+
+Example 3: Using the > Operator
+1	x = 5
+2	y = 10
+3	
+4	greater = (x > y)  # The `>` operator compares the values of `x` and `y`
+5	
+6	print("Is x greater than y?", greater)
+7	
+In this example, we have two variables x and y with values 5 and 10, respectively. The > operator is used to compare the values of x and y. The result of the comparison is then stored in the greater variable.
+
+The print statement will output the result of the comparison, indicating whether x is greater than y (True or False).
+
+Output:
+
+1	Is x greater than y? False
+2	
+The output shows that x is not greater than y, as the value of greater is False.
+
+Conclusion
+Comparison operators play a crucial role in making decisions and controlling the flow of a program. By using these operators in conditional statements, you can evaluate conditions and execute specific code blocks based on the comparison results. Understanding the usage of comparison operators is essential for writing effective and logical programs in Python.
+
+---
+
+Topic 3
+Boolean Operators
+Boolean operators, also known as logical operators, are used in programming to combine and manipulate boolean values (True or False). In Python, there are three main boolean operators: and, or, and not. These operators allow you to build complex conditions by combining multiple boolean expressions. This guide provides an overview of boolean operators in Python, demonstrates their usage in combining conditions, explains short-circuit evaluation, and discusses the importance of logical expressions in programming.
+
+Logical Operators
+The following are the three logical operators in Python:
+
+and: The and operator returns True if both of its operands are True, and False otherwise.
+or: The or operator returns True if at least one of its operands is True, and False otherwise.
+not: The not operator reverses the logical state of its operand. If the operand is True, the not operator returns False, and if the operand is False, it returns True.
+Usage of Logical Operators
+Logical operators are often used to combine multiple conditions and create complex boolean expressions. They are typically used within conditional statements such as if, while, and for to determine the flow of the program based on the evaluation of these conditions. Here are some examples of using logical operators:
+
+Example 1: Using the and Operator
+1	age = 25
+2	day = 1
+3	
+4	answer = (age > 20 and day > 0)  # answer = True
+5	
+The code declares and initializes variables age with a value of 25 and day with a value of 1. It then evaluates the logical expression (age > 20 and day > 0) and assigns the result (True) to the variable answer.
+
+Example 2: Using the or Operator
+1	score = 80
+2	
+3	answer = (score >= 90 or score <= 50)  # answer = False
+4	
+The code sets the variable score to 80 and evaluates the logical expression (score >= 90 or score <= 50), resulting in False being assigned to the variable answer since the score is not greater than or equal to 90, and it is not less than or equal to 50.
+
+Example 3: Using the not Operator
+1	x = 5
+2	y = 10
+3	
+4	answer = not (x > y)  # answer = True
+5	
+The code initializes variables x and y with values 5 and 10 respectively, and assigns the logical negation of the comparison x > y to the variable answer, resulting in True being stored in answer.
+
+Short-Circuit Evaluation
+One important feature of logical operators in Python is short-circuit evaluation. Short-circuit evaluation means that the second operand of an and or or operator is not evaluated if the outcome can be determined solely by evaluating the first operand. This behavior can be useful in improving performance and preventing unnecessary evaluations. Here's an example:
+
+1	x = 0
+2	y = 10
+3	
+4	answer = (x > 0 and y / x > 2)  # answer = False
+5	
+The code initializes variables x and y with values 0 and 10 respectively. It then evaluates the logical expression (x > 0 and y / x > 2) and assigns the result (False) to the variable answer. The expression checks if x is greater than 0. Since x is 0, this first operand is already False, and an and expression can only be true when both operands are true. The outcome is therefore already decided, so Python skips the second operand y / x > 2 entirely and assigns False to answer.
+
+Notice that this is what saves the program from an error. Dividing y by x would be a division by zero, but because that operand is never evaluated, the error never happens.
+
+Conclusion
+Boolean operators play a crucial role in combining conditions and creating logical expressions in Python. By using and, or, and not, you can build complex conditions that determine the flow of your program. Additionally, understanding short-circuit evaluation can help you optimize your code and improve performance in certain scenarios.
+
+Remember to use parentheses ( ) to clarify the order of evaluation when using multiple logical operators in the same expression.
+
+---
+
+Topic 4
+if Statement
+The if statement is a fundamental control structure in Python that allows you to control the flow of your program based on specified conditions. It provides a way to execute certain blocks of code only when a given condition is true. This guide will explain the syntax and usage of the if statement in Python, provide code snippets to demonstrate its placement and use, discuss controlling program flow based on conditions, and highlight the importance of conditional statements in programming.
+
+Illustration
+If Statement
+
+Syntax and Usage
+The if statement in Python has the following syntax:
+
+1	if condition:
+2	    # Code to be executed if the condition is true
+3	
+The condition is an expression that evaluates to either True or False. If the condition is True, the code block indented under the if statement will be executed. If the condition is False, the code block will be skipped, and the program will continue to the next statement after the if block.
+
+Example: Using the if Statement
+Here's an example that demonstrates the usage of the if statement in Python:
+
+1	age = 20
+2	
+3	if age >= 18:
+4	    print("You are an adult.")
+5	
+In this example, the condition age >= 18 is evaluated. If the value of age is greater than or equal to 18, the message "You are an adult" will be printed to the console.
+
+Nested if Statements
+You can also nest if statements within other if statements to create more complex decision-making structures, just like in C. This allows you to test multiple conditions and execute different blocks of code based on those conditions. Here's an example:
+
+1	age = 20
+2	gender = 'M'
+3	
+4	if age >= 18:
+5	    if gender == 'M':
+6	        print("You are a male adult.")
+7	    else:
+8	        print("You are a female adult.")
+9	
+In this example, we use the else keyword along with the nested if statement to check the condition gender == 'M' inside the outer if block. If the condition is True, it prints the message "You are a male adult." Otherwise, it prints the message "You are a female adult."
+
+Conclusion
+The if statement is a powerful tool for controlling program flow based on conditions in Python. By using if, else, and nested if statements, you can create dynamic and flexible programs that adapt to different situations. Conditional statements are essential in decision-making processes, allowing your code to execute different actions based on specific conditions being met or not.
+
+---
+
+Is The Triangle Equilateral?
+by CodeChum Admin
+
+Write a program that takes three integers x, y, and z, as input and checks if they represent the sides of an equilateral triangle. An equilateral triangle has all sides of equal length, so this function checks if x, y, and z are all equal. If they are equal, it prints "Triangle is equilateral." Otherwise, it does nothing.
+Sample Output 1
+
+Enter x: 10
+Enter y: 5
+Enter z: 4
+Sample Output 2
+
+Enter x: 5
+Enter y: 5
+Enter z: 5
+Triangle is equilateral.
+Sample Output 3
+
+Enter x: 4
+Enter y: 4
+Enter z: 4
+Triangle is equilateral.
+
+---
+
+Topic 5
+if...else Statement
+The if...else statement is a powerful control structure in Python programming that allows you to execute different code blocks based on specified conditions. It provides a way to control the flow of your program by providing alternative paths of execution. This guide will explain the syntax and usage of the if...else statement in Python, provide code snippets to demonstrate its placement and use, discuss executing different code blocks based on conditions, and highlight the importance of conditional statements in programming.
+
+Illustration
+If-else
+
+Syntax and Usage
+The if...else statement in Python has the following syntax:
+
+1	if condition:
+2	    # Code to be executed if the condition is true
+3	else:
+4	    # Code to be executed if the condition is false
+5	
+The condition is an expression that evaluates to either True or False. If the condition is True, the code block indented under the if statement will be executed. If the condition is False, the code block indented under the else statement will be executed.
+
+Example: Using the if...else Statement
+Here's an example that demonstrates the usage of the if...else statement in Python:
+
+1	num = 5
+2	
+3	if num % 2 == 0:
+4	    print("The number is even.")
+5	else:
+6	    print("The number is odd.")
+7	
+In this example, the condition num % 2 == 0 is evaluated. If the value of num is divisible by 2 and has a remainder of 0, the message "The number is even" will be printed to the console. Otherwise, the message "The number is odd" will be printed.
+
+Multiple Conditions: elif
+The if...else statement can be extended to include multiple conditions using the elif (short for "else if") clause. This allows you to test additional conditions and execute different code blocks accordingly. The syntax for elif is as follows:
+
+1	if condition1:
+2	    # Code to be executed if condition1 is true
+3	elif condition2:
+4	    # Code to be executed if condition2 is true
+5	else:
+6	    # Code to be executed if both condition1 and condition2 are false
+7	
+Here's an example that includes an elif clause:
+
+1	num = 0
+2	
+3	if num > 0:
+4	    print("The number is positive.")
+5	elif num < 0:
+6	    print("The number is negative.")
+7	else:
+8	    print("The number is zero.")
+9	
+In this example, the program checks the value of num. If num is greater than 0, the message "The number is positive" will be printed. If num is less than 0, the message "The number is negative" will be printed. Otherwise, if both conditions are false, the message "The number is zero" will be printed.
+
+Nested if...else Statements
+You can also nest if...else statements within other if...else statements to create more complex decision-making structures, just like in C. This allows you to test multiple conditions and execute different code blocks based on those conditions. Here's an example:
+
+1	num = 10
+2	
+3	if num > 0:
+4	    if num % 2 == 0:
+5	        print("The number is positive and even.")
+6	    else:
+7	        print("The number is positive and odd.")
+8	else:
+9	    print("The number is non-positive.")
+10	
+In this example, the inner if...else statement is nested within the outer if statement. If num is greater than 0, the program checks whether it is divisible by 2 to determine if it is even or odd. If num is less than or equal to 0, the message "The number is non-positive" will be printed.
+
+Conclusion
+The if...else statement is a fundamental building block in programming that allows you to make decisions and control the flow of your program based on conditions in Python. By using the if...else statement, you can execute different code blocks depending on whether a condition is True or False. This enables you to create dynamic and responsive programs that can adapt to different scenarios.
+
+Understanding the syntax and usage of the if...else statement is essential for developing robust and logical programs. It gives you the power to control the execution of your code and make decisions based on specific conditions. By combining the if...else statement with other control structures and operators, you can create complex and flexible programs.
+
+---
+
+Squaring the Years
+by CodeChum Admin
+
+Write a program that two integer inputs, birthYear and currentYear, and calculate the age by subtracting birthYear from currentYear. Then store the calculated age as an integer.
+
+ 
+
+The program should then check if the square root of the age is an integer, indicating that it's a perfect square. If it's a perfect square, print "Your age is a perfect square." Otherwise, print "Your age is not a perfect square."
+
+Sample Output 1
+
+Enter your birth year: 2000
+Enter the current year: 2025
+Your age is a perfect square.
+Sample Output 2
+
+Enter your birth year: 1997
+Enter the current year: 2023
+Your age is not a perfect square.
+Sample Output 3
+
+Enter your birth year: 2020
+Enter the current year: 2024
+Your age is a perfect square.
+
+---
+
+Topic 6
+if...else if...else Statement
+The if...elif...else statement is a powerful control structure in Python programming that allows you to test multiple conditions and execute different code blocks based on those conditions. It provides a way to create complex decision-making structures by combining multiple if and elif clauses. This guide will explain the syntax and usage of the if...elif...else statement in Python, provide code snippets to demonstrate its placement and use, discuss using multiple elif clauses for complex conditions, illustrate nested decision-making, and highlight the importance of these constructs in programming.
+
+Illustration
+If-else-else-if
+
+Syntax and Usage
+The if...elif...else statement in Python has the following syntax:
+
+1	if condition1:
+2	    # Code to be executed if condition1 is true
+3	elif condition2:
+4	    # Code to be executed if condition1 is false and condition2 is true
+5	elif condition3:
+6	    # Code to be executed if both condition1 and condition2 are false and condition3 is true
+7	else:
+8	    # Code to be executed if all conditions are false
+9	
+Each condition is an expression that evaluates to either True or False. The if clause checks the first condition, and if it is True, the corresponding code block is executed. If the first condition is False, the program moves to the next elif clause and evaluates its condition. This process continues until a condition is found to be True, in which case the corresponding code block is executed. If none of the conditions are True, the code block within the else clause is executed.
+
+Example: Using Multiple elif Clauses
+Here's an example that demonstrates the usage of multiple elif clauses in Python:
+
+1	num = 5
+2	
+3	if num > 0:
+4	    print("The number is positive.")
+5	elif num < 0:
+6	    print("The number is negative.")
+7	elif num == 0:
+8	    print("The number is zero.")
+9	else:
+10	    print("Invalid number.")
+11	
+In this example, the program checks the value of num and executes the corresponding code block based on the condition. If num is greater than 0, the message "The number is positive" will be printed. If num is less than 0, the message "The number is negative" will be printed. If num is equal to 0, the message "The number is zero" will be printed. If none of these conditions are met, the message "Invalid number" will be printed.
+
+Nested Decision: Using Nested if...elif...else
+The if...elif...else statement can also be nested within other if or else clauses to create nested decision-making structures, just like in C. This allows you to test multiple conditions and execute different code blocks based on those conditions within each level of nesting. Here's an example:
+
+1	num = 10
+2	
+3	if num > 0:
+4	    if num % 2 == 0:
+5	        print("The number is positive and even.")
+6	    else:
+7	        print("The number is positive and odd.")
+8	elif num < 0:
+9	    print("The number is negative.")
+10	else:
+11	    print("The number is zero.")
+12	
+In this example, the outer if statement checks if num is greater than 0. If it is, the program enters the nested if...else statement to check whether num is even or odd. If num is divisible by 2, it is even; otherwise, it is odd. If num is less than 0, the message "The number is negative" will be printed. If num is equal to 0, the message "The number is zero" will be printed.
+
+Conclusion
+The if...elif...else statement and nested decision-making structures provide a flexible way to handle complex conditions in Python programming. By using multiple elif clauses, you can create decision trees with multiple branches, allowing your program to respond differently based on different conditions. Nesting if...elif...else statements further enhances your ability to make intricate decisions by testing multiple conditions within each level of nesting. These constructs are essential for writing robust and flexible programs that adapt to various scenarios.
+
+Understanding the syntax and usage of the if...elif...else statement and mastering nested decision-making will greatly enhance your programming skills and enable you to create more sophisticated and dynamic applications.
+
+---
+
+All or Not
+by CodeChum Admin
+
+Write a program that takes three integers, num1, num2, and num3, as input and classifies them based on the following conditions:
+
+If all three numbers are positive, it prints "All numbers are positive."
+If all three numbers are negative, it prints "All numbers are negative."
+If all three numbers are even, it prints "All numbers are even."
+If all three numbers are odd, it prints "All numbers are odd."
+If none of the above conditions are met, it prints "Numbers are different."
+Sample Output 1
+
+Enter first number: 1
+Enter second number: 2
+Enter third number: 3
+All numbers are positive.
+Sample Output 2
+
+Enter first number: -1
+Enter second number: -2
+Enter third number: -3
+All numbers are negative.
+Sample Output 3
+
+Enter first number: -2
+Enter second number: 4
+Enter third number: -6
+All numbers are even.
+
+---
+
+Topic 7
+Nested Decision
+In programming, decision-making is a fundamental concept that allows your code to respond differently based on conditions. Nested decisions provide a way to create more intricate and specific decision structures. By combining multiple if...else statements within each other, you can create a branching path of execution. This guide will walk you through the concept of nested decisions using the Python programming language.
+
+Illustration
+Before diving into the details, let's visualize what nested decisions look like:
+
+Nested Decisions
+Image Source: GeeksforGeeks
+
+Definition and Purpose of Nested Decisions
+Nested decisions refer to the practice of placing one or more if...else statements inside another if or else block. This technique enables you to handle complex decision scenarios where multiple conditions need to be evaluated sequentially. Nested decisions provide greater flexibility and granularity when designing your program's logic.
+
+Syntax and Usage
+The general syntax of a nested if...else statement in Python is as follows:
+
+1	if condition1:
+2	    # Code to execute if condition1 is true
+3	    if condition2:
+4	        # Code to execute if both condition1 and condition2 are true
+5	    else:
+6	        # Code to execute if condition1 is true, but condition2 is false
+7	else:
+8	    # Code to execute if condition1 is false
+9	
+Nested if...else Statements
+Let's consider a simple example where we determine if a given number is positive, negative, or zero:
+
+script.py
+
+
+
+Execute code
+Nested if...else if...else Statements
+Building upon the previous example, let's now categorize the positive numbers as "small" or "large":
+
+script.py
+
+
+
+Execute code
+Conclusion
+Nested decisions offer a powerful tool for crafting intricate decision structures in your Python programs. By nesting if...else statements and combining logical operators, you can create code that adapts to a variety of scenarios. Understanding and effectively using nested decisions will enhance your programming skills and enable you to build more sophisticated and dynamic applications.
+
+---
+
+Book Recommendation
+by CodeChum Admin
+
+Write a program that takes a reader's age and genre preference as input and recommends a book based on the following conditions:
+
+If the reader is between 8 and 12 years old (inclusive):
+If they prefer adventure, print "The Adventures of Tom Sawyer".
+If they prefer mystery, print "Nancy Drew: The Secret of the Old Clock".
+If the reader is between 13 older:
+If they prefer fantasy, print "Harry Potter and the Sorcerer's Stone".
+If they prefer science fiction, print "Ender's Game".
+If the reader does not meet any of the above criteria, print "No recommendation available".
+Sample Output 1
+
+Enter your age: 9
+Enter your genre preference (a for adventure, m for mystery, f for fantasy, s for science fiction): a
+The Adventures of Tom Sawyer
+Sample Output 2
+
+Enter your age: 10
+Enter your genre preference (a for adventure, m for mystery, f for fantasy, s for science fiction): m
+Nancy Drew: The Secret of the Old Clock
+Sample Output 3
+
+Enter your age: 13
+Enter your genre preference (a for adventure, m for mystery, f for fantasy, s for science fiction): f
+Harry Potter and the Sorcerer's Stone

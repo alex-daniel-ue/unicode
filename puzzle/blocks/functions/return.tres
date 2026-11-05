@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=6 format=3]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://d3x0blpfjk0us" path="res://puzzle/ui/block/data/socket_data.gd" id="2_socket"]
+[ext_resource type="Script" uid="uid://bbad2gtjv78sn" path="res://puzzle/ui/block/data/value_data.gd" id="3_value"]
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="4_script"]
+[ext_resource type="Resource" uid="uid://ku4fdpi3fdcc" path="res://puzzle/blocks/_common/value/receptive_editable_line.tres" id="5_slot"]
+
+[resource]
+script = ExtResource("1_data")
+name = "ReturnBlock"
+title = "Return"
+color = Color(0.93333334, 0.5137255, 0.6431373, 1)
+base_path = "uid://demtvw17w06g5"
+category = "Functions"
+syntax = "return {value: variant}"
+description = "Python's return: ends the function at once, and gives the value back to the call (None when the slot is empty). Only works inside a define block."
+note = "This block ends a function, and gives a value back to the block that called it."
+text = "return {}"
+text_blocks = Array[ExtResource("1_data")]([ExtResource("5_slot")])
+text_hints = PackedStringArray("value")
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_return"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

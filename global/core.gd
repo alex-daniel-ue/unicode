@@ -97,6 +97,10 @@ func to_python_repr(value: Variant) -> String:
 	# A room's list: [1, 2], (1,) or {1, 2}, by its kind.
 	if value is ListEntity:
 		return (value as ListEntity).repr()
+	if value is DictEntity:
+		return (value as DictEntity).repr()
+	if value is FileEntity:
+		return (value as FileEntity).repr()
 	match typeof(value):
 		TYPE_NIL:
 			return "None"
@@ -117,6 +121,10 @@ func get_type_string(variant: Variant) -> String:
 	
 	if variant is ListEntity:
 		return (variant as ListEntity).kind_name()
+	if variant is DictEntity:
+		return "dict"
+	if variant is FileEntity:
+		return "file"
 
 	if variant is Object:
 		var obj: Object = variant

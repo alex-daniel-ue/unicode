@@ -1,0 +1,67 @@
+Topic 1
+Typecasting
+In Python programming, typecasting, also known as type conversion, refers to the process of converting a value from one data type to another. Typecasting allows you to modify the interpretation of a value, enabling you to perform operations and assignments that involve different data types. This guide provides an overview of typecasting, including its definition, purpose, and the two types of typecasting: implicit and explicit. Additionally, it covers casting between different data types.
+
+Definition and Purpose of Typecasting
+Typecasting involves changing the data type of a value temporarily to perform a specific operation or assignment that requires a different data type. It allows you to ensure compatibility between operands in expressions, manipulate data in a desired format, and avoid potential data loss or truncation.
+
+Implicit Typecasting
+Implicit typecasting, also known as automatic type conversion, occurs when Python automatically converts a value from one data type to another without explicit instructions from the programmer. This conversion is based on the rules defined by the language. Implicit typecasting is generally performed when a narrower data type is assigned to a broader data type or when an operation involves different data types. Here's an example:
+
+1	x = 10
+2	y = 3.14
+3	result = x + y  # Implicit typecasting from int to float
+4	
+5	print(result)  # Output: 13.14
+6	
+In this example, the integer value x is implicitly converted to a floating-point value during the addition operation with the float y.
+
+Explicit Typecasting
+Explicit typecasting, also known as type conversion, requires the programmer to explicitly specify the desired data type. It involves using built-in functions to inform Python about the intended conversion. Here are some commonly used type conversion functions:
+
+int(): Converts a value to an integer data type.
+float(): Converts a value to a floating-point data type.
+str(): Converts a value to a string data type.
+Here's an example of explicit typecasting:
+
+1	x = 65
+2	y = chr(x)  # Explicit typecasting from int to char (using the chr() function)
+3	
+4	print(y)  # Output: 'A'
+5	
+In this example, the integer value x is explicitly converted to a character using the chr() function.
+
+Casting Between Different Data Types
+Casting between different data types in Python is straightforward using the appropriate type conversion functions. Here are some examples:
+
+script.py
+
+
+
+Execute code
+In these examples, the values are explicitly cast to the desired data types using the appropriate type conversion functions.
+
+Conclusion
+Typecasting in Python allows you to manipulate data by converting values from one data type to another. It provides flexibility and control over how data is interpreted and used in different contexts. Implicit typecasting occurs automatically by Python, while explicit typecasting requires the use of built-in conversion functions. However, it's essential to use typecasting with caution, ensuring compatibility and handling potential data loss or truncation issues.
+
+---
+
+Type Conversion Difference
+by CodeChum Admin
+
+Write a program that takes two numbers (one integer and one float) and take their difference after converting the integer to a float. Finally, print the result in format "The difference is: {result}".
+Sample Output 1
+
+Enter an integer: 5
+Enter a float: 3.14
+The difference is: 1.86
+Sample Output 2
+
+Enter an integer: 90
+Enter a float: 5.2321
+The difference is: 84.77
+Sample Output 3
+
+Enter an integer: 3
+Enter a float: 0.412421
+The difference is: 2.59

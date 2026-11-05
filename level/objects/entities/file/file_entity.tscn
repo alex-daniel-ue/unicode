@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://level/objects/entities/file/file_entity.gd" id="1_file"]
+[ext_resource type="Script" path="res://level/objects/entities/file/file_block_provider.gd" id="2_provider"]
+
+[node name="FileEntity" type="Node2D"]
+z_index = 1
+script = ExtResource("1_file")
+
+[node name="FileBlockProvider" type="Node" parent="."]
+script = ExtResource("2_provider")

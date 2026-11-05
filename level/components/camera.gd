@@ -32,6 +32,22 @@ static func node_bounds(root: Node) -> Rect2:
 			bounds = board if not found else bounds.merge(board)
 			found = true
 			continue
+		# A terminal is drawn, not built from nodes, so it says how big it is.
+		if current is FileEntity:
+			var sheet := (current as FileEntity).get_global_bounds()
+			bounds = sheet if not found else bounds.merge(sheet)
+			found = true
+			continue
+		if current is DictEntity:
+			var rows := (current as DictEntity).get_global_bounds()
+			bounds = rows if not found else bounds.merge(rows)
+			found = true
+			continue
+		if current is TerminalEntity:
+			var screen := (current as TerminalEntity).get_global_bounds()
+			bounds = screen if not found else bounds.merge(screen)
+			found = true
+			continue
 
 		nodes_to_check.append_array(current.get_children())
 

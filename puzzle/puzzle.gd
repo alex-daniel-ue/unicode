@@ -111,6 +111,19 @@ func _on_guide_finished() -> void:
 func show_information() -> void:
 	side_panels[0].focus_content(get_node(INFORMATION_TAB) as Control)
 
+## The level's functions, a define block each, to the left of Begin and one
+## under another.
+func _place_defines(begin_at: Vector2) -> void:
+	var at := begin_at + FunctionDefinitions.OFFSET
+	for node in Core.get_children_recursive(Game.level, true):
+		if not node is FunctionDefinitions:
+			continue
+		for define in (node as FunctionDefinitions).define_blocks():
+			canvas.add_child(define)
+			define.position = at
+			define.visible = true
+			at.y += maxf(define.get_combined_minimum_size().y, 80.0) + FunctionDefinitions.GAP
+
 ## Whether `block`, let go at `at` (global), goes back into the open toolbox:
 ## a block from the canvas, over the left panel while it shows the toolbox.
 ## Putting a block back where blocks come from throws it away, as the trash
@@ -189,6 +202,7 @@ func configure_level() -> void:
 		preset.reparent(canvas)
 		preset.position = canvas.size / 2.
 		preset.visible = true
+		_place_defines(preset.position)
 	
 	SfxPlayer.play(SfxPlayer.LEVEL_START)
 	# The assistant keeps a picture of the level as it starts, to send beside the

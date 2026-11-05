@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="BlockData" load_steps=5 format=3 uid="uid://dtgyhy0bj482q"]
+
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://1qnigenojt5n" path="res://puzzle/functions/control_flow.gd" id="4_script"]
+[ext_resource type="Script" uid="uid://161ehj11g3ex" path="res://puzzle/ui/block/data/nested_data.gd" id="5_nested"]
+
+[sub_resource type="Resource" id="Resource_nested"]
+script = ExtResource("5_nested")
+type = 8
+
+[resource]
+script = ExtResource("1_data")
+name = "DefineBlock"
+title = "Define"
+color = Color(0.93333334, 0.5137255, 0.6431373, 1)
+base_path = "uid://5gy242cokjpa"
+type = 1
+nested = SubResource("Resource_nested")
+toolbox = false
+category = "Functions"
+syntax = "define {name}({params})"
+description = "Python's def: the blocks under it are the function's body, and they run when a call to the function runs, with each parameter holding its argument's value. The level makes one per function; Play doesn't run it on its own."
+note = "The blocks under this block run when a call to it runs."
+top_notch = false
+trashable = false
+copyable = false
+text = "define"
+text_hints = PackedStringArray()
+Type/nested = SubResource("Resource_nested")
+Function/script = ExtResource("4_script")
+Function/entity_name = &""
+Function/method = &"_define"
+metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

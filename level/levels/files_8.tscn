@@ -1,0 +1,156 @@
+[gd_scene load_steps=16 format=4]
+
+[ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
+[ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
+[ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="3_main_theme"]
+[ext_resource type="Script" uid="uid://dbo3fa8pswxeg" path="res://puzzle/ui/block/data/block_data.gd" id="4_block_data"]
+[ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="5_goal_manager"]
+[ext_resource type="TileSet" uid="uid://b41gvomjqm625" path="res://world/tilesets/school_tiles.tres" id="6_school_tiles"]
+[ext_resource type="TileSet" uid="uid://ci0tufhkgt2lv" path="res://world/tilesets/school_walls.tres" id="7_school_walls"]
+[ext_resource type="PackedScene" path="res://level/objects/entities/file/file_entity.tscn" id="8_file_entity"]
+[ext_resource type="Script" path="res://level/goals/file_goal.gd" id="9_file_goal"]
+[ext_resource type="Resource" path="res://puzzle/blocks/terminal/convert.tres" id="10_convert"]
+[ext_resource type="Resource" path="res://puzzle/blocks/generic/initialize.tres" id="11_initialize"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/if.tres" id="12_if"]
+[ext_resource type="Resource" path="res://puzzle/blocks/socket/comparison.tres" id="13_comparison"]
+[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_each.tres" id="14_for_each"]
+[ext_resource type="Resource" path="res://puzzle/blocks/files/write.tres" id="15_write"]
+
+[node name="FILES8PassingScores" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
+block: BeginBlock
+  kind: nested
+  text: \"begin code\"
+  locked: true
+  children:
+    - block: ForEachBlock
+      kind: nested
+      text: \"for each {} in {}\"
+      parameters:
+        - line
+        - \"scores.txt\"  # not a readable value
+      children:
+        - block: IfBlock
+          kind: nested
+          text: \"if {}\"
+          parameters:
+            - block: ComparisonBlock
+              kind: expression
+              text: \"{} {} {}\"
+              parameters:
+                - block: ConvertBlock
+                  kind: value
+                  text: \"{} ( {} )\"
+                  parameters:
+                    - int
+                    - line
+                - >=
+                - 75
+          children:
+            - block: WriteBlock
+              kind: statement
+              text: \"write {} to {}\"
+              parameters:
+                - line
+                - \"passed.txt\"  # not a readable value"
+room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
+
+[node name="LevelDescription" parent="." index="0"]
+title = "Passing scores"
+mission = "Copy only the passing scores, 75 and up, from scores.txt into passed.txt, in order."
+rooms = PackedStringArray("Four scores.", "Three scores.")
+tip = "In Python, compare numbers, not text: `int(line) >= 75`."
+
+[node name="GenericBlockProvider" parent="." index="2"]
+block_data = Array[ExtResource("4_block_data")]([ExtResource("10_convert"), ExtResource("11_initialize"), ExtResource("12_if"), ExtResource("13_comparison"), ExtResource("14_for_each"), ExtResource("15_write")])
+
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
+bounds = Rect2(40.0, 70.0, 232.0, 114.0)
+focus_markers = [NodePath("../../Visuals/Files/Room1")]
+
+[node name="PassedTxtGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("file")]
+script = ExtResource("9_file_goal")
+file = NodePath("../../../Visuals/Files/Room1/passed_txt")
+expected = PackedStringArray("82", "75")
+
+[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
+script = ExtResource("5_goal_manager")
+bounds = Rect2(40.0, 358.0, 232.0, 94.0)
+focus_markers = [NodePath("../../Visuals/Files/Room2")]
+
+[node name="PassedTxtGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("file")]
+script = ExtResource("9_file_goal")
+file = NodePath("../../../Visuals/Files/Room2/passed_txt")
+expected = PackedStringArray("90", "76")
+
+[node name="Camera2D" parent="." index="4"]
+level_bounds = Rect2(0.0, 0.0, 320.0, 544.0)
+
+[node name="Visuals" type="Node2D" parent="." index="5"]
+
+[node name="Floor" type="TileMapLayer" parent="Visuals"]
+tile_map_data = PackedByteArray("AAABAAIAAQAAAAAAAAACAAIAAQABAAAAAAADAAIAAQACAAAAAAAEAAIAAQABAAAAAAAFAAIAAQACAAAAAAAGAAIAAQABAAAAAAAHAAIAAQACAAAAAAAIAAIAAQADAAAAAAABAAMAAQAAAAEAAAACAAMAAQABAAEAAAADAAMAAQACAAEAAAAEAAMAAQABAAEAAAAFAAMAAQACAAEAAAAGAAMAAQABAAEAAAAHAAMAAQACAAEAAAAIAAMAAQADAAEAAAABAAQAAQAAAAIAAAACAAQAAQABAAIAAAADAAQAAQACAAIAAAAEAAQAAQABAAIAAAAFAAQAAQACAAIAAAAGAAQAAQABAAIAAAAHAAQAAQACAAIAAAAIAAQAAQADAAIAAAABAAUAAQAAAAEAAAACAAUAAQABAAEAAAADAAUAAQACAAEAAAAEAAUAAQABAAEAAAAFAAUAAQACAAEAAAAGAAUAAQABAAEAAAAHAAUAAQACAAEAAAAIAAUAAQADAAEAAAABAAYAAQAAAAMAAAACAAYAAQABAAMAAAADAAYAAQACAAMAAAAEAAYAAQABAAMAAAAFAAYAAQACAAMAAAAGAAYAAQABAAMAAAAHAAYAAQACAAMAAAAIAAYAAQADAAMAAAABAAsAAQAAAAAAAAACAAsAAQABAAAAAAADAAsAAQACAAAAAAAEAAsAAQABAAAAAAAFAAsAAQACAAAAAAAGAAsAAQABAAAAAAAHAAsAAQACAAAAAAAIAAsAAQADAAAAAAABAAwAAQAAAAEAAAACAAwAAQABAAEAAAADAAwAAQACAAEAAAAEAAwAAQABAAEAAAAFAAwAAQACAAEAAAAGAAwAAQABAAEAAAAHAAwAAQACAAEAAAAIAAwAAQADAAEAAAABAA0AAQAAAAIAAAACAA0AAQABAAIAAAADAA0AAQACAAIAAAAEAA0AAQABAAIAAAAFAA0AAQACAAIAAAAGAA0AAQABAAIAAAAHAA0AAQACAAIAAAAIAA0AAQADAAIAAAABAA4AAQAAAAEAAAACAA4AAQABAAEAAAADAA4AAQACAAEAAAAEAA4AAQABAAEAAAAFAA4AAQACAAEAAAAGAA4AAQABAAEAAAAHAA4AAQACAAEAAAAIAA4AAQADAAEAAAABAA8AAQAAAAMAAAACAA8AAQABAAMAAAADAA8AAQACAAMAAAAEAA8AAQABAAMAAAAFAA8AAQACAAMAAAAGAA8AAQABAAMAAAAHAA8AAQACAAMAAAAIAA8AAQADAAMAAAA=")
+tile_set = ExtResource("6_school_tiles")
+
+[node name="Files" type="Node2D" parent="Visuals"]
+
+[node name="Room1" type="Node2D" parent="Visuals/Files"]
+
+[node name="scores_txt" parent="Visuals/Files/Room1" instance=ExtResource("8_file_entity")]
+position = Vector2(40, 70)
+file_name = "scores.txt"
+room_index = 0
+lines = PackedStringArray("70", "82", "75", "60")
+
+[node name="passed_txt" parent="Visuals/Files/Room1" instance=ExtResource("8_file_entity")]
+position = Vector2(162, 70)
+file_name = "passed.txt"
+room_index = 0
+lines = PackedStringArray()
+
+[node name="Room2" type="Node2D" parent="Visuals/Files"]
+
+[node name="scores_txt" parent="Visuals/Files/Room2" instance=ExtResource("8_file_entity")]
+position = Vector2(40, 358)
+file_name = "scores.txt"
+room_index = 1
+lines = PackedStringArray("90", "40", "76")
+
+[node name="passed_txt" parent="Visuals/Files/Room2" instance=ExtResource("8_file_entity")]
+position = Vector2(162, 358)
+file_name = "passed.txt"
+room_index = 1
+lines = PackedStringArray()
+
+[node name="YSorted" type="Node2D" parent="Visuals"]
+y_sort_enabled = true
+
+[node name="Furniture" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAFAAYAAQACAAAAAAAHAAYAAwAAAAAAABADAA8AAQAAAAAAAAAEAA8AAwAAAAAAABA=")
+tile_set = ExtResource("2_school_chair")
+
+[node name="Walls" type="TileMapLayer" parent="Visuals/YSorted"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQADAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAAEAAAAAQABAAAAAAAFAAAAAQABAAAAAAAGAAAAAQABAAAAAAAHAAAAAQABAAAAAAAIAAAAAQABAAAAAAAJAAAAAQAAAAAAABAAAAEAAQAAAAEAAAABAAEAAQADAAEAAAACAAEAAQABAAEAAAADAAEAAQABAAEAAAAEAAEAAQABAAEAAAAFAAEAAQABAAEAAAAGAAEAAQABAAEAAAAHAAEAAQABAAEAAAAIAAEAAQABAAEAAAAJAAEAAQAAAAEAABAAAAIAAQAAAAEAAAAJAAIAAQAAAAEAABAAAAMAAQAAAAEAAAAJAAMAAQAAAAEAABAAAAQAAQAAAAEAAAAJAAQAAQAAAAEAABAAAAUAAQAAAAEAAAAJAAUAAQAAAAEAABAAAAYAAQAAAAEAAAAJAAYAAQAAAAEAABAAAAcAAQACAAAAADABAAcAAAAAAAEAAHACAAcAAAAAAAEAAHADAAcAAAAAAAEAAHAEAAcAAAAAAAEAAHAFAAcAAAAAAAEAAHAGAAcAAAAAAAEAAHAHAAcAAAAAAAEAAHAIAAcAAAAAAAEAAHAJAAcAAQACAAAAACAAAAkAAQAAAAAAAAABAAkAAQADAAAAAAACAAkAAQABAAAAAAADAAkAAQABAAAAAAAEAAkAAQABAAAAAAAFAAkAAQABAAAAAAAGAAkAAQABAAAAAAAHAAkAAQABAAAAAAAIAAkAAQABAAAAAAAJAAkAAQAAAAAAABAAAAoAAQAAAAEAAAABAAoAAQADAAEAAAACAAoAAQABAAEAAAADAAoAAQABAAEAAAAEAAoAAQABAAEAAAAFAAoAAQABAAEAAAAGAAoAAQABAAEAAAAHAAoAAQABAAEAAAAIAAoAAQABAAEAAAAJAAoAAQAAAAEAABAAAAsAAQAAAAEAAAAJAAsAAQAAAAEAABAAAAwAAQAAAAEAAAAJAAwAAQAAAAEAABAAAA0AAQAAAAEAAAAJAA0AAQAAAAEAABAAAA4AAQAAAAEAAAAJAA4AAQAAAAEAABAAAA8AAQAAAAEAAAAJAA8AAQAAAAEAABAAABAAAQACAAAAADABABAAAAAAAAEAAHACABAAAAAAAAEAAHADABAAAAAAAAEAAHAEABAAAAAAAAEAAHAFABAAAAAAAAEAAHAGABAAAAAAAAEAAHAHABAAAAAAAAEAAHAIABAAAAAAAAEAAHAJABAAAQACAAAAACA=")
+tile_set = ExtResource("7_school_walls")
+
+[node name="Room1Label" type="Label" parent="Visuals"]
+offset_left = 134.0
+offset_top = 228.0
+offset_right = 186.0
+offset_bottom = 251.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 1"
+
+[node name="Room2Label" type="Label" parent="Visuals"]
+offset_left = 134.0
+offset_top = 516.0
+offset_right = 186.0
+offset_bottom = 539.0
+theme = ExtResource("3_main_theme")
+theme_type_variation = &"RoomLabel"
+text = "Room 2"
+
+[editable path="LevelBlockPreset/BeginBlock"]
