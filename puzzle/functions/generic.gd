@@ -25,22 +25,6 @@ func _print(this: Block) -> void:
 	await Interpreter.step(this)
 
 
-## text: declare {variable}
-func _declare_var(this: Block) -> void:
-	var args := await this.function.eval_args([this.function.Argument.STRING_NAME])
-	if Interpreter.interrupted: return
-	
-	var var_name := args[0] as StringName
-	if not var_name.is_valid_ascii_identifier():
-		this.function.error("'%s' isn't a valid variable name." % var_name)
-		return
-	
-	if not Interpreter.declare_var(var_name, null):
-		this.function.error("Variable '%s' already exists." % var_name)
-		return
-	
-	await Interpreter.step(this)
-
 ## text: set {variable} to {value/variable}
 func _set_var(this: Block) -> void:
 	var args := await this.function.eval_args([
@@ -63,13 +47,6 @@ func _set_var(this: Block) -> void:
 
 ## text: increment {variable}
 func _increment(this: Block) -> void:
-	await __crement(this, 1)
-
-## text: decrement {variable}
-func _decrement(this: Block) -> void:
-	await __crement(this, -1)
-
-func __crement(this: Block, value: int) -> void:
 	var args := await this.function.eval_args([this.function.Argument.STRING_NAME])
 	if Interpreter.interrupted: return
 	
@@ -83,7 +60,7 @@ func __crement(this: Block, value: int) -> void:
 		this.function.error("Cannot increment '%s': value is not a number." % var_name)
 		return
 	
-	Interpreter.assign_var(var_name, current_value + value)
+	Interpreter.assign_var(var_name, current_value + 1)
 	await Interpreter.step(this)
 
 ## text: initialize {variable} to {variable/value}

@@ -68,7 +68,7 @@ func copy() -> Block:
 	# consequences, particularly regarding node ownership
 	var packed_scn := PackedScene.new()
 	if packed_scn.pack(base) != OK:
-		Debug.log("Copy failed! (packed scene workaround)")
+		push_error("(%s) Couldn't pack the block to copy it." % base.name)
 	
 	var block := packed_scn.instantiate()
 	
