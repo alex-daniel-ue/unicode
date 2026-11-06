@@ -9,5 +9,7 @@ base_path = "uid://demtvw17w06g5"
 draggable = false
 placeable = false
 text = "%s block%s..."
+text_hints = PackedStringArray()
+Function/entity_name = &""
 Function/method = &""
 metadata/_custom_type_script = "uid://dbo3fa8pswxeg"

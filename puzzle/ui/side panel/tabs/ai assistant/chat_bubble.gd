@@ -10,8 +10,6 @@ const MAX_WIDTH_RATIO := 0.85
 @export var label: RichTextLabel
 ## The assistant's robot, beside its messages; not beside the student's.
 @export var avatar: TextureRect
-## The assistant's robot, beside its messages; not beside the student's.
-@export var avatar: TextureRect
 
 var bubble_theme := BubbleTheme.new():
 	set(value):
