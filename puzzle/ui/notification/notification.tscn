@@ -6,6 +6,7 @@
 [node name="Notification" type="PanelContainer" node_paths=PackedStringArray("label")]
 size_flags_horizontal = 0
 size_flags_vertical = 0
+mouse_filter = 2
 theme = ExtResource("1_nhyce")
 theme_type_variation = &"NotificationPanel"
 script = ExtResource("2_t1s2m")

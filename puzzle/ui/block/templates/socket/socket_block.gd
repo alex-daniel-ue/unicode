@@ -56,6 +56,13 @@ func typecast(string: String) -> Variant:
 func has_overridden() -> bool:
 	return overridden_socket != null
 
+## Gives back the slot block this block took the place of, and forgets it: for
+## when this block leaves that slot for good, thrown away.
+func release_slot() -> void:
+	if overridden_socket != null and is_instance_valid(overridden_socket):
+		overridden_socket.visible = true
+	overridden_socket = null
+
 func socket_function() -> Variant:
 	if data.value == null and data.socket != null and data.socket.receptive:
 		function.error("This slot is empty. Drop a condition into it.")

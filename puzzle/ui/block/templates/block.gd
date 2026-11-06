@@ -91,12 +91,19 @@ func _process(delta: float) -> void:
 	visual._update(delta)
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouse and not shows_at(get_global_transform() * (event as InputEventMouse).position):
+		return
 	drag.handle_copying(event)
 
-func _get_drag_data(_at_position: Vector2) -> Variant:
+func _get_drag_data(at_position: Vector2) -> Variant:
 	if display or not data.draggable or Interpreter.is_running:
 		return null
-	
+	# Pressed inside the block's box but not on the block: the canvas showing
+	# beside narrower blocks or inside a loop. That pans (PuzzleCanvas), it
+	# doesn't pick the whole stack up.
+	if not shows_at(get_global_transform() * at_position):
+		return null
+
 	var preview := drag.generate_preview()
 	set_drag_preview(preview)
 	Core.current_drag_preview = preview
@@ -108,6 +115,12 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	visual.set_error(false)
 	visible = false
 	return self
+
+## Whether `point` (global) is on this block as it's drawn, not merely inside
+## its box. A block is drawn as its whole box; a loop and begin aren't (see
+## their overrides).
+func shows_at(point: Vector2) -> bool:
+	return get_global_rect().has_point(point)
 
 func get_all_blocks(include_self := false) -> Array[Block]:
 	var result: Array[Block]

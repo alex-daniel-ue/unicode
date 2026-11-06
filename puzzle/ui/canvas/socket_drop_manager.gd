@@ -46,10 +46,8 @@ func _notification(what: int) -> void:
 			
 			# If the block was dropped in the trash, restore and unlink the overridden socket
 			if current_socket.is_queued_for_deletion():
-				if current_socket.has_overridden():
-					current_socket.overridden_socket.visible = true
-					current_socket.overridden_socket = null
-				
+				current_socket.release_slot()
+
 				if drop_preview != null:
 					drop_preview.queue_free()
 					drop_preview = null

@@ -300,12 +300,14 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 
 [node name="NotificationStack" type="VBoxContainer" parent="UserInterface/MiddleSpace/NotificationContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 10
 alignment = 2
 script = ExtResource("11_j1boe")

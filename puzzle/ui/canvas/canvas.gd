@@ -142,25 +142,46 @@ func _drop_data(at_position: Vector2, drop: Variant) -> void:
 	drop.position = at_position - drag_preview.size / 2.
 
 func handle_panning(event: InputEvent) -> void:
-	# Check is_panning first before checking hovered Control is Canvas
-	if not (is_panning or get_viewport().gui_get_hovered_control() == self):
-		return
-	
 	if event.is_action_pressed("pan"):
+		if not _pans_from_here(event):
+			return
 		if has_focus():
 			focus_clicked.emit()
 		get_viewport().gui_release_focus()
-		
+
 		is_panning = true
 		drag_start_position = get_global_mouse_position()
 		node_start_position = position
+	elif not is_panning:
+		return
 	elif event.is_action_released("pan"):
 		is_panning = false
-	
-	elif event is InputEventMouseMotion and is_panning:
+
+	elif event is InputEventMouseMotion:
 		var current_global_mouse := get_global_mouse_position()
 		var offset := current_global_mouse - drag_start_position
 		position = node_start_position + offset
+
+## Whether a press of a pan button, which has reached the canvas, pans it. On
+## the canvas itself it does, and in a block's box where the block isn't drawn
+## (beside narrower blocks under it, inside a loop), which is canvas as far as
+## a student can see. The middle button pans over blocks too: nothing else uses
+## it. A left press on a block is that block's, to pick it up.
+func _pans_from_here(event: InputEvent) -> bool:
+	var hovered := get_viewport().gui_get_hovered_control()
+	if hovered == self:
+		return true
+	if hovered == null or not is_ancestor_of(hovered):
+		return false
+	if event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_MIDDLE:
+		return true
+	var at := get_global_mouse_position()
+	var node: Node = hovered
+	while node != self:
+		if node is Block and (node as Block).shows_at(at):
+			return false
+		node = node.get_parent()
+	return true
 
 func handle_zooming(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed):
@@ -248,10 +269,8 @@ func _rescue_from(doomed: Block) -> Array[Block]:
 	return rescued
 
 func _discard(block: Block) -> void:
-	var socket := block as SocketBlock
-	if socket != null and socket.has_overridden():
-		socket.overridden_socket.visible = true  # the slot gets its default back
-		socket.overridden_socket = null
+	if block is SocketBlock:
+		(block as SocketBlock).release_slot()  # the slot gets its default back
 	# Trash all is a trash too. A tutorial step waiting for a block to be thrown
 	# away otherwise waits forever once Trash all has taken the block it meant.
 	Tutorial.block_trashed.emit(StringName(block.data.name))

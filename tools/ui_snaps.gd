@@ -11,7 +11,10 @@ extends Node
 ## only the rooms' (the Information tab among them); with `-- tips`, the puzzle
 ## screen's hints: a long notification, the assistant peeking out with a
 ## suggestion, and the pointer beside the running line; with `-- reset`, a room
-## as a run left it and then after its Reset button.
+## as a run left it and then after its Reset button; with `-- trash`, a block
+## dragged out of a slot and let go over the toolbox; with `-- pan`, presses on
+## the canvas, in blocks' boxes and on blocks, and whether each pans the canvas
+## or picks a block up.
 
 const SUMMARY := "Nice use of a loop! In Python that is for steps in route: and it reads each stop with route[0], route[1] and so on."
 
@@ -28,6 +31,10 @@ func _ready() -> void:
 		await _tips_shots()
 	elif "reset" in args:
 		await _reset_shots()
+	elif "trash" in args:
+		await _trash_shots()
+	elif "pan" in args:
+		await _pan_checks()
 	else:
 		if not "menu" in args:
 			await _puzzle_shots()
@@ -67,6 +74,137 @@ func _tips_shots() -> void:
 	await _snap("running")
 	puzzle.queue_free()
 	for i in 3: await get_tree().process_frame
+
+## A Not in a While's condition, dragged out with the mouse and let go over the
+## open toolbox, which throws it away: the While's empty condition slot should
+## show again (ar-4). Prints whether it does.
+func _trash_shots() -> void:
+	Game.level = (load("res://level/levels/ar_4.tscn") as PackedScene).instantiate()
+	Game.level_scene = null
+	Game.level_id = &"ar-4"
+	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
+	puzzle.visible = true
+	add_child(puzzle)
+	puzzle.configure_level()
+	for i in 20: await get_tree().process_frame
+	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
+		(guide as TutorialOverlay).skip()
+	var loop := Block.construct(load("res://puzzle/blocks/control flow/while.tres")) as NestedBlock
+	puzzle.canvas.add_child(loop)
+	loop.position = puzzle._get_begin().position + Vector2(0, 220)
+	for i in 5: await get_tree().process_frame
+	# The Not in the slot as a drop leaves it (socket_drop_manager.gd): the
+	# slot's own block hidden, and remembered by the one put in its place.
+	var slot := loop.text.get_blocks()[0] as SocketBlock
+	var fill := Block.construct(load("res://puzzle/blocks/socket/not.tres")) as SocketBlock
+	slot.get_parent().add_child(fill)
+	slot.get_parent().move_child(fill, slot.get_index())
+	slot.visible = false
+	fill.overridden_socket = slot
+	puzzle.side_panels[0].focus_content(puzzle.toolbox)
+	for i in 20: await get_tree().process_frame
+	await _snap("trash_before")
+	# A real drag out of the slot, toward the toolbox. Letting go is not: the
+	# trash button asks where the system's own pointer is, which events don't
+	# move. So the drag ends as an unsuccessful one does, the drop managers
+	# answering it as they would, and then comes what the trash button does for
+	# a block let go over the toolbox.
+	var grab := fill.get_global_rect().position + Vector2(10, fill.get_global_rect().size.y / 2.0)
+	await _drag(grab, puzzle.side_panels[0].get_global_rect().get_center(), false)
+	get_viewport().gui_cancel_drag()
+	await get_tree().process_frame
+	puzzle.get_node(^"UserInterface/SideMenuLeft/ButtonContainer/TrashButton").call(&"_drop_data", Vector2.ZERO, fill)
+	for i in 20: await get_tree().process_frame
+	print("TRASH not thrown away: ", not is_instance_valid(fill), ", while's slot shows: ", is_instance_valid(slot) and slot.is_visible_in_tree())
+	await _snap("trash_after")
+	puzzle.queue_free()
+	for i in 3: await get_tree().process_frame
+
+## Where a press on the canvas goes (ar-4, begin holding a For block wider than
+## its hat): beside begin's hat and inside the For's empty mouth it should pan,
+## on the For's top it should pick the For up, the middle button should pan even
+## on a block, and so should a press beside a notification. Prints each, as
+## "pans" or "picks up"; the canvas doesn't move, since panning follows the
+## system's own pointer, which events don't move.
+func _pan_checks() -> void:
+	Game.level = (load("res://level/levels/ar_4.tscn") as PackedScene).instantiate()
+	Game.level_scene = null
+	Game.level_id = &"ar-4"
+	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
+	puzzle.visible = true
+	add_child(puzzle)
+	puzzle.configure_level()
+	for i in 20: await get_tree().process_frame
+	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
+		(guide as TutorialOverlay).skip()
+	var begin := puzzle._get_begin()
+	var loop := Block.construct(load("res://puzzle/blocks/control flow/for_int.tres")) as NestedBlock
+	begin.mouth.add_child(loop)
+	puzzle.notif.push("A notification at the top of the canvas.", Notification.Type.LOG)
+	for i in 30: await get_tree().process_frame
+	var hat := begin.upper_lip.get_global_rect()
+	var body := (loop.mouth.get_parent() as Control).get_global_rect()
+	var note := (puzzle.notif.get_child(0) as Control).get_global_rect()
+	var spots := [
+		["beside begin's hat, in its box", Vector2(hat.end.x + 24, hat.get_center().y), MOUSE_BUTTON_LEFT],
+		["inside the For's empty mouth", Vector2(body.position.x + 70, body.get_center().y), MOUSE_BUTTON_LEFT],
+		["on the For's top", loop.upper_lip.get_global_rect().position + Vector2(12, 14), MOUSE_BUTTON_LEFT],
+		["middle button on the For's top", loop.upper_lip.get_global_rect().position + Vector2(12, 14), MOUSE_BUTTON_MIDDLE],
+		["beside the notification", Vector2(note.end.x + 40, note.get_center().y), MOUSE_BUTTON_LEFT],
+	]
+	print("PAN begin's box ", begin.get_global_rect(), ", hat ", hat)
+	for spot: Array in spots:
+		var at: Vector2 = spot[1]
+		_press(at, spot[2], true)
+		await get_tree().process_frame
+		var panning := puzzle.canvas.is_panning
+		for i in range(1, 13):
+			var motion := InputEventMouseMotion.new()
+			motion.position = at + Vector2(3 * i, 2 * i)
+			motion.global_position = motion.position
+			motion.relative = Vector2(3, 2)
+			motion.button_mask = MOUSE_BUTTON_MASK_LEFT if spot[2] == MOUSE_BUTTON_LEFT else MOUSE_BUTTON_MASK_MIDDLE
+			Input.parse_input_event(motion)
+			await get_tree().process_frame
+		var picked: Variant = get_viewport().gui_get_drag_data() if get_viewport().gui_is_dragging() else null
+		print("PAN %s: %s" % [spot[0], "pans" if panning and picked == null else ("picks up %s" % picked if picked != null else "nothing")])
+		if get_viewport().gui_is_dragging():
+			get_viewport().gui_cancel_drag()
+		_press(at + Vector2(36, 24), spot[2], false)
+		for i in 5: await get_tree().process_frame
+	puzzle.queue_free()
+	for i in 3: await get_tree().process_frame
+
+## A mouse button pressed or let go at `at`, after the pointer moves there.
+func _press(at: Vector2, button: MouseButton, pressed: bool) -> void:
+	var motion := InputEventMouseMotion.new()
+	motion.position = at
+	motion.global_position = at
+	Input.parse_input_event(motion)
+	var click := InputEventMouseButton.new()
+	click.button_index = button
+	click.pressed = pressed
+	click.position = at
+	click.global_position = at
+	Input.parse_input_event(click)
+
+## A left-button drag from `from` to `to`, in steps, as a mouse makes one; let
+## go at the end unless `release` says not to.
+func _drag(from: Vector2, to: Vector2, release := true) -> void:
+	_pointer(from, true)
+	await get_tree().process_frame
+	for i in range(1, 13):
+		var motion := InputEventMouseMotion.new()
+		motion.position = from.lerp(to, i / 12.0)
+		motion.global_position = motion.position
+		motion.relative = (to - from) / 12.0
+		motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+		Input.parse_input_event(motion)
+		await get_tree().process_frame
+	print("DRAG under way: ", get_viewport().gui_is_dragging(), " with ", get_viewport().gui_get_drag_data())
+	if release:
+		_pointer(to, false)
+		await get_tree().process_frame
 
 ## Two steps forward run, fast, and leave the robot two tiles on; then the
 ## room's Reset button, pressed as a student would, puts it back (ar-4).

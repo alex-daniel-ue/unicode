@@ -23,6 +23,17 @@ func _can_drop_data(_at_position: Vector2, block: Variant) -> bool:
 		block.data.top_notch
 	)
 
+## On the loop as it's drawn: its top, its bottom, and the spine down its left
+## side. Not the inside of the mouth, nor the box's corner beside a top that is
+## narrower than what's in the mouth: there the canvas shows through.
+func shows_at(point: Vector2) -> bool:
+	if upper_lip.get_global_rect().has_point(point) or lower_lip.get_global_rect().has_point(point):
+		return true
+	var body := mouth.get_parent() as Control
+	var spine := body.get_global_rect()
+	spine.size.x = body.get_theme_stylebox(&"panel").get_margin(SIDE_LEFT) * body.get_global_transform().get_scale().x
+	return spine.has_point(point)
+
 func within_mouth(global_pos: Vector2) -> bool:
 	var m_rect := mouth.get_global_rect()
 	var l_rect := lower_lip.get_global_rect()

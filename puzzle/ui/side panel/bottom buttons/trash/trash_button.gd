@@ -40,6 +40,12 @@ func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 
 func _drop_data(_at_position: Vector2, drop: Variant) -> void:
 	# drop is Block, drop is trashable
+	# A block taken out of a slot gives the slot its own block back. The slots'
+	# drop manager does that for a drop on the can, but a block let go over the
+	# toolbox it has already put back in the slot by now, as for any drag that
+	# lands nowhere, so the slot was left empty. Done here, for both.
+	if drop is SocketBlock:
+		(drop as SocketBlock).release_slot()
 	SfxPlayer.play(TRASH_SOUND)
 	Tutorial.block_trashed.emit(StringName(drop.data.name))
 	drop.queue_free()

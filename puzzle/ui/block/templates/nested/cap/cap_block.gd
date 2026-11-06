@@ -18,6 +18,11 @@ func _ready() -> void:
 	super()
 	Interpreter.running_changed.connect(_on_running_changed)
 
+## Begin is drawn as its hat alone: the blocks under it are their own, and the
+## rest of its box is canvas.
+func shows_at(point: Vector2) -> bool:
+	return upper_lip.get_global_rect().has_point(point)
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
