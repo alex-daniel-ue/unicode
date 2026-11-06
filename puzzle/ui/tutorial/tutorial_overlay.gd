@@ -1,6 +1,5 @@
 class_name TutorialOverlay
 extends Control
-
 ## A guide (a "dimmed tutorial"): pages shown one at a time on a card over the
 ## whole puzzle, with the screen dimmed except for what the page points at. A
 ## page moves on when its button is pressed, or when the student does what it
@@ -13,8 +12,8 @@ extends Control
 ## targets); _rect_of() works out where that is on screen.
 ##
 ## What a page points at is lit, and the card sits next to it with an arrow
-## (GuidePointer) running from the card to it, rather than in a fixed spot. The
-## dim alone was easy to miss on a small screen. Back goes over earlier pages
+## (GuidePointer) running from the card to it, rather than in a fixed spot: the
+## dim alone is easy to miss on a small screen. Back goes over earlier pages
 ## again; a page seen before waits for nothing.
 
 signal finished
@@ -50,12 +49,34 @@ var _placed := false
 var _spot := ""
 
 
+## Where a line from the middle of `rect` towards `toward` leaves the rect.
+static func _edge_toward(rect: Rect2, toward: Vector2) -> Vector2:
+	var centre := rect.get_center()
+	var d := toward - centre
+	if d.is_zero_approx():
+		return centre
+	var tx := INF if is_zero_approx(d.x) else (rect.size.x / 2.0) / absf(d.x)
+	var ty := INF if is_zero_approx(d.y) else (rect.size.y / 2.0) / absf(d.y)
+	return centre + d * minf(minf(tx, ty), 1.0)
+
+
+## Every frame, because targets move: a tab opens, a panel scrolls, the room's
+## camera reframes, the window is resized.
+func _process(delta: float) -> void:
+	if not _closing:
+		_update(delta)
+
+
+## Shows `guide_pages` over `to`, from the first page.
 func start(to: Puzzle, guide_pages: Array) -> void:
 	puzzle = to
 	pages = guide_pages
-	if mask == null: mask = get_node_or_null(^"Mask") as TutorialMask
-	if card == null: card = get_node_or_null(^"Card") as GuideCard
-	if pointer == null: pointer = get_node_or_null(^"Pointer") as GuidePointer
+	if mask == null:
+		mask = get_node_or_null(^"Mask") as TutorialMask
+	if card == null:
+		card = get_node_or_null(^"Card") as GuideCard
+	if pointer == null:
+		pointer = get_node_or_null(^"Pointer") as GuidePointer
 	if mask == null or card == null or pages.is_empty():
 		push_error("Tutorial overlay is missing its Mask or Card, or has no pages; the guide can't run.")
 		queue_free()
@@ -85,9 +106,11 @@ func start(to: Puzzle, guide_pages: Array) -> void:
 	create_tween().tween_property(self, "modulate:a", 1.0, FADE)
 	_go_to(0)
 
+
 ## Ends the guide now: the pause menu's Skip.
 func skip() -> void:
 	_finish()
+
 
 func is_running() -> bool:
 	return not _closing
@@ -96,23 +119,62 @@ func is_running() -> bool:
 #region Events
 # Methods rather than lambdas, so the connections go away with the overlay when
 # a replayed guide replaces it.
-func _on_next() -> void: _on_event(A.NEXT)
-func _on_running_changed() -> void: _on_event(A.RUN_STARTED if Interpreter.is_running else A.RUN_FINISHED)
-func _on_error_raised(_error: Interpreter.Error) -> void: _on_event(A.ERROR_RAISED)
-func _on_room_completed(_done: int, _total: int) -> void: _on_event(A.ROOM_COMPLETED)
-func _on_level_completed() -> void: _on_event(A.LEVEL_COMPLETED)
-func _on_block_placed(block: Block, _into: Block) -> void: _on_event(A.BLOCK_PLACED, StringName(block.data.name))
-func _on_block_trashed(block_name: StringName) -> void: _on_event(A.BLOCK_TRASHED, block_name)
-func _on_message_sent(_text: String) -> void: _on_event(A.MESSAGE_SENT)
-func _on_assistant_replied(_text: String) -> void: _on_event(A.ASSISTANT_REPLIED)
-func _on_menu_toggled(open: bool) -> void: _on_event(A.MENU_OPENED if open else A.MENU_CLOSED)
-func _on_panel_toggled(_panel: SidePanel, open: bool) -> void: _on_event(A.PANEL_OPENED if open else A.PANEL_CLOSED)
-func _on_view_framed() -> void: _on_event(A.VIEW_FRAMED)
-func _on_tab_shown(content: Control) -> void: _on_event(A.TAB_SHOWN, StringName(content.name))
+func _on_next() -> void:
+	_on_event(A.NEXT)
+
+
+func _on_running_changed() -> void:
+	_on_event(A.RUN_STARTED if Interpreter.is_running else A.RUN_FINISHED)
+
+
+func _on_error_raised(_error: Interpreter.BlockError) -> void:
+	_on_event(A.ERROR_RAISED)
+
+
+func _on_room_completed(_done: int, _total: int) -> void:
+	_on_event(A.ROOM_COMPLETED)
+
+
+func _on_level_completed() -> void:
+	_on_event(A.LEVEL_COMPLETED)
+
+
+func _on_block_placed(block: Block, _into: Block) -> void:
+	_on_event(A.BLOCK_PLACED, StringName(block.data.name))
+
+
+func _on_block_trashed(block_name: StringName) -> void:
+	_on_event(A.BLOCK_TRASHED, block_name)
+
+
+func _on_message_sent(_text: String) -> void:
+	_on_event(A.MESSAGE_SENT)
+
+
+func _on_assistant_replied(_text: String) -> void:
+	_on_event(A.ASSISTANT_REPLIED)
+
+
+func _on_menu_toggled(open: bool) -> void:
+	_on_event(A.MENU_OPENED if open else A.MENU_CLOSED)
+
+
+func _on_panel_toggled(_panel: SidePanel, open: bool) -> void:
+	_on_event(A.PANEL_OPENED if open else A.PANEL_CLOSED)
+
+
+func _on_view_framed() -> void:
+	_on_event(A.VIEW_FRAMED)
+
+
+func _on_tab_shown(content: Control) -> void:
+	_on_event(A.TAB_SHOWN, StringName(content.name))
+
 
 func _on_back() -> void:
 	if _index > 0 and not _closing:
 		_go_to(_index - 1)
+
 
 func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
 	var page := _page()
@@ -140,8 +202,22 @@ func _on_event(kind: Guides.Advance, block_name: StringName = &"") -> void:
 func _page() -> Dictionary:
 	return pages[_index] if _index >= 0 and _index < pages.size() else {}
 
+
 func _reviewing() -> bool:
 	return _index < _furthest
+
+
+func _finish() -> void:
+	if _closing:
+		return
+	_closing = true
+	set_process(false)
+	pointer.shown = false
+	finished.emit()
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, FADE)
+	tween.tween_callback(queue_free)
+
 
 func _go_to(index: int) -> void:
 	_index = index
@@ -161,6 +237,7 @@ func _go_to(index: int) -> void:
 	_focus_panel(page.get("focus", ""))
 	_update(0.0)
 
+
 ## Opens the side panel tab a page names. focus_content() rather than
 ## show_content(), because show_content() closes a tab that is already open.
 func _focus_panel(path: String) -> void:
@@ -173,11 +250,6 @@ func _focus_panel(path: String) -> void:
 		return
 	panel.focus_content(content)
 
-## Every frame, because targets move: a tab opens, a panel scrolls, the room's
-## camera reframes, the window is resized.
-func _process(delta: float) -> void:
-	if not _closing:
-		_update(delta)
 
 func _update(delta: float) -> void:
 	var page := _page()
@@ -199,6 +271,7 @@ func _update(delta: float) -> void:
 	var lost := not targets.is_empty() and rects.is_empty()
 	mask.visible = (page.get("dim", true) or page.get("block_input", false)) and not lost
 	_place_card(page, rects, _arrow_targets(page, by_path), delta)
+
 
 ## Where a target is on screen, or an empty rect while it isn't showing.
 ##   "block:MoveBlock"   the block with that data name, in the toolbox or else on the canvas
@@ -225,6 +298,7 @@ func _rect_of(path: String) -> Rect2:
 		return _level_rect(path.trim_prefix("level:"))
 	var control := puzzle.get_node_or_null(NodePath(path)) as Control
 	return control.get_global_rect() if control != null and control.is_visible_in_tree() else Rect2()
+
 
 ## A level node's rectangle as it appears on screen: world, through the level
 ## camera into the SubViewport, then scaled into the container showing it.
@@ -274,6 +348,7 @@ func _arrow_targets(page: Dictionary, by_path: Dictionary) -> Array[Rect2]:
 		out.append(best)
 	return out
 
+
 func _place_card(page: Dictionary, rects: Array[Rect2], arrows_to: Array[Rect2], delta: float) -> void:
 	var area := mask.size
 	var s := card.size
@@ -305,6 +380,7 @@ func _place_card(page: Dictionary, rects: Array[Rect2], arrows_to: Array[Rect2],
 			]))
 	pointer.arrows = pairs
 	pointer.shown = not pairs.is_empty()
+
 
 ## The spot beside `target` that leaves the page's targets clearest, a gap away
 ## so the arrow has room. Tries each side of the target itself, then each side
@@ -344,6 +420,7 @@ func _spot_near(target: Rect2, rects: Array[Rect2]) -> Vector2:
 	_spot = best_key
 	return spots[best_key]
 
+
 ## How bad a card at `card_rect` is: far from its target is a little bad;
 ## covering a small target (a button, a block) is very bad; covering a big one
 ## (a panel) only somewhat; too close to its target for an arrow, bad.
@@ -359,6 +436,7 @@ func _score(card_rect: Rect2, target: Rect2, rects: Array[Rect2]) -> float:
 	if card_rect.intersects(target.grow(ARROW_GAP * 0.5)):
 		score += 20000.0
 	return score
+
 
 ## No small target to point at: the spot that covers the least of the lit
 ## parts, preferring the middle of the screen.
@@ -387,11 +465,13 @@ func _spot_clear_of(rects: Array[Rect2]) -> Vector2:
 	_spot = best_key
 	return spots[best_key]
 
+
 func _covered(card_rect: Rect2, rects: Array[Rect2]) -> float:
 	var total := 0.0
 	for r in rects:
 		total += card_rect.intersection(r.grow(mask.padding + CARD_MARGIN * 0.5)).get_area()
 	return total
+
 
 func _on_screen(spot: Vector2) -> Vector2:
 	var area := mask.size
@@ -399,25 +479,4 @@ func _on_screen(spot: Vector2) -> Vector2:
 	return Vector2(
 		clampf(spot.x, CARD_MARGIN, maxf(CARD_MARGIN, area.x - s.x - CARD_MARGIN)),
 		clampf(spot.y, CARD_MARGIN, maxf(CARD_MARGIN, area.y - s.y - CARD_MARGIN)))
-
-## Where a line from the middle of `rect` towards `toward` leaves the rect.
-static func _edge_toward(rect: Rect2, toward: Vector2) -> Vector2:
-	var centre := rect.get_center()
-	var d := toward - centre
-	if d.is_zero_approx():
-		return centre
-	var tx := INF if is_zero_approx(d.x) else (rect.size.x / 2.0) / absf(d.x)
-	var ty := INF if is_zero_approx(d.y) else (rect.size.y / 2.0) / absf(d.y)
-	return centre + d * minf(minf(tx, ty), 1.0)
-
-func _finish() -> void:
-	if _closing:
-		return
-	_closing = true
-	set_process(false)
-	pointer.shown = false
-	finished.emit()
-	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, FADE)
-	tween.tween_callback(queue_free)
 #endregion

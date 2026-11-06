@@ -1,6 +1,5 @@
 class_name TileStrip
 extends Control
-
 ## A row of room tiles for guide pictures, drawn with the rooms' own sprites at
 ## twice their size: floor, the robot, and what can stand on a tile. Everything
 ## is set before it enters the tree; GuideGraphics builds these.
@@ -48,9 +47,6 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	custom_minimum_size = Vector2(cells.length() * TILE, TILE + _overhang())
 
-## A wall is a whole tile taller than anything else drawn here.
-func _overhang() -> float:
-	return TILE if cells.contains("W") else OVERHANG
 
 func _draw() -> void:
 	for i in cells.length():
@@ -70,8 +66,15 @@ func _draw() -> void:
 	if arrow_from >= 0 and arrow_to >= 0 and arrow_from != arrow_to:
 		_draw_arrow(arrow_from, arrow_to)
 
+
+## A wall is a whole tile taller than anything else drawn here.
+func _overhang() -> float:
+	return TILE if cells.contains("W") else OVERHANG
+
+
 func _tile_rect(i: int) -> Rect2:
 	return Rect2(i * TILE, _overhang(), TILE, TILE)
+
 
 func _draw_thing(code: String, tile: Rect2) -> void:
 	match code:
@@ -88,6 +91,7 @@ func _draw_thing(code: String, tile: Rect2) -> void:
 			var size := WALL_REGION.size * SCALE
 			draw_texture_rect_region(WALLS, Rect2(Vector2(tile.position.x, tile.end.y - size.y), size), WALL_REGION)
 
+
 func _draw_robot(i: int, direction: Vector2, tint: Color) -> void:
 	var animation := &"idle_right"
 	match direction:
@@ -101,6 +105,7 @@ func _draw_robot(i: int, direction: Vector2, tint: Color) -> void:
 	var tile := _tile_rect(i)
 	var spot := Rect2(Vector2(tile.get_center().x - size.x / 2.0, tile.end.y - size.y - 4), size)
 	draw_texture_rect(texture, spot, false, tint)
+
 
 ## Along the bottom of the tiles, under the robot's feet.
 func _draw_arrow(from: int, to: int) -> void:
@@ -116,6 +121,7 @@ func _draw_arrow(from: int, to: int) -> void:
 	var outline := PackedVector2Array([b + direction * 3.0, base + side * 1.3, base - side * 1.3])
 	draw_colored_polygon(outline, INK)
 	draw_colored_polygon(PackedVector2Array([b, base + side, base - side]), ACCENT)
+
 
 func _draw_centered_text(text: String, at: Vector2, size: int) -> void:
 	var width := MARK_FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x

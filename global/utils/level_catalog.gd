@@ -1,29 +1,22 @@
 @tool
 class_name LevelCatalog
 extends Resource
-
-## The single source of truth for what levels exist, what order they are in, and
-## which ProgressCode slot each one owns.
+## Every level, in order, and the ProgressCode slot each one owns.
 ##
-## Everything else derives from this: the level select grid, the Progress star
-## array, the level id written into a progress code, and the lint pass. Adding a
-## level is editing this resource, no scene rewiring, no second list to keep in
-## sync.
+## Level select's grid, the Progress star array, the level id in a progress code
+## and the lint all read this, so adding a level is adding an entry here.
 ##
-## Slot rule: a level's ProgressCode slot is its position in the flattened
-## catalog, skipping entries with `counts_for_progress = false`. Slots are
-## therefore stable as long as you only ever APPEND to a module and never
-## reorder or delete a shipped one. If you must remove a level after codes have
-## been handed out, set `retired = true` instead of deleting it, that holds the
-## slot and keeps every code already in students' hands readable.
+## Slot rule: a level's slot is its position in the flattened catalog, skipping
+## entries with `counts_for_progress = false`. Slots stay put as long as levels
+## are only appended to a module. A level pulled after codes were handed out is
+## set `retired = true` rather than deleted: it keeps its slot, so every code
+## already in students' hands still reads.
 
 @export var modules: Array[LevelModule] = []
-
 ## Levels beyond the furthest one solved in their module stay locked, practice
-## levels included. Each module is a scaffold-then-fade sequence, so
-## out-of-order play breaks the teaching order. See Progress.is_unlocked().
+## levels included: each module builds on itself, so playing out of order
+## breaks the teaching order. See Progress.is_unlocked().
 @export var sequential_unlock := true
-
 ## How many levels past the last solved one in a module stay open. 1 = the next one.
 @export var unlock_lookahead := 1
 
@@ -48,7 +41,7 @@ func scored_entries() -> Array[LevelEntry]:
 	return out
 
 
-## ProgressCode slot for a level id, or -1 when the id is not in the catalog.
+## ProgressCode slot for a level id, or -1 when it has none.
 func slot_of(level_id: StringName) -> int:
 	var slot := 0
 	for entry in all_entries():
@@ -77,8 +70,8 @@ func module_of(level_id: StringName) -> LevelModule:
 	return null
 
 
-## Entries whose id is not unique, or that are missing a scene. Used by the lint
-## pass and by _validate() below so a broken catalog is loud in the editor.
+## Ids that aren't unique, entries without a scene, and more scored levels than
+## a progress code holds. Progress and the lint report them.
 func problems() -> PackedStringArray:
 	var issues: PackedStringArray = []
 	var seen: Dictionary[StringName, bool] = {}

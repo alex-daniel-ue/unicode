@@ -1,9 +1,9 @@
 extends Node
-
-## Events the tutorial overlay listens for. They are emitted where the thing
+## Events the guides (TutorialOverlay) wait for. Each is emitted where the thing
 ## already happens (drop_manager, trash_button, canvas, ai_assistant, the side
-## panels, the pause menu), so the overlay needs no node paths into the puzzle's
-## UI and works for any level.
+## panels, the pause menu), so a guide needs no node paths into the puzzle's UI
+## and works for any level.
+
 @warning_ignore("unused_signal")
 signal block_placed(block: Block, into: Block)
 @warning_ignore("unused_signal")
@@ -21,10 +21,10 @@ signal panel_toggled(panel: SidePanel, open: bool)
 ## The reframe button put the level view back.
 @warning_ignore("unused_signal")
 signal view_framed
-## A side panel's button opened one of its tabs (the toolbox, the task...), or
+## A side panel's button opened one of its tabs (the Toolbox, the task...), or
 ## brought it to the front.
 @warning_ignore("unused_signal")
 signal tab_shown(content: Control)
 
-
+## Whether the assistant has said how Enter and Shift+Enter work this session.
 var send_keys_shown := false

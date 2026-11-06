@@ -1,16 +1,13 @@
 extends Control
-
-## Level select, built from the LevelCatalog.
+## Level select, built from the LevelCatalog: one module at a time, a grid of
+## its levels, each with its stars or its lock.
 ##
-## Every static button is connected in level_select.tscn, not here. The only
-## programmatic connections are on the level buttons themselves, which do not
-## exist until the catalog is read. The handlers below are all zero-argument so
-## they connect straight from `pressed`, except _apply_code(), which the Enter
-## key reaches through `text_submitted` with Unbind set to 1.
+## Every static button is connected in level_select.tscn. The level buttons are
+## connected here, since they don't exist until the catalog is read.
 
 const CONFIG_FILE := "unicode.cfg"
-## Checked second. The codebase notes told people to put [levels] here, beside
-## the relay settings, so honour it rather than silently ignore it.
+## Read too when unicode.cfg has no [levels] key, for a [levels] section put
+## beside the relay settings.
 const AI_CONFIG_FILE := "unicode_ai.cfg"
 ## A locked tile's number and lock; the module dots, lit and not.
 const DIM := Color("4a6385")
@@ -28,6 +25,11 @@ const STAR_GAP := 4.0
 ## How far down the space the column doesn't fill it sits: a little above the
 ## middle, with more room under the tiles than over the header.
 const COLUMN_RISE := 0.355
+
+## The module last looked at, for coming back to level select this session.
+## Opening on the module of the level just played comes first; this covers
+## paging to a module and leaving through Home without playing.
+static var _last_module_id: StringName = &""
 
 @export_group("Wiring")
 @export var module_label: Label
@@ -47,10 +49,6 @@ const COLUMN_RISE := 0.355
 
 var _catalog: LevelCatalog
 var _module_index := 0
-## The module last looked at, for coming back to level select this session.
-## Opening on the module of the level just played comes first; this covers
-## paging to a module and leaving through Home without playing.
-static var _last_module_id: StringName = &""
 ## The module ids unicode.cfg opens. While its key is there, it alone decides:
 ## a module it leaves out is closed whatever LevelModule.released says.
 var _released_override: PackedStringArray = []
@@ -85,15 +83,17 @@ func _ready() -> void:
 	_module_index = _remembered_module()
 	_refresh()
 
+
 ## The column centred across the window and COLUMN_RISE down it, on whole
 ## pixels so the pixel art stays crisp.
 func _layout() -> void:
 	if column != null:
 		column.position = ((size - column.size) * Vector2(0.5, COLUMN_RISE)).round()
 
-#region Deployment gate
-## Reuses the config file that already sits beside the executable for the relay
-## URL, so opening a module on lab day is a text edit rather than a rebuild:
+
+#region Release gate
+## Which modules are open, from a config file beside the game, so opening a
+## module on the day it is taught is a text edit rather than a rebuild:
 ##
 ##     [levels]
 ##     released="iteration"
@@ -101,14 +101,11 @@ func _layout() -> void:
 ## Leave the key out and each module's own `released` flag decides. Comma
 ## separate to open more than one.
 func _load_release_config() -> void:
-	var folder := ProjectSettings.globalize_path("res://") if OS.has_feature("editor") \
-		else OS.get_executable_path().get_base_dir()
-
-	var config := ConfigFile.new()
+	var config: ConfigFile
 	var found := ""
 	for file in [CONFIG_FILE, AI_CONFIG_FILE]:
 		config = ConfigFile.new()
-		if config.load(folder.path_join(file)) == OK and config.has_section_key("levels", "released"):
+		if config.load(Core.config_path(file)) == OK and config.has_section_key("levels", "released"):
 			found = file
 			break
 	if found.is_empty():
@@ -134,8 +131,7 @@ func _is_released(module: LevelModule) -> bool:
 
 
 ## Where the student left off: the module of the level they last opened, else
-## the module they last looked at, else the first one that's open. Always
-## landing on Tutorial after a level in another module was jarring.
+## the module they last looked at, else the first one that's open.
 func _remembered_module() -> int:
 	for wanted: StringName in [_module_id_of(Game.level_id), _last_module_id]:
 		if wanted.is_empty():
@@ -144,6 +140,7 @@ func _remembered_module() -> int:
 			if _catalog.modules[i].id == wanted and _is_released(_catalog.modules[i]):
 				return i
 	return _first_open_module()
+
 
 func _module_id_of(level_id: StringName) -> StringName:
 	if level_id.is_empty():
@@ -158,6 +155,7 @@ func _first_open_module() -> int:
 			return i
 	return 0
 #endregion
+
 
 #region Display
 func _refresh() -> void:
@@ -188,9 +186,10 @@ func _refresh() -> void:
 		locked_notice.visible = not released
 	if grid != null:
 		grid.visible = released
-	
+
 	if released:
 		_build_grid(module)
+
 
 func _build_grid(module: LevelModule) -> void:
 	if grid == null:
@@ -264,6 +263,7 @@ func _build_button(entry: LevelEntry, next := false) -> Button:
 		button.pressed.connect(_on_level_pressed.bind(entry))
 	return button
 
+
 ## `marks` side by side, centred across `button` at MARKS_TOP, on whole pixels.
 func _add_marks(button: Button, marks: Array[Texture2D]) -> void:
 	var width := -STAR_GAP
@@ -277,6 +277,7 @@ func _add_marks(button: Button, marks: Array[Texture2D]) -> void:
 		shown.position = Vector2(x, MARKS_TOP)
 		button.add_child(shown)
 		x += mark.get_width() + STAR_GAP
+
 
 ## How far below the top of a tile number's line its digits start: the font's
 ## ascent less the digits' height, which in Kenney Mini is five eighths of its
@@ -308,30 +309,23 @@ func _lock_reason(entry: LevelEntry) -> String:
 	return "Finish the level before this one first."
 #endregion
 
-#region Handlers, all connected in level_select.tscn
+
+#region Handlers
 func _on_level_pressed(entry: LevelEntry) -> void:
-	# The scene is handed over rather than instantiated here. Instantiating at
-	# button-press time left an orphan Level node outside the tree whenever the
-	# transition did not complete, and made Puzzle guess the level's identity
-	# from its filename.
-	Game.level_scene = entry.scene
-	Game.level_id = entry.id
-	Transition.change_scene(Core.PUZZLE_CANVAS)
+	Game.play(entry)
 
 
 func _on_home_pressed() -> void:
 	Transition.change_scene(Core.MAIN_MENU)
 
 
-## Looks for the catalog entry with id "tutorial".
+## Opens the catalog entry with id "tutorial".
 func _on_tutorial_pressed() -> void:
 	var entry := _catalog.entry_of(&"tutorial") if _catalog != null else null
 	if entry == null or entry.scene == null:
 		push_warning("LevelSelect: no catalog entry with id 'tutorial', or it has no scene.")
 		return
-	Game.level_scene = entry.scene
-	Game.level_id = entry.id
-	Transition.change_scene(Core.PUZZLE_CANVAS)
+	Game.play(entry)
 
 
 func _on_prev_pressed() -> void:

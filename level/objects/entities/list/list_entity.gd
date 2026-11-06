@@ -1,17 +1,10 @@
 @tool
 class_name ListEntity
-extends Node2D
-
+extends RoomEntity
 ## A list that lives in a room, drawn the way a list is drawn on a classroom
 ## whiteboard: its name, a row of boxes holding its values in order, and each
 ## box's index underneath, starting at 0. The level makes it; the student reads
 ## and changes it through blocks, and the board shows every change.
-##
-## One board per room. A level puts a board in every room that needs the list,
-## all with the same list_name and each with its own room_index, and the name
-## block a student drags finds the board of the room that's running (find()).
-## So every room's contents are on screen before Play, the way every room's walls
-## are, and nothing has to move between rooms.
 ##
 ## The operations are called by list_functions.gd with the calling block last,
 ## the way robot.gd's are, and pace themselves with Interpreter.step(). The
@@ -24,11 +17,9 @@ extends Node2D
 ## script lays them out for the number of boxes and instances one list_slot.tscn
 ## per box.
 
-const GROUP := &"list_entity"
 const SCENE_PATH := "res://level/objects/entities/list/list_entity.tscn"
 const SLOT_SCENE := preload("res://level/objects/entities/list/list_slot.tscn")
 const REPORTER_TEMPLATE := "res://puzzle/blocks/lists/list_reporter.tres"
-
 ## One box per tile.
 const CELL := 32.0
 ## The index row under the boxes.
@@ -56,7 +47,6 @@ const GHOST_REACH := 3
 const SOURCES_KEPT := 4
 ## How far a standing board's legs reach below it.
 const LEG_LENGTH := 8.0
-
 ## Tints over the cards and boxes.
 const TINT_EMPTY := Color(0.86, 0.88, 0.92)
 const TINT_FLASH := Color("#ffd166")
@@ -64,15 +54,18 @@ const TINT_FLASH := Color("#ffd166")
 const TINT_RIGHT := Color("#b6ecc6")
 const TINT_WRONG := Color("#ffb8b8")
 
+## The last few boxes values were read from, anywhere in the level, newest last:
+## where a value flies from when it's written into a list. A few rather than one,
+## because a program often reads something else in between, as in
+## `if b != item -1 of tidy: append b to tidy`. Cleared at each run.
+static var _sources: Array[Dictionary] = []
+
 ## What students read, and what the name block says. Empty means the node's name.
 @export var list_name: StringName = &"":
 	set(value):
 		list_name = value
 		_rebuild()
 		update_configuration_warnings()
-## Which room this board belongs to, counted from 0 like Resettable's rooms, so
-## Room 1 is 0. Ignored when the level has only one board with this name.
-@export var room_index := 0
 @export var values: Array = []:
 	set(value):
 		values = value
@@ -84,21 +77,17 @@ const TINT_WRONG := Color("#ffb8b8")
 		standing = value
 		_rebuild()
 
-## The last few boxes values were read from, anywhere in the level, newest last:
-## where a value flies from when it's written into a list. A few rather than one,
-## because a program often reads something else in between, as in
-## `if b != item -1 of tidy: append b to tidy`. Cleared at each run.
-static var _sources: Array[Dictionary] = []
+## One per box drawn, left to right.
+var slots: Array[ListSlot] = []
 
 var _initial: Array = []
-var _slots: Array[ListSlot] = []
 ## What a ListGoal wants this list to end up as, shown on the board so the goal
 ## is on screen the way a flag is. Empty and unused without a goal.
 var _target: Array = []
 var _has_target := false
 ## Positions the program has written this run. Only written values are marked
-## right or wrong, so a list that starts off different from its goal (AR-7's
-## lockers) isn't red before anything runs.
+## right or wrong, so a list that starts off different from its goal isn't red
+## before anything runs.
 var _written: Array = []
 
 @onready var _board: Panel = get_node_or_null(^"Board")
@@ -112,129 +101,16 @@ var _written: Array = []
 @onready var _ghost_index: Label = get_node_or_null(^"GhostIndex")
 
 
-func _ready() -> void:
-	if _chip != null:
-		var reporter := load(REPORTER_TEMPLATE) as BlockData
-		if reporter != null:
-			_chip.self_modulate = reporter.color
-	_rebuild()
-	if Engine.is_editor_hint():
-		return
-	_initial = values.duplicate(true)
-	# Only a level's boards are lists a program can reach; a guide's picture of
-	# one is just a picture, and a run mustn't restore it.
-	if Game.level != null and Game.level.is_ancestor_of(self):
-		add_to_group(GROUP)
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_PATH_RENAMED and list_name.is_empty():
-		_rebuild()
-
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings: PackedStringArray = []
-	if get_node_or_null(^"Slots") == null:
-		warnings.append("This is the ListEntity script on its own. Instance list_entity.tscn instead; the board's parts live in the scene.")
-	var shown := String(get_list_name())
-	if not shown.is_valid_ascii_identifier():
-		warnings.append("'%s' isn't a name Python would accept, and students will read it as one." % shown)
-	return warnings
-
-
-#region Queries
-func get_list_name() -> StringName:
-	return list_name if not list_name.is_empty() else StringName(name)
-
-## Python's name for what this is. Only lists now; the watcher and the
-## assistant still ask.
-func kind_name() -> String:
-	return "list"
-
-## The values as Python writes them: [1, 2].
-func repr() -> String:
-	return repr_of(values)
-
-## What the level started this list with, as Python writes it.
-func initial_repr() -> String:
-	return repr_of(_initial)
-
-func repr_of(items: Array) -> String:
-	var parts := PackedStringArray()
-	for item: Variant in items:
-		parts.append(Core.to_python_repr(item))
-	return "[" + ", ".join(parts) + "]"
-
-## True when the contents equal `expected` in Python's terms: 3 and "3" differ,
-## 3 and 3.0 don't.
-func matches(expected: Array) -> bool:
-	if expected.size() != values.size():
-		return false
-	for i in expected.size():
-		if not same(values[i], expected[i]):
-			return false
-	return true
-
-## Boxes drawn: one per value, and one per value the goal still wants.
-func box_count() -> int:
-	return maxi(values.size(), _target.size())
-
-## Called by a ListGoal: what this list should end up holding.
-func set_target(expected: Array) -> void:
-	_has_target = true
-	_target = expected.duplicate()
-	_rebuild()
-
-## For guide pictures: shows `shown` with `target` as its goal, as if the program
-## had written the positions in `written`.
-func show_example(shown: Array, target: Array, written: Array = []) -> void:
-	_target = target.duplicate()
-	_has_target = not target.is_empty()
-	values = shown.duplicate()
-	_written = written.duplicate()
-	_refresh_marks()
-
-## The whole board in global coordinates. Worked out from the exported values
-## rather than measured from the nodes, so it is right before _ready() has laid
-## the board out, which is when the editor's LevelCamera measures a level.
-## LevelCamera.node_bounds() asks for it.
-func get_global_bounds() -> Rect2:
-	var rect := _board_rect(box_count())
-	if standing:
-		rect.size.y += LEG_LENGTH
-	return global_transform * rect
-
-## Among every board of this name in the level, the one that hands out the name
-## block: the lowest room_index, then the first in the tree.
-func is_canonical() -> bool:
-	var best: ListEntity = null
-	for node in get_tree().get_nodes_in_group(GROUP):
-		var other := node as ListEntity
-		if other == null or other.get_list_name() != get_list_name():
-			continue
-		if best == null or other.room_index < best.room_index:
-			best = other
-	return best == self
-
-## A new board from the scene, for code that needs one (the level checks).
+## A new board from the scene, for code that needs one (guide pictures, the
+## level checks).
 static func create() -> ListEntity:
 	return (load(SCENE_PATH) as PackedScene).instantiate() as ListEntity
 
-## The board a block means by `p_name` right now: the only one with that name, or
-## the one in the room that's running.
+
+## The board a block means by `p_name` right now.
 static func find(p_name: StringName) -> ListEntity:
-	var level := Game.level
-	if level == null or not level.is_inside_tree():
-		return null
-	var named: Array[ListEntity] = []
-	for node in level.get_tree().get_nodes_in_group(GROUP):
-		var list := node as ListEntity
-		if list != null and list.get_list_name() == p_name and level.is_ancestor_of(list):
-			named.append(list)
-	if named.size() == 1:
-		return named[0]
-	for list in named:
-		if list.room_index == level.current_room:
-			return list
-	return null
+	return find_named(ListEntity, p_name) as ListEntity
+
 
 ## Why find() came back empty, for the block that asked.
 static func missing_message(p_name: StringName) -> String:
@@ -242,6 +118,7 @@ static func missing_message(p_name: StringName) -> String:
 	if level != null and level.room_goals.size() > 1:
 		return "There's no list named '%s' in Room %d." % [p_name, level.current_room + 1]
 	return "There's no list named '%s' here." % p_name
+
 
 ## The name block for a list: a round block that is just the list's name, like
 ## Scratch's variable reporters. Built from a template so its look is editable.
@@ -258,19 +135,9 @@ static func reporter_data(p_name: StringName) -> BlockData:
 	data.func_entity_name = p_name
 	return data
 
-func make_reporter_data() -> BlockData:
-	return reporter_data(get_list_name())
-
-## True when `data` is a list's name block, or, with `or_template`, the
-## template they're made from: a level's description names the template to
-## introduce its lists' name blocks, since the real ones only exist at runtime.
-static func is_reporter(data: BlockData, or_template := false) -> bool:
-	if data == null:
-		return false
-	return data.name.begins_with("List_") or (or_template and data.resource_path == REPORTER_TEMPLATE)
 
 ## Equality in Python's terms: numbers compare by value, anything else only
-## against the same kind of thing.
+## against the same kind of thing. 3 and "3" differ, 3 and 3.0 don't.
 static func same(a: Variant, b: Variant) -> bool:
 	var number_a := typeof(a) == TYPE_INT or typeof(a) == TYPE_FLOAT
 	var number_b := typeof(b) == TYPE_INT or typeof(b) == TYPE_FLOAT
@@ -279,6 +146,113 @@ static func same(a: Variant, b: Variant) -> bool:
 	if typeof(a) != typeof(b):
 		return false
 	return a == b
+
+
+func _ready() -> void:
+	super()
+	if _chip != null:
+		var reporter := load(REPORTER_TEMPLATE) as BlockData
+		if reporter != null:
+			_chip.self_modulate = reporter.color
+	_rebuild()
+	if not Engine.is_editor_hint():
+		_initial = values.duplicate(true)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PATH_RENAMED and list_name.is_empty():
+		_rebuild()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings: PackedStringArray = []
+	if get_node_or_null(^"Slots") == null:
+		warnings.append("This is the ListEntity script on its own. Instance list_entity.tscn instead; the board's parts live in the scene.")
+	var shown := String(get_list_name())
+	if not shown.is_valid_ascii_identifier():
+		warnings.append("'%s' isn't a name Python would accept, and students will read it as one." % shown)
+	return warnings
+
+
+func get_entity_name() -> StringName:
+	return get_list_name()
+
+
+func restore() -> void:
+	_written.clear()
+	_sources.clear()
+	values = _initial.duplicate(true)
+
+
+func get_global_bounds() -> Rect2:
+	var rect := board_rect(box_count())
+	if standing:
+		rect.size.y += LEG_LENGTH
+	return global_transform * rect
+
+
+#region Queries
+func get_list_name() -> StringName:
+	return list_name if not list_name.is_empty() else StringName(name)
+
+
+## The values as Python writes them: [1, 2].
+func repr() -> String:
+	return repr_of(values)
+
+
+## What the level started this list with, as Python writes it.
+func initial_repr() -> String:
+	return repr_of(_initial)
+
+
+func repr_of(items: Array) -> String:
+	var parts := PackedStringArray()
+	for item: Variant in items:
+		parts.append(Core.to_python_repr(item))
+	return "[" + ", ".join(parts) + "]"
+
+
+## True when the contents equal `expected` in Python's terms (same()).
+func matches(expected: Array) -> bool:
+	if expected.size() != values.size():
+		return false
+	for i in expected.size():
+		if not same(values[i], expected[i]):
+			return false
+	return true
+
+
+## Boxes drawn: one per value, and one per value the goal still wants.
+func box_count() -> int:
+	return maxi(values.size(), _target.size())
+
+
+## The board for `count` boxes, in this node's space: the name column, the
+## boxes, the index row, and a margin all round.
+func board_rect(count: int) -> Rect2:
+	var left := -NAME_GAP - _name_width() - PAD
+	var right := maxi(count, 1) * CELL + PAD
+	return Rect2(left, -PAD_TOP, right - left, PAD_TOP + CELL + INDEX_ROW + PAD * 0.5)
+#endregion
+
+
+#region Goal
+## Called by a ListGoal: what this list should end up holding.
+func set_target(expected: Array) -> void:
+	_has_target = true
+	_target = expected.duplicate()
+	_rebuild()
+
+
+## For guide pictures: shows `shown` with `target` as its goal, as if the program
+## had written the positions in `written`.
+func show_example(shown: Array, target: Array, written: Array = []) -> void:
+	_target = target.duplicate()
+	_has_target = not target.is_empty()
+	values = shown.duplicate()
+	_written = written.duplicate()
+	_refresh_marks()
 #endregion
 
 
@@ -294,6 +268,7 @@ func read(index: Variant, from_this: Block) -> Variant:
 	var value: Variant = values[i]
 	return value.duplicate(true) if value is Array else value
 
+
 ## set item {index} of {list} to {value}
 func write(index: Variant, value: Variant, from_this: Block) -> void:
 	if not _storable(value, from_this):
@@ -302,19 +277,21 @@ func write(index: Variant, value: Variant, from_this: Block) -> void:
 	if i == null:
 		return
 	values[i] = value
-	_slots[i].value_label.text = _value_text(value)
+	slots[i].value_label.text = _value_text(value)
 	_written.append(i)
-	_arrive(_slots[i], value, true)
+	_arrive(slots[i], value, true)
 	_refresh_marks()
 	await Interpreter.step(from_this)
+
 
 ## length of {list}
 func size(from_this: Block) -> int:
 	flash_name()
 	for i in values.size():
-		_flash_card(_slots[i])
+		_flash_card(slots[i])
 	await Interpreter.step(from_this)
 	return values.size()
+
 
 ## append {value} to {list}
 func append_value(value: Variant, from_this: Block) -> void:
@@ -331,9 +308,10 @@ func append_value(value: Variant, from_this: Block) -> void:
 	_ensure_slots(values.size())
 	_fill_slot(i)
 	_written.append(i)
-	_arrive(_slots[i], value)
+	_arrive(slots[i], value)
 	_refresh_marks()
 	await Interpreter.step(from_this)
+
 
 ## {value} in {list}: looks at each item in turn, as Python does.
 func contains(value: Variant, from_this: Block) -> bool:
@@ -344,9 +322,10 @@ func contains(value: Variant, from_this: Block) -> bool:
 			break
 	var last := found if found >= 0 else values.size() - 1
 	for i in last + 1:
-		_flash_card(_slots[i], float(i) / maxf(1.0, last + 1.0))
+		_flash_card(slots[i], float(i) / maxf(1.0, last + 1.0))
 	await Interpreter.step(from_this)
 	return found >= 0
+
 
 ## For a picture of a program rather than a run (the main menu's demos): a
 ## read and a write of box `i`, animated just as a program's are, with no block
@@ -356,20 +335,23 @@ func show_read(i: int) -> Variant:
 	_remember(i)
 	return values[i]
 
+
 func show_write(i: int, value: Variant) -> void:
 	values[i] = value
-	_slots[i].value_label.text = _value_text(value)
-	_arrive(_slots[i], value, true)
+	slots[i].value_label.text = _value_text(value)
+	_arrive(slots[i], value, true)
+
 
 ## Outlines box `i` as the one a for each is on; a negative index clears it.
 func point_at(i: int) -> void:
 	if _cursor == null:
 		return
-	_cursor.visible = i >= 0 and i < _slots.size()
+	_cursor.visible = i >= 0 and i < slots.size()
 	if _cursor.visible:
 		_cursor.position = Vector2(i * CELL, 0)
 		if i < values.size():
 			_remember(i)
+
 
 func flash_name() -> void:
 	var lit: CanvasItem = _chip if _chip != null else _name
@@ -380,13 +362,6 @@ func flash_name() -> void:
 	tween.tween_property(lit, "modulate", Color(1.4, 1.4, 1.4), t * 0.2)
 	tween.tween_interval(t * 0.4)
 	tween.tween_property(lit, "modulate", Color.WHITE, t * 0.4)
-
-## Back to the contents the level was authored with. Redraws, which also clears
-## the cursor and any ghost box left by the last run.
-func restore() -> void:
-	_written.clear()
-	_sources.clear()
-	values = _initial.duplicate(true)
 #endregion
 
 
@@ -421,6 +396,7 @@ func _checked_index(index: Variant, from_this: Block, what: String) -> Variant:
 	# Python counts negative indices from the end: -1 is the last item.
 	return i + count if i < 0 else i
 
+
 func _storable(value: Variant, from_this: Block) -> bool:
 	if value == null:
 		from_this.function.error("There's nothing to put into '%s'. Fill in the value slot." % get_list_name())
@@ -442,7 +418,7 @@ func _rebuild() -> void:
 	for old in _slot_holder.get_children():
 		_slot_holder.remove_child(old)
 		old.queue_free()
-	_slots.clear()
+	slots.clear()
 	_name.text = String(get_list_name())
 	_cursor.visible = false
 	_ghost.modulate.a = 0.0
@@ -450,21 +426,22 @@ func _rebuild() -> void:
 	_ensure_slots(box_count())
 	_refresh_marks()
 
+
 ## Adds boxes up to `count`, leaving the ones already there (and anything
 ## animating in them) alone, and stretches the board to fit.
 func _ensure_slots(count: int) -> void:
-	while _slots.size() < count:
-		var i := _slots.size()
+	while slots.size() < count:
+		var i := slots.size()
 		var slot := SLOT_SCENE.instantiate() as ListSlot
 		slot.position = Vector2(i * CELL, 0)
 		_slot_holder.add_child(slot)
 		slot.index_label.text = str(i)
-		_slots.append(slot)
+		slots.append(slot)
 		if i < values.size():
 			_fill_slot(i)
 		else:
 			_empty_slot(i)
-	var rect := _board_rect(_slots.size())
+	var rect := board_rect(slots.size())
 	_board.position = rect.position
 	_board.size = rect.size
 	_legs.visible = standing
@@ -484,12 +461,6 @@ func _ensure_slots(count: int) -> void:
 	_caption.position = Vector2(-NAME_GAP - name_width, CELL - 5.0)
 	_caption.size = Vector2(name_width, INDEX_ROW)
 
-## The board for `count` boxes, in this node's space: the name column, the
-## boxes, the index row, and a margin all round.
-func _board_rect(count: int) -> Rect2:
-	var left := -NAME_GAP - _name_width() - PAD
-	var right := maxi(count, 1) * CELL + PAD
-	return Rect2(left, -PAD_TOP, right - left, PAD_TOP + CELL + INDEX_ROW + PAD * 0.5)
 
 ## The name column: as wide as the name's chip or the "index" caption.
 func _name_width() -> float:
@@ -498,20 +469,22 @@ func _name_width() -> float:
 	var chip := _text_width(label, String(get_list_name())) + CHIP_PAD * 2.0
 	return ceilf(maxf(chip, _text_width(caption, "index"))) + 2.0
 
+
 func _text_width(label: Label, text: String) -> float:
 	var settings: LabelSettings = label.label_settings if label != null else null
 	var font: Font = settings.font if settings != null else ThemeDB.fallback_font
 	var font_size: int = settings.font_size if settings != null else ThemeDB.fallback_font_size
 	return font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 
+
 ## Shows the goal on the board: a green badge with the wanted value on each box
 ## that is empty or holds something else, and a green or red card on each value
 ## the program wrote, by whether it's right.
 func _refresh_marks() -> void:
-	if _slots.is_empty():
+	if slots.is_empty():
 		return
-	for i in _slots.size():
-		var slot := _slots[i]
+	for i in slots.size():
+		var slot := slots[i]
 		var has_value := i < values.size()
 		var want_known := i < _target.size()
 		var want: Variant = _target[i] if want_known else null
@@ -528,22 +501,25 @@ func _refresh_marks() -> void:
 		elif extra:
 			slot.card.self_modulate = TINT_WRONG
 
+
 func _fill_slot(i: int) -> void:
-	var slot := _slots[i]
+	var slot := slots[i]
 	slot.cell.self_modulate = Color.WHITE
 	slot.card.visible = true
 	slot.card.modulate = Color.WHITE
 	slot.value_label.text = _value_text(values[i])
 	slot.index_label.modulate.a = 1.0
 
+
 ## A box past the end of the list: dim, no card, and no index, because there is
 ## no item there to number.
 func _empty_slot(i: int) -> void:
-	var slot := _slots[i]
+	var slot := slots[i]
 	slot.cell.self_modulate = TINT_EMPTY
 	slot.card.visible = false
 	slot.value_label.text = ""
 	slot.index_label.modulate.a = 0.0
+
 
 func _value_text(value: Variant) -> String:
 	if typeof(value) == TYPE_STRING:
@@ -556,16 +532,18 @@ func _value_text(value: Variant) -> String:
 func _anim_time() -> float:
 	return minf(ANIM_TIME, Interpreter.current_delay * 1.5)
 
+
 func _flash(i: int, asked: Variant) -> void:
-	_flash_card(_slots[i])
+	_flash_card(slots[i])
 	# A negative index shows its own number on the index row for a moment, so -1
 	# is seen landing on the last box.
 	if typeof(asked) == TYPE_INT and asked < 0:
-		var index := _slots[i].index_label
+		var index := slots[i].index_label
 		index.text = str(asked)
 		var tween := create_tween()
 		tween.tween_interval(maxf(_anim_time(), Interpreter.current_delay))
 		tween.tween_callback(func() -> void: index.text = str(i))
+
 
 ## Rises and glows, holds, and settles: a value being read.
 func _flash_card(slot: ListSlot, delay := 0.0) -> void:
@@ -579,6 +557,7 @@ func _flash_card(slot: ListSlot, delay := 0.0) -> void:
 	tween.tween_property(slot.card, "position:y", slot.card_rest.y, t * 0.4)
 	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.4)
 
+
 func _pop(slot: ListSlot) -> void:
 	var t := _anim_time()
 	var tween := _card_tween(slot)
@@ -587,6 +566,7 @@ func _pop(slot: ListSlot) -> void:
 	tween.tween_interval(t * 0.4)
 	tween.tween_property(slot.card, "scale", Vector2.ONE, t * 0.4)
 	tween.parallel().tween_property(slot.card, "modulate", Color.WHITE, t * 0.4)
+
 
 ## A card's new animation, with the one before it stopped and its card put back
 ## where it rests, so two quick moves on one box can't leave it halfway.
@@ -602,6 +582,7 @@ func _card_tween(slot: ListSlot) -> Tween:
 	slot.set_meta(&"card_tween", tween)
 	return tween
 
+
 func _drop(slot: ListSlot) -> void:
 	var t := _anim_time()
 	var tween := _card_tween(slot)
@@ -610,14 +591,16 @@ func _drop(slot: ListSlot) -> void:
 	tween.tween_property(slot.card, "position", slot.card_rest, t).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(slot.card, "modulate:a", 1.0, t * 0.5)
 
+
 ## Remembers box `i` as where a value was just read, for _arrive().
 func _remember(i: int) -> void:
-	if Engine.is_editor_hint() or i >= _slots.size():
+	if Engine.is_editor_hint() or i >= slots.size():
 		return
-	var slot := _slots[i]
+	var slot := slots[i]
 	_sources.append({value = values[i], position = slot.to_global(slot.card_rest), list = self, index = i})
 	if _sources.size() > SOURCES_KEPT:
 		_sources.pop_front()
+
 
 ## Where, in `slot`'s own coordinates, a card carrying `value` should fly in from:
 ## the box that value was most recently read from, anywhere in the level. Null
@@ -627,10 +610,11 @@ func _source_for(value: Variant, slot: ListSlot) -> Variant:
 		var source := _sources[k]
 		if not is_instance_valid(source.list) or not same(source.value, value):
 			continue
-		if source.list == self and source.index == _slots.find(slot):
+		if source.list == self and source.index == slots.find(slot):
 			return null  # read from and written to the same box: nothing to carry
 		return slot.to_local(source.position)
 	return null
+
 
 ## A written card arriving in its box: it flies from the board its value was
 ## read from, or drops in (pops, when it replaces a value in place).
@@ -656,6 +640,7 @@ func _arrive(slot: ListSlot, value: Variant, in_place := false) -> void:
 			slot.card.z_index = 0
 			slot.card.position = slot.card_rest)
 
+
 ## One point of a card's flight: a straight line from `from` to `to`, lifted into
 ## a shallow arc so it reads as carried rather than slid.
 func _arc(k: float, card: Control, from: Vector2, to: Vector2) -> void:
@@ -665,8 +650,10 @@ func _arc(k: float, card: Control, from: Vector2, to: Vector2) -> void:
 	at.y -= sin(k * PI) * minf(24.0, from.distance_to(to) * 0.25)
 	card.position = at
 
+
 func _flight_time() -> float:
 	return minf(FLIGHT_TIME, Interpreter.current_delay * 1.3)
+
 
 ## Marks where an out-of-range index would have been: a red box just past the
 ## end, labelled with the index that was asked for.

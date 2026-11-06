@@ -1,6 +1,8 @@
 class_name ValueBlock
 extends SocketBlock
-
+## A round block that gives a value: a slot typed into or picked from (a number,
+## a name, a choice in a dropdown), or a block that works one out (Index Of,
+## Length Of, Math, a list's name).
 
 @export var editable_container: Container
 @export var type_label: Label
@@ -14,77 +16,77 @@ var hint := ""
 
 func _ready() -> void:
 	assert(data.value != null)
-	
+
 	option_button.clear()
 	for item in data.value.enum_values:
 		option_button.add_item(item)
-	
+
 	if option_button.item_count > 0:
 		# A preset authored through data names its choice in `text`, which is the
 		# only way to pre-select anything but the first option. Toolbox blocks
-		# have no matching text and fall back to the first choice, as before.
+		# have no matching text and fall back to the first choice.
 		var chosen := data.value.enum_values.find(data.text)
 		option_button.select(maxi(chosen, 0))
-	
-	# If editables or static text is shown
+
+	# The editable fields, or the block's text.
 	text_container.visible = not data.value.editable_shown
 	editable_container.visible = data.value.editable_shown
-	
+
 	line_edit.editable = data.value.editable
 	option_button.disabled = not data.value.editable
 	var shown_hint := hint if not hint.is_empty() else data.value.placeholder
 	if not shown_hint.is_empty():
 		line_edit.placeholder_text = shown_hint
-	
+
 	if not data.value.editable_shown or data.toolbox:
 		line_edit.editable = false
 		option_button.disabled = true
-	
-	# Whether LineEdit or OptionButton is shown
+
+	# A line to type in, or a dropdown.
 	line_edit.visible = not data.value.enum_flag
 	option_button.visible = data.value.enum_flag
-	
+
 	if data.value.show_type:
 		type_label.update_type()
 	visual.update_type_color()
-	
+
 	super()
 	if preview_type != PreviewType.NONE:
 		return
-	
+
 	Interpreter.running_changed.connect(_on_interpreter_running_changed)
-	
+
 	line_edit.text_changed.connect(visual.update_type_color.unbind(1))
 	option_button.item_selected.connect(visual.update_type_color.unbind(1))
 	data.text_changed.connect(visual.update_type_color)
-	
+
 	if data.value.show_type:
 		line_edit.text_changed.connect(type_label.update_type.unbind(1), CONNECT_DEFERRED)
 		option_button.item_selected.connect(type_label.update_type.unbind(1), CONNECT_DEFERRED)
 		data.text_changed.connect(type_label.update_type, CONNECT_DEFERRED)
 
+
 func typecast(string: String) -> Variant:
 	if data.value.enum_as_string:
 		assert(data.value.editable_shown and data.value.enum_flag)
 		return string
-	
 	return super(string)
+
 
 ## Re-reads the flags that decide whether the field can be typed into. _ready()
 ## reads them once, and a preset block is readied while its slots still carry the
 ## .tres default toolbox = true; get_preset() clears that flag afterwards, so
-## without a refresh a preset's fields stayed locked until the first run happened
-## to fire running_changed.
+## without a refresh a preset's fields would stay locked until the first run.
 func refresh_editable() -> void:
 	_on_interpreter_running_changed()
 
+
 func _on_interpreter_running_changed() -> void:
-	var should_be_disabled := (
-		not data.value.editable or
-		not data.value.editable_shown or
-		data.toolbox or
-		Interpreter.is_running
+	var locked := (
+		not data.value.editable
+		or not data.value.editable_shown
+		or data.toolbox
+		or Interpreter.is_running
 	)
-	
-	line_edit.editable = not should_be_disabled
-	option_button.disabled = should_be_disabled
+	line_edit.editable = not locked
+	option_button.disabled = locked

@@ -1,7 +1,6 @@
 @tool
 class_name TerminalGoal
 extends Goal
-
 ## A terminal has to end up showing `expected`, line for line, when the program
 ## finishes. A query goal, like ListGoal: checked once, after the run. Only what
 ## the program printed counts; what the user typed is shown under the screen,
@@ -28,15 +27,13 @@ func _ready() -> void:
 	super()
 	_show_goal()
 
-func _show_goal() -> void:
-	if terminal != null and is_inside_tree():
-		terminal.set_target(expected)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := super()
 	if terminal == null:
 		warnings.append("No terminal set, so this goal can't be checked.")
 	return warnings
+
 
 func check_condition() -> bool:
 	if terminal == null:
@@ -48,3 +45,8 @@ func check_condition() -> bool:
 	var detail := terminal.mismatch()
 	fail_message = detail if _authored_message.is_empty() else _authored_message + " " + detail
 	return false
+
+
+func _show_goal() -> void:
+	if terminal != null and is_inside_tree():
+		terminal.set_target(expected)

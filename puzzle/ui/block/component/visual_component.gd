@@ -1,6 +1,8 @@
 class_name BlockVisualComponent
 extends BlockBaseComponent
-
+## A block's colour: its own, brighter while it runs, flashing red after an
+## error. Every frame the parts in `color_affected` ease towards the colour
+## wanted (update_color()).
 
 const PULSE_DURATION := 0.4
 const COLOR_CHANGE_MULT := 20.0
@@ -12,55 +14,65 @@ const ERROR_DURATION := 2.0
 @export var color_affected: Array[Control]
 
 var target_color := Color.WHITE
-
-var error_timer: Timer
-var error_t := 2.0
 var erroring := false:
 	set = set_error
+
+var _error_timer: Timer
+var _error_t := 2.0
 
 
 func _ready() -> void:
 	target_color = base.data.color
-	error_timer = Timer.new()
-	error_timer.one_shot = true
-	error_timer.timeout.connect(set_error.bind(false))
-	add_child(error_timer)
+	_error_timer = Timer.new()
+	_error_timer.one_shot = true
+	_error_timer.timeout.connect(set_error.bind(false))
+	add_child(_error_timer)
 
-func _update(delta: float) -> void:
-		var final_target := target_color
-		
-		if erroring:
-			error_t += delta * ERROR_SPD_MULT
-			var t := pingpong(error_t, 1.0)
-			final_target = error_color.lerp(Color.WHITE, t)
-		
-		for affected in color_affected:
-			affected.self_modulate = affected.self_modulate.lerp(final_target, delta * COLOR_CHANGE_MULT)
+
+## Eases the block's parts a step towards the colour wanted, flashing between
+## red and white while it shows an error. Block calls this every frame.
+func update_color(delta: float) -> void:
+	var final_target := target_color
+	if erroring:
+		_error_t += delta * ERROR_SPD_MULT
+		var t := pingpong(_error_t, 1.0)
+		final_target = error_color.lerp(Color.WHITE, t)
+	for affected in color_affected:
+		affected.self_modulate = affected.self_modulate.lerp(final_target, delta * COLOR_CHANGE_MULT)
+
 
 func apply_immediately() -> void:
 	for affected in color_affected:
 		affected.self_modulate = target_color
 
+
 func highlight() -> void:
 	target_color = saturate(target_color)
 	Interpreter.block_highlighted.emit(base)
 
+
+## Lit for `duration` of running time, then back to its own colour.
 func pulse(duration := PULSE_DURATION) -> void:
 	highlight()
 	await Game.sleep(duration)
 	reset()
 
+
 func reset() -> void:
 	target_color = base.data.color
+
 
 func set_error(to: bool) -> void:
 	erroring = to
 	if erroring:
-		error_t = 0.0
+		_error_t = 0.0
+
 
 func start_error_timer() -> void:
-	error_timer.start(ERROR_DURATION)
+	_error_timer.start(ERROR_DURATION)
 
+
+## `color`, brighter: more saturated, or lighter when it is a grey.
 func saturate(color: Color) -> Color:
 	var col := color
 	if col.s < 0.1:

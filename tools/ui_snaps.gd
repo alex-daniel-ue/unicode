@@ -1,5 +1,4 @@
 extends Node
-
 ## Screenshots of the screens whose look changes without a level to play: the
 ## toolbox, the assistant's panel, a block with hinted slots on the canvas, the
 ## win card with a summary that has code in it, a room mid-scan and a list's goal
@@ -51,14 +50,14 @@ func _tips_shots() -> void:
 	for i in 20: await get_tree().process_frame
 	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
 		(guide as TutorialOverlay).skip()
-	var begin := puzzle._get_begin()
+	var begin := puzzle._find_begin()
 	var counting := (load("res://puzzle/blocks/control flow/for_int.tres") as BlockData).deep_copy()
 	for pair in [[0, "i"], [1, "0"], [2, "3"], [3, ""]]:
 		counting.text_blocks[pair[0]].text = pair[1]
 	var loop := Block.construct(counting) as NestedBlock
 	loop.mouth.add_child(Block.construct(load("res://level/objects/entities/robot/blocks/move.tres")))
 	begin.mouth.add_child(loop)
-	puzzle.notif.push("A message as long as a run's errors can be is too wide for one line, so it wraps onto the next one instead of running off the screen.", Notification.Type.ERROR)
+	puzzle.notifications.push("A message as long as a run's errors can be is too wide for one line, so it wraps onto the next one instead of running off the screen.", Notification.Type.ERROR)
 	puzzle._suggest_assistant()
 	for i in 40: await get_tree().process_frame
 	await _snap("tips")
@@ -81,7 +80,7 @@ func _reset_shots() -> void:
 	for i in 20: await get_tree().process_frame
 	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
 		(guide as TutorialOverlay).skip()
-	var begin := puzzle._get_begin()
+	var begin := puzzle._find_begin()
 	for i in 2:
 		begin.mouth.add_child(Block.construct(load("res://level/objects/entities/robot/blocks/move.tres")))
 	for i in 5: await get_tree().process_frame
@@ -134,6 +133,7 @@ func _room_shots() -> void:
 		puzzle.queue_free()
 		for i in 3: await get_tree().process_frame
 
+
 ## The main menu's quit popup, with the progress code in it.
 func _quit_shot() -> void:
 	var menu: Control = (load("res://menus/main/main_menu.tscn") as PackedScene).instantiate()
@@ -155,6 +155,7 @@ func _quit_shot() -> void:
 	await _snap("quit")
 	menu.queue_free()
 
+
 func _puzzle_shots() -> void:
 	Game.level = (load("res://level/levels/ar_4.tscn") as PackedScene).instantiate()
 	Game.level_scene = null
@@ -168,12 +169,12 @@ func _puzzle_shots() -> void:
 	# A for block on the canvas, its slots empty, to show the hints and shimmer.
 	var for_block := Block.construct(load("res://puzzle/blocks/control flow/for_int.tres"))
 	puzzle.canvas.add_child(for_block)
-	for_block.position = puzzle._get_begin().position + Vector2(0, 160)
+	for_block.position = puzzle._find_begin().position + Vector2(0, 160)
 	# A loose block let go right on top of Begin, where it can't attach: it
 	# should have drifted clear by the time of the shot (PuzzleCanvas._separate).
 	var loose := Block.construct(load("res://level/objects/entities/robot/blocks/move.tres"))
 	puzzle.canvas.add_child(loose)
-	loose.position = puzzle._get_begin().position + Vector2(12, 6)
+	loose.position = puzzle._find_begin().position + Vector2(12, 6)
 	for i in 30: await get_tree().process_frame
 	puzzle.side_panels[0].focus_content(puzzle.toolbox)
 	# One block's note open, through its eye, as a student would.
@@ -208,6 +209,7 @@ func _puzzle_shots() -> void:
 	puzzle.queue_free()
 	for i in 3: await get_tree().process_frame
 
+
 func _level_select_shot() -> void:
 	Game.level_id = &"ar-4"  # just played: level select should open on Arrays
 	var select: Node = (load("res://menus/level select/level_select.tscn") as PackedScene).instantiate()
@@ -235,6 +237,7 @@ func _level_select_shot() -> void:
 	await _snap("level_select_first")
 	select.queue_free()
 
+
 ## The pointer moved to `at`, by events rather than the real cursor, with its
 ## left button then pressed (true) or let go (false) there if `press` says.
 func _pointer(at: Vector2, press: Variant = null) -> void:
@@ -249,6 +252,7 @@ func _pointer(at: Vector2, press: Variant = null) -> void:
 		click.position = at
 		click.global_position = at
 		Input.parse_input_event(click)
+
 
 func _snap(label: String) -> void:
 	await RenderingServer.frame_post_draw

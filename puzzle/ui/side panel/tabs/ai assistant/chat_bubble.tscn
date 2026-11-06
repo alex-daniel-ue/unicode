@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="1_x0ows"]
 [ext_resource type="Script" uid="uid://nu0sx40wt3xk" path="res://puzzle/ui/side panel/tabs/ai assistant/chat_bubble.gd" id="2_xuyyj"]
-[ext_resource type="Texture2D" uid="uid://cgbux3a3yqg6t" path="res://puzzle/ui/block/templates/socket/value/debug_texture.png" id="3_pl706"]
+[ext_resource type="Texture2D" uid="uid://dmhudhn17si7k" path="res://puzzle/ui/side panel/tabs/ai assistant/bubble_texture.png" id="3_pl706"]
 [ext_resource type="Texture2D" uid="uid://q7qrg52rg6u6" path="res://menus/level select/art/chat_avatar.png" id="4_avatar"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvcr2"]

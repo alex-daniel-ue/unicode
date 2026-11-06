@@ -1,16 +1,15 @@
 extends TextEdit
-
+## The field a question is typed in. Enter sends, as in a chat app; Shift+Enter
+## starts a new line.
 
 signal submitted
 
 
-## Enter sends, as in a chat app; Shift+Enter starts a new line. Handled before
-## TextEdit's own input, which would put a new line in for Enter and nothing for
-## Shift+Enter.
+## Handled before TextEdit's own input, which would put a new line in for Enter
+## and nothing for Shift+Enter.
 func _gui_input(event: InputEvent) -> void:
 	if not event is InputEventKey:
 		return
-
 	var key := event as InputEventKey
 	if not key.pressed or key.keycode not in [KEY_ENTER, KEY_KP_ENTER]:
 		return

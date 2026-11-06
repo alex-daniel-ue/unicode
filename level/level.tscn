@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://drm2h0sdbclcy" path="res://puzzle/blocks/generic/begin.tres" id="4_d5hd8"]
 [ext_resource type="Script" uid="uid://beu7xt5nxi8f5" path="res://level/level_description.gd" id="5_cw150"]
 [ext_resource type="Script" uid="uid://dih2mwqkdmcfd" path="res://level/goal_manager.gd" id="6_uenn3"]
-[ext_resource type="Script" uid="uid://bfk6051guh5k6" path="res://level/components/camera.gd" id="8_0exh4"]
+[ext_resource type="Script" uid="uid://bfk6051guh5k6" path="res://level/components/level_camera.gd" id="8_0exh4"]
 [ext_resource type="Script" uid="uid://cb64jhsbft6yo" path="res://level/room_goals.gd" id="9_xii2b"]
 
 [node name="Level" type="Node2D" node_paths=PackedStringArray("preset", "description")]

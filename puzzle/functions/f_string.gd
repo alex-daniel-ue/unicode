@@ -1,6 +1,5 @@
 class_name FString
 extends RefCounted
-
 ## Text typed into a slot the way Python writes it: "quotes", the escape codes
 ## \n, \t, \\, \" and \', and f-strings, f"Hello, {name}!", whose {name} is
 ## the value of that variable when the block runs. That is Python's string
@@ -18,10 +17,12 @@ static func is_f_string(raw: String) -> bool:
 	var quote := raw[1]
 	return raw[0] in ["f", "F"] and quote in ['"', "'"] and raw[raw.length() - 1] == quote
 
+
 ## The text inside an f-string's quotes, before its braces are filled. What a
 ## slot shows as its type and colour: an f-string is text.
 static func template_of(raw: String) -> String:
 	return unescape(raw.substr(2, raw.length() - 3))
+
 
 ## Python's escape codes in the text between quotes.
 static func unescape(text: String) -> String:
@@ -45,6 +46,7 @@ static func unescape(text: String) -> String:
 		out += c
 		i += 1
 	return out
+
 
 ## The f-string `raw` with its braces filled, or null after raising the error
 ## on `block`.
@@ -80,6 +82,7 @@ static func format(block: Block, raw: String) -> Variant:
 		out += filled
 		i = close + 1
 	return out
+
 
 static func _fill(block: Block, inside: String) -> Variant:
 	var spec := ""

@@ -1,8 +1,7 @@
 extends Node
-
 ## Walks the first level's tour by doing what each page asks, through the real
 ## buttons where there is one, and reports any page it can't get past. The trash
-## page is passed with Trash all, the way that used to strand the tour.
+## page is passed with Trash all, which a guide has to count as a trash too.
 ##   godot --headless --path . res://tools/tour_check.tscn
 
 const A := Guides.Advance
@@ -67,8 +66,9 @@ func _ready() -> void:
 		return
 	_done("PASS: every page of the tour was passed by doing what it asked, and the menu replays and skips it.")
 
+
 func _do(puzzle: Puzzle, page: Dictionary) -> void:
-	var begin := puzzle._get_begin()
+	var begin := puzzle._find_begin()
 	match page.get("advance", A.NEXT):
 		A.NEXT:
 			(puzzle.find_children("*", "GuideCard", true, false)[0] as GuideCard).next_button.pressed.emit()
@@ -86,7 +86,8 @@ func _do(puzzle: Puzzle, page: Dictionary) -> void:
 			await get_tree().process_frame
 			Tutorial.block_placed.emit(block, begin)
 		A.BLOCK_TRASHED:
-			# Trash all, not a drag onto the bin: the case that used to strand it.
+			# Trash all, not a drag onto the bin: a guide waiting for a block to be
+			# trashed must hear about Trash all too.
 			puzzle.canvas.clear()
 		A.MENU_OPENED:
 			puzzle.open_menu()
@@ -96,6 +97,7 @@ func _do(puzzle: Puzzle, page: Dictionary) -> void:
 			(puzzle.get_node(RIGHT + "PlayButton") as Button).pressed.emit()
 		A.RUN_FINISHED:
 			pass  # the run started on the page before finishes by itself
+
 
 func _done(result: String) -> void:
 	print("TOUR ", result)

@@ -71,5 +71,3 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_1pb65")
 
 [node name="VisualComponent" parent="." index="7" node_paths=PackedStringArray("color_affected")]
 color_affected = [NodePath("../UpperLip"), NodePath("../Body"), NodePath("../LowerLip")]
-
-[connection signal="resized" from="Body/Mouth" to="Body" method="_on_mouth_resized"]

@@ -81,7 +81,7 @@ func make_state(c: Dictionary) -> void:
 	for i in 10: await get_tree().process_frame
 
 	if c.program != null:
-		var begin: CapBlock = puzzle._get_begin()
+		var begin: CapBlock = puzzle._find_begin()
 		for child in begin.mouth.get_children():
 			begin.mouth.remove_child(child)
 			child.queue_free()

@@ -1,15 +1,18 @@
 class_name SocketBlock
 extends Block
+## A block that goes in a slot: a value (ValueBlock) or a condition
+## (ExpressionBlock). A slot is a SocketBlock too: a block dropped into it hides
+## it, and remembers it as its overridden_socket, to bring back when it leaves.
 
-
+## The slot this block was dropped into, hidden behind it.
 var overridden_socket: SocketBlock
 
 
 func _ready() -> void:
 	if data.func_type == BlockData.FuncType.LAMBDA:
-		function.set_func(socket_function)
-	
+		function.set_callable(socket_function)
 	super()
+
 
 func _get_drag_data(at_position: Vector2) -> Variant:
 	var result: Variant = super(at_position)
@@ -17,45 +20,47 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 		overridden_socket.visible = true
 	return result
 
+
 func _can_drop_data(_at_position: Vector2, drop: Variant) -> bool:
 	if preview_type == Block.PreviewType.DROP:
 		return drop is SocketBlock
-	
+	# Inside a block, that block must be on the canvas, not in the toolbox.
 	var solid := get_parent_matching(_has_top_notch)
-	
 	return (
-		not data.toolbox and
-		data.socket.receptive and
-		drop is SocketBlock and
-		# if in a Block, Block must not be toolbox
-		(solid == null or not solid.data.toolbox)
+		not data.toolbox
+		and data.socket.receptive
+		and drop is SocketBlock
+		and (solid == null or not solid.data.toolbox)
 	)
 
+
+## The value `string` stands for, tried in this order: nothing, a boolean, an
+## integer, a decimal, an f-string or quoted text, a variable's name. Null when
+## it is none of them.
 func typecast(string: String) -> Variant:
-	## Order of typecasting:
-	## Empty string, boolean, integer, float, string, identifier, invalid
-	
+	const QUOTES := ['"', "'"]
 	if string.is_empty(): return null
 	if string == "True": return true
 	if string == "False": return false
 	if string.is_valid_int(): return string.to_int()
 	if string.is_valid_float(): return string.to_float()
-	
-	const quotes := ['"', "'"]
-	var last := len(string)-1
+
+	var last := len(string) - 1
 	# f"Hello, {name}!": text, filled in when the block runs (socket_function).
 	if FString.is_f_string(string):
 		return FString.template_of(string)
-	if string[last] in quotes and string[0] in quotes and last >= 1:
-		return FString.unescape(string.substr(1, last-1))
-	
-	if string.is_valid_ascii_identifier(): return StringName(string)
-	
+	if string[last] in QUOTES and string[0] in QUOTES and last >= 1:
+		return FString.unescape(string.substr(1, last - 1))
+	if string.is_valid_ascii_identifier():
+		return StringName(string)
 	return null
+
 
 func has_overridden() -> bool:
 	return overridden_socket != null
 
+
+## What a slot gives when it runs: what was typed or chosen in it.
 func socket_function() -> Variant:
 	if data.value == null and data.socket != null and data.socket.receptive:
 		function.error("This slot is empty. Drop a condition into it.")
@@ -64,6 +69,7 @@ func socket_function() -> Variant:
 	if FString.is_f_string(raw):
 		return FString.format(self, raw)
 	return typecast(raw)
+
 
 func _has_top_notch(block: Block) -> bool:
 	return block.data.top_notch

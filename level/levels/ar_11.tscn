@@ -68,6 +68,7 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 [node name="LevelDescription" parent="." index="0"]
 title = "Here either day"
 mission = "The monday list has the students who came on Monday. The tuesday list has the students who came on Tuesday. Put every student who came on either day into the present list, and put each student in only once."
+rooms = PackedStringArray("Three on Monday, three on Tuesday.", "Two on Monday, two on Tuesday.", "Four on Monday, two on Tuesday.")
 twist = "Some students came on both days."
 tip = "The Not block turns True into False, and False into True."
 

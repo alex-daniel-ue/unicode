@@ -1,6 +1,5 @@
 class_name BlockPicture
 extends Control
-
 ## An inert picture of a block, for guide pages and their graphics: it looks like
 ## the real one and can't be dragged, clicked or typed into.
 ##
@@ -19,14 +18,13 @@ extends Control
 const TAG := preload("res://puzzle/ui/canvas/value_tag.tscn")
 ## Room above and to the right of the block for the tag to stick out into.
 const TAG_ROOM := Vector2(18, 12)
+const BEGIN := "res://puzzle/blocks/generic/begin.tres"
 
 @export var data: BlockData
 @export var values: PackedStringArray = []
 @export var list_name := ""
 @export var tag := ""
 @export_multiline var program := ""
-
-const BEGIN := "res://puzzle/blocks/generic/begin.tres"
 
 var _block: Control
 var _badge: Control
@@ -50,7 +48,7 @@ func _ready() -> void:
 		else:
 			shown.text_blocks[i].text = value
 	var block := Block.construct(shown)
-	block.display = true
+	block.is_picture = true
 	if not program.is_empty() and block is NestedBlock:
 		var parsed: Variant = JSON.parse_string(program)
 		if parsed is Array:
@@ -71,6 +69,7 @@ func _ready() -> void:
 	block.resized.connect(_fit)
 	_fit()
 
+
 ## Sizes this control to the block (plus room for the tag) and pins the tag to
 ## the block's top-right corner.
 func _fit() -> void:
@@ -82,6 +81,7 @@ func _fit() -> void:
 	if _badge != null:
 		_badge.position = Vector2(_block.size.x + room.x - _badge.size.x, 0)
 
+
 ## Builds `spec` (with its body, for a nested block) into `parent`'s mouth.
 func _add(parent: NestedBlock, spec: Variant) -> void:
 	if not spec is Array:
@@ -90,15 +90,16 @@ func _add(parent: NestedBlock, spec: Variant) -> void:
 	var body: Array = []
 	if not parts.is_empty() and parts[-1] is Dictionary:
 		body = (parts.pop_back() as Dictionary).get("body", [])
-	var spec_data := LevelBlockPreset._data_for(parts)
+	var spec_data := LevelBlockPreset.data_for(parts)
 	if spec_data == null:
 		return
 	var inner := Block.construct(spec_data)
-	inner.display = true
+	inner.is_picture = true
 	parent.mouth.add_child(inner)
 	if inner is NestedBlock:
 		for child_spec: Variant in body:
 			_add(inner as NestedBlock, child_spec)
+
 
 func _silence(block: Control) -> void:
 	for node in [block] + block.find_children("*", "Control", true, false):

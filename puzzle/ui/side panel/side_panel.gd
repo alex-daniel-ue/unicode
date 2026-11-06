@@ -1,15 +1,17 @@
 class_name SidePanel
 extends Panel
-
+## A panel at the side of the puzzle that slides open and shut, showing one of
+## its tabs (its children) at a time.
 
 ## Whenever the panel starts opening or closing, whoever asked.
 signal toggled(open: bool)
 
-const VIEWPORT_RATIO := 1. / 3.5
+## How much of the window's width the open panel takes.
+const VIEWPORT_RATIO := 1.0 / 3.5
 
 var is_open := false
+## Holds the panel as it is: the room's panel stays open while a program runs.
 var keep_state := false
-
 var expand_size: float
 var shown_content: Control
 
@@ -18,25 +20,25 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_update_expand_size)
 	_update_expand_size()
 
+
 func show_menu(to_open: bool) -> void:
 	if keep_state:
 		return
-	
+
 	var changed := is_open != to_open
 	is_open = to_open
 	if changed:
 		toggled.emit(is_open)
-	
-	var destination := Vector2(
-		expand_size if to_open else 0.0,
-		custom_minimum_size.y
-	)
-	
+
+	var destination := Vector2(expand_size if to_open else 0.0, custom_minimum_size.y)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_QUAD)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "custom_minimum_size", destination, 0.2)
 
+
+## What a tab's button does: opens the panel on `control`, or shuts it when
+## `control` is the tab already showing.
 func show_content(control: Control) -> void:
 	var was_open := is_open
 	if not is_open:
@@ -50,13 +52,14 @@ func show_content(control: Control) -> void:
 	if is_open:
 		Tutorial.tab_shown.emit(control)
 
+
 ## Opens the panel on `control`. Unlike show_content(), calling this on the
 ## already-visible tab won't toggle the panel shut.
 func focus_content(control: Control) -> void:
 	if not is_open:
 		show_menu(true)
-
 	_switch_to(control)
+
 
 ## Shows `control` and hides the other tabs, fading the new one in when it is a
 ## different tab from the one already showing.
@@ -67,6 +70,7 @@ func _switch_to(control: Control) -> void:
 	shown_content = control
 	if changed and control != null:
 		UiMotion.fade_in(control, 0.16)
+
 
 func _update_expand_size() -> void:
 	expand_size = get_viewport_rect().size.x * VIEWPORT_RATIO

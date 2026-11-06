@@ -1,6 +1,5 @@
 class_name ListGraphic
 extends Control
-
 ## A guide picture built around a real list board, so the picture looks exactly
 ## like the boards in the rooms. Sets the board up from these when it's shown:
 ## a goal to show on it, positions the "program" has written, and a box to

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmhudhn17si7k"
-path="res://.godot/imported/debug_texture.png-d19d5cb6ba9cf6bf9e85bea72fb2d6fb.ctex"
+path="res://.godot/imported/bubble_texture.png-4524c4f0296c063bb1c4023b1b831d1e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://puzzle/ui/block/templates/socket/value/debug_texture.png"
-dest_files=["res://.godot/imported/debug_texture.png-d19d5cb6ba9cf6bf9e85bea72fb2d6fb.ctex"]
+source_file="res://puzzle/ui/side panel/tabs/ai assistant/bubble_texture.png"
+dest_files=["res://.godot/imported/bubble_texture.png-4524c4f0296c063bb1c4023b1b831d1e.ctex"]
 
 [params]
 
