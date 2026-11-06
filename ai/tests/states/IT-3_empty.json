@@ -1,0 +1,18 @@
+{
+  "id": "IT-3_empty",
+  "level_id": "it_3",
+  "mistake": "Nothing placed or run yet: the level as it opens.",
+  "context": {
+    "instructions": "Around the corners\nYOUR MISSION\nOne program runs in all three rooms. Each room has corners. Get the robot to the green flag in each room.\nRoom 1\nOne corner.\nRoom 2\nTwo corners.\nRoom 3\nA path with many corners.\nTHE TWIST\nEach room turns a different number of times.\n★★★\n6 blocks or fewer",
+    "blocks": "- while {condition: boolean}: A loop that repeatedly executes the blocks inside as long as the condition is true.\n- if {condition: boolean}: Executes the blocks inside only once, and only if the provided boolean expression evaluates to true.\n- else: Executes the blocks inside only if the if block above it, and any elif blocks in the same chain, did not run. Must be placed directly below an if or an elif.\n- not {value: boolean}: Flips a true or false value to the opposite one. Put a condition inside it to ask whether that condition is NOT true.\n- step forward: Steps the robot one tile forward, in the direction it is facing. Fails if the robot hits a wall.\n- turn {direction: string}: Rotates the robot 90 degrees to the left or right, or turns it around to face the other way.\n- ahead is {what: blocked/destination/puddle}: Asks what is on the single tile directly in front of the robot. True only if that tile holds the thing you picked.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: WhileBlock\n      kind: nested\n      text: \"while {}\"\n      parameters:\n        - block: NotBlock\n          kind: expression\n          text: \"not {}\"\n          parameters:\n            - block: AheadIsBlock\n              kind: expression\n              text: \"ahead is {}\"\n              parameters:\n                - destination\n      children:\n        - block: IfBlock\n          kind: nested\n          text: \"if {}\"\n          parameters:\n            - block: AheadIsBlock\n              kind: expression\n              text: \"ahead is {}\"\n              parameters:\n                - blocked\n          children:\n            - block: TurnBlock\n              kind: statement\n              text: \"turn {}\"\n              parameters:\n                - left\n        - block: ElseBlock\n          kind: nested\n          text: \"else\"\n          children:\n            - block: MoveBlock\n              kind: statement\n              text: \"step forward\"\n    - block: MoveBlock\n      kind: statement\n      text: \"step forward\"",
+    "last_run": "The student hasn't pressed Play on this level yet.",
+    "last_run_program": "",
+    "output_log": "",
+    "robot": "At its start in Room 1: tile (1, 3), facing right. Nothing has run yet.",
+    "rooms": "Room 1: the robot starts at tile (1, 3), facing right; it has to end on tile (4, 1).\nRoom 2: the robot starts at tile (1, 9), facing right; it has to end on tile (1, 7).\nRoom 3: the robot starts at tile (1, 13), facing right; it has to end on tile (5, 15).",
+    "robot_path": "",
+    "lists": ""
+  }
+}

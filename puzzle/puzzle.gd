@@ -223,10 +223,16 @@ func _toolbox_button() -> Button:
 	button.pressed.connect(func() -> void:
 		side_panels[0].focus_content(toolbox)
 		Tutorial.tab_shown.emit(toolbox))
-	Interpreter.running_changed.connect(func() -> void:
-		if is_instance_valid(button):
-			button.disabled = Interpreter.is_running
-			row.modulate.a = 0.45 if button.disabled else 1.0)
+	# Let go of when the button goes. A lambda on an autoload's signal outlives
+	# what it captured, so after a level change every run logged "Lambda capture
+	# at index 0 was freed", once for each button before.
+	var follow_running := func() -> void:
+		button.disabled = Interpreter.is_running
+		row.modulate.a = 0.45 if button.disabled else 1.0
+	Interpreter.running_changed.connect(follow_running)
+	button.tree_exited.connect(func() -> void:
+		if Interpreter.running_changed.is_connected(follow_running):
+			Interpreter.running_changed.disconnect(follow_running))
 	return button
 
 func _card_label(text: String, font: Font, font_size: int, color: Color) -> Label:

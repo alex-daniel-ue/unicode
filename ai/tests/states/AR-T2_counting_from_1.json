@@ -1,0 +1,18 @@
+{
+  "id": "AR-T2_counting_from_1",
+  "level_id": "ar_t2",
+  "mistake": "Uses index 3 for the third value, counting from 1.",
+  "context": {
+    "instructions": "Read a list\nYOUR MISSION\nStop the robot on the green flag in each room. The flag is as far away as the third value in the list.\nRoom 1\nA list with three values.\nRoom 2\nA list with four values.\nTHE TWIST\nEach room has a different list.\nIn Python, index 0 of route is written as  route[0] .\n★★★\n1 block or fewer",
+    "blocks": "- index {index: int} of {list: list}: Gives the value at an index in a list. Indexes start at 0, and -1 is the last value.\n- route: The list named route, shown on its board in the room. Drop it into any block that needs a list.\n- step forward {count: int} times: Steps the robot forward one tile, that many times. Fails if the robot hits a wall on the way.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: MoveTilesBlock\n      kind: statement\n      text: \"step forward {} times\"\n      parameters:\n        - block: ItemOfBlock\n          kind: value\n          text: \"index {} of {}\"\n          parameters:\n            - 3\n            - route",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: MoveTilesBlock\n      kind: statement\n      text: \"step forward {} times\"\n      parameters:\n        - block: ItemOfBlock\n          kind: value\n          text: \"index {} of {}\"\n          parameters:\n            - 2\n            - route",
+    "last_run": "Did not solve the level; the reason is in the output log. The blocks are unchanged since that run.",
+    "last_run_program": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: MoveTilesBlock\n      kind: statement\n      text: \"step forward {} times\"\n      parameters:\n        - block: ItemOfBlock\n          kind: value\n          text: \"index {} of {}\"\n          parameters:\n            - 3\n            - route",
+    "output_log": "Room 1 of 2 —\n[ERROR]: Index 3 is out of range. 'route' has 3 values, at indexes 0 to 2., from \"index 3 of route\"\n\t\tStack trace: begin code > step forward index 3 of route times\n\t\tStack variables: {  }",
+    "robot": "Now in Room 1: tile (1, 3), facing right. This is where the last run left it, not where it starts. It starts that room at tile (1, 3), facing right.",
+    "rooms": "Room 1: the robot starts at tile (1, 3), facing right; it has to end on tile (4, 3).\nRoom 2: the robot starts at tile (1, 10), facing right; it has to end on tile (6, 10).",
+    "robot_path": "The robot didn't step or turn in the last run.",
+    "lists": "Room 1: route = [4, 1, 3]  (list)\nRoom 2: route = [2, 6, 5, 1]  (list)"
+  }
+}

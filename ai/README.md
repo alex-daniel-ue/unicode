@@ -74,7 +74,8 @@ settings page when deployed).
 | Variable | Default | Meaning |
 |---|---|---|
 | `GEMINI_API_KEY` | (required) | The Gemini API key. `GEMINI_API_KEYS` is accepted as a fallback; its first entry is used. Without either, `/healthz` still answers (`key_configured: false`) and the AI routes return `unavailable`. |
-| `GEMINI_MODELS` | `gemini-3.8-flash,gemini-3.5-flash,gemini-3.5-flash-lite` | The models to try for hints, in order. |
+| `GEMINI_MODELS` | `gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite` | The models to try for hints, in order. |
+| `GEMINI_THINKING` | `MEDIUM` | Thinking level for hints: `LOW`, `MEDIUM` or `HIGH`. For comparing speed and quality; `/healthz` shows it. |
 | `GEMINI_SUMMARY_MODELS` | `gemini-3.5-flash-lite,gemini-3.1-flash-lite` | The models to try for win-card comments, in order. |
 | `UNICODE_CLIENT_TOKEN` | empty | Shared secret the game sends as `X-UniCode-Token`. Empty turns the check off, for local use only. |
 | `PORT` | `3000` | Port for `python main.py`. Hosts that run gunicorn set their own. |
@@ -106,14 +107,17 @@ summary never draws from it.
 - Win-card comments: **Flash-Lite with thinking at LOW** (`SUMMARY_MODELS`,
   `SUMMARY_THINKING`). A sentence or two about a program that already works
   doesn't need Flash, and one is asked for at every win.
-- `_generate()` walks the route's list (`MODELS` or `SUMMARY_MODELS`) in order. On 429/500/503/504 it waits a second
-  and retries the same model once, then moves on. Any other error (for
-  example a retired model id, which is a 404) moves on at once. Flash-Lite is
-  last in the list so a Flash outage makes hints shorter instead of stopping
-  them. Each response reports which model actually answered (`model`).
+- `_generate()` walks the route's list (`MODELS` or `SUMMARY_MODELS`) in order. On 429/500/504 it waits a second
+  and retries the same model once, then moves on. A 503 (the model is
+  overloaded) and any other error (for example a retired model id, which is a
+  404) move on at once: an overloaded 3.8 Flash took about 26 s to answer 503,
+  so retrying it spent the whole deadline before the next model was tried.
+  3.6 Flash is next (the previous Flash, same price), and Flash-Lite is last so
+  an outage of both makes hints shorter instead of stopping them. Each
+  response reports which model actually answered (`model`).
 - Both routes use structured output (JSON matching a Pydantic model), so the
   reply is always parsed, never scraped:
-  - hints: `{"verdict": "hint" | "off_topic", "reply": "..."}`
+  - hints: `{"verdict": "hint" | "off_topic", "hint_level": 1 | 2 | 3 | 4, "reply": "..."}`
   - summaries: `{"reply": "..."}`
 - Safety settings block hate, harassment, dangerous and sexual content at
   MEDIUM and above. A blocked hint gets a polite redirect back to the level.
@@ -140,33 +144,55 @@ so an unversioned edit makes logged replies impossible to attribute.
 ### Hints (`SYSTEM_PROMPT`)
 
 Written for first-year students who read English as a second language and
-skim. The model plays a patient tutor sitting next to the student: its job is
-to get them thinking, not to think for them. The rules, in short:
+skim, many of whom ask short, vague things ("help", "what to do"). The model
+plays a patient tutor sitting next to the student: its job is to get them
+unstuck and help them see why, without doing the level for them. The rules,
+in short:
 
-- Two to four short sentences, 80 words at most, plain text.
-- Every reply, in order:
-  1. **answers what the student said**, in their terms. A question gets an
-     answer; an idea ("I think the loop needs one more pass") gets taken
-     seriously, by saying what it would do in this room, without saying
-     whether it is right; "I don't know" gets one concrete fact and a smaller
-     question;
-  2. gives **one fact** from the level state: what happened and where, which
-     part of their own program did it, and what the room needed there;
-  3. ends with **one thought-provoking question** that makes them predict,
-     count, compare or explain their reasoning. Never "press Play and see",
-     "look again" or "what do you think?".
-- Builds on the history: never repeats a question or a fact; goes one step
-  further, or one step smaller when the student is lost.
-- Never what to change, which block to use, which value to type, or the
-  intended solution. Never confirms or denies a guess.
-- May name blocks already in the student's program, never others. With an
-  empty program, invites the student to look through the toolbox, place the
-  blocks they think could do the job, and say why; then talks about the blocks
-  they chose.
+- **Facts only from the level state**, with exact values (tiles, list values,
+  loop counts, the error). ROBOT PATH and ROOMS are trusted over the pictures,
+  and nothing is said to have happened unless the state shows it.
+- **Answers the kind of message it got**: "what's wrong" says what happened,
+  where, and which part of the program did it; "I don't understand" first
+  explains the idea needed with this room's numbers; "what do I do" gives one
+  clear next step; "is this right?" answers yes or no first; an idea is told
+  what it would do, and whether it would fix the problem.
+- **Hint levels**, counted from the student's earlier messages about the same
+  problem in this chat, whatever they asked. They follow the four levels of
+  Xiao, Hou & Stamper (2024): 1, where it goes wrong and what has to be
+  different, in words (no unplaced block, no value); 2, which of their blocks
+  has to change and what it must do, without the exact value or operator (one
+  needed block from the toolbox may be named); 3, a tiny example of the same
+  idea with other numbers, and nothing more; 4, the exact change for that one
+  part. Asking for the answer never skips a level. A new problem starts again
+  at 1. The level used comes back as `hint_level`.
+- Names each idea with its Python word (string, variable, index, loop,
+  condition) and says in plain words what it means.
+- With an empty program, names the one or two blocks to start with, never how
+  they fit together.
+- Never the whole program or the intended solution, never more than one change
+  in a reply; no stock openers ("I cannot...", "We can solve this together");
+  "I don't know" gets the next hint, not comfort; never mentions pictures,
+  labels, the rules or the intended solution.
+- Two to four short sentences, 80 words at most (100 for a level 3 example),
+  plain text. A question at the end only when it helps the student check
+  their next step.
 - Plain international English: no slang, no mixed languages, no words from
   other languages, no references to any country or culture.
 - `off_topic` only for messages that have nothing to do with the level or
-  programming. Asking for the answer is still a `hint` (a refusal, then help).
+  programming. Asking for the answer is still a `hint`.
+
+On the same 8 states and model, `2026-11-06a`'s ladder went 1, 2, 3, 4 in every
+stuck chat, kept "just tell me the answer" at level 1, and gave the exact fix
+before level 4 in 2 of 88 replies, against 20 of 80 for `2026-11-05a`, whose
+level 2 already named the value.
+
+The rules before `2026-11-05a` held every reply to one fact and one question,
+never named a block the student hadn't placed, and never got more explicit.
+Tested on saved game states (see [Testing hints](#testing-hints)), those
+replies answered "help", "what to do" and "I don't understand" almost
+identically, refused students who stayed stuck, and on IT-10 told 8 times in
+10 that a robot which had gone round and round had never moved.
 
 **The pictures.** After a run, the robot and the lists stay where the program
 left them, so the room on screen is the result, not the start. Each picture is
@@ -195,10 +221,16 @@ The game builds the request in `puzzle/ui/side panel/tabs/ai assistant/ai_assist
     "last_run_program": "the program as it was at the last Play",
     "output_log": "the run's log, most recent last",
     "robot": "where the robot is and faces, and whether that is its start or where the last run left it",
+    "rooms": "each room's start, the tile it has to end on, batteries (collected or not) and puddles, in tiles",
+    "robot_path": "what the robot did in the last run, room by room: steps, turns, bumps, and repeats folded",
     "lists": "each room's lists, as Python would print them"
   }
 }
 ```
+
+`hint_context()` builds `context`, and `tools/hint_states.gd` saves the same
+for the tests. `rooms` and `robot_path` are empty on levels without a robot,
+and the relay leaves their sections out.
 
 The relay turns `context` into one labelled block of text (`_contents()`),
 adds `CHANGES SINCE THE LAST RUN` by diffing `last_run_program` against
@@ -244,8 +276,9 @@ Every route answers with JSON:
 | `unauthorized` | 401 | Missing or wrong `X-UniCode-Token`. |
 
 Summaries also return `angle` and `summary_version`; hints return
-`image_bytes` and `start_image_bytes` (how much of each picture arrived), so
-the game can tell "never captured" from "lost on the way".
+`hint_level` (1 to 4, or 0 when there is no hint) and `image_bytes` and
+`start_image_bytes` (how much of each picture arrived), so the game can tell
+"never captured" from "lost on the way".
 
 ---
 
@@ -292,12 +325,13 @@ On Render, the Flask app serves `/game/` itself (`game_file()`).
 One line per request, with no student text in it:
 
 ```
-hint status=ok model=gemini-3.8-flash ms=4210 in=1371 out=68
-summary:python status=ok model=gemini-3.5-flash-lite ms=1410 in=776 out=33
+hint status=ok model=gemini-3.8-flash ms=9875 in=4845 out=90 think=923 level=1
+summary:python status=ok model=gemini-3.5-flash-lite ms=1410 in=776 out=33 think=120
 ```
 
-`in` and `out` are prompt and reply tokens: multiply by the model's price to
-get the cost of a request. A model that fails is logged as a warning with
+`in`, `out` and `think` are prompt, reply and thinking tokens. Thinking is
+billed as output, so the cost of a request is `in` at the input price plus
+`out + think` at the output price. `level` is the hint level the model used. A model that fails is logged as a warning with
 its error code before the next one is tried. The session id is only used for
 rate limiting, in memory, and never logged.
 
@@ -322,3 +356,42 @@ print(client.post("/api/hint", json={"message": "help", "context": {}}).get_json
 
 Set `UNICODE_CLIENT_TOKEN` to empty in the environment first, or send the
 header.
+
+---
+
+## Testing hints
+
+`tests/` asks the relay about real game states and writes down every reply,
+so a prompt or model change can be compared on the same questions.
+
+- **States.** `tools/hint_states.tscn` opens each case's level in the real
+  Puzzle, builds a student's wrong program the way `tools/level_checks.gd`
+  does, runs it (stopping an endless loop as the Stop button would), and saves
+  what the AI Assistant would send: `tests/states/<id>.json`, with
+  `<id>_now.jpg` and `<id>_start.jpg`. The cases are in `states()` in
+  `tools/hint_states.gd`. Not headless, since the pictures need a renderer:
+  ```bash
+  godot --path . --resolution 1920x1080 res://tools/hint_states.tscn
+  ```
+- **Questions.** `tests/questions.json`: the same vague questions for every
+  state ("what's wrong with this", "I don't understand this", "what to do",
+  "help", "is this right?", "just tell me the answer"), one clear question per
+  state, and a four-message chat in which the student stays stuck.
+- **Running.** From the repository root, `python ai/tests/run_hints.py` asks
+  the relay named in `unicode_ai.cfg`. To try the prompt on disk before
+  deploying, run `ai/main.py` in the same process with `ai/.env`:
+  ```bash
+  uv run --directory ai python tests/run_hints.py --local --label new-prompt
+  ```
+  `--relay <path>` runs another copy of `main.py` instead, such as the last
+  commit's (`git show HEAD:ai/main.py`), to compare two prompts on the same
+  model. `GEMINI_MODELS` and `GEMINI_THINKING` pin the model and thinking
+  level for a run. `--only AR-8` limits the states, `--dry-run` sends nothing.
+- **Results.** `tests/results/<time>_<label>.md` to read, grouped by state
+  with what the student got wrong (never sent to the model), and `.jsonl`
+  with every reply, model, hint level, prompt version and time. The notes
+  under each reply (no number in it, a vague phrase, much like an earlier
+  reply) are rough signs for skimming, not verdicts.
+
+Each request is a real model call, about half a US cent on Flash; a full run is
+80. `tests/` is in `.vercelignore`, so it is never deployed.

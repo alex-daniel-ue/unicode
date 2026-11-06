@@ -18,6 +18,16 @@ var move_duration := 0.2
 var move_tween: Tween
 var step_size := 32.0
 
+## What the robot did in the last run, for the AI Assistant: one entry per step,
+## turn or bump, saying what happened, where the robot was after it (`at`), which
+## way it faced, and in which room. Cleared when a run starts. Without it the
+## model saw only where a run ended, and a robot that went round and stopped back
+## on its start tile read as one that had never moved. ai_assistant.gd words it.
+var path: Array[Dictionary] = []
+## An endless loop stops adding after this many; the start is what explains it,
+## and the assistant compares entries pairwise to find the repeating part.
+const PATH_LIMIT := 600
+
 ## How high the sprite hops on a turn, and on a turn all the way around.
 const TURN_HOP := 7.0
 const AROUND_HOP := 11.0
@@ -69,6 +79,7 @@ func move(from_this: Block) -> void:
 	var velocity := facing_direction * step_size
 	if test_move(global_transform, velocity):
 		_bump()
+		_note(&"bump")
 		from_this.function.error("Robot: I can't step forward.")
 		return
 	
@@ -91,6 +102,7 @@ func move(from_this: Block) -> void:
 	# Invariant: when move() returns, the robot is exactly on the target tile.
 	cancel_motion()
 	position = target
+	_note(&"step")
 
 ## text: step forward {count} times
 ##
@@ -138,6 +150,17 @@ func _on_interpreter_running_changed() -> void:
 		cancel_motion()
 	else:
 		_settle()
+		path.clear()
+
+## Adds what just happened to `path`, with where the robot is now.
+func _note(kind: StringName, extra := {}) -> void:
+	if path.size() >= PATH_LIMIT:
+		return
+	var level := _level()
+	var entry := {kind = kind, at = global_position, facing = facing_direction,
+		room = level.current_room if level != null else 0}
+	entry.merge(extra)
+	path.append(entry)
 
 ## text: turn {left/right/around}
 func turn(from_this: Block) -> void:
@@ -164,6 +187,7 @@ func turn(from_this: Block) -> void:
 	if Interpreter.interrupted:
 		return
 	facing_direction = turned
+	_note(&"turn", {dir = turn_dir})
 
 ## text: ahead is {TAGS}
 func ahead_is(from_this: Block) -> bool:

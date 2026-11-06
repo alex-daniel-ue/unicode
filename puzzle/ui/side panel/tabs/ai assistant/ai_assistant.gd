@@ -269,17 +269,7 @@ func _send_hint_request(msg: String) -> void:
 		screenshot_jpeg_b64 = screenshot,
 		# Only once something has run: before that, the room on screen is the start.
 		start_screenshot_jpeg_b64 = _start_shot if not puzzle.last_run_yaml.is_empty() else "",
-		context = {
-			instructions = level.description.get_raw() if level else "N/A",
-			blocks = _get_available_blocks_doc(),
-			workspace = puzzle.canvas.serializer.yaml_serialize(),
-			intended_solution = level.intended_solution if level else "N/A",
-			last_run = puzzle.describe_last_run(),
-			last_run_program = puzzle.last_run_yaml,  # the relay diffs this against workspace
-			output_log = "\n".join(Interpreter.output_log.slice(-LOG_LINES)),
-			robot = _robot_state(),
-			lists = _lists_state(),
-		},
+		context = hint_context(),
 	}
 	
 	_pending_json = JSON.stringify(payload)
@@ -374,6 +364,25 @@ func _on_hint_failed(text: String) -> void:
 #endregion
 
 #region Context gathering
+## The level as the relay reads it: everything a hint request carries besides
+## the question, the chat and the pictures. tools/hint_states.gd saves this for
+## the relay's tests (ai/tests), so they ask about exactly what the game sends.
+func hint_context() -> Dictionary:
+	var level: Level = Game.level if is_instance_valid(Game.level) else null
+	return {
+		instructions = level.description.get_raw() if level else "N/A",
+		blocks = _get_available_blocks_doc(),
+		workspace = puzzle.canvas.serializer.yaml_serialize(),
+		intended_solution = level.intended_solution if level else "N/A",
+		last_run = puzzle.describe_last_run(),
+		last_run_program = puzzle.last_run_yaml,  # the relay diffs this against workspace
+		output_log = "\n".join(Interpreter.output_log.slice(-LOG_LINES)),
+		robot = _robot_state(),
+		rooms = _rooms_state(),
+		robot_path = _robot_path(),
+		lists = _lists_state(),
+	}
+
 func _get_conversation_history() -> Array[Dictionary]:
 	var history: Array[Dictionary] = []
 	
@@ -475,6 +484,148 @@ func _robot_start(robot: Node2D, room: int, step: float) -> String:
 	
 func _tile_and_facing(at: Vector2, facing: Variant, step: float) -> String:
 	return "tile %s, facing %s" % [Vector2i((at / step).floor()), FACING.get(facing, "?")]
+
+func _tile(at: Vector2, step: float) -> String:
+	return "tile %s" % Vector2i((at / step).floor())
+
+## Each room in tiles, in ROBOT's coordinates: where the robot starts, the tile
+## it has to stop on, its batteries and its puddles. Before this the model
+## counted tiles off the picture, and miscounted. Batteries say whether the last
+## run collected them, in the rooms it reached. Empty on levels without a robot.
+func _rooms_state() -> String:
+	var robot := get_tree().get_first_node_in_group(&"robot") as Node2D
+	if robot == null or not is_instance_valid(Game.level):
+		return ""
+	var step: float = robot.get(&"step_size") if &"step_size" in robot else 32.0
+	var managers := Game.level.room_goals
+	var reached := Game.level.current_room if not puzzle.last_run_yaml.is_empty() else -1
+	var lines: PackedStringArray = []
+	for room in managers.size():
+		var manager := managers[room] as GoalManager
+		if manager == null:
+			continue
+		var parts: PackedStringArray = []
+		var start := _robot_start(robot, room, step)
+		if not start.is_empty():
+			parts.append("the robot starts at " + start)
+		var stops: PackedStringArray = []
+		var collected: PackedStringArray = []
+		var missed: PackedStringArray = []
+		var puddles: PackedStringArray = []
+		for goal in manager.goals:
+			var script := goal.get_script() as Script
+			match script.resource_path.get_file() if script != null else "":
+				"destination_goal.gd":
+					var area := goal.get(&"destination_area") as Node2D
+					if area != null:
+						stops.append(_tile(area.global_position, step))
+				"checkpoint_goal.gd":
+					if goal.detection_area != null:
+						var at := _tile(goal.detection_area.global_position, step)
+						if goal.is_complete and room <= reached:
+							collected.append(at)
+						else:
+							missed.append(at)
+				"hazard_goal.gd":
+					if goal.detection_area != null:
+						puddles.append(_tile(goal.detection_area.global_position, step))
+		if not stops.is_empty():
+			parts.append("it has to end on " + " or ".join(stops))
+		if room <= reached:
+			if not collected.is_empty():
+				parts.append("the last run collected the batteries on " + ", ".join(collected))
+			if not missed.is_empty():
+				parts.append("the last run did not collect the batteries on " + ", ".join(missed))
+		elif not missed.is_empty():
+			parts.append("batteries on " + ", ".join(missed))
+		if not puddles.is_empty():
+			parts.append("puddles on " + ", ".join(puddles))
+		if not parts.is_empty():
+			lines.append(("Room %d: " % (room + 1) if managers.size() > 1 else "") + "; ".join(parts) + ".")
+	return "\n".join(lines)
+
+## Actions written out in one room's path before the rest are only counted.
+const PATH_SHOWN := 24
+
+## What the robot did in the last run, room by room (Robot.path): steps in a row
+## run together, then turns and bumps, each saying where the robot was. When
+## the moves start going round, as in a loop that never ends, the first round
+## is written out and the rest counted. Before this the model saw only where a
+## run ended, and took a robot that went round and stopped on its start tile
+## for one that never moved. Empty before a run and on levels without a robot.
+func _robot_path() -> String:
+	var robot := get_tree().get_first_node_in_group(&"robot") as Node2D
+	if robot == null or puzzle.last_run_yaml.is_empty() or not &"path" in robot:
+		return ""
+	var path: Array = robot.get(&"path")
+	if path.is_empty():
+		return "The robot didn't step or turn in the last run."
+	var step: float = robot.get(&"step_size") if &"step_size" in robot else 32.0
+	var many_rooms := is_instance_valid(Game.level) and Game.level.room_goals.size() > 1
+	var order: Array[int] = []
+	var by_room := {}
+	for entry: Dictionary in path:
+		if not by_room.has(entry.room):
+			by_room[entry.room] = []
+			order.append(entry.room)
+		(by_room[entry.room] as Array).append(entry)
+	var lines: PackedStringArray = []
+	for room in order:
+		var start := _robot_start(robot, room, step)
+		var told := ("from " + start + ": ") if not start.is_empty() else ""
+		lines.append(("Room %d: " % (room + 1) if many_rooms else "") + told
+				+ "; ".join(_fold_repeats(_path_actions(by_room[room], step))) + ".")
+	return "\n".join(lines)
+
+## One room's Robot.path entries in words, with a run of steps the same way as one.
+func _path_actions(entries: Array, step: float) -> PackedStringArray:
+	var actions: PackedStringArray = []
+	var i := 0
+	while i < entries.size():
+		var entry: Dictionary = entries[i]
+		var way: String = FACING.get(entry.facing, "?")
+		match entry.kind:
+			&"step":
+				var n := 1
+				while i + n < entries.size() and entries[i + n].kind == &"step" and entries[i + n].facing == entry.facing:
+					n += 1
+				actions.append("stepped %s %d tile%s to %s" % [way, n, "" if n == 1 else "s", _tile(entries[i + n - 1].at, step)])
+				i += n
+				continue
+			&"turn":
+				actions.append("turned %s on %s to face %s" % [entry.dir, _tile(entry.at, step), way])
+			&"bump":
+				actions.append("tried to step %s from %s but the way was blocked" % [way, _tile(entry.at, step)])
+		i += 1
+	return actions
+
+## `actions` with an endless loop folded: when the end of the list is the same
+## few actions over and over (twice at least), the first time through is kept
+## and the rest counted. Otherwise a long list is cut after PATH_SHOWN.
+func _fold_repeats(actions: PackedStringArray) -> PackedStringArray:
+	var n := actions.size()
+	var start := n
+	var period := 0
+	for p in range(1, floori(n / 2.0) + 1):
+		var i := n - p - 1
+		while i >= 0 and actions[i] == actions[i + p]:
+			i -= 1
+		if n - (i + 1) >= 2 * p and i + 1 < start:
+			start = i + 1
+			period = p
+	if period > 0:
+		var kept := actions.slice(0, start + period)
+		var again := floori(float(n - start) / period) - 1
+		# "At least": Robot.path stops growing at PATH_LIMIT, so a long run went
+		# round more times than were recorded.
+		kept.append("then it repeated those last %d actions at least %d more time%s until the run ended"
+				% [period, again, "" if again == 1 else "s"])
+		return kept
+	if n > PATH_SHOWN:
+		var cut := actions.slice(0, PATH_SHOWN)
+		cut.append("and %d more after that" % (n - PATH_SHOWN))
+		return cut
+	return actions
 
 ## Every list in the level as Python writes it, room by room, because a
 ## screenshot is a poor way to read numbers. It's what each list holds now, so

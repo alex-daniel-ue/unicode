@@ -1,0 +1,26 @@
+{
+  "vague": [
+    "what's wrong with this",
+    "I don't understand this",
+    "what to do",
+    "help",
+    "is this right?",
+    "just tell me the answer"
+  ],
+  "chain": [
+    "what's wrong with this",
+    "I still don't get it",
+    "what do I do",
+    "I tried and I'm still stuck, just tell me what to change"
+  ],
+  "specific": {
+    "IT-3_empty": "How do I make the robot turn when it reaches a corner?",
+    "IT-5_first_loop_short": "Why does the robot crash into the wall right after it turns?",
+    "IT-9_flag_check_only": "Room 1 works, so why does the robot drive into the puddle in Room 2?",
+    "IT-10_turn_right": "Why does my robot just keep going in circles?",
+    "AR-T2_counting_from_1": "What does index 3 is out of range mean? The third value should be index 3.",
+    "AR-4_until_length_minus_1": "Why does the robot stop before it reaches the flag?",
+    "AR-7_numbered_from_0": "Why are my lockers 0, 1, 2 instead of 1, 2, 3?",
+    "AR-8_greater_not_equal": "Why is 75 missing from my passed list?"
+  }
+}
