@@ -454,6 +454,8 @@ func _robot_state() -> String:
 	var now := _tile_and_facing(robot.global_position, robot.get(&"facing_direction"), step)
 	if puzzle.last_run_yaml.is_empty():
 		return "At its start%s: %s. Nothing has run yet." % [in_room, now]
+	if puzzle.room_reset:
+		return "At its start%s: %s. The student reset the room after the last run." % [in_room, now]
 	var line := "Now%s: %s. This is where the last run left it, not where it starts." % [in_room, now]
 	var start := _robot_start(robot, room, step)
 	if not start.is_empty():

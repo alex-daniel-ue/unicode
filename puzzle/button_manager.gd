@@ -43,6 +43,9 @@ func _on_stop_button_pressed() -> void:
 	Interpreter.interrupted = true
 	Game.level.fail("Program terminated.")
 
+func _on_reset_button_pressed() -> void:
+	puzzle.reset_room()
+
 func _on_speed_button_pressed() -> void:
 	Interpreter.is_fast = not Interpreter.is_fast
 

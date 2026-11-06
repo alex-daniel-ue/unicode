@@ -4,8 +4,23 @@ extends Control
 
 const COMPLETE_SOUND := preload("res://audio/success.mp3")
 const ERROR_SOUND := preload("res://audio/fail.mp3")
+const THEME := preload("res://puzzle/ui/themes/main_theme.tres")
+## The Go to Toolbox card (_toolbox_button): the brief's fonts, the blue of the
+## game's pointers and log messages, and the toolbox tab's own icon.
+const TOOLBOX_CARD_FONT := preload("res://puzzle/ui/themes/fonts/Kenney Mini.ttf")
+const TOOLBOX_CARD_BODY_FONT := preload("res://puzzle/ui/themes/fonts/AtkinsonHyperlegible-Regular.ttf")
+const TOOLBOX_CARD_BLUE := Color(0.21960784, 0.7411765, 0.972549)
+const TOOLBOX_ICON := preload("res://puzzle/ui/side panel/icons/pixelarticons--briefcase-plus.png")
+## The assistant's tab button, which the assistant peeks out of to suggest
+## itself (AssistantPeek), and the space over the canvas it peeks into.
+const AI_BUTTON := "UserInterface/SideMenuLeft/ButtonContainer/AIAssistantMenuButton"
+const MIDDLE_SPACE := "UserInterface/MiddleSpace"
 
-const NUDGE_AFTER := [1, 4, 7]
+## After which failed runs in a row the assistant offers to help
+## (_suggest_assistant): these, then every NUDGE_EVERY after the last of them,
+## so a student still stuck isn't left alone, and isn't nagged either.
+const NUDGE_AFTER := [2, 4, 7]
+const NUDGE_EVERY := 4
 const TUTORIAL_OVERLAY := preload("res://puzzle/ui/tutorial/tutorial_overlay.tscn")
 ## Hidden when a level asks for the minimal UI (Level.minimal_ui): the first
 ## levels show only what they use, because everything at once lost people.
@@ -24,11 +39,15 @@ const EXTRA_UI := [
 ]
 
 var failed_runs := 0
+## Whether the room has been reset (reset_room()) since the last run, so the
+## assistant reads it as at its start, not as the run left it.
+var room_reset := false
 var last_run_yaml := ""
 var last_run_result := "The student hasn't pressed Play on this level yet."
 var current_run_placed_blocks := 0
 
 var _paused_before_menu := false
+var _peek: AssistantPeek
 ## The guide on screen, if any, and the pages this level's guide has.
 var _guide: TutorialOverlay
 var _guide_pages: Array = []
@@ -51,7 +70,20 @@ func _ready() -> void:
 	# focus_content, not show_menu: the panel has to know the room is what it
 	# shows, or the room button's first press only "switches" to it.
 	side_panels[1].focus_content(get_node(ROOM_TAB) as Control)
-	
+
+	canvas.add_child(RunPointer.new())
+	_peek = AssistantPeek.new()
+	_peek.button = get_node(AI_BUTTON) as Control
+	get_node(MIDDLE_SPACE).add_child(_peek)
+	# Once the assistant's panel is open, or a run starts, its suggestion has
+	# been taken or is stale.
+	ai_assistant.visibility_changed.connect(func() -> void:
+		if ai_assistant.is_visible_in_tree():
+			_peek.retreat())
+	Interpreter.running_changed.connect(func() -> void:
+		if Interpreter.is_running:
+			_peek.retreat())
+
 	if Game.level_scene != null:
 		Game.level = Game.level_scene.instantiate() as Level
 		configure_level()
@@ -139,23 +171,72 @@ func returns_to_toolbox(block: Block, at: Vector2) -> bool:
 
 ## The way on from the Information tab once it has been read: to the blocks.
 ## The same as the toolbox's own tab button, so a guide waiting for that tab
-## moves on too, and off while a program runs, as that button is. Quiet, like
-## the tab buttons.
+## moves on too, and off while a program runs, as that button is. A card like
+## the brief's own (LevelDescription._card), in the blue the game points with,
+## with the toolbox tab's icon, so it reads as the brief's next step.
 func _toolbox_button() -> Button:
 	var button := Button.new()
 	button.name = "GoToToolbox"
-	button.text = "Go to Toolbox"
-	button.theme_type_variation = &"MainMenuButton"
-	button.custom_minimum_size = Vector2(200, 40)
-	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.theme_type_variation = &"InfoCardButton"
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+	# The words and the icon as a row on the button, inside its margins. A
+	# button doesn't size to what it holds, so it takes the row's height.
+	var box := THEME.get_stylebox(&"normal", &"InfoCardButton")
+	var row := HBoxContainer.new()
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	row.offset_left = box.content_margin_left
+	row.offset_top = box.content_margin_top
+	row.offset_right = -box.content_margin_right
+	row.offset_bottom = -box.content_margin_bottom
+	row.add_theme_constant_override(&"separation", 12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var words := VBoxContainer.new()
+	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	words.alignment = BoxContainer.ALIGNMENT_CENTER
+	words.add_theme_constant_override(&"separation", 2)
+	words.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	words.add_child(_card_label("NEXT STEP", TOOLBOX_CARD_FONT, 16, TOOLBOX_CARD_BLUE))
+	var body := _card_label("Pick your blocks in the Toolbox.", TOOLBOX_CARD_BODY_FONT, 20, Color.WHITE)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	words.add_child(body)
+	row.add_child(words)
+	var icon := TextureRect.new()
+	icon.texture = TOOLBOX_ICON
+	icon.custom_minimum_size = Vector2(30, 30)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	icon.modulate = TOOLBOX_CARD_BLUE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(icon)
+	button.add_child(row)
+	var fit := func() -> void:
+		button.custom_minimum_size.y = row.get_combined_minimum_size().y \
+			+ box.content_margin_top + box.content_margin_bottom
+	row.minimum_size_changed.connect(fit)
+	fit.call()
+
 	button.pressed.connect(func() -> void:
 		side_panels[0].focus_content(toolbox)
 		Tutorial.tab_shown.emit(toolbox))
 	Interpreter.running_changed.connect(func() -> void:
 		if is_instance_valid(button):
-			button.disabled = Interpreter.is_running)
+			button.disabled = Interpreter.is_running
+			row.modulate.a = 0.45 if button.disabled else 1.0)
 	return button
+
+func _card_label(text: String, font: Font, font_size: int, color: Color) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_override(&"font", font)
+	label.add_theme_font_size_override(&"font_size", font_size)
+	label.add_theme_color_override(&"font_color", color)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return label
 
 func _exit_tree() -> void:
 	Interpreter.is_running = false
@@ -260,7 +341,8 @@ func run_program() -> void:
 		return
 	
 	last_run_yaml = canvas.serializer.yaml_serialize()
-	
+	room_reset = false
+
 	Interpreter.is_running = true
 	side_panels[1].show_menu(true)
 	side_panels[1].keep_state = true
@@ -272,14 +354,8 @@ func run_program() -> void:
 	if not cleared:
 		_report_failure()
 		failed_runs += 1
-		if failed_runs in NUDGE_AFTER and not Game.level.minimal_ui:
-			notif.push(
-				"Stuck? The assistant can look at your last run.",
-				Notification.Type.LOG,
-				func() -> void:
-					side_panels[0].focus_content(ai_assistant)
-					ai_assistant.prompt_for_question()
-			)
+		if _should_nudge(failed_runs) and not Game.level.minimal_ui:
+			_suggest_assistant()
 		last_run_result = "Did not solve the level; the reason is in the output log."
 	else:
 		failed_runs = 0
@@ -288,6 +364,29 @@ func run_program() -> void:
 	Interpreter.is_running = false
 	side_panels[1].keep_state = false
 	Game.level.camera.frame()
+
+## The room's Reset button: every room back as it was before the last run, the
+## robot at its start, so the next run can be watched from the beginning. The
+## blocks stay as they are.
+func reset_room() -> void:
+	if Interpreter.is_running:
+		return
+	Game.level.reset_rooms()
+	room_reset = true
+	notif.push("The room is back to how it started.", Notification.Type.LOG)
+
+## Whether the `failures`th failed run in a row gets the assistant's offer:
+## 2, 4, 7, then 11, 15, 19 and on.
+func _should_nudge(failures: int) -> bool:
+	var last: int = NUDGE_AFTER[-1]
+	return failures in NUDGE_AFTER or (failures > last and (failures - last) % NUDGE_EVERY == 0)
+
+## After a failed run: the assistant peeks out of its tab button and offers to
+## look at the run. Taking the offer opens its panel, ready for a question.
+func _suggest_assistant() -> void:
+	_peek.suggest("Stuck? I can look at your last run.", func() -> void:
+		side_panels[0].focus_content(ai_assistant)
+		ai_assistant.prompt_for_question())
 
 func describe_last_run() -> String:
 	if last_run_yaml.is_empty():

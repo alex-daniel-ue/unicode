@@ -13,6 +13,9 @@ const _COLORS: Dictionary[Type, Color] = {
 	Type.ERROR: Color("#FB7185"),
 	Type.SUCCESS: Color("#34D399")
 }
+## The widest a notification gets, as a share of the stack's width; its text
+## wraps past that, as a chat bubble's does (chat_bubble.gd).
+const MAX_WIDTH_RATIO := 0.85
 
 @export var label: Label
 
@@ -28,7 +31,12 @@ func _ready() -> void:
 	var stylebox := (get_theme_stylebox("panel") as StyleBoxFlat).duplicate(true)
 	stylebox.border_color = _COLORS[type]
 	add_theme_stylebox_override("panel", stylebox)
-	
+
+	_fit()
+	var stack := get_parent() as Control
+	if stack != null:
+		stack.resized.connect(_fit)
+
 	modulate.a = 0.0
 	
 	var tween_in := create_tween()
@@ -51,6 +59,18 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 		action.call()
 		queue_free()
+
+## The label as wide as its text, up to MAX_WIDTH_RATIO of the stack, and
+## wrapped onto more lines past that.
+func _fit() -> void:
+	var stack := get_parent() as Control
+	if stack == null:
+		return
+	var font := label.get_theme_font(&"font")
+	var font_size := label.get_theme_font_size(&"font_size")
+	var text_width := font.get_multiline_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var max_width := stack.size.x * MAX_WIDTH_RATIO - get_theme_stylebox(&"panel").get_minimum_size().x
+	label.custom_minimum_size.x = clampf(ceilf(text_width) + 2.0, 0.0, maxf(max_width, 0.0))
 
 func with(_type: Type) -> Notification:
 	type = _type

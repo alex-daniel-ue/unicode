@@ -7,7 +7,11 @@ extends Node
 ##   godot --path . --resolution 1920x1080 res://tools/ui_snaps.tscn
 ## Saved to user://ui_<name>.png; each path is printed. With `-- menu` after
 ## the path, only the main menu's shots; with `-- levels`, only level select's;
-## with `-- win`, only the puzzle's, the win card among them.
+## with `-- win`, only the puzzle's, the win card among them; with `-- rooms`,
+## only the rooms' (the Information tab among them); with `-- tips`, the puzzle
+## screen's hints: a long notification, the assistant peeking out with a
+## suggestion, and the pointer beside the running line; with `-- reset`, a room
+## as a run left it and then after its Reset button.
 
 const SUMMARY := "Nice use of a loop! In Python that is for steps in route: and it reads each stop with route[0], route[1] and so on."
 
@@ -18,6 +22,12 @@ func _ready() -> void:
 		await _level_select_shot()
 	elif "win" in args:
 		await _puzzle_shots()
+	elif "rooms" in args:
+		await _room_shots()
+	elif "tips" in args:
+		await _tips_shots()
+	elif "reset" in args:
+		await _reset_shots()
 	else:
 		if not "menu" in args:
 			await _puzzle_shots()
@@ -25,6 +35,72 @@ func _ready() -> void:
 			await _level_select_shot()
 		await _quit_shot()
 	get_tree().quit()
+
+## A notification too long for one line, wrapped; the assistant peeking out of
+## its button, saying what it can do; then a for block left counting by nothing
+## (so by 1) runs a step forward three times, with the pointer beside the line
+## that's lit (ar-4).
+func _tips_shots() -> void:
+	Game.level = (load("res://level/levels/ar_4.tscn") as PackedScene).instantiate()
+	Game.level_scene = null
+	Game.level_id = &"ar-4"
+	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
+	puzzle.visible = true
+	add_child(puzzle)
+	puzzle.configure_level()
+	for i in 20: await get_tree().process_frame
+	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
+		(guide as TutorialOverlay).skip()
+	var begin := puzzle._get_begin()
+	var counting := (load("res://puzzle/blocks/control flow/for_int.tres") as BlockData).deep_copy()
+	for pair in [[0, "i"], [1, "0"], [2, "3"], [3, ""]]:
+		counting.text_blocks[pair[0]].text = pair[1]
+	var loop := Block.construct(counting) as NestedBlock
+	loop.mouth.add_child(Block.construct(load("res://level/objects/entities/robot/blocks/move.tres")))
+	begin.mouth.add_child(loop)
+	puzzle.notif.push("A message as long as a run's errors can be is too wide for one line, so it wraps onto the next one instead of running off the screen.", Notification.Type.ERROR)
+	puzzle._suggest_assistant()
+	for i in 40: await get_tree().process_frame
+	await _snap("tips")
+	puzzle.run_program()
+	await get_tree().create_timer(5.5).timeout
+	await _snap("running")
+	puzzle.queue_free()
+	for i in 3: await get_tree().process_frame
+
+## Two steps forward run, fast, and leave the robot two tiles on; then the
+## room's Reset button, pressed as a student would, puts it back (ar-4).
+func _reset_shots() -> void:
+	Game.level = (load("res://level/levels/ar_4.tscn") as PackedScene).instantiate()
+	Game.level_scene = null
+	Game.level_id = &"ar-4"
+	var puzzle: Puzzle = (load("res://puzzle/puzzle.tscn") as PackedScene).instantiate()
+	puzzle.visible = true
+	add_child(puzzle)
+	puzzle.configure_level()
+	for i in 20: await get_tree().process_frame
+	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
+		(guide as TutorialOverlay).skip()
+	var begin := puzzle._get_begin()
+	for i in 2:
+		begin.mouth.add_child(Block.construct(load("res://level/objects/entities/robot/blocks/move.tres")))
+	for i in 5: await get_tree().process_frame
+	Interpreter.is_fast = true
+	puzzle.run_program()
+	var waited := 0.0
+	while Interpreter.is_running and waited < 30.0:
+		await get_tree().process_frame
+		waited += get_process_delta_time()
+	Interpreter.is_fast = false
+	for i in 30: await get_tree().process_frame
+	await _snap("after_run")
+	var reset := puzzle.get_node(^"UserInterface/SideMenuRight/ButtonContainer/ResetButton") as Button
+	print("RESET disabled after the run: ", reset.disabled)
+	reset.pressed.emit()
+	for i in 30: await get_tree().process_frame
+	await _snap("after_reset")
+	puzzle.queue_free()
+	for i in 3: await get_tree().process_frame
 
 ## The robot's Ahead Is scan halfway across the tile in front of it (it-2), with
 ## the speed button blue as in a fast run and the Information tab's Go to

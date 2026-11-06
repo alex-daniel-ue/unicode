@@ -86,7 +86,9 @@ func _for(this: NestedBlock):
 	if from_value == null: return
 	var to_value: Variant = __resolve_bound(this, args[2], "until")
 	if to_value == null: return
-	var step_value: Variant = __resolve_bound(this, args[3], "step")
+	# Counting by is optional: left blank, it counts by 1, as Python's
+	# range(start, end) does.
+	var step_value: Variant = 1 if __is_blank(this, 3) else __resolve_bound(this, args[3], "counting by")
 	if step_value == null: return
 	
 	var to := int(to_value)
@@ -471,6 +473,14 @@ func __validate_else_placement(block: Block, prev_block: Block) -> bool:
 				prev_block.is_type(NestedData.Type.IF))
 	
 	return true
+
+## Whether the slot at `index` in `this` is a typed-in slot left empty.
+func __is_blank(this: Block, index: int) -> bool:
+	var slots := this.text.get_blocks()
+	if index >= slots.size():
+		return true
+	var slot := slots[index] as ValueBlock
+	return slot != null and slot.data.value.editable_shown and slot.line_edit.text.strip_edges().is_empty()
 
 func __resolve_bound(this: NestedBlock, raw: Variant, label: String) -> Variant:
 	var value: Variant = this.function.unwrap(raw)

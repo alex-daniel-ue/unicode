@@ -8,6 +8,10 @@ extends VBoxContainer
 ##
 ## Above the block, not under it: the page's words sit under its graphics, and
 ## samples between the block and the words read as what the words were about.
+## The exception is a block whose samples point at two slots (SLOTS_FOR): two
+## samples side by side above it, each with an arrow to both slots, crossed
+## arrows over the block. So the first sits above it and the second under it,
+## and each one's arrows fan out to the two slots without crossing.
 ##
 ## The samples are real slots with the values typed in, so they wear the type
 ## label (var, int) and colour that the slot will when the student types. A
@@ -78,28 +82,47 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	alignment = BoxContainer.ALIGNMENT_CENTER
 	add_theme_constant_override(&"separation", 40)  # the arrows run in this gap
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override(&"separation", 36)
-	row.mouse_filter = MOUSE_FILTER_IGNORE
-	add_child(row)
-	for value: Variant in SAMPLES_FOR.get(_picture.data.name, SAMPLES):
-		var sample := BlockPicture.new()
-		if value is Array:
-			sample.data = LevelBlockPreset._data_for(value)
-		else:
-			var data := SLOT.deep_copy()
-			data.text = value
-			sample.data = data
-		row.add_child(sample)
+	var above := _row()
+	add_child(above)
+	var split := _slot_indices.size() > 1
+	var values: Array = SAMPLES_FOR.get(_picture.data.name, SAMPLES)
+	for i in values.size():
+		var sample := _sample(values[i])
 		_samples.append(sample)
+		if split and i > 0:
+			continue  # under the block, once it's in
+		above.add_child(sample)
 	_picture.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	add_child(_picture)
+	if split:
+		var below := _row()
+		for sample in _samples.slice(1):
+			below.add_child(sample)
+		add_child(below)
 	# A Node2D, so the container leaves it out of the layout; last, so it draws
 	# over the rest.
 	_arrows = Node2D.new()
 	_arrows.draw.connect(_draw_arrows)
 	add_child(_arrows)
+
+func _row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override(&"separation", 36)
+	row.mouse_filter = MOUSE_FILTER_IGNORE
+	return row
+
+## A slot with `value` typed in, or, for a value written as a block spec, that
+## block.
+func _sample(value: Variant) -> BlockPicture:
+	var sample := BlockPicture.new()
+	if value is Array:
+		sample.data = LevelBlockPreset._data_for(value)
+	else:
+		var data := SLOT.deep_copy()
+		data.text = value
+		sample.data = data
+	return sample
 
 func _process(_delta: float) -> void:
 	_arrows.queue_redraw()
@@ -112,12 +135,15 @@ func _draw_arrows() -> void:
 		if slot == null or slot.size == Vector2.ZERO:
 			continue
 		var slot_rect := slot.get_global_rect()
-		var end := to_local * Vector2(slot_rect.get_center().x, slot_rect.position.y - 2.0)
 		for sample in _samples:
 			if sample.size == Vector2.ZERO:
 				continue
+			# From a sample's near edge to the slot's: up into it from one under
+			# the block, down into it from one above.
 			var rect := sample.get_global_rect()
-			var start := to_local * Vector2(rect.get_center().x, rect.end.y - 4.0)
+			var below := rect.position.y > slot_rect.get_center().y
+			var start := to_local * Vector2(rect.get_center().x, rect.position.y + 4.0 if below else rect.end.y - 4.0)
+			var end := to_local * Vector2(slot_rect.get_center().x, slot_rect.end.y + 2.0 if below else slot_rect.position.y - 2.0)
 			_arrow(start, end)
 
 func _arrow(a: Vector2, b: Vector2) -> void:

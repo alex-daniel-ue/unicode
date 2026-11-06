@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=64 format=3 uid="uid://dndk60sn664bq"]
+[gd_resource type="Theme" load_steps=68 format=3 uid="uid://dndk60sn664bq"]
 
 [ext_resource type="FontFile" uid="uid://cypqhhpk8l6ck" path="res://puzzle/ui/themes/fonts/Kenney Pixel.ttf" id="2_hdcft"]
 [ext_resource type="FontFile" uid="uid://dkmn8s2nj6esh" path="res://puzzle/ui/themes/fonts/Kenney Mini.ttf" id="2_oiocf"]
@@ -524,6 +524,58 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_infocard_normal"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(0.21960784, 0.7411765, 0.972549, 0.1)
+border_width_left = 4
+border_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_infocard_hover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(0.21960784, 0.7411765, 0.972549, 0.18)
+border_width_left = 4
+border_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_infocard_pressed"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(0.21960784, 0.7411765, 0.972549, 0.26)
+border_width_left = 4
+border_color = Color(0.21960784, 0.7411765, 0.972549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_infocard_disabled"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(1, 1, 1, 0.04)
+border_width_left = 4
+border_color = Color(0.5803922, 0.6392157, 0.72156864, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [resource]
 default_font = ExtResource("2_oiocf")
 default_font_size = 16
@@ -552,6 +604,12 @@ HeaderSmall/base_type = &"Label"
 HeaderSmall/colors/font_outline_color = Color(1, 1, 1, 1)
 HeaderSmall/constants/outline_size = 2
 HeaderSmall/font_sizes/font_size = 36
+InfoCardButton/base_type = &"Button"
+InfoCardButton/styles/disabled = SubResource("StyleBoxFlat_infocard_disabled")
+InfoCardButton/styles/focus = SubResource("StyleBoxEmpty_title")
+InfoCardButton/styles/hover = SubResource("StyleBoxFlat_infocard_hover")
+InfoCardButton/styles/normal = SubResource("StyleBoxFlat_infocard_normal")
+InfoCardButton/styles/pressed = SubResource("StyleBoxFlat_infocard_pressed")
 Label/font_sizes/font_size = 24
 Label/fonts/font = ExtResource("2_hdcft")
 LegibleLabel/base_type = &"Label"

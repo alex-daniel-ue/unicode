@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cr6e3ajrul0dk"]
+[gd_scene load_steps=33 format=3 uid="uid://cr6e3ajrul0dk"]
 
 [ext_resource type="Script" uid="uid://obxdjk3xfis0" path="res://puzzle/puzzle.gd" id="1_iy1cu"]
 [ext_resource type="PackedScene" uid="uid://blied6nj0jtq5" path="res://puzzle/ui/canvas/canvas.tscn" id="1_n7lcs"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://djagmtqt1y8sg" path="res://puzzle/ui/side panel/bottom buttons/trash/trash_button.gd" id="11_xr7vu"]
 [ext_resource type="PackedScene" uid="uid://dobqbboxweqv8" path="res://puzzle/ui/side panel/bottom buttons/trash/confirm_dialog.tscn" id="12_sbp70"]
 [ext_resource type="Texture2D" uid="uid://83eu6oqlg0ta" path="res://puzzle/ui/side panel/bottom buttons/speed/fast_forward.png" id="15_35gji"]
+[ext_resource type="Texture2D" uid="uid://bl78vf8x2w42j" path="res://puzzle/ui/side panel/bottom buttons/reset/reset.png" id="40_reset"]
 [ext_resource type="PackedScene" uid="uid://bsbw5by2bjcge" path="res://puzzle/ui/notification/notification.tscn" id="16_e1dgq"]
 [ext_resource type="Script" uid="uid://bh2q80abbq58g" path="res://puzzle/ui/side panel/bottom buttons/speed/speed_button.gd" id="16_tkwoe"]
 [ext_resource type="Texture2D" uid="uid://nircgbcu4bdq" path="res://puzzle/ui/side panel/icons/pixelarticons--close.png" id="16_vm51y"]
@@ -56,7 +57,7 @@ script = ExtResource("2_n8lp6")
 play_button = NodePath("../UserInterface/SideMenuRight/ButtonContainer/PlayButton")
 play_icon = ExtResource("11_vlyq7")
 pause_icon = ExtResource("4_1wbjf")
-scripting_buttons = [NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton")]
+scripting_buttons = [NodePath("../UserInterface/SideMenuLeft/ButtonContainer/TrashButton"), NodePath("../UserInterface/SideMenuLeft/ButtonContainer/ToolboxMenuButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/ResetButton")]
 running_buttons = [NodePath("../UserInterface/SideMenuRight/ButtonContainer/StopButton"), NodePath("../UserInterface/SideMenuRight/ButtonContainer/SpeedButton")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("20_equ7n")]
@@ -377,6 +378,15 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
+[node name="ResetButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+tooltip_text = "Reset the room to how it started"
+theme = ExtResource("2_xv3xb")
+theme_type_variation = &"SidePanelButton"
+icon = ExtResource("40_reset")
+expand_icon = true
+
 [node name="SpeedButton" type="Button" parent="UserInterface/SideMenuRight/ButtonContainer" groups=["sfx_click"]]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
@@ -441,6 +451,7 @@ layout_mode = 1
 [connection signal="confirmed" from="UserInterface/SideMenuLeft/ButtonContainer/TrashButton/ConfirmDialog" to="Canvas" method="clear"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/MenuButton" to="." method="open_menu"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/FrameButton" to="ButtonManager" method="_on_frame_button_pressed"]
+[connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/ResetButton" to="ButtonManager" method="_on_reset_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="ButtonManager" method="_on_speed_button_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" to="UserInterface/SideMenuRight/ButtonContainer/SpeedButton" method="_on_pressed"]
 [connection signal="pressed" from="UserInterface/SideMenuRight/ButtonContainer/PlayButton" to="ButtonManager" method="_on_play_button_pressed"]

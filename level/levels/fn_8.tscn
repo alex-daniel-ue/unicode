@@ -29,7 +29,7 @@ block: BeginBlock
   children:
     - block: ForBlock (Integer)
       kind: nested
-      text: \"for {}, from {}\\nuntil {}, at step {}\"
+      text: \"for {} from {} until {}\\ncounting by {}\"
       parameters:
         - i
         - 0

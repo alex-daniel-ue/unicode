@@ -154,17 +154,10 @@ func run_rooms(begin: CapBlock) -> bool:
 	_room_label = ""
 	var room_count := maxi(room_goals.size(), 1)
 
-	# Every room's lists at once, and only here: after a run each board keeps
-	# what the program wrote into it, so a student can read what went wrong.
-	for list in get_tree().get_nodes_in_group(ListEntity.GROUP):
-		(list as ListEntity).restore()
-	# Terminals too: nothing printed and nothing read yet, in every room.
-	for terminal in get_tree().get_nodes_in_group(TerminalEntity.GROUP):
-		(terminal as TerminalEntity).restore()
-	for board in get_tree().get_nodes_in_group(DictEntity.GROUP):
-		(board as DictEntity).restore()
-	for file in get_tree().get_nodes_in_group(FileEntity.GROUP):
-		(file as FileEntity).restore()
+	# Every room's boards at once, and only here or on Reset: after a run each
+	# board keeps what the program wrote into it, so a student can read what
+	# went wrong.
+	_restore_boards()
 
 	for room_index in range(room_count):
 		current_room = room_index
@@ -231,6 +224,34 @@ func calculate_stars(placed_block_count: int) -> int:
 	elif placed_block_count <= par + star_slack:
 		return 2
 	return 1
+
+## Every room as it was before any run, for the room's Reset button: the boards
+## restored, every goal unmet, and everything resettable at the first room's
+## start, where a run puts it before it begins. The program isn't touched.
+## False when any entity had no snapshot for the first room.
+func reset_rooms() -> bool:
+	has_failed = false
+	current_room = 0
+	_room_label = ""
+	_restore_boards()
+	for manager in room_goals:
+		if manager != null:
+			manager.reset_goals()
+	var ok := reset_state(0)
+	camera.frame()
+	return ok
+
+## Every room's lists, terminals, dicts and files back as the level has them.
+func _restore_boards() -> void:
+	for list in get_tree().get_nodes_in_group(ListEntity.GROUP):
+		(list as ListEntity).restore()
+	# Terminals too: nothing printed and nothing read yet, in every room.
+	for terminal in get_tree().get_nodes_in_group(TerminalEntity.GROUP):
+		(terminal as TerminalEntity).restore()
+	for board in get_tree().get_nodes_in_group(DictEntity.GROUP):
+		(board as DictEntity).restore()
+	for file in get_tree().get_nodes_in_group(FileEntity.GROUP):
+		(file as FileEntity).restore()
 
 ## False when any entity had no snapshot for this room.
 func reset_state(room_index := 0) -> bool:

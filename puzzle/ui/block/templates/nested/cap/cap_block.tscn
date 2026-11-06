@@ -15,8 +15,9 @@ texture = ExtResource("3_3hsbr")
 texture_margin_left = 50.90574
 texture_margin_top = 25.0
 texture_margin_right = 8.0
-texture_margin_bottom = 27.27716
-region_rect = Rect2(0, 0, 278, 125)
+texture_margin_bottom = 35.27716
+region_rect = Rect2(0, 0, 278, 133)
+expand_margin_bottom = 8.0
 
 [node name="Block" node_paths=PackedStringArray("upper_lip", "mouth", "lower_lip") instance=ExtResource("1_3hsbr")]
 offset_right = 141.0
