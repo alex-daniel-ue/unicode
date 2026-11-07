@@ -1,13 +1,11 @@
 class_name ToolboxNewSection
 extends VBoxContainer
-
 ## The top of the toolbox when a level brings in new blocks: each new block with
 ## one short line about what it does. The toolbox is where a student goes for
 ## blocks, so this is where a new one is explained, instead of in a level brief
 ## that, opened first thing, read as a wall of text.
 
-## Keeps Toolbox.sort_categories() happy; this section always sorts first.
-var category_name := ""
+const TILE := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.tscn")
 
 @export var entries: Container
 ## Copied per block: a holder the block's tile goes in.
@@ -17,7 +15,6 @@ var category_name := ""
 func _ready() -> void:
 	entry_template.visible = false
 
-const TILE := preload("res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.tscn")
 
 ## Moves `block` (already a toolbox block, draggable as ever) into the section,
 ## on a tile like the rest of the toolbox's, so it reads as something to pick up

@@ -1,166 +1,143 @@
 extends Control
+## Where a dragged slot block will go: a see-through copy of it (the drop
+## preview) stands in the slot under the pointer, hiding the slot, and the block
+## takes the slot's place when it is let go. drop_manager.gd does the same for
+## statement and nested blocks.
 
-
+## A slot that would take a block but not this one tints the drag preview this.
 const REFUSED_TINT := Color(1.0, 0.45, 0.45, 1.0)
-const DROP_SOUND := preload("res://audio/block_drop.mp3")
 
-var current_socket: SocketBlock
-var drop_preview: SocketBlock
-var dp_socket: SocketBlock
-var children: Array[Node]
-
-var drag_base_modulate := Color.WHITE
+var _dragged: SocketBlock
+var _drop_preview: SocketBlock
+## The slot the drop preview stands in now.
+var _target: SocketBlock
+var _preview_modulate := Color.WHITE
 
 
-# Refer to drop_manager.gd, most of this is just copied
+func _process(_delta: float) -> void:
+	if _dragged == null:
+		return
+
+	var slot := _slot_under_pointer()
+	PuzzleCanvas.drag_preview.visible = slot == null
+	var refusing := slot == null and _is_over_refusing_slot()
+	PuzzleCanvas.drag_preview.modulate = (_preview_modulate * REFUSED_TINT) if refusing else _preview_modulate
+
+	if slot != null:
+		if slot != _target:
+			# The drop preview stands in the slot, as the block will.
+			var container := slot.get_parent()
+			var index := slot.get_index()
+			_drop_preview.orphan()
+			container.add_child(_drop_preview)
+			container.move_child(_drop_preview, index)
+			slot.visible = false
+			if _target != null:
+				_target.visible = true
+			_drop_preview.overridden_socket = slot
+	elif _target != null:
+		_target.visible = true
+		_drop_preview.orphan()
+		if _drop_preview.has_overridden():
+			_drop_preview.overridden_socket = null
+
+	_target = slot
+
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_DRAG_BEGIN:
 			var drag_data: Variant = get_viewport().gui_get_drag_data()
-			
 			if not drag_data is SocketBlock:
-				current_socket = null
+				_dragged = null
 				return
-			
-			current_socket = drag_data
-			drag_base_modulate = PuzzleCanvas.drag_preview.modulate
-			
-			drop_preview = Block.construct(current_socket.data)
-			drop_preview.name = "DropPreview_%s" % drop_preview.name
-			drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
-			
-			# If the socket is an entity block, forward the object reference
-			if current_socket.data.func_type == BlockData.FuncType.ENTITY:
-				drop_preview.function.object = current_socket.function.object
-			
-			# Use _get_children so drop_preview isn't prematurely added to the scene tree
-			var children: Array[Node]
-			Core._get_children(drop_preview, children)
-			for child in children:
-				if child is Block:
-					child.preview_type = Block.PreviewType.DROP
-		
+
+			_dragged = drag_data
+			_preview_modulate = PuzzleCanvas.drag_preview.modulate
+
+			_drop_preview = Block.construct(_dragged.data)
+			_drop_preview.name = "DropPreview_%s" % _drop_preview.name
+			_drop_preview.modulate = PuzzleCanvas.drag_preview.modulate
+			# An entity block's preview talks to the same entity.
+			if _dragged.data.func_type == BlockData.FuncType.ENTITY:
+				_drop_preview.function.object = _dragged.function.object
+			for block in [_drop_preview] + _drop_preview.find_children("*", "Block", true, false):
+				(block as Block).preview_type = Block.PreviewType.DROP
+
 		NOTIFICATION_DRAG_END:
-			if current_socket == null:
+			if _dragged == null:
 				return
-			
-			# If the block was dropped in the trash, restore and unlink the overridden socket
-			if current_socket.is_queued_for_deletion():
-				current_socket.release_slot()
 
-				if drop_preview != null:
-					drop_preview.queue_free()
-					drop_preview = null
-				dp_socket = null
-				current_socket = null
+			# Thrown in the trash: the slot it was in gets its default back.
+			if _dragged.is_queued_for_deletion():
+				_dragged.release_slot()
+				if _drop_preview != null:
+					_drop_preview.queue_free()
+					_drop_preview = null
+				_target = null
+				_dragged = null
 				return
-			
-			current_socket.visible = true
-			var dropped := dp_socket != null
-			var left_slot := dropped or current_socket.get_parent() is PuzzleCanvas
-			
-			if current_socket.has_overridden():
-				if left_slot: 
-					current_socket.overridden_socket = null
-				else: 
-					current_socket.overridden_socket.visible = false
-			
-			if dp_socket != null:
-				SfxPlayer.play(DROP_SOUND)  # attached: the same click as a statement block
-				var container := dp_socket.get_parent()
-				var idx := dp_socket.get_index()
-				
-				dp_socket.visible = false
-				
-				current_socket.orphan()
-				container.add_child(current_socket)
-				container.move_child(current_socket, idx)
-				
-				current_socket.overridden_socket = dp_socket
-			
-			if drop_preview != null:
-				drop_preview.queue_free()
-				drop_preview = null
-			
-			dp_socket = null
-			current_socket = null
 
-func _process(_delta: float) -> void:
-	if current_socket == null:
-		return
-	
-	var this_socket := get_preview_socket()
+			_dragged.visible = true
+			var dropped := _target != null
+			var left_slot := dropped or _dragged.get_parent() is PuzzleCanvas
+			if _dragged.has_overridden():
+				if left_slot:
+					_dragged.overridden_socket = null
+				else:
+					_dragged.overridden_socket.visible = false
 
-	PuzzleCanvas.drag_preview.visible = this_socket == null
+			if _target != null:
+				SfxPlayer.play(SfxPlayer.BLOCK_DROP)
+				var container := _target.get_parent()
+				var index := _target.get_index()
+				_target.visible = false
+				_dragged.orphan()
+				container.add_child(_dragged)
+				container.move_child(_dragged, index)
+				_dragged.overridden_socket = _target
 
-	var refusing := this_socket == null and _is_over_refusing_socket()
-	PuzzleCanvas.drag_preview.modulate = (
-		(drag_base_modulate * REFUSED_TINT) if refusing else drag_base_modulate
-	)
-	
-	if this_socket != null:
-		if this_socket != dp_socket:
-			# Temporarily parent the drop_preview to the socket to visualize the drop
-			var container := this_socket.get_parent()
-			var idx := this_socket.get_index()
-			
-			drop_preview.orphan()
-			container.add_child(drop_preview)
-			container.move_child(drop_preview, idx)
-			this_socket.visible = false
-			
-			if dp_socket != null:
-				dp_socket.visible = true
-			
-			drop_preview.overridden_socket = this_socket
-	
-	elif dp_socket != null:
-		dp_socket.visible = true
-		drop_preview.orphan()
-		if drop_preview.has_overridden():
-			drop_preview.overridden_socket = null
-	
-	dp_socket = this_socket
+			if _drop_preview != null:
+				_drop_preview.queue_free()
+				_drop_preview = null
+			_target = null
+			_dragged = null
 
-func get_preview_socket() -> SocketBlock:
+
+## The slot the dragged block would go into if let go now, or null.
+func _slot_under_pointer() -> SocketBlock:
 	var control := get_viewport().gui_get_hovered_control()
 	if control == null:
 		return null
-	
-	# If hovering anywhere over the current drop preview or any of its children, maintain target
-	if dp_socket != null and is_instance_valid(drop_preview) and drop_preview.is_inside_tree():
-		if control == drop_preview or drop_preview.is_ancestor_of(control):
-			return dp_socket
-	
+
+	# Anywhere over the drop preview, or anything in it, keeps the slot it is in.
+	if _target != null and is_instance_valid(_drop_preview) and _drop_preview.is_inside_tree():
+		if control == _drop_preview or _drop_preview.is_ancestor_of(control):
+			return _target
+
 	var block := Core.get_block(control)
-	
-	# Rule out the obvious
-	if block == null or (not block is SocketBlock) or block.data.toolbox:
+	if block == null or not block is SocketBlock or block.data.toolbox:
 		return null
-	
-	# Return the same when hovering drop previews or blocks inside drop previews
+
+	# Over the drop preview, or a block inside it: the same slot.
 	if block.preview_type == Block.PreviewType.DROP:
-		return dp_socket
-	
-	var parent_drop := block.get_parent_matching(func(b: Block) -> bool: return b.preview_type == Block.PreviewType.DROP)
-	if parent_drop != null:
-		return dp_socket
-	
-	if not block._can_drop_data(Vector2.ZERO, current_socket):
+		return _target
+	var in_preview := block.get_parent_matching(func(b: Block) -> bool: return b.preview_type == Block.PreviewType.DROP)
+	if in_preview != null:
+		return _target
+
+	if not block._can_drop_data(Vector2.ZERO, _dragged):
 		return null
-	
 	return block as SocketBlock
 
 
-## True when the cursor is over a socket that could have taken a block but
-## refused this one. Empty canvas isn't a refusal and shouldn't look like one --
-## get_preview_socket() returns null for both cases, so it can't tell them apart.
-func _is_over_refusing_socket() -> bool:
+## True when the pointer is over a slot that could have taken a block but
+## refuses this one. Empty canvas isn't a refusal and doesn't look like one;
+## _slot_under_pointer() gives null for both, so it can't tell them apart.
+func _is_over_refusing_slot() -> bool:
 	var block := Core.get_block(get_viewport().gui_get_hovered_control())
-	
 	if block == null or not (block is SocketBlock):
 		return false
 	if block.data.socket == null or not block.data.socket.receptive:
 		return false
-	
-	return not block._can_drop_data(Vector2.ZERO, current_socket)
+	return not block._can_drop_data(Vector2.ZERO, _dragged)

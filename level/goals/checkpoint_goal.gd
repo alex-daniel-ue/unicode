@@ -1,6 +1,6 @@
 @tool
+class_name CheckpointGoal
 extends Goal
-
 ## A battery to collect: done once the robot has passed over it. The battery pops
 ## and fades when picked up, and comes back when the room resets.
 
@@ -14,11 +14,11 @@ var _sprite: CanvasItem
 var _rest_scale := Vector2.ONE
 var _tween: Tween
 
+
 func _ready() -> void:
-	# ORDER MATTERS. set_complete() gates on `not permanent or value`, so assigning
-	# is_complete = false while permanent is already true is silently dropped — and
-	# initial_complete would then record whatever the .tscn happened to hold. Land
-	# the starting value first, latch afterwards.
+	# The starting value lands before permanent latches: set_complete() drops
+	# `is_complete = false` while permanent is true, and initial_complete would
+	# then keep whatever the scene file held.
 	must_maintain = false
 	permanent = false
 	is_complete = false
@@ -31,12 +31,15 @@ func _ready() -> void:
 		_rest_scale = (_sprite as Node2D).scale
 	completion_changed.connect(_on_completion_changed)
 
+
 func needs_detection() -> bool:
 	return true
+
 
 func _on_entity_entered(body: Node2D) -> void:
 	if body == required_entity:
 		is_complete = true
+
 
 func _on_completion_changed(_goal: Goal) -> void:
 	if _sprite == null:

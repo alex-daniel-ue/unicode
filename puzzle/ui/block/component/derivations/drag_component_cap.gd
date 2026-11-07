@@ -1,14 +1,10 @@
 extends BlockDragComponent
+## The cap block's drag: a Begin block can't be copied.
 
 
 func _ready() -> void:
 	assert(base is CapBlock)
 
-func is_copy_valid(event: InputEvent) -> bool:
-	# Explicit type conversion
-	var cap := base as CapBlock
-	
-	return (
-		not cap.is_type(NestedData.Type.BEGIN) and
-		super(event)
-	)
+
+func can_copy(event: InputEvent) -> bool:
+	return not (base as CapBlock).is_type(NestedData.Type.BEGIN) and super(event)

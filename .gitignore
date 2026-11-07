@@ -32,3 +32,6 @@ ai/.env
 
 ai/public/
 .vercel
+
+# macOS folder metadata
+.DS_Store

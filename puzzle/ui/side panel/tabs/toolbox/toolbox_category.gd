@@ -1,6 +1,5 @@
 class_name ToolboxCategory
 extends VBoxContainer
-
 ## One category of the toolbox: its name, then a grid of tiles, one block on each.
 
 ## The pointer is on one of this category's blocks.
@@ -24,11 +23,13 @@ var title := "":
 func _ready() -> void:
 	heading.text = title
 
+
 func add_block(block: Block) -> void:
 	var tile := TILE.instantiate() as ToolboxTile
 	container.add_child(tile)
 	tile.hold(block)
 	block.mouse_entered.connect(pointed_at.emit)
+
 
 func get_blocks() -> Array[Block]:
 	var blocks: Array[Block] = []
@@ -37,6 +38,7 @@ func get_blocks() -> Array[Block]:
 			blocks.append((tile as ToolboxTile).block())
 	return blocks
 
+
 ## The tile `block` sits on, so it can be dropped once the block has moved on
 ## (to the new blocks section).
 func tile_of(block: Block) -> ToolboxTile:
@@ -44,6 +46,7 @@ func tile_of(block: Block) -> ToolboxTile:
 		if tile is ToolboxTile and (tile as ToolboxTile).block() == block:
 			return tile as ToolboxTile
 	return null
+
 
 func is_empty() -> bool:
 	return get_blocks().is_empty()

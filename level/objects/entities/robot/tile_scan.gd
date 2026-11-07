@@ -1,11 +1,10 @@
 class_name TileScan
 extends Node2D
-
 ## The robot looking at the tile in front of it, for Ahead Is: a yellow frame
 ## on the tile and a band of light sweeping across it, away from the robot, the
 ## way a list's board lights the box a block reads. Then the frame takes the
 ## answer's colour, green for True and pink for False (the value tags' colours),
-## and fades. Without it, a check that came out False looked like nothing had
+## and fades. Without it, a check that comes out False looks like nothing
 ## happened at all.
 ##
 ## Made and freed by Robot.ahead_is(); one tile, centred on this node, with the
@@ -30,18 +29,6 @@ var settle := 0.0:
 		queue_redraw()
 
 
-## Shows the scan over `time` seconds, then frees itself.
-func play(time: float) -> void:
-	modulate.a = 0.0
-	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 1.0, time * 0.1)
-	tween.parallel().tween_property(self, "sweep", 1.0, time * 0.45) \
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, "settle", 1.0, time * 0.15)
-	tween.tween_interval(time * 0.15)
-	tween.tween_property(self, "modulate:a", 0.0, time * 0.25)
-	tween.tween_callback(queue_free)
-
 func _draw() -> void:
 	var half := tile / 2.0
 	var box := Rect2(-half, -half, tile, tile).grow(-1.0)
@@ -54,3 +41,16 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2(edge - 3.0, box.position.y), Vector2(3.0, box.size.y)), Color(color, 0.9 * (1.0 - settle)))
 	draw_rect(box, Color(color, 0.25 * settle))
 	draw_rect(box.grow(-FRAME / 2.0), color, false, FRAME)
+
+
+## Shows the scan over `time` seconds, then frees itself.
+func play(time: float) -> void:
+	modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, time * 0.1)
+	tween.parallel().tween_property(self, "sweep", 1.0, time * 0.45) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "settle", 1.0, time * 0.15)
+	tween.tween_interval(time * 0.15)
+	tween.tween_property(self, "modulate:a", 0.0, time * 0.25)
+	tween.tween_callback(queue_free)

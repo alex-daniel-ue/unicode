@@ -1,4 +1,6 @@
 extends Control
+## The main menu: the logo and the buttons on the left, a demo running in the
+## courtyard (MenuDemo), and Exit, which shows the progress code before it quits.
 
 const LOGO := "Menu/Logo"
 const BUTTONS := "Menu/Buttons"
@@ -11,8 +13,8 @@ const BUTTON_WIDTH := Vector2(220, 360)
 const QUIT := "PopupPanel"
 const QUIT_CODE := "PopupPanel/VBoxContainer/CodeRow"
 ## The code flashes this colour a few times when the quit popup opens: leaving
-## is the last chance to copy it, and a code sitting quietly in a dialog was
-## walked past.
+## is the last chance to copy it, and a code sitting quietly in a dialog is
+## easy to walk past.
 const FLASH := Color(1.0, 0.82, 0.3)
 const FLASHES := 3
 
@@ -30,6 +32,7 @@ func _ready() -> void:
 	UiMotion.stagger_in(get_node(BUTTONS).get_children(), 0.06)
 	UiMotion.fade_in(get_node(^"Demo") as CanvasItem, 0.5)
 
+
 func _fit_logo() -> void:
 	var logo := get_node(LOGO) as TextureRect
 	var art := logo.texture.get_size()
@@ -38,8 +41,19 @@ func _fit_logo() -> void:
 	(get_node(BUTTONS) as Control).custom_minimum_size.x = \
 		clampf(art.x * k * BUTTON_SHARE, BUTTON_WIDTH.x, BUTTON_WIDTH.y)
 
+
+func _flash(label: Label) -> void:
+	label.modulate = Color.WHITE
+	var tween := label.create_tween()
+	for i in FLASHES:
+		tween.tween_property(label, "modulate", FLASH, 0.14)
+		tween.tween_property(label, "modulate", Color.WHITE, 0.3)
+	tween.tween_property(label, "modulate", FLASH, 0.14)
+
+
 func _on_start_button_pressed() -> void:
 	Transition.change_scene(Core.LEVEL_SELECT)
+
 
 ## Exit asks first, and shows the progress code while it asks, once there are
 ## stars to keep.
@@ -56,17 +70,11 @@ func _on_quit_pressed() -> void:
 	if has_stars:
 		_flash(code)
 
-func _flash(label: Label) -> void:
-	label.modulate = Color.WHITE
-	var tween := label.create_tween()
-	for i in FLASHES:
-		tween.tween_property(label, "modulate", FLASH, 0.14)
-		tween.tween_property(label, "modulate", Color.WHITE, 0.3)
-	tween.tween_property(label, "modulate", FLASH, 0.14)
 
 func _on_copy_code_pressed() -> void:
 	DisplayServer.clipboard_set(Progress.get_code())
 	(get_node(QUIT_CODE + "/CopyButton") as Button).text = "Copied"
+
 
 func _on_exit_button_pressed() -> void:
 	get_tree().quit()

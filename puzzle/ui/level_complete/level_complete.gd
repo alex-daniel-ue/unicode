@@ -1,17 +1,20 @@
 class_name LevelComplete
 extends Control
-
-## The win screen, as its own scene so Puzzle only has to call present().
+## The win card: the stars, the block count, the next star to go for, and the
+## assistant's comment on the program. Puzzle shows it with present().
 ##
-## A plain Control rather than a PopupPanel, per design doc §7: a popup closes on
-## Escape and on any outside click, and Escape is also the pause key. This one
-## stays until a button is pressed, and holds the way out for a moment so the
-## result is actually read.
+## A plain Control rather than a PopupPanel: a popup closes on Escape and on any
+## outside click, and Escape is also the pause key. This one stays until a
+## button is pressed.
+##
+## Everything on it comes from the game, never from the model, except the
+## comment, which is the assistant's, fills in afterwards, and never carries a
+## number the game worked out.
 
-## The way out -- Try for more stars, Level select, Next level -- opens after
+## The way out (Try for more stars, Level select, Next level) opens after
 ## MIN_HOLD, long enough that a click meant for the canvas doesn't skip the card.
-## It never waits for the post-win summary: offline, that wait was the whole
-## screen. The summary fills in whenever it arrives, or its line goes away.
+## It never waits for the comment: offline, that wait would be the whole screen.
+## The comment fills in whenever it arrives, or its line goes away.
 const MIN_HOLD := 1.0
 const SUMMARY_WAITING := "Looking at your program..."
 const STAR_SIZE := 64
@@ -23,11 +26,11 @@ const STAR_RIM := Color(0.105882354, 0.09411765, 0.13725491)
 ## The next star tier only: "For ★★★, use 4 blocks or fewer." Hidden at three
 ## stars. Rich text, so the stars can be set in StarText's font.
 @export var target_label: RichTextLabel
-## The post-win summary (design doc §8). Hidden until it has text. Rich text, so
-## the Python in it shows as code (CodeSpans) instead of running on as English.
-## Its code font is the scene's mono_font: swap in a monospace one there.
+## The assistant's comment, hidden until it has text. Rich text, so the Python
+## in it shows as code (CodeSpans) instead of running on as English. Its code
+## font is the scene's mono_font.
 @export var summary_label: RichTextLabel
-## The assistant's badge and the bubble the summary is in: shown with it.
+## The assistant's badge and the bubble the comment is in: shown with it.
 @export var summary_row: Control
 @export var stay_button: Button
 @export var select_button: Button
@@ -35,7 +38,7 @@ const STAR_RIM := Color(0.105882354, 0.09411765, 0.13725491)
 
 var _next: LevelEntry
 var _released := false
-## Bumped per present(), so a timer or a summary left over from an earlier win
+## Bumped per present(), so a timer or a comment left over from an earlier win
 ## (Try for more stars, then win again) can't release or fill a newer card.
 var _presentation := 0
 
@@ -44,10 +47,8 @@ func _ready() -> void:
 	visible = false
 
 
-## Everything the card shows comes from the game, never from the model: the
-## design doc's rule for the one screen students screenshot. The summary is the
-## one exception: it is the assistant's, it fills in afterwards, and it never
-## carries a number the game computed.
+## Shows the card for a win, and gives the number show_summary() wants with
+## the comment.
 func present(stars: int, placed: int, par: int, slack: int, summary_expected := false) -> int:
 	StarText.fill(stars_label, stars, STAR_SIZE, STAR_RIM, 8)
 
@@ -79,6 +80,19 @@ func present(stars: int, placed: int, par: int, slack: int, summary_expected := 
 	get_tree().create_timer(MIN_HOLD).timeout.connect(_try_release.bind(_presentation))
 	return _presentation
 
+
+## Called by Puzzle when the comment's request finishes. Empty means it failed
+## or timed out, and the section is left out rather than shown half-empty.
+func show_summary(text: String, presentation: int) -> void:
+	if not is_instance_valid(self) or presentation != _presentation:
+		return
+	summary_label.modulate.a = 1.0
+	summary_label.text = CodeSpans.to_bbcode(text) if not text.is_empty() else ""
+	summary_row.visible = not text.is_empty()
+	if summary_row.visible:
+		UiMotion.fade_in(summary_label, 0.3)
+
+
 ## The stars land a moment after the card, with a bounce: the one bit of this
 ## screen that is pure reward.
 func _bounce_stars() -> void:
@@ -93,8 +107,8 @@ func _bounce_stars() -> void:
 	tween.tween_property(stars_label, "scale", Vector2.ONE, 0.12)
 
 
-## Only the next rung up, and nothing at three stars. Printing both thresholds
-## every time read as a verdict even on a perfect solve.
+## Only the next rung up, and nothing at three stars: both thresholds every time
+## read as a verdict, even on a perfect solve.
 func _next_tier(stars: int, par: int, slack: int) -> String:
 	match stars:
 		3:
@@ -104,30 +118,15 @@ func _next_tier(stars: int, par: int, slack: int) -> String:
 		_:
 			return _tier_line(2, par + slack)
 
+
 func _tier_line(stars: int, blocks: int) -> String:
 	return "[center]For %s, use %d block%s or fewer.[/center]" % [
 		StarText.bbcode(StarText.FILLED.repeat(stars)), blocks, "" if blocks == 1 else "s"]
 
 
-## Called by Puzzle when the summary request finishes. Empty means it failed or
-## timed out, and the section is left out rather than shown half-empty.
-func show_summary(text: String, presentation: int) -> void:
-	if not is_instance_valid(self) or presentation != _presentation:
-		return
-	summary_label.modulate.a = 1.0
-	summary_label.text = CodeSpans.to_bbcode(text) if not text.is_empty() else ""
-	summary_row.visible = not text.is_empty()
-	if summary_row.visible:
-		UiMotion.fade_in(summary_label, 0.3)
-
-
 func _try_release(presentation: int) -> void:
 	if not is_instance_valid(self) or _released or presentation != _presentation:
 		return
-	_release()
-
-
-func _release() -> void:
 	_released = true
 	stay_button.disabled = false
 	select_button.disabled = false
@@ -169,9 +168,6 @@ func _on_select_pressed() -> void:
 
 
 func _on_next_pressed() -> void:
-	if _next == null:
-		return
-	Game.level_scene = _next.scene
-	Game.level_id = _next.id
-	Transition.change_scene(Core.PUZZLE_CANVAS)
+	if _next != null:
+		Game.play(_next)
 #endregion

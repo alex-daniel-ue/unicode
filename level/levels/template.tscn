@@ -67,10 +67,10 @@ autowrap_mode = 2
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("2_block_data")]([ExtResource("3_if"), ExtResource("4_not")])
 
-[node name="GoalManagerRoom1" type="Node" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+[node name="GoalManagerRoom1" type="Node" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_mgr")
 bounds = Rect2(-14, -14, 172.08, 76.08)
-focus_marker = NodePath("../../Visuals/Destination1")
+focus_markers = [NodePath("../../Visuals/Destination1")]
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom1" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
 script = ExtResource("6_dest_goal")
@@ -79,10 +79,10 @@ destination_area = NodePath("../../../Visuals/Destination1")
 fail_message = "The robot did not reach the door!"
 camera_focus = NodePath("../../../Visuals/Destination1")
 
-[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_marker")]
+[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("5_goal_mgr")
 bounds = Rect2(-14, -14, 174, 206)
-focus_marker = NodePath("../../Visuals/Destination2")
+focus_markers = [NodePath("../../Visuals/Destination2")]
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus")]
 script = ExtResource("6_dest_goal")

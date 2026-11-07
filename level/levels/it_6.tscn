@@ -64,9 +64,9 @@ tip = "The blocks inside a loop repeat together, in order, on every pass."
 layout_mode = 2
 data = ExtResource("19_for_int")
 
-[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_marker")]
+[node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
 bounds = Rect2(32, 65.92, 158.08, 158.08)
-focus_marker = NodePath("../../Visuals/Destination1")
+focus_markers = [NodePath("../../Visuals/Destination1")]
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("9_dest_goal")

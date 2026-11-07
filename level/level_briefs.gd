@@ -1,12 +1,12 @@
-## Fallback copy for every level's brief, keyed by scene file name.
-##
-## LevelDescription reads its scene fields first and fills any that are empty
-## from here. The scene fields are exported properties on a non-@tool script,
-## and the editor has twice saved scenes without such values (the tutorial
-## steps lost theirs the same way), which in the export showed up as block
-## pictures with no text under them. Keep this in step with the scenes.
 class_name LevelBriefs
 extends RefCounted
+## A copy of every level's brief, keyed by scene file name.
+##
+## LevelDescription reads its scene fields first and fills any that are empty
+## from here. The scene fields are exported properties on a script that isn't
+## @tool, and the editor has saved scenes without such values, which in the
+## export showed up as block pictures with no text under them. Keep this in step
+## with the scenes.
 
 const BRIEFS := {
 	"tutorial_1": {
@@ -199,6 +199,7 @@ const BRIEFS := {
 }
 
 
+## The brief for the level at `scene_path`, or an empty Dictionary.
 static func for_scene(scene_path: String) -> Dictionary:
 	var key := scene_path.get_file().get_basename()
 	# The generated modules' briefs live in their own table (module_briefs.gd).

@@ -1,7 +1,6 @@
 @tool
 class_name GuideArrow
 extends Control
-
 ## An arrow for guide pictures, drawn from `from` to `to`, both as fractions of
 ## this control's rect: (0, 0.5) to (1, 0.5) points right across it. Size and
 ## place the control where the arrow should be.
@@ -31,6 +30,7 @@ extends Control
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
+
 
 func _draw() -> void:
 	var a := from * size

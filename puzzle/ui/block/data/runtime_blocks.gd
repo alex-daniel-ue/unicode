@@ -1,6 +1,5 @@
 class_name RuntimeBlocks
 extends RefCounted
-
 ## Blocks that only exist once a level is running, named in a level's
 ## description through the template they're made from: a list's name block
 ## (list_reporter.tres, made per list by ListEntity) and a function's call
@@ -24,6 +23,7 @@ static func family_of(template: BlockData) -> String:
 	if template == null:
 		return ""
 	return FAMILIES.get(template.resource_path, "")
+
 
 ## True when `data` was made from a template of `family`.
 static func in_family(data: BlockData, family: String) -> bool:

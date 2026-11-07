@@ -1,6 +1,5 @@
 class_name StarText
 extends RefCounted
-
 ## Stars, drawn in the one font that has them. Neither game font has ★ or ☆, and
 ## Noto can't be a fallback on them: a fallback's taller line height spread to
 ## every label in the game. So a star is always its own Label, or its own span
@@ -22,9 +21,11 @@ const EMPTY := "☆"
 static func of(stars: int, out_of := 3) -> String:
 	return FILLED.repeat(stars) + EMPTY.repeat(maxi(out_of - stars, 0))
 
+
 ## A span of stars inside a RichTextLabel's BBCode.
 static func bbcode(stars: String) -> String:
 	return "[font=%s][color=#%s]%s[/color][/font]" % [FONT_PATH, COLOR.to_html(false), stars]
+
 
 ## Makes `label` a star label: Noto, yellow, at `size`.
 static func style(label: Label, size: int) -> Label:
@@ -34,14 +35,6 @@ static func style(label: Label, size: int) -> Label:
 	label.add_theme_color_override(&"font_disabled_color", COLOR)
 	return label
 
-## A row of `out_of` stars, `stars` of them earned: see fill().
-static func row(stars: int, size: int, rim := Color.TRANSPARENT, rim_size := 0, out_of := 3) -> HBoxContainer:
-	var box := HBoxContainer.new()
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_theme_constant_override(&"separation", 0)
-	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	fill(box, stars, size, rim, rim_size, out_of)
-	return box
 
 ## Puts the stars into `box`: the earned ones yellow, with a `rim` outline when
 ## one is given, then the rest black and plain. Two labels, since a Label has

@@ -1,7 +1,6 @@
 @tool
 class_name FileGoal
 extends Goal
-
 ## A file has to end up holding `expected`, line for line. A query goal, like
 ## TerminalGoal; the lines it wants are on the file from the start, faded.
 
@@ -20,15 +19,13 @@ func _ready() -> void:
 	super()
 	_show_goal()
 
-func _show_goal() -> void:
-	if file != null and is_inside_tree():
-		file.set_target(expected)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := super()
 	if file == null:
 		warnings.append("No file set, so this goal can't be checked.")
 	return warnings
+
 
 func check_condition() -> bool:
 	if file == null:
@@ -39,3 +36,8 @@ func check_condition() -> bool:
 		return true
 	fail_message = file.mismatch()
 	return false
+
+
+func _show_goal() -> void:
+	if file != null and is_inside_tree():
+		file.set_target(expected)

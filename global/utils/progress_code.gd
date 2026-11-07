@@ -1,6 +1,5 @@
 class_name ProgressCode
 extends RefCounted
-
 ## Star progress as ten Crockford base32 characters, written XXXXX-XXXXX.
 ##
 ## Layout, 50 bits over 10 characters of 5 bits:
@@ -32,18 +31,17 @@ const LENGTH := 10
 ## 2 since the Arrays rework scored Arrays 1 and 2 and cut Tidy up, which moved
 ## every Arrays slot. Progress reads a version 1 code against its own slots.
 const VERSION := 2
-
-const ALPHABET := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"   # Crockford: no I, L, O, U
+const ALPHABET := "0123456789ABCDEFGHJKMNPQRSTVWXYZ"  # Crockford: no I, L, O, U
 
 
 static func encode(stars: PackedInt32Array, version := VERSION) -> String:
-	var bits := 0                       # 40-bit payload, built little-end first
+	var bits := 0  # the 40-bit payload, level 0 in the lowest pair
 	for level in mini(stars.size(), LEVELS):
 		var count: int = clampi(stars[level], 0, 3)
 		bits |= count << (level * STARS_PER_LEVEL)
 
 	var chars: PackedInt32Array = []
-	for i in PAYLOAD_CHARS:             # 5 bits at a time, lowest group first
+	for i in PAYLOAD_CHARS:  # 5 bits at a time, lowest group first
 		chars.append((bits >> (i * 5)) & 0b11111)
 	chars.append(clampi(version, 0, 30))
 	chars.append(_checksum(chars))
@@ -54,10 +52,9 @@ static func encode(stars: PackedInt32Array, version := VERSION) -> String:
 	return out.insert(5, "-")
 
 
-## Returns an empty array when the code is malformed, so the caller can say so.
-## A code written by a NEWER format version is rejected rather than misread:
-## without this, bumping VERSION would silently decode old codes against the new
-## layout and hand students the wrong stars.
+## Empty when the code is malformed, so the caller can say so. A code written
+## by a newer format version is rejected rather than misread against this
+## version's layout.
 static func decode(code: String) -> PackedInt32Array:
 	var chars := _values(code)
 	if chars.is_empty():
@@ -82,23 +79,11 @@ static func version_of(code: String) -> int:
 	return -1 if chars.is_empty() else chars[VERSION_INDEX]
 
 
-static func is_valid(code: String) -> bool:
-	return not decode(code).is_empty()
-
-
-## Total stars, for "take the higher of the typed code and the local file".
 static func score(stars: PackedInt32Array) -> int:
 	var total := 0
 	for count in stars:
 		total += count
 	return total
-
-
-## Formats a raw ten-character code for display. Kept here so the hyphen
-## convention lives in one place.
-static func format_for_display(code: String) -> String:
-	var cleaned := code.strip_edges().to_upper().replace("-", "").replace(" ", "")
-	return cleaned.insert(5, "-") if cleaned.length() == LENGTH else code
 
 
 static func _checksum(chars: PackedInt32Array) -> int:

@@ -1,8 +1,7 @@
 extends Node
-
 ## Real-engine replay: builds each program from a compact spec, runs it through
 ## the real Puzzle, interpreter, physics and goals, and prints PASS or the fail
-## reason next to what was expected. Replaces the old IT-0a/IT-1-only checks.
+## reason next to what was expected.
 ##
 ## Run the scene (F6 on level_checks.tscn), or headless and fast:
 ##   godot --headless --fixed-fps 60 --path . res://tools/level_checks.tscn -- IT-9
@@ -60,6 +59,7 @@ var filter := ""
 ## a list slot. Not typed: the case is reported BAD unless it expects "LOCKED".
 var typed_into_locked: PackedStringArray = []
 
+
 func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
 	filter = args[0] if not args.is_empty() else ""
@@ -73,17 +73,37 @@ func _ready() -> void:
 	for line in report: print(line)
 	get_tree().quit()
 
+
 func W(cond, body: Array) -> Array: return ["while", cond, body]
+
+
 func I(cond, body: Array) -> Array: return ["if", cond, body]
+
+
 func A(tag: String) -> Array: return ["ahead", tag]
+
+
 func N(cond) -> Array: return ["not", cond]
+
+
 func M() -> Array: return ["move"]
+
+
 func T(dir: String) -> Array: return ["turn", dir]
+
+
 func F(v: String, a, b, s, body: Array) -> Array: return ["for", v, a, b, s, body]
+
+
 ## A list's name block. Anything else in a value slot is typed into it.
 func L(list_name: String) -> Array: return ["list", list_name]
+
+
 func E(v: String, list, body: Array) -> Array: return ["each", v, list, body]
+
+
 func MV(tiles) -> Array: return ["moven", tiles]
+
 
 func cases() -> Array:
 	var it9 := "res://level/levels/it_9.tscn"
@@ -115,6 +135,7 @@ func cases() -> Array:
 		["IT-10 turn right", it10, [W(N(A("destination")), [I(A("blocked"), [T("right"), ["continue"]]), M()]), M()], "FAIL"],
 	] + arrays_cases() + module_cases()
 
+
 ## The generated modules' cases, from MODULE_CASES. JSON numbers arrive as
 ## floats; a whole one is typed as an int, as a student would type it.
 func module_cases() -> Array:
@@ -127,12 +148,14 @@ func module_cases() -> Array:
 		return []
 	return _whole_numbers(parsed)
 
+
 func _whole_numbers(value: Variant) -> Variant:
 	if value is Array:
 		return (value as Array).map(_whole_numbers)
 	if value is float and is_equal_approx(value, roundf(value)):
 		return int(value)
 	return value
+
 
 ## The Arrays module, named by level id: AR-T2 and AR-T3 (Arrays 1 and 2), then
 ## AR-3 to AR-11, with no AR-9 (Tidy up was cut): each level's intended program,
@@ -223,6 +246,7 @@ func arrays_cases() -> Array:
 		["Robot: step forward text", tut.call(2), [MV(["item", 0, L("names")])], "FAIL error: Robot: I can only step forward a whole number of times, but I got 'Ana'.", [{name = "names", values = ["Ana"]}]],
 	]
 
+
 ## `extras` adds lists to the level before it opens, so list operations can be
 ## checked without a scene of their own: [{name, values}]. An
 ## `expect` of "LOG <text>" passes when a printed line contains <text>, whatever
@@ -242,7 +266,7 @@ func run_case(title: String, path: String, program: Array, expect: String, extra
 	add_child(puzzle)
 	puzzle.configure_level()
 	for i in 3: await get_tree().process_frame
-	var begin: CapBlock = puzzle._get_begin()
+	var begin: CapBlock = puzzle._find_begin()
 	for child in begin.mouth.get_children():
 		begin.mouth.remove_child(child); child.queue_free()
 	await get_tree().process_frame
@@ -302,6 +326,7 @@ func run_case(title: String, path: String, program: Array, expect: String, extra
 	puzzle.queue_free()
 	for i in 3: await get_tree().process_frame
 
+
 ## With "snap" among the arguments (and without --headless, which draws
 ## nothing), each case saves screenshots before, during and after its run.
 func _snap(label: String) -> void:
@@ -315,9 +340,11 @@ func _snap(label: String) -> void:
 		level_image.resize(level_image.get_width() * 2, level_image.get_height() * 2, Image.INTERPOLATE_NEAREST)
 		level_image.save_png(file.replace("snap_", "level_"))
 
+
 func make(kind: String) -> Block:
 	var data: BlockData = load(DATA[kind])
 	return Block.construct(data)
+
 
 func make_spec(spec: Array) -> Block:
 	if spec[0] == "call":
@@ -344,12 +371,14 @@ func make_spec(spec: Array) -> Block:
 		return copied
 	return make(spec[0])
 
+
 func build_into(nested: NestedBlock, program: Array) -> void:
 	for spec in program:
 		var block := make_spec(spec)
 		nested.mouth.add_child(block)
 		await get_tree().process_frame
 		await fill(block, spec)
+
 
 func fill(block: Block, spec: Array) -> void:
 	match spec[0]:
@@ -401,12 +430,14 @@ func fill(block: Block, spec: Array) -> void:
 			type_into(slots[0], str(spec[1])); await put(slots[1], spec[2])
 			await build_into(block, spec[3])
 
+
 ## Plugs a block into a slot when given a spec, types into it otherwise.
 func put(slot: Block, x) -> void:
 	if x is Array:
 		await plug(slot, x)
 	else:
 		type_into(slot, str(x))
+
 
 func plug(slot: Block, spec: Array) -> void:
 	var block := make_spec(spec)
@@ -419,12 +450,14 @@ func plug(slot: Block, spec: Array) -> void:
 	await get_tree().process_frame
 	await fill(block, spec)
 
+
 func choose(slot: Block, value: String) -> void:
 	await get_tree().process_frame
 	var vb := slot as ValueBlock
 	var idx := vb.data.value.enum_values.find(value)
 	assert(idx >= 0, "no option " + value)
 	vb.option_button.select(idx)
+
 
 func type_into(slot: Block, value: String) -> void:
 	if not (slot as ValueBlock).data.value.editable:

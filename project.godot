@@ -23,7 +23,6 @@ buses/default_bus_layout=""
 [autoload]
 
 Core="*res://global/core.gd"
-Debug="*res://global/debug.gd"
 Game="*res://global/game.gd"
 Interpreter="*res://global/interpreter.gd"
 SfxPlayer="*res://global/sfx player/sfx_player.gd"

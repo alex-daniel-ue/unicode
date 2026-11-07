@@ -1,7 +1,6 @@
 @tool
 class_name DictGoal
 extends Goal
-
 ## A dictionary has to end up holding `expected`, key for key, in any order, as
 ## Python's == compares two dicts. A query goal, like ListGoal. The rows it
 ## wants are on the board from the start, faded until the program writes them.
@@ -21,15 +20,13 @@ func _ready() -> void:
 	super()
 	_show_goal()
 
-func _show_goal() -> void:
-	if board != null and is_inside_tree():
-		board.set_target(expected)
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings := super()
 	if board == null:
 		warnings.append("No dictionary set, so this goal can't be checked.")
 	return warnings
+
 
 func check_condition() -> bool:
 	if board == null:
@@ -40,3 +37,8 @@ func check_condition() -> bool:
 		return true
 	fail_message = board.mismatch()
 	return false
+
+
+func _show_goal() -> void:
+	if board != null and is_inside_tree():
+		board.set_target(expected)

@@ -1,12 +1,10 @@
 class_name ListBlockProvider
 extends BlockProvider
-
-## Hands out a list's name block. ListEntity adds one of these to itself at
-## runtime; it isn't authored.
+## Hands out a list's name block, from inside list_entity.tscn.
 ##
-## A level has one board per room under the same name, and they all answer to one
-## name block, so only one of them offers it: the canonical board (lowest
-## room_index). The block finds the running room's board itself when it runs.
+## Every room's board of a list answers to one name block, so only one of them
+## offers it: the canonical board (lowest room_index). The block finds the
+## running room's board itself when it runs.
 
 
 func get_block_data() -> Array[BlockData]:
@@ -14,5 +12,5 @@ func get_block_data() -> Array[BlockData]:
 	if list == null or not list.is_canonical():
 		return []
 	if block_data.is_empty():
-		block_data.append(list.make_reporter_data())
+		block_data.append(ListEntity.reporter_data(list.get_list_name()))
 	return block_data

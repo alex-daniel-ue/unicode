@@ -1,18 +1,10 @@
 extends Node
-
-## Star progress. Authoritative in memory, mirrored to user://progress.cfg, and
-## portable as a ProgressCode.
+## Star progress: held in memory, saved to user://progress.cfg, and portable as
+## a ProgressCode.
 ##
-## Three changes from the previous version, all of them deployment concerns:
-##
-##   1. It persists. Nothing wrote to disk before, so closing the game lost
-##      everything unless the student had copied a code off the win screen.
-##   2. Level ids come from the LevelCatalog rather than a hardcoded dictionary,
-##      so "lt_1..lt_10" and the level-select module list can no longer drift
-##      apart from each other or from the design doc's names.
-##   3. An unknown level id is reported instead of silently ignored. A typo in a
-##      scene name used to mean a solved level recorded nothing, with no sign
-##      anything had gone wrong.
+## Level ids and slots come from the LevelCatalog, so level select, the stars
+## and the code all read one list. An id the catalog doesn't know is reported,
+## because the only other sign of a misnamed level is a win that records nothing.
 
 signal progress_updated
 
@@ -27,14 +19,10 @@ const V1_SLOTS: Array[StringName] = [
 
 var catalog: LevelCatalog
 var level_stars: PackedInt32Array = PackedInt32Array()
-## Stars for the levels that own no progress slot (the Tutorial module), by level id.
-## Kept in the save file only: they are a reward on the level grid, not part of
-## the code or of the study's data.
+## Stars for the levels that own no progress slot (the Tutorial module), by
+## level id. Kept in the save file only: they are a reward on the level grid,
+## not part of the code or of the study's data.
 var practice_stars: Dictionary[StringName, int] = {}
-
-## True when this machine had no save file at startup. The tutorial prompt uses
-## this as its "first run" test.
-var is_fresh := true
 
 var _disk_available := true
 
@@ -52,7 +40,7 @@ func _ready() -> void:
 
 	_load_from_disk()
 
-#region Public API
+
 func get_code() -> String:
 	return ProgressCode.encode(level_stars)
 
@@ -77,36 +65,30 @@ func apply_code(code: String) -> bool:
 	return true
 
 
-## Records a win. Stars are clamped to 1..3 because completing a level is itself
-## worth one star (§7: the first star is the completion marker).
+## Records a win. Stars are clamped to 1..3: completing a level is itself worth
+## the first star.
 func record_completion(level_id: StringName, stars: int) -> void:
+	var earned := clampi(stars, 1, 3)
 	var slot := slot_of(level_id)
 	if slot < 0:
-		# A level that deliberately owns no progress slot (a tutorial) keeps its
-		# stars in the save file only. An id the catalog has never heard of is a
-		# wiring mistake and has to be loud, because the symptom is a solved
-		# level that records nothing.
-		var known: bool = catalog != null and catalog.entry_of(level_id) != null
-		if not known:
+		# A level that owns no progress slot (a tutorial) keeps its stars in the
+		# save file only. An id the catalog has never heard of is a wiring
+		# mistake, and has to be loud.
+		if catalog == null or catalog.entry_of(level_id) == null:
 			push_error(
 				"Progress: level id '%s' is not in the LevelCatalog, so this completion was not recorded. "
 				% level_id + "Add a LevelEntry for it."
 			)
 			return
-		var best := clampi(stars, 1, 3)
-		if best > practice_stars.get(level_id, 0):
-			practice_stars[level_id] = best
+		if earned > practice_stars.get(level_id, 0):
+			practice_stars[level_id] = earned
 			_save_to_disk()
 		progress_updated.emit()
 		return
 
-	var earned := clampi(stars, 1, 3)
-	if earned <= level_stars[slot]:
-		progress_updated.emit()
-		return
-
-	level_stars[slot] = earned
-	_save_to_disk()
+	if earned > level_stars[slot]:
+		level_stars[slot] = earned
+		_save_to_disk()
 	progress_updated.emit()
 
 
@@ -154,14 +136,6 @@ func is_unlocked(level_id: StringName) -> bool:
 	return place <= furthest_solved + catalog.unlock_lookahead
 
 
-func reset() -> void:
-	level_stars.fill(0)
-	practice_stars.clear()
-	_save_to_disk()
-	progress_updated.emit()
-#endregion
-
-#region Persistence
 ## Best-effort. A lab PC that restores itself on reboot, or a roaming profile
 ## with user:// read-only, must not take the game down with it. The progress
 ## code is the real answer on those machines; this is the convenience on top.
@@ -174,8 +148,6 @@ func _load_from_disk() -> void:
 	if err != OK:
 		push_warning("Progress: could not read %s (error %d). Starting fresh." % [SAVE_PATH, err])
 		return
-
-	is_fresh = false
 
 	# Stored as a code rather than as raw ints so the file is checksummed by the
 	# same routine as a typed code, and a half-written file is rejected instead
@@ -233,11 +205,10 @@ func _save_to_disk() -> void:
 
 	var err := cfg.save(SAVE_PATH)
 	if err != OK:
-		# Say it once. A machine that cannot write user:// will fail every save,
-		# and forty identical warnings per session hide everything else.
+		# Said once: a machine that can't write user:// fails every save, and a
+		# warning per save would hide everything else.
 		_disk_available = false
 		push_warning(
 			"Progress: cannot write %s (error %d). Progress will survive this session only, "
 			% [SAVE_PATH, err] + "students on this machine must copy their progress code."
 		)
-#endregion

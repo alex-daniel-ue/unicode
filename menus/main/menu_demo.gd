@@ -1,6 +1,5 @@
 class_name MenuDemo
 extends PanelContainer
-
 ## The main menu's demos, in the courtyard: a short program beside a little
 ## classroom where it runs, each block lighting up as it runs. A few of them
 ## take turns, so the menu shows what the game is about in more than one way:
@@ -135,6 +134,7 @@ func _ready() -> void:
 	resized.connect(func() -> void: _place.call_deferred())
 	_show(0)
 
+
 ## SAMPLE PUZZLE over the demo's name, with a dot a demo beside the name, the
 ## one showing lit.
 func _header() -> Control:
@@ -162,6 +162,7 @@ func _header() -> Control:
 		_dots.add_child(dot)
 	title_row.add_child(_dots)
 	return header
+
 
 func _label(text: String, font: Font, font_size: int, color: Color) -> Label:
 	var label := Label.new()
@@ -213,6 +214,7 @@ func _show(index: int) -> void:
 	_fit()
 	_play(demo)
 
+
 func _play(demo: Dictionary) -> void:
 	if _robot != null:
 		_at = _robot.position
@@ -221,6 +223,7 @@ func _play(demo: Dictionary) -> void:
 	_player = create_tween().set_loops(demo.cycles)
 	call(demo.play, _player)
 	_player.finished.connect(_next, CONNECT_ONE_SHOT)
+
 
 ## Fades this demo out and the next one in.
 func _next() -> void:
@@ -254,6 +257,7 @@ func _fit() -> void:
 	reset_size()
 	_place.call_deferred()
 
+
 ## Centred in the space right of `avoid`, so each demo's card, whatever its
 ## size, sits in the middle of it. In a window too small for the card (its room
 ## is at 1x by then), the whole card shrinks to fit. Set by hand: reset_size()
@@ -267,6 +271,7 @@ func _place() -> void:
 	scale = Vector2(fit, fit)
 	var shown := size * fit
 	position = Vector2(_left_limit() + (space.x - shown.x) / 2.0, GAP + (space.y - shown.y) / 2.0).round()
+
 
 ## Where the free space starts, a GAP past the right edge of whatever in
 ## `avoid` reaches furthest. Their laid-out rects, not their drawn ones: the
@@ -286,12 +291,14 @@ func _redraw() -> void:
 	queue_redraw()
 	_overlay.queue_redraw()
 
+
 ## Under the content: an ink line round the board and the frame's shaded
 ## inner edge.
 func _draw() -> void:
 	var board := Rect2(Vector2.ZERO, size)
 	_frame(self, board.grow(2.0), 2.0, INK)
 	_frame(self, board.grow(-FRAME), 2.0, FRAME_SHADE)
+
 
 ## Over the content: the tray with its pens and eraser, the magnets holding
 ## the room up, and the pointer beside the running line.
@@ -315,6 +322,7 @@ func _draw_overlay() -> void:
 	if not is_nan(_pointer_y) and _picture != null:
 		_draw_pointer(Vector2(_local_rect(_picture).position.x - 22.0, _pointer_y).round())
 
+
 ## A pixel triangle pointing right, from `at` to 8 px past it, in ink.
 func _draw_pointer(at: Vector2) -> void:
 	# Half the height of each 2 px column: the ink one round each gold one.
@@ -324,6 +332,7 @@ func _draw_pointer(at: Vector2) -> void:
 		_overlay.draw_rect(Rect2(at.x - 2.0 + 2.0 * i, at.y - ink[i], 2.0, 2.0 * ink[i]), INK)
 	for i in gold.size():
 		_overlay.draw_rect(Rect2(at.x + 2.0 * i, at.y - gold[i], 2.0, 2.0 * gold[i]), GOLD)
+
 
 ## Slides the pointer to `block`'s first line, the part that lights up.
 func _point_at(block: Block) -> void:
@@ -340,14 +349,17 @@ func _point_at(block: Block) -> void:
 	_slide.tween_method(_set_pointer, _pointer_y, y, STEP * 0.3) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
+
 func _set_pointer(y: float) -> void:
 	_pointer_y = y
 	_overlay.queue_redraw()
+
 
 ## `control`'s rect in the card's own coordinates, whatever the card's scale.
 func _local_rect(control: Control) -> Rect2:
 	var to_card := get_global_transform().affine_inverse() * control.get_global_transform()
 	return Rect2(to_card.origin, to_card.basis_xform(control.size))
+
 
 ## A band `width` wide just inside `rect`'s edges.
 static func _frame(on: CanvasItem, rect: Rect2, width: float, color: Color) -> void:
@@ -355,6 +367,7 @@ static func _frame(on: CanvasItem, rect: Rect2, width: float, color: Color) -> v
 	on.draw_rect(Rect2(rect.position.x, rect.end.y - width, rect.size.x, width), color)
 	on.draw_rect(Rect2(rect.position.x, rect.position.y, width, rect.size.y), color)
 	on.draw_rect(Rect2(rect.end.x - width, rect.position.y, width, rect.size.y), color)
+
 
 ## `rect` filled with `color` in a 2 px ink outline.
 static func _chip(on: CanvasItem, rect: Rect2, color: Color) -> void:
@@ -377,6 +390,7 @@ func _play_lap(t: Tween) -> void:
 		_step(t, turn)
 		_turn(t, "left")
 
+
 ## while True: for each steps in route: step forward steps times; turn left.
 ## The board's cursor sits on the value in use; the four values make a
 ## rectangle back to the start. A beat after the for each, before the while
@@ -396,6 +410,7 @@ func _play_route(t: Tween) -> void:
 		_turn(t, "left")
 	t.tween_callback(_list.point_at.bind(-1))
 	t.tween_interval(STEP)
+
 
 ## while True: if ahead is blocked: turn around, else: step forward. Along the
 ## hallway and back, the tile ahead lit by each check (TileScan).
@@ -428,6 +443,7 @@ func _play_patrol(t: Tween) -> void:
 		t.tween_interval(STEP)  # the beat after the if and else
 	assert(_at == start and _facing == start_facing)
 
+
 ## while True: declare temp as index 0 of nums; set index 0 of nums to index 2
 ## of nums; set index 2 of nums to temp. The first and last values change
 ## places, flying across the board, and change back on the next pass.
@@ -459,10 +475,12 @@ func _step(t: Tween, block: Block) -> void:
 	t.tween_callback(_light.bind(block))
 	t.tween_interval(STEP)
 
+
 func _move(t: Tween, tiles: int) -> void:
 	for i in tiles:
 		_at += _facing * TILE
 		t.tween_property(_robot, "position", _at, MOVE_TIME)
+
 
 ## A turn as robot.gd turns: left is (y, -x), right is (-y, x), around is -1 x.
 func _turn(t: Tween, how: String) -> void:
@@ -476,6 +494,7 @@ func _turn(t: Tween, how: String) -> void:
 	t.tween_property(_sprite, "position:y", _rest.y, TURN_TIME / 2.0) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
+
 ## The tile ahead lit up, as Ahead Is lights it in a level.
 func _scan(facing: Vector2, found: bool) -> void:
 	var scan := TileScan.new()
@@ -487,10 +506,12 @@ func _scan(facing: Vector2, found: bool) -> void:
 	_robot.add_child(scan)
 	scan.play(STEP * 0.85)
 
+
 ## The pictured block with this title, or null.
 func _block(title: String) -> Block:
 	var found := _blocks(title)
 	return found[0] if not found.is_empty() else null
+
 
 ## Every pictured block with this title, top to bottom.
 func _blocks(title: String) -> Array[Block]:
@@ -499,6 +520,7 @@ func _blocks(title: String) -> Array[Block]:
 		if (node as Block).data.title == title:
 			found.append(node as Block)
 	return found
+
 
 ## Lights `block` the way a running block lights up, for one step, and points
 ## at it. A picture's blocks don't animate their own colours, so this sets
