@@ -18,6 +18,10 @@ const FLASHES := 3
 
 
 func _ready() -> void:
+	# A page in a browser has nothing to quit: the tab is closed instead. The
+	# progress code is still reachable through the Progress button.
+	if OS.has_feature("web"):
+		get_node(BUTTONS + "/ExitButton").queue_free()
 	get_viewport().size_changed.connect(_fit_logo)
 	_fit_logo()
 	# The logo pops in, then the buttons arrive one after another, and the demo
