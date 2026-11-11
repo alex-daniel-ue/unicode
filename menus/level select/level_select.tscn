@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cdilcamcaiut0"]
+[gd_scene load_steps=9 format=3 uid="uid://cdilcamcaiut0"]
 
 [ext_resource type="Script" uid="uid://dwjw041c4pomd" path="res://menus/level select/level_select.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://c3063l7q8ujsd" path="res://menus/level select/art/icon_home.png" id="2_home"]
@@ -84,7 +84,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="Column" type="Control" parent="."]
-layout_mode = 0
+anchors_preset = 0
 offset_right = 912.0
 offset_bottom = 534.0
 mouse_filter = 2
@@ -97,6 +97,7 @@ anchor_right = 0.5
 offset_left = -300.0
 offset_right = -236.0
 offset_bottom = 64.0
+grow_horizontal = 2
 theme_type_variation = &"PixelButton"
 icon = ExtResource("7_prev")
 icon_alignment = 1
@@ -109,6 +110,7 @@ anchor_right = 0.5
 offset_left = 236.0
 offset_right = 300.0
 offset_bottom = 64.0
+grow_horizontal = 2
 theme_type_variation = &"PixelButton"
 icon = ExtResource("8_next")
 icon_alignment = 1

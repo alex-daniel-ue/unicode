@@ -451,7 +451,7 @@ metadata/_custom_type_script = "uid://copysdfiq2iil"
 [sub_resource type="Resource" id="gen_operators"]
 script = ExtResource("1_level_module")
 id = &"operators"
-display_name = "Operators and Expressions"
+display_name = "Operators, Expressions"
 subtitle = "Work it out."
 levels = Array[ExtResource("2_level_entry")]([SubResource("gen_operators_op_1"), SubResource("gen_operators_op_2"), SubResource("gen_operators_op_3"), SubResource("gen_operators_op_4"), SubResource("gen_operators_op_5"), SubResource("gen_operators_op_6"), SubResource("gen_operators_op_7"), SubResource("gen_operators_op_8"), SubResource("gen_operators_op_9"), SubResource("gen_operators_op_10")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
