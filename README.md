@@ -810,9 +810,12 @@ The game side is `puzzle/ui/side panel/tabs/ai assistant/ai_assistant.gd`:
   - the last run's result and output log;
   - the robot's position and facing, and every room's lists;
   - the chat history.
-- **Question budget:** a pool of 10 questions that refills one a minute,
-  shared by all levels (`HintPool`). A request that never reached the model
-  gives its question back.
+- **Question budget:** a pool of 10 questions that refills one every three
+  minutes, plus 3 the first time a level is solved on this computer, never
+  above 10. It is shared by all levels (`HintPool`), and saved with the time
+  it was last updated in `user://hint_pool.cfg`, so it refills while the game
+  is closed and a restart doesn't refill it. A request that never reached the
+  model gives its question back.
 - **Win-card comment:** one request per win. The card never waits for it; it
   fills in when it arrives, or its line disappears.
 - **New chat** clears the history. Each message scrolls the chat to the bottom.

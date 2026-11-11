@@ -66,10 +66,12 @@ func apply_code(code: String) -> bool:
 
 
 ## Records a win. Stars are clamped to 1..3: completing a level is itself worth
-## the first star.
+## the first star. A level's first win on this computer also gives the
+## assistant's HintPool its bonus questions.
 func record_completion(level_id: StringName, stars: int) -> void:
 	var earned := clampi(stars, 1, 3)
 	var slot := slot_of(level_id)
+	var first_solve := not is_complete(level_id)
 	if slot < 0:
 		# A level that owns no progress slot (a tutorial) keeps its stars in the
 		# save file only. An id the catalog has never heard of is a wiring
@@ -83,12 +85,16 @@ func record_completion(level_id: StringName, stars: int) -> void:
 		if earned > practice_stars.get(level_id, 0):
 			practice_stars[level_id] = earned
 			_save_to_disk()
+		if first_solve:
+			HintPool.reward_first_solve()
 		progress_updated.emit()
 		return
 
 	if earned > level_stars[slot]:
 		level_stars[slot] = earned
 		_save_to_disk()
+	if first_solve:
+		HintPool.reward_first_solve()
 	progress_updated.emit()
 
 
