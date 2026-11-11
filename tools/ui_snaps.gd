@@ -90,7 +90,7 @@ func _trash_shots() -> void:
 		(guide as TutorialOverlay).skip()
 	var loop := Block.construct(load("res://puzzle/blocks/control flow/while.tres")) as NestedBlock
 	puzzle.canvas.add_child(loop)
-	loop.position = puzzle._get_begin().position + Vector2(0, 220)
+	loop.position = puzzle._find_begin().position + Vector2(0, 220)
 	for i in 5: await get_tree().process_frame
 	# The Not in the slot as a drop leaves it (socket_drop_manager.gd): the
 	# slot's own block hidden, and remembered by the one put in its place.
@@ -136,14 +136,14 @@ func _pan_checks() -> void:
 	for i in 20: await get_tree().process_frame
 	for guide in puzzle.find_children("*", "TutorialOverlay", true, false):
 		(guide as TutorialOverlay).skip()
-	var begin := puzzle._get_begin()
+	var begin := puzzle._find_begin()
 	var loop := Block.construct(load("res://puzzle/blocks/control flow/for_int.tres")) as NestedBlock
 	begin.mouth.add_child(loop)
-	puzzle.notif.push("A notification at the top of the canvas.", Notification.Type.LOG)
+	puzzle.notifications.push("A notification at the top of the canvas.", Notification.Type.LOG)
 	for i in 30: await get_tree().process_frame
 	var hat := begin.upper_lip.get_global_rect()
 	var body := (loop.mouth.get_parent() as Control).get_global_rect()
-	var note := (puzzle.notif.get_child(0) as Control).get_global_rect()
+	var note := (puzzle.notifications.get_child(0) as Control).get_global_rect()
 	var spots := [
 		["beside begin's hat, in its box", Vector2(hat.end.x + 24, hat.get_center().y), MOUSE_BUTTON_LEFT],
 		["inside the For's empty mouth", Vector2(body.position.x + 70, body.get_center().y), MOUSE_BUTTON_LEFT],
@@ -156,7 +156,7 @@ func _pan_checks() -> void:
 		var at: Vector2 = spot[1]
 		_press(at, spot[2], true)
 		await get_tree().process_frame
-		var panning := puzzle.canvas.is_panning
+		var panning := puzzle.canvas._is_panning
 		for i in range(1, 13):
 			var motion := InputEventMouseMotion.new()
 			motion.position = at + Vector2(3 * i, 2 * i)

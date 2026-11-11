@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4]
+[gd_scene load_steps=15 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
@@ -14,8 +14,6 @@
 [ext_resource type="Resource" path="res://puzzle/blocks/lists/item_of.tres" id="12_item_of"]
 [ext_resource type="Resource" path="res://puzzle/blocks/lists/length_of.tres" id="13_length_of"]
 [ext_resource type="Resource" path="res://puzzle/blocks/socket/arithmetic.tres" id="14_arithmetic"]
-[ext_resource type="Resource" path="res://puzzle/blocks/control flow/for_each.tres" id="15_for_each"]
-[ext_resource type="Resource" path="res://puzzle/blocks/generic/set_var.tres" id="16_set_var"]
 
 [node name="AR7NumberTheLockers" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
@@ -63,7 +61,7 @@ block_values = PackedStringArray("0,list:lockers,1")
 tip = "In Python: `lockers[0] = 1`"
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_block_data")]([ExtResource("11_for_int"), ExtResource("10_set_item"), ExtResource("12_item_of"), ExtResource("13_length_of"), ExtResource("14_arithmetic"), ExtResource("15_for_each"), ExtResource("16_set_var")])
+block_data = Array[ExtResource("4_block_data")]([ExtResource("11_for_int"), ExtResource("10_set_item"), ExtResource("12_item_of"), ExtResource("13_length_of"), ExtResource("14_arithmetic")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
 bounds = Rect2(46.0, 15.0, 200.0, 58.0)

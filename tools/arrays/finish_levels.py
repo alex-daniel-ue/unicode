@@ -4,8 +4,8 @@
 
 For each level: runs its "AR-n intended" harness case in yaml mode and keeps
 the serializer's output, then measures the level with tools/bake_level.tscn.
-Then reruns gen_arrays.py with both, so they land in the scenes. AR-3 is
-hand-made, so its numbers are printed here to be copied in by hand.
+Then reruns gen_arrays.py with both, so they land in the scenes. That rewrites
+every Arrays scene, ar_11 included, which has been saved in the editor since.
 """
 import json, os, re, subprocess, sys
 

@@ -1,7 +1,8 @@
 """Generates the Arrays module's scenes: ar_t2 and ar_t3 (Arrays 1 and 2) and
-ar_4.tscn .. ar_11.tscn. AR-3 is hand-made in the editor and listed in
-HAND_MADE, so this never overwrites it; its spec stays here for the brief text
-and the catalog.
+ar_3.tscn .. ar_11.tscn. A level listed in HAND_MADE is never overwritten; its
+spec stays here for the brief text and the catalog. ar_11.tscn has been saved
+in the editor since it was generated, so regenerate into another folder and
+copy back only the levels that changed.
 
 The ids are the progress and thesis-data keys, so they never change: Arrays 1
 and 2 keep the "t" from when they were tutorials, and there is no ar_9, since
@@ -200,67 +201,90 @@ LEVELS["ar_t3"] = dict(
     rooms=[route_room(c, [len(c), c[0]]) for c in ([2, 6, 1, 3], [1, 4, 2, 5, 1, 3])],
 )
 
+# One move, as far as the last value: index ((length of route) - 1) of route,
+# Arrays 1's one-block program with its index worked out, and the Math block
+# used once. It used to be two moves, the first as far as the last index, so
+# the same Math block was needed twice in the level that brings it in. The
+# last values differ (5, 2), and neither room's last value sits at index 2 in
+# the other, so neither a number typed in nor index 2 passes; index -1, the last
+# value as Python writes it, does.
 LEVELS["ar_3"] = dict(
-    id="ar-3", label="3", root="AR3CountThenTheLast", title="Last index, last value",
+    id="ar-3", label="3", root="AR3LastIndexLastValue", title="Last index, last value",
+    uid="uid://cl87a1qgt7eki",  # the catalog's, from when this scene was made by hand
     concept="The last index is the length minus 1, and the last value sits there.",
-    mission="Before the turn, move as far as the last index of the list. After the turn, move as far as the last value in the list.",
-    rooms_text=["A list with three values.", "A list with two values."],
+    mission="Move as far as the last value in the list.",
+    rooms_text=["A list with three values.", "A list with four values."],
     twist="Each list has a different length.",
     blocks=["arith"],
     notes=["This block does math, like 3 + 1. Pick the sign in the middle. Either side can take a number, or the answer of another block."],
     tip="The Math block can use the answer of another block. In Python: `len(route) + 1`.",
-    robot=["move_n", "turn"], toolbox=["item", "len", "arith"],
-    # The first move builds (length of route) - 1 alone; the second puts the same
-    # block inside Index Of, so the nesting deepens one step at a time.
-    rooms=[route_room(c, [len(c) - 1, c[-1]]) for c in ([2, 5, 1], [4, 3])],
+    robot=["move_n"], toolbox=["item", "len", "arith"],
+    rooms=[hall_room(c[-1], 7, c) for c in ([4, 1, 5], [3, 6, 1, 2])],
 )
 
 
 # The first half of the module has two rooms a level, not three: a third board
-# and a third route on screen was more to take in than it taught.
+# and a third route on screen was more to take in than it taught. Arrays 4's
+# lists have three values each, so its loop is Iteration's For with a small
+# number, `for i from 0 until 3`, and the one new idea is `index i of route`.
+# With two values, writing the moves out was as short as the loop (3 blocks)
+# and earned 3 stars; with three it is 5 blocks, 1 star.
+# Arrays 5 goes round longer routes, four values each. Going until `length of
+# route` waits for lists of different lengths (Arrays 6 and 7).
 def ar4_rooms():
-    return [route_room(c, c, pens_at_corners=True) for c in ([4, 2, 4, 2], [3, 2, 3])]
+    return [route_room(c, c, pens_at_corners=True) for c in ([3, 2, 3], [2, 3, 1])]
+
+
+def ar5_rooms():
+    return [route_room(c, c, pens_at_corners=True) for c in ([4, 2, 4, 2], [3, 2, 3, 1])]
 
 
 LEVELS["ar_4"] = dict(
     id="ar-4", label="4", root="AR4EveryStop", title="Every stop",
     concept="Going through a list by index.",
     mission="Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag.",
-    rooms_text=["A lap.", "A U-turn."],
-    twist="Each list has a different number of stops.",
+    rooms_text=["A U-turn.", "Two corners, then one step."],
+    twist="Both lists have 3 values, but not the same ones.",
     blocks=[], notes=[],
     tip="The For block stops before its end number, like `range(0, 3)` in Python, which gives 0, 1, 2.",
-    robot=["move_n", "turn"], toolbox=["for", "item", "len", "arith"],
+    robot=["move_n", "turn"], toolbox=["for", "item"],
     rooms=ar4_rooms(),
 )
 
 LEVELS["ar_5"] = dict(
     id="ar-5", label="5", root="AR5EveryStopAgain", title="Every stop, again",
     concept="Going through a list value by value: for each.",
-    mission="These are the same rooms as in the last level. Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag.",
-    rooms_text=["A lap.", "A U-turn."],
-    twist="This time, there is no Index Of block and no Length Of block.",
+    mission="Each value in the list is how far to move before the next left turn. Collect every battery on the way to the green flag.",
+    rooms_text=["A lap.", "A U-turn, then one more step."],
+    twist="The lists are longer now, and there is no Index Of block.",
     blocks=["each"],
     notes=["This block runs its blocks once for each value in a list. The box that it is on lights up."],
     block_values=["steps,list:route"],
     tip="In Python: `for steps in route:`",
     robot=["move_n", "turn"], toolbox=["each"],
-    rooms=ar4_rooms(),
+    rooms=ar5_rooms(),
 )
 
+# Arrays 4's program read from the end: the list on the wall is the route
+# written backwards, so its last value is the first move. Only the For header
+# is new (start at length - 1, stop past 0, count by -1). For Each reads
+# forward, so it drives the route the wrong way round. The rooms are the routes
+# the old There and back drove on its way out; driving back retraced them with
+# every turn reversed, which was a second puzzle, about maps, not lists.
+def ar6_rooms():
+    return [route_room(c, list(reversed(c)), pens_at_corners=True) for c in ([4, 2, 3], [2, 1, 3, 2])]
+
+
 LEVELS["ar_6"] = dict(
-    id="ar-6", label="6", root="AR6ThereAndBack", title="There and back",
+    id="ar-6", label="6", root="AR6LastToFirst", title="Last to first",
     concept="Going through a list backwards.",
-    mission="Move out and collect every battery. Then move back the same way, to the green flag where you started.",
-    rooms_text=["A long way out.", "A winding way out."],
-    twist="The way back is the list, read backwards.",
+    mission="This list is in reverse order. Its last value is the first move. Each value is how far to move before the next left turn. Collect every battery on the way to the green flag.",
+    rooms_text=["Three stops.", "Four stops."],
+    twist="For Each goes from the first value to the last.",
     blocks=[], notes=[],
-    tip="The For block can count down. Give it a step of -1.",
+    tip="The For block can count down. Give it a step of -1. It still stops before its end number.",
     robot=["move_n", "turn"], toolbox=["each", "for", "item", "len", "arith"],
-    star_slack=2,
-    # A battery at every corner and at the far end: each one is a turn the robot
-    # makes on the way out, and again on the way back.
-    rooms=[route_room(c, c, flag="start", pens_at_corners=True, pen_far=True) for c in ([3, 2, 4], [2, 3, 1, 2])],
+    rooms=ar6_rooms(),
 )
 
 LEVELS["ar_7"] = dict(
@@ -273,9 +297,10 @@ LEVELS["ar_7"] = dict(
     notes=["This block changes the value at an index of a list."],
     block_values=["0,list:lockers,1"],
     tip="In Python: `lockers[0] = 1`",
-    # for each and set var are red herrings: `for each x in lockers { set x to ... }`
-    # leaves the lockers unchanged, because the loop variable is a copy.
-    robot=None, toolbox=["for", "setitem", "item", "len", "arith", "each", "set"],
+    # No For Each or Set: they were red herrings here (`for each x in lockers {
+    # set x to ... }` leaves the lockers unchanged, the loop variable being a
+    # copy), one more thing to rule out in a level that already counts from 1.
+    robot=None, toolbox=["for", "setitem", "item", "len", "arith"],
     rooms=[data_room([dict(name="lockers", values=[0] * n)], goals=[("lockers", list(range(1, n + 1)))]) for n in (3, 5, 4)],
 )
 
@@ -607,8 +632,13 @@ def build(key, spec):
         add("show_stars = false\n")
     add("\n")
 
+    # A preset is locked (no trash, no copy) but movable, like Iteration's; only
+    # a worked example to watch is immovable.
     if spec.get("preset"):
-        add('[node name="LevelBlockPreset" parent="." index="1"]\nimmovable = true\nprogram = "%s"\n\n' % esc(json.dumps(spec["preset"])))
+        add('[node name="LevelBlockPreset" parent="." index="1"]\n')
+        if spec.get("immovable"):
+            add("immovable = true\n")
+        add('program = "%s"\n\n' % esc(json.dumps(spec["preset"])))
 
     add('[node name="GenericBlockProvider" parent="." index="2"]\n')
     add("block_data = Array[%s]([%s])\n\n" % (DATA, ", ".join(blk(b) for b in spec["toolbox"])))
@@ -732,7 +762,8 @@ def build(key, spec):
         editable += '[editable path="Visuals/YSorted/RobotCharacter"]\n'
     add(editable)
 
-    head = "[gd_scene load_steps=%d format=4]\n\n" % (len(ext) + len(subs) + 1)
+    uid = ' uid="%s"' % spec["uid"] if spec.get("uid") else ""
+    head = "[gd_scene load_steps=%d format=4%s]\n\n" % (len(ext) + len(subs) + 1, uid)
     text = head + "\n".join(ext) + "\n\n" + ("\n".join(subs) + "\n" if subs else "") + "".join(out)
     with open(os.path.join(ROOT, "level/levels/%s.tscn" % key), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(text)
@@ -770,7 +801,7 @@ def zoom_report():
     return "\n".join(lines)
 
 
-HAND_MADE = {"ar_3"}  # reworked by hand in the editor; never overwritten
+HAND_MADE = set()  # levels reworked by hand in the editor, never overwritten
 
 if __name__ == "__main__":
     for key, spec in LEVELS.items():

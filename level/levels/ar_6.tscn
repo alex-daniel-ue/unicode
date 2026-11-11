@@ -28,35 +28,13 @@
 [sub_resource type="CircleShape2D" id="Circle_1"]
 radius = 12.0
 
-[node name="AR6ThereAndBack" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
+[node name="AR6LastToFirst" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
 block: BeginBlock
   kind: nested
   text: \"begin code\"
   locked: true
   children:
-    - block: ForEachBlock
-      kind: nested
-      text: \"for each {} in {}\"
-      parameters:
-        - steps
-        - route
-      children:
-        - block: MoveTilesBlock
-          kind: statement
-          text: \"step forward {} times\"
-          parameters:
-            - steps
-        - block: TurnBlock
-          kind: statement
-          text: \"turn {}\"
-          parameters:
-            - left
-    - block: TurnBlock
-      kind: statement
-      text: \"turn {}\"
-      parameters:
-        - around
     - block: ForBlock (Integer)
       kind: nested
       text: \"for {} from {} until {}\\ncounting by {}\"
@@ -76,11 +54,6 @@ block: BeginBlock
         - -1
         - -1
       children:
-        - block: TurnBlock
-          kind: statement
-          text: \"turn {}\"
-          parameters:
-            - right
         - block: MoveTilesBlock
           kind: statement
           text: \"step forward {} times\"
@@ -90,16 +63,20 @@ block: BeginBlock
               text: \"index {} of {}\"
               parameters:
                 - i
-                - route"
+                - route
+        - block: TurnBlock
+          kind: statement
+          text: \"turn {}\"
+          parameters:
+            - left"
 room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManagerRoom2")]
-star_slack = 2
 
 [node name="LevelDescription" parent="." index="0"]
-title = "There and back"
-mission = "Move out and collect every battery. Then move back the same way, to the green flag where you started."
-rooms = PackedStringArray("A long way out.", "A winding way out.")
-twist = "The way back is the list, read backwards."
-tip = "The For block can count down. Give it a step of -1."
+title = "Last to first"
+mission = "This list is in reverse order. Its last value is the first move. Each value is how far to move before the next left turn. Collect every battery on the way to the green flag."
+rooms = PackedStringArray("Three stops.", "Four stops.")
+twist = "For Each goes from the first value to the last."
+tip = "The For block can count down. Give it a step of -1. It still stops before its end number."
 
 [node name="GenericBlockProvider" parent="." index="2"]
 block_data = Array[ExtResource("4_block_data")]([ExtResource("18_for_each"), ExtResource("19_for_int"), ExtResource("20_item_of"), ExtResource("21_length_of"), ExtResource("22_arithmetic")])
@@ -122,14 +99,7 @@ fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen1_2")
 detection_area = NodePath("../../../Visuals/Pen1_2")
 
-[node name="CheckpointGoal3" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every battery."
-camera_focus = NodePath("../../../Visuals/Pen1_3")
-detection_area = NodePath("../../../Visuals/Pen1_3")
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="3" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="2" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("10_destination_")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination1")
@@ -163,14 +133,7 @@ fail_message = "The robot didn't collect every battery."
 camera_focus = NodePath("../../../Visuals/Pen2_3")
 detection_area = NodePath("../../../Visuals/Pen2_3")
 
-[node name="CheckpointGoal4" type="Node" parent="RoomGoals/GoalManagerRoom2" index="3" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
-script = ExtResource("11_checkpoint_g")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-fail_message = "The robot didn't collect every battery."
-camera_focus = NodePath("../../../Visuals/Pen2_4")
-detection_area = NodePath("../../../Visuals/Pen2_4")
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="4" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="3" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("10_destination_")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 destination_area = NodePath("../../../Visuals/Destination2")
@@ -188,7 +151,7 @@ tile_map_data = PackedByteArray("AAABAAMAAQAAAAAAAAACAAMAAQABAAAAAAADAAMAAQACAAA
 tile_set = ExtResource("7_school_tiles")
 
 [node name="Destination1" type="Area2D" parent="Visuals"]
-position = Vector2(80, 176)
+position = Vector2(48, 112)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -223,20 +186,8 @@ shape = SubResource("Circle_1")
 scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
-[node name="Pen1_3" type="Area2D" parent="Visuals"]
-position = Vector2(48, 112)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen1_3"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen1_3"]
-scale = Vector2(1, 1)
-texture = ExtResource("14_battery")
-
 [node name="Destination2" type="Area2D" parent="Visuals"]
-position = Vector2(48, 464)
+position = Vector2(80, 432)
 script = ExtResource("12_sensed_area")
 tag = &"destination"
 
@@ -283,18 +234,6 @@ shape = SubResource("Circle_1")
 scale = Vector2(1, 1)
 texture = ExtResource("14_battery")
 
-[node name="Pen2_4" type="Area2D" parent="Visuals"]
-position = Vector2(80, 432)
-script = ExtResource("12_sensed_area")
-tag = &"undetectable"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Pen2_4"]
-shape = SubResource("Circle_1")
-
-[node name="Sprite" type="Sprite2D" parent="Visuals/Pen2_4"]
-scale = Vector2(1, 1)
-texture = ExtResource("14_battery")
-
 [node name="Lists" type="Node2D" parent="Visuals"]
 
 [node name="Room1" type="Node2D" parent="Visuals/Lists"]
@@ -303,7 +242,7 @@ texture = ExtResource("14_battery")
 position = Vector2(144, 20)
 z_index = 1
 room_index = 0
-values = [3, 2, 4]
+values = [4, 2, 3]
 
 [node name="Room2" type="Node2D" parent="Visuals/Lists"]
 
@@ -311,7 +250,7 @@ values = [3, 2, 4]
 position = Vector2(144, 276)
 z_index = 1
 room_index = 1
-values = [2, 3, 1, 2]
+values = [2, 1, 3, 2]
 
 [node name="YSorted" type="Node2D" parent="Visuals"]
 y_sort_enabled = true

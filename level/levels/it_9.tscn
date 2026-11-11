@@ -78,7 +78,7 @@ room_goals = [NodePath("RoomGoals/GoalManager"), NodePath("RoomGoals/GoalManager
 [node name="LevelDescription" parent="." index="0"]
 title = "Two ways out"
 block_notes = PackedStringArray("This block ends the loop that it is in, right away.", "This block is always True, or always False.")
-rooms = PackedStringArray("Stop on the green flag.", "Stop right before the puddle.", "Stop on the green flag.")
+rooms = PackedStringArray("Stop right before the puddle.", "Stop on the green flag.", "Stop on the green flag.")
 mission = "One program runs in all three rooms. In each room, stop on the green flag or right before a puddle. Stop at the one that comes first."
 twist = "The Not block is missing this time."
 blocks = Array[ExtResource("6_block_data")]([ExtResource("4_break"), ExtResource("5_boolean")])
@@ -87,39 +87,39 @@ blocks = Array[ExtResource("6_block_data")]([ExtResource("4_break"), ExtResource
 block_data = Array[ExtResource("6_block_data")]([ExtResource("2_while"), ExtResource("3_if"), ExtResource("4_break"), ExtResource("5_boolean")])
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
-bounds = Rect2(0, 0, 256, 96)
-focus_markers = [NodePath("../../Visuals/Destination1")]
+bounds = Rect2(0, 0, 320, 96)
+focus_markers = [NodePath("../../Visuals/Plate1")]
 
 [node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManager" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
 script = ExtResource("7_dest_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Destination1")
-fail_message = "The robot didn't stop on the green flag."
-camera_focus = NodePath("../../../Visuals/Destination1")
-detection_area = NodePath("../../../Visuals/Destination1")
-
-[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
-script = ExtResource("8_goal_mgr")
-bounds = Rect2(0, 128, 320, 96)
-focus_markers = [NodePath("../../Visuals/Plate2")]
-
-[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
-script = ExtResource("7_dest_goal")
-required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
-destination_area = NodePath("../../../Visuals/Plate2")
+destination_area = NodePath("../../../Visuals/Plate1")
 fail_message = "The robot didn't stop right before the puddle."
-camera_focus = NodePath("../../../Visuals/Plate2")
-detection_area = NodePath("../../../Visuals/Plate2")
+camera_focus = NodePath("../../../Visuals/Plate1")
+detection_area = NodePath("../../../Visuals/Plate1")
 
-[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
+[node name="HazardGoal" type="Node" parent="RoomGoals/GoalManager" index="1" node_paths=PackedStringArray("required_entity", "camera_focus", "detection_area")]
 script = ExtResource("9_hazard_goal")
 required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
 is_complete = true
 permanent = false
 must_maintain = true
 fail_message = "The robot drove into the puddle."
-camera_focus = NodePath("../../../Visuals/Hazard2")
-detection_area = NodePath("../../../Visuals/Hazard2")
+camera_focus = NodePath("../../../Visuals/Hazard1")
+detection_area = NodePath("../../../Visuals/Hazard1")
+
+[node name="GoalManagerRoom2" type="Node" parent="RoomGoals" index="1" node_paths=PackedStringArray("focus_markers")]
+script = ExtResource("8_goal_mgr")
+bounds = Rect2(0, 128, 256, 96)
+focus_markers = [NodePath("../../Visuals/Destination2")]
+
+[node name="DestinationGoal" type="Node" parent="RoomGoals/GoalManagerRoom2" index="0" node_paths=PackedStringArray("required_entity", "destination_area", "camera_focus", "detection_area")]
+script = ExtResource("7_dest_goal")
+required_entity = NodePath("../../../Visuals/YSorted/RobotCharacter")
+destination_area = NodePath("../../../Visuals/Destination2")
+fail_message = "The robot didn't stop on the green flag."
+camera_focus = NodePath("../../../Visuals/Destination2")
+detection_area = NodePath("../../../Visuals/Destination2")
 
 [node name="GoalManagerRoom3" type="Node" parent="RoomGoals" index="2" node_paths=PackedStringArray("focus_markers")]
 script = ExtResource("8_goal_mgr")
@@ -154,34 +154,34 @@ level_bounds = Rect2(0, -32, 256, 384)
 tile_map_data = PackedByteArray("AAABAAEAAQAAAAAAAAACAAEAAQABAAAAAAADAAEAAQACAAAAAAAEAAEAAQABAAAAAAAFAAEAAQACAAAAAAAGAAEAAQADAAAAAAABAAUAAQAAAAAAAAACAAUAAQABAAAAAAADAAUAAQABAAAAAAAEAAUAAQACAAAAAAABAAkAAQAAAAAAAAACAAkAAQABAAAAAAADAAkAAQABAAAAAAAEAAkAAQACAAAAAAAFAAkAAQACAAAAAAAGAAkAAQADAAAAAAAFAAUAAQACAAAAAAAGAAUAAQADAAAAAAA=")
 tile_set = ExtResource("10_tiles_floor")
 
-[node name="Destination1" type="Area2D" parent="Visuals" index="1"]
-position = Vector2(208, 48)
+[node name="Destination2" type="Area2D" parent="Visuals" index="1"]
+position = Vector2(208, 176)
 script = ExtResource("11_sensed")
 tag = &"destination"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination1" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Destination2" index="0"]
 shape = SubResource("Circle_1")
 
-[node name="Sprite" type="Sprite2D" parent="Visuals/Destination1" index="1"]
+[node name="Sprite" type="Sprite2D" parent="Visuals/Destination2" index="1"]
 texture = ExtResource("12_tex_dest")
 
-[node name="Plate2" type="Area2D" parent="Visuals" index="2"]
-position = Vector2(176, 176)
+[node name="Plate1" type="Area2D" parent="Visuals" index="2"]
+position = Vector2(176, 48)
 script = ExtResource("11_sensed")
 tag = &"undetectable"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Plate2" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Plate1" index="0"]
 shape = SubResource("Circle_1")
 
-[node name="Hazard2" type="Area2D" parent="Visuals" index="3"]
-position = Vector2(208, 176)
+[node name="Hazard1" type="Area2D" parent="Visuals" index="3"]
+position = Vector2(208, 48)
 script = ExtResource("11_sensed")
 tag = &"puddle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Hazard2" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/Hazard1" index="0"]
 shape = SubResource("Circle_1")
 
-[node name="Sprite" type="Sprite2D" parent="Visuals/Hazard2" index="1"]
+[node name="Sprite" type="Sprite2D" parent="Visuals/Hazard1" index="1"]
 texture = ExtResource("13_3ptfa")
 
 [node name="Destination3" type="Area2D" parent="Visuals" index="4"]

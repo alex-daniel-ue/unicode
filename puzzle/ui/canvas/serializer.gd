@@ -7,12 +7,15 @@ extends Node
 
 
 ## The blocks in `yaml` that count for stars: every block in a program's or a
-## function's body, not the values in slots, and, with `skip_locked`, not the
-## blocks the level placed (locked: true).
+## function's body, not the values in slots, not anything loose on the canvas
+## (it never runs), and, with `skip_locked`, not the blocks the level placed
+## (locked: true).
 static func count_solid_blocks(yaml: String, skip_locked := true) -> int:
 	var lines := yaml.split("\n")
 	# One entry per open section: x is the key's indent, y is 1 when it is
-	# `children:`, whose items count.
+	# `children:`, whose items count, and 2 for `detached:`, under which
+	# nothing counts. A loose If's own block was skipped, but the blocks in its
+	# mouth were counted, so a loose If with a step in it cost a star.
 	var sections: Array[Vector2i] = []
 	var total := 0
 
@@ -27,14 +30,17 @@ static func count_solid_blocks(yaml: String, skip_locked := true) -> int:
 			sections.pop_back()
 
 		if body.begins_with("- block:"):
-			var counts: bool = not sections.is_empty() and sections.back().y == 1
+			var counts: bool = not sections.is_empty() and sections.back().y == 1 \
+					and not sections.any(func(s: Vector2i) -> bool: return s.y == 2)
 			if counts and not (skip_locked and _item_is_locked(lines, i, indent)):
 				total += 1
 			continue
 
 		if body.begins_with("children:"):
 			sections.append(Vector2i(indent, 1))
-		elif body.begins_with("parameters:") or body.begins_with("detached:") or body.begins_with("functions:"):
+		elif body.begins_with("detached:"):
+			sections.append(Vector2i(indent, 2))
+		elif body.begins_with("parameters:") or body.begins_with("functions:"):
 			sections.append(Vector2i(indent, 0))
 
 	return total

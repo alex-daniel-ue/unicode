@@ -126,16 +126,16 @@ Defined in `global/utils/level_catalog.tres`: modules in order, levels in order.
 | | 4 | Count the desks | A counter built by hand. |
 | | 5 | One block instead of three | `for`: the counter, packaged. |
 | | 6 | A pattern, not a step | A loop body worth more than one move. |
-| | 7 | Aisle by aisle | A loop inside a loop. |
-| | 8 | Every row is longer | The inner bound is the outer counter. |
+| | 7 | Around the room | A loop inside a loop. |
+| | 8 | Every side is longer | The inner bound is the outer counter. |
 | | 9 | Two ways out | Leaving a loop early: `break`. |
 | | 10 | Back to the question | Skipping to the next pass: `continue`. |
 | Arrays | 1 | Read a list | A list, its indexes, and Index Of, with Step Forward N Times. |
 | | 2 | How long is a list? | Length Of, then the first value. |
-| | 3 | Last index, last value | Math with Length Of: the last index is length - 1, and the last value sits there. |
+| | 3 | Last index, last value | Math with Length Of: the last value sits at index length - 1. |
 | | 4 | Every stop | Going through a list by index. |
 | | 5 | Every stop, again | Going through a list value by value: For Each. |
-| | 6 | There and back | Going through a list backwards. |
+| | 6 | Last to first | Going through a list backwards. |
 | | 7 | Number the lockers | Changing a list's values in place (Set Index). |
 | | 8 | Passing marks | Building a new list with Append. |
 | | 9 | In both | Checking whether a value is in a list (In). |
@@ -143,13 +143,57 @@ Defined in `global/utils/level_catalog.tres`: modules in order, levels in order.
 
 Arrays 1 to 3 add one idea each: a value by its index, the number of values,
 then the last value. Each has two rooms with different lists, so a number typed
-in doesn't pass. Arrays 2 and 3 share one shape, move, turn, move, and Arrays 3
-changes only what is read: its first move builds the last index, length - 1, and
-its second puts that same block inside Index Of, so the nesting deepens one step
-at a time. Arrays 1 also brings Step Forward N Times, which is
+in doesn't pass. Arrays 3 is a single move, as far as the last value:
+`index (length of route - 1) of route`, Arrays 1's program with its index
+worked out, and the Math block used once.
+Arrays 1 also brings Step Forward N Times, which is
 Iteration's step forward with a number. An earlier opener asked for Step
 Forward N Times, Index Of and a list's name block twice each, around a turn,
 which was too much to take in; Arrays 1 uses each once, in a one-block program.
+
+**One new idea a level.** Students said, and play-testing showed, that the
+next level always jumped too far: a new structure, a blank canvas and a hard
+room at once. So each level puts its one new idea in a simple task, and a
+room that needs more than that waits for a later level. Easier tasks, not
+pre-placed blocks, are the fix: only Iteration 7 and 8 pre-place a block (the
+outer loop, locked: it can't be trashed or copied, but it can be moved), and
+nothing that the level before taught is pre-placed, since that gives its
+answer away.
+
+- Iteration 3 is Iteration 2's loop with an If and Else inside. Every corner in
+  its rooms is one left turn, and the flag is never right after one, so an If
+  without an Else passes too. Turning more than once on one tile is Iteration
+  10's, where Continue is the point.
+- Iteration 7, Around the room, is one lap of a room around a block of desks.
+  Its outer loop comes filled in, one pass a side, and the body is one inner
+  loop of steps and a turn. It replaced Aisle by aisle, whose pass held three
+  inner loops (up an aisle, back down, over to the next) and passed without
+  any of them.
+- Iteration 8, Every side is longer, is Iteration 7's program with one slot
+  changed: the robot spirals out from the middle of the room, each side one
+  step longer, so the inner loop runs `from 0 until side`. The outer loop
+  comes filled in, as in Iteration 7. It replaced Every row is longer, a
+  staircase whose rows showed 1, 3, 4 and 5 batteries for 1, 2, 3 and 4
+  steps, with a turn, a step and a turn between rows: a hard path on top of
+  the hardest idea in the module.
+- Iteration 9's Room 1 is the puddle room, so the first room asks for the
+  new idea: stop before a puddle with Break. A
+  plain hallway to a flag first sent students back to Iteration 1's `ahead is
+  blocked`.
+- Arrays 3 is one move, as far as the last value, with the Math block used
+  once, inside Index Of. It used to be two moves, the first as far as the last
+  index, so the same Math block was needed twice in the level that brings it in.
+- Arrays 4's lists have 3 values each, so its loop is Iteration's For with a
+  small number, `for i from 0 until 3`, and the one new idea is `index i of
+  route`. With 2 values, the moves written out were as short as the loop and
+  earned 3 stars; with 3 they cost 5 blocks and 1 star. Arrays 5 goes round longer routes of 4 values.
+  Going until `length of route` waits for lists of different lengths, in
+  Arrays 6 and 7.
+- Arrays 6, Last to first, is Arrays 4's program read from the end: the list
+  on the wall is the route in reverse, and only the For header is new. It
+  replaced There and back, whose way home retraced the route with every turn
+  reversed: a second puzzle, about maps rather than lists.
+- Arrays 7 no longer offers For Each and Set, which were there to mislead.
 
 **The modules around Iteration and Arrays** follow the course syllabus
 (CCP 1101) in its order, with CodeChum's exercises as the model for many
@@ -848,8 +892,9 @@ python tools/modules/finish_modules.py . "$GODOT"
 **The Arrays generator** (`tools/arrays/`, Python 3, no packages):
 
 - `gen_arrays.py` writes the Arrays scenes from the specs in its `LEVELS`:
-  `ar_t2`, `ar_t3` and `ar_4`..`ar_11`, without `ar_9`. `ar_3` is hand-made
-  (`HAND_MADE`) and never overwritten. Rooms, boards, the robot's route,
+  `ar_t2`, `ar_t3` and `ar_3`..`ar_11`, without `ar_9`. `ar_11` has been saved
+  in the editor since it was generated, so regenerate into another folder and
+  copy back only the levels that changed. Rooms, boards, the robot's route,
   batteries, the flag, goals and clutter all come from the spec; clutter is
   seeded, so a level comes out the same each time.
 - `finish_levels.py` runs each level's "intended" harness case for its YAML and
