@@ -91,14 +91,22 @@ func resolve(raw: Variant, kind: Script, noun: String) -> RoomEntity:
 	return null
 
 
-## Every parameter, evaluated in order, each type checked against `types` (one
-## entry per parameter; an empty entry takes anything). Empty after an error.
-func eval_args(types: Array[PackedInt32Array]) -> Array:
-	var evaluated: Array
+## Every parameter, evaluated left to right, each type checked against `types`
+## (one entry per parameter; an empty entry takes anything). Empty after an
+## error. `order` evaluates them in another order, by parameter index, where
+## Python does: `d[k] = v` reads v first. The result is still in slot order.
+func eval_args(types: Array[PackedInt32Array], order := PackedInt32Array()) -> Array:
+	var params := base.text.get_blocks()
+	var evaluated: Array = []
+	evaluated.resize(params.size())
 	var arg_count := types.size()
 	Interpreter.values_cleared.emit(base)
 
-	for block in base.text.get_blocks():
+	var indexes: PackedInt32Array = order if not order.is_empty() else PackedInt32Array(range(params.size()))
+	for index in indexes:
+		if index >= params.size():
+			continue
+		var block: Block = params[index]
 		await Interpreter.step(block)
 		if Interpreter.interrupted:
 			return []
@@ -109,17 +117,15 @@ func eval_args(types: Array[PackedInt32Array]) -> Array:
 
 		# A slot that names the variable being set (set, for, for each) isn't
 		# read, so its value would only be the old one.
-		var index := evaluated.size()
 		if index >= arg_count or types[index] != Argument.STRING_NAME:
 			Interpreter.value_shown.emit(block, value)
-		evaluated.append(value)
+		evaluated[index] = value
 
 	if evaluated.size() < arg_count:
 		var plurality := " is" if arg_count == 1 else "s are"
 		error("%d argument%s required." % [arg_count, plurality])
 		return []
 
-	var params := base.text.get_blocks()
 	for i in range(arg_count):
 		# A name slot whose text isn't a name Python would accept says which
 		# name, and why. Core.validate_type() would say "1st argument must be a

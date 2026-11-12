@@ -4996,6 +4996,26 @@
 "FAIL Room 1 of 2"
 ],
 [
+"DICT-4 both inputs in one block",
+"res://level/levels/dict_4.tscn",
+[
+[
+"setkey",
+[
+"dict",
+"phone"
+],
+[
+"input"
+],
+[
+"input"
+]
+]
+],
+"FAIL Room 1 of 2"
+],
+[
 "DICT-5 intended",
 "res://level/levels/dict_5.tscn",
 [

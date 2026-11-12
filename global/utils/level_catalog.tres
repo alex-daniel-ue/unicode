@@ -655,10 +655,10 @@ metadata/_custom_type_script = "uid://copysdfiq2iil"
 [sub_resource type="Resource" id="Res_15"]
 script = ExtResource("1_level_module")
 id = &"iteration"
-display_name = "Iteration"
+display_name = "Loops"
 subtitle = "Don't repeat yourself."
 levels = Array[ExtResource("2_level_entry")]([SubResource("Res_5"), SubResource("Res_6"), SubResource("Res_7"), SubResource("Res_8"), SubResource("Res_9"), SubResource("Res_10"), SubResource("Res_11"), SubResource("Res_12"), SubResource("Res_13"), SubResource("Res_14")])
-locked_notice = "Focus on Arrays for now."
+locked_notice = "Focus on Lists for now."
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"
 
 [sub_resource type="Resource" id="gen_functions_fn_1"]
@@ -860,7 +860,7 @@ metadata/_custom_type_script = "uid://copysdfiq2iil"
 [sub_resource type="Resource" id="Res_16"]
 script = ExtResource("1_level_module")
 id = &"arrays"
-display_name = "Arrays"
+display_name = "Lists"
 subtitle = "Zero to hero."
 levels = Array[ExtResource("2_level_entry")]([SubResource("Res_art2"), SubResource("Res_art3"), SubResource("Res_ar3"), SubResource("Res_ar4"), SubResource("Res_ar5"), SubResource("Res_ar6"), SubResource("Res_ar7"), SubResource("Res_ar8"), SubResource("Res_ar10"), SubResource("Res_ar11")])
 metadata/_custom_type_script = "uid://bosuufgg1ovh8"

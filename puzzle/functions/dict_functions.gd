@@ -31,7 +31,9 @@ func _get_value(this: Block) -> Variant:
 
 ## set {dict} [ {key} ] to {value}
 func _set_value(this: Block) -> void:
-	var args := await this.function.eval_args([this.function.Argument.VARIANT, this.function.Argument.VARIANT, this.function.Argument.VARIANT])
+	# Python's d[key] = value reads the value, then d, then key, so
+	# phone[input()] = input() puts the first typed line in the value.
+	var args := await this.function.eval_args([this.function.Argument.VARIANT, this.function.Argument.VARIANT, this.function.Argument.VARIANT], PackedInt32Array([2, 0, 1]))
 	if Interpreter.interrupted: return
 	var board := this.function.resolve(args[0], DictEntity, "a dictionary") as DictEntity
 	if board == null: return
