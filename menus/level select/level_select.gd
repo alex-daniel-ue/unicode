@@ -180,6 +180,7 @@ func _refresh() -> void:
 		prev_button.disabled = _module_index == 0
 	if next_button != null:
 		next_button.disabled = _module_index >= _catalog.modules.size() - 1
+	_place_arrows()
 
 	if locked_notice != null:
 		locked_notice.text = module.locked_notice
@@ -189,6 +190,24 @@ func _refresh() -> void:
 
 	if released:
 		_build_grid(module)
+
+
+## Moves the module arrows out past the title's ends, so a long title
+## ("Operators, Expressions") never runs under them. Short titles keep the
+## arrows at their scene spot (236px either side of center).
+func _place_arrows() -> void:
+	if module_label == null or prev_button == null or next_button == null:
+		return
+	var font := module_label.get_theme_font("font")
+	var font_size := module_label.get_theme_font_size("font_size")
+	var outline := module_label.get_theme_constant("outline_size")
+	var text_half := (font.get_string_size(module_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + outline) / 2.0
+	var inner := maxf(236.0, ceilf(text_half + 12.0))
+	var width := prev_button.offset_right - prev_button.offset_left
+	prev_button.offset_left = -inner - width
+	prev_button.offset_right = -inner
+	next_button.offset_left = inner
+	next_button.offset_right = inner + width
 
 
 func _build_grid(module: LevelModule) -> void:
