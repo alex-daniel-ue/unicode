@@ -23,6 +23,10 @@ var level_stars: PackedInt32Array = PackedInt32Array()
 ## level id. Kept in the save file only: they are a reward on the level grid,
 ## not part of the code or of the study's data.
 var practice_stars: Dictionary[StringName, int] = {}
+## Set by the MUSAI code: every level and every module open until the game
+## closes. Never saved, and it gives no stars, so codes and the study's data
+## stay as earned.
+var unlock_all := false
 
 var _disk_available := true
 
@@ -121,7 +125,7 @@ func total_stars() -> int:
 ## `unlock_lookahead` places behind it. The first level of a module is always
 ## open; whether the module shows at all is its release gate.
 func is_unlocked(level_id: StringName) -> bool:
-	if catalog == null or not catalog.sequential_unlock:
+	if unlock_all or catalog == null or not catalog.sequential_unlock:
 		return true
 	var module := catalog.module_of(level_id)
 	if module == null:

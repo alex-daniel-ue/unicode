@@ -117,7 +117,7 @@ func _load_release_config() -> void:
 	# Changing a module's flag in the catalog does nothing while the file has
 	# the key, so say so where the two disagree.
 	for module in _catalog.modules:
-		if module != null and module.released != _is_released(module):
+		if module != null and not Progress.unlock_all and module.released != _is_released(module):
 			push_warning("LevelSelect: %s %s module '%s', so its released = %s in the catalog is ignored. Edit [levels] released in %s, or take the key out to let the catalog decide."
 				% [found, "opens" if _is_released(module) else "leaves out", module.id, module.released, found])
 
@@ -125,6 +125,8 @@ func _load_release_config() -> void:
 func _is_released(module: LevelModule) -> bool:
 	if module == null:
 		return false
+	if Progress.unlock_all:
+		return true
 	if _override_active:
 		return String(module.id).to_lower() in _released_override
 	return module.released

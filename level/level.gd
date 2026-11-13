@@ -31,6 +31,9 @@ const KEEP_VISIBLE := 0.25
 ## speed button), so a newcomer sees only what this level needs. Guides
 ## introduce each part when a later level first needs it.
 @export var minimal_ui := false
+## A testing room (the EYOW code): the program runs, but the level is never
+## completed, so it shows no win card and records no stars.
+@export var sandbox := false
 
 @export_group("Exports")
 @export var preset: LevelBlockPreset
@@ -190,6 +193,8 @@ func run_rooms(begin: CapBlock) -> bool:
 
 		room_completed.emit(room_index, room_count)
 
+	if sandbox:
+		return true
 	completed.emit()
 	return true
 

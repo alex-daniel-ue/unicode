@@ -7,6 +7,11 @@ extends PopupPanel
 ## `visible = false`: a Window saved visible pops up the moment its parent scene
 ## enters the tree, which would put this dialog over the main menu at launch.
 
+## Cheat codes for testing, typed into the same box as a progress code, in any
+## case. Neither is ten characters, so neither can be read as a progress code.
+const CHEAT_UNLOCK_ALL := "MUSAI"
+const CHEAT_SANDBOX := "EYOW"
+
 @export var code_label: Label
 @export var copy_button: Button
 @export var import_edit: LineEdit
@@ -46,6 +51,17 @@ func _on_import_pressed() -> void:
 	if code.is_empty():
 		feedback.text = "Type your code first."
 		return
+	match code.to_upper():
+		CHEAT_UNLOCK_ALL:
+			Progress.unlock_all = true
+			Progress.progress_updated.emit()
+			feedback.text = "Every level is unlocked until the game closes."
+			import_edit.clear()
+			return
+		CHEAT_SANDBOX:
+			hide()
+			Game.play_sandbox()
+			return
 	if not Progress.apply_code(code):
 		feedback.text = "That code isn't readable. Check for a mistyped character."
 		return
