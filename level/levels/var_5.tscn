@@ -73,6 +73,7 @@ block_values = PackedStringArray("a,b")
 tip = "In Python: `a = b` gives a the value of b. Then the old value of a is gone."
 
 [node name="LevelBlockPreset" parent="." index="1"]
+read_only = true
 program = "[[\"declare\", \"a\", [\"input\"]], [\"declare\", \"b\", [\"input\"]], [\"print\", \"a\"], [\"print\", \"b\"]]"
 
 [node name="GenericBlockProvider" parent="." index="2"]

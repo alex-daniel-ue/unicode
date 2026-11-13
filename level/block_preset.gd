@@ -38,6 +38,12 @@ const IMMOVABLE_TOOLTIP := "This program is locked: read it, then watch it run."
 ## Preset blocks can't be dragged at all, not just not deleted. For worked
 ## examples, where the program on the canvas is the thing being studied.
 @export var immovable := false
+## Preset blocks can't be moved or changed: nothing typed or picked in their
+## slots, and no block taken out of a slot or dropped into one. New blocks still
+## go between them and inside their loops. For a program the student adds to but
+## mustn't rewrite: Swap's declares and prints, which could otherwise be renamed
+## or reordered instead of swapped.
+@export var read_only := false
 ## A program to put under begin, written out instead of built in the editor,
 ## for presets whose slots hold other blocks (the level generators write these).
 ## JSON: a list of blocks, each [name, slot, slot...], where a slot is typed in
@@ -102,6 +108,12 @@ func get_preset() -> Block:
 		if immovable:
 			block.data.placeable = false
 			block.data.draggable = false
+		if read_only:
+			block.data.draggable = false
+			if block.data.value != null:
+				block.data.value.editable = false
+			if block.data.socket != null:
+				block.data.socket.receptive = false
 		preset_data.append(block.data)
 
 	# The flags above only take effect on the next read. ValueBlocks read theirs in
@@ -138,4 +150,16 @@ func _build_program(root: NestedBlock) -> void:
 	for spec: Variant in parsed:
 		var data := data_for(spec)
 		if data != null:
+			_pin_slot_blocks(data)
 			root.mouth.add_child(Block.construct(data))
+
+
+## A block the program puts in a slot is built as the slot itself, without the
+## empty slot a dropped-in block keeps behind it. Taken out, it would leave a gap
+## nothing can go back into (Good names' input()), so it can't be dragged. Set on
+## the data, because format() rebuilds the slots from it.
+static func _pin_slot_blocks(data: BlockData) -> void:
+	for inner: BlockData in data.text_blocks:
+		if inner != null:
+			inner.draggable = false
+			_pin_slot_blocks(inner)
