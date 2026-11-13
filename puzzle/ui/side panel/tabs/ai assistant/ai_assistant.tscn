@@ -121,7 +121,7 @@ size_flags_vertical = 3
 
 [node name="LimitBar" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Questions you can ask the assistant. One comes back every minute."
+tooltip_text = "Questions you can ask the assistant. One comes back every three minutes. You get three more the first time you solve a level."
 theme_override_constants/separation = 8
 
 [node name="Caption" type="Label" parent="VBoxContainer/LimitBar"]

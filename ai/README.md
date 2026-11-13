@@ -95,8 +95,9 @@ Other limits are constants at the top of `main.py`:
 | `MAX_MSG`, `MAX_FIELD`, `MAX_IMG_BYTES` | 600 chars, 6000 chars, 1 MB | Caps on what a request may carry. |
 
 The game has its own limit as well: the Assistant tab draws on a pool of 10
-questions that refills one a minute (`global/utils/hint_pool.gd`). The win-card
-summary never draws from it.
+questions that refills one every three minutes, plus 3 the first time a level
+is solved (`global/utils/hint_pool.gd`). The win-card summary never draws from
+it.
 
 ---
 
