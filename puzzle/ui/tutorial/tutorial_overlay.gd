@@ -291,7 +291,10 @@ func _rect_of(path: String) -> Rect2:
 					# Scrolled out of sight: bring it into view, and only light
 					# the part that shows.
 					puzzle.toolbox.reveal(block)
-					return block.get_global_rect().intersection(puzzle.toolbox.visible_rect())
+					# Through its transform: a long block is drawn smaller on its
+					# tile when the toolbox is narrow (ToolboxFit).
+					var drawn := block.get_global_transform() * Rect2(Vector2.ZERO, block.size)
+					return drawn.intersection(puzzle.toolbox.visible_rect())
 				return block.get_global_rect()
 		return Rect2()
 	if path.begins_with("level:"):

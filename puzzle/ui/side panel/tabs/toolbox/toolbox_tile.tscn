@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_tile.gd" id="1_tile"]
 [ext_resource type="Theme" uid="uid://dndk60sn664bq" path="res://puzzle/ui/themes/main_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://d3cm84lguffxf" path="res://puzzle/ui/side panel/icons/pixelarticons--eye.png" id="3_eye"]
+[ext_resource type="Script" path="res://puzzle/ui/side panel/tabs/toolbox/toolbox_fit.gd" id="4_fit"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_tile"]
 content_margin_left = 10.0
@@ -20,12 +21,13 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[node name="Tile" type="PanelContainer" node_paths=PackedStringArray("holder", "eye", "note")]
+[node name="Tile" type="PanelContainer" node_paths=PackedStringArray("holder", "fitter", "eye", "note")]
 mouse_filter = 2
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBox_tile")
 script = ExtResource("1_tile")
-holder = NodePath("Stack/Row/Holder")
+holder = NodePath("Stack/Row/Center/Fit/Holder")
+fitter = NodePath("Stack/Row/Center/Fit")
 eye = NodePath("Stack/Row/Eye")
 note = NodePath("Stack/Note")
 
@@ -39,9 +41,18 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="Holder" type="CenterContainer" parent="Stack/Row"]
+[node name="Center" type="CenterContainer" parent="Stack/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Fit" type="Container" parent="Stack/Row/Center"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("4_fit")
+
+[node name="Holder" type="MarginContainer" parent="Stack/Row/Center/Fit"]
+layout_mode = 2
 mouse_filter = 2
 
 [node name="Eye" type="TextureButton" parent="Stack/Row"]

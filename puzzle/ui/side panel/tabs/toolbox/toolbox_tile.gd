@@ -11,8 +11,12 @@ const FADE := 0.12
 ## The eye, dim while the note is hidden and lit while it shows.
 const EYE_SHUT := Color(1, 1, 1, 0.4)
 const EYE_OPEN := Color(1.0, 0.82, 0.3)
+## Smallest a block is drawn to fit a narrow toolbox; past that the tile is
+## left wider than the toolbox rather than unreadable.
+const MIN_FIT := 0.6
 
 @export var holder: Container
+@export var fitter: ToolboxFit
 @export var eye: TextureButton
 @export var note: Label
 
@@ -38,6 +42,17 @@ func hold(block: Block, text := "", open := false) -> void:
 	eye.visible = not note.text.is_empty()
 	eye.set_pressed_no_signal(open and eye.visible)
 	_show_note(eye.button_pressed)
+
+
+## Draws the block smaller when the tile at full size would be wider than
+## `width`, and back at full size once it fits.
+func fit_to(width: float) -> void:
+	var natural := holder.get_combined_minimum_size().x
+	if natural <= 0.0:
+		return
+	# The tile's width less its block's: margins, the eye, the gap between.
+	var around := get_combined_minimum_size().x - natural * fitter.fit
+	fitter.fit = clampf((width - around) / natural, MIN_FIT, 1.0)
 
 
 func block() -> Block:

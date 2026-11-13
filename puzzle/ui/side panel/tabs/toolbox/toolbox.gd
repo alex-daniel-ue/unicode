@@ -61,6 +61,26 @@ func _ready() -> void:
 	tabs.tab_clicked.connect(_on_tab_clicked)
 	scroll.get_v_scroll_bar().value_changed.connect(_on_scrolled)
 	_refresh_tabs()
+	# The toolbox's own size changes when a tile stretches it, the panel's when
+	# the window does: either can mean a tile has to be drawn smaller or larger.
+	resized.connect(_fit_tiles)
+	if get_parent() is Control:
+		(get_parent() as Control).resized.connect(_fit_tiles)
+
+
+## Draws a block smaller on its tile when the tile would be wider than the
+## toolbox's panel, so one long block (the counting for) can't stretch the
+## toolbox past it on a small window.
+func _fit_tiles() -> void:
+	var panel := get_parent() as Control
+	if panel == null:
+		return
+	for tile: ToolboxTile in find_children("*", "ToolboxTile", true, false):
+		var row := tile.get_parent() as Control
+		# What the toolbox puts around a row of tiles is the same whether or not
+		# a tile is stretching it, so the room a row really has is the panel's
+		# width less that.
+		tile.fit_to(panel.size.x - (size.x - row.size.x))
 
 
 func add_block(block: Block) -> void:
