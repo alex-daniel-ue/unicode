@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4]
+[gd_scene load_steps=19 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
@@ -17,6 +17,7 @@
 [ext_resource type="Resource" path="res://puzzle/blocks/control flow/else.tres" id="15_else"]
 [ext_resource type="Resource" path="res://puzzle/blocks/socket/comparison.tres" id="16_comparison"]
 [ext_resource type="Script" path="res://level/function_definitions.gd" id="17_function_def"]
+[ext_resource type="Resource" path="res://puzzle/blocks/functions/return.tres" id="90_return"]
 
 [node name="FN7TheBiggest" node_paths=PackedStringArray("room_goals") instance=ExtResource("1_level")]
 intended_solution = "# locked: true marks blocks the level placed; the student can't delete them
@@ -111,7 +112,7 @@ twist = "bigger takes only two numbers, but there are three."
 tip = "Python has this function built in: `max(x, y, z)`."
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_block_data")]([ExtResource("10_print"), ExtResource("11_input"), ExtResource("12_convert"), ExtResource("13_initialize"), ExtResource("14_if"), ExtResource("15_else"), ExtResource("16_comparison")])
+block_data = Array[ExtResource("4_block_data")]([ExtResource("10_print"), ExtResource("11_input"), ExtResource("12_convert"), ExtResource("13_initialize"), ExtResource("14_if"), ExtResource("15_else"), ExtResource("16_comparison"), ExtResource("90_return")])
 
 [node name="Functions" type="Node" parent="."]
 script = ExtResource("17_function_def")

@@ -78,7 +78,7 @@ block_values = PackedStringArray("n", "2")
 tip = "In Python: `return n * 2`"
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_block_data")]([ExtResource("20_input"), ExtResource("21_convert"), ExtResource("22_arithmetic")])
+block_data = Array[ExtResource("4_block_data")]([ExtResource("20_input"), ExtResource("21_convert"), ExtResource("22_arithmetic"), ExtResource("18_return")])
 
 [node name="Functions" type="Node" parent="."]
 script = ExtResource("23_function_def")

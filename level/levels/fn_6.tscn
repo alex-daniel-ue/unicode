@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=4]
+[gd_scene load_steps=28 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
@@ -25,6 +25,7 @@
 [ext_resource type="Resource" path="res://puzzle/blocks/socket/arithmetic.tres" id="23_arithmetic"]
 [ext_resource type="Script" path="res://level/function_definitions.gd" id="24_function_def"]
 [ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move_n.tres" id="25_move_n"]
+[ext_resource type="Resource" path="res://puzzle/blocks/functions/return.tres" id="90_return"]
 
 [sub_resource type="CircleShape2D" id="Circle_1"]
 radius = 12.0
@@ -110,7 +111,7 @@ twist = "Sometimes the first number is bigger, and sometimes the second one is."
 tip = "Python has this function built in: `abs(a - b)`."
 
 [node name="GenericBlockProvider" parent="." index="2"]
-block_data = Array[ExtResource("4_block_data")]([ExtResource("18_input"), ExtResource("19_convert"), ExtResource("20_if"), ExtResource("21_else"), ExtResource("22_comparison"), ExtResource("23_arithmetic")])
+block_data = Array[ExtResource("4_block_data")]([ExtResource("18_input"), ExtResource("19_convert"), ExtResource("20_if"), ExtResource("21_else"), ExtResource("22_comparison"), ExtResource("23_arithmetic"), ExtResource("90_return")])
 
 [node name="Functions" type="Node" parent="."]
 script = ExtResource("24_function_def")
