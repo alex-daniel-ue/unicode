@@ -288,6 +288,9 @@ func _make_toolbox_button() -> Button:
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.focus_mode = Control.FOCUS_NONE
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# No grow on hover: the card spans the Information tab, whose scroll clips
+	# it, so growing cut off its edges. Its hover colour answers the pointer.
+	button.set_meta(&"no_juice", true)
 
 	# The words and the icon as a row on the button, inside its margins. A
 	# button doesn't size to what it holds, so it takes the row's height.
