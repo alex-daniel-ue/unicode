@@ -150,16 +150,17 @@ func _build_program(root: NestedBlock) -> void:
 	for spec: Variant in parsed:
 		var data := data_for(spec)
 		if data != null:
-			_pin_slot_blocks(data)
+			pin_slot_blocks(data)
 			root.mouth.add_child(Block.construct(data))
 
 
 ## A block the program puts in a slot is built as the slot itself, without the
 ## empty slot a dropped-in block keeps behind it. Taken out, it would leave a gap
 ## nothing can go back into (Good names' input()), so it can't be dragged. Set on
-## the data, because format() rebuilds the slots from it.
-static func _pin_slot_blocks(data: BlockData) -> void:
+## the data, because format() rebuilds the slots from it. FunctionDefinitions
+## pins a locked body the same way (Stripes' mark * n inside its print).
+static func pin_slot_blocks(data: BlockData) -> void:
 	for inner: BlockData in data.text_blocks:
 		if inner != null:
 			inner.draggable = false
-			_pin_slot_blocks(inner)
+			pin_slot_blocks(inner)

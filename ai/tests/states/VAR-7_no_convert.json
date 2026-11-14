@@ -1,0 +1,18 @@
+{
+  "id": "VAR-7_no_convert",
+  "level_id": "var_7",
+  "mistake": "Never converts the input, so the price stays text.",
+  "context": {
+    "instructions": "A decimal point\nYOUR MISSION\nThe user types a price. Show Price: and the price as a number with a decimal point, like Price: 15.0\nRoom 1\nThe user types 15.\nRoom 2\nThe user types 7.5.\nTHE TWIST\nOne user types a whole number, and one does not.\nIn Python,  float(\"15\")  is 15.0, and  int(\"7.5\")  is an error.\n★★★\n2 blocks or fewer",
+    "blocks": "- print {message: variant}: Shows a value on the room's terminal as a new line, like Python's print(): text appears without its quotes, and \\n inside text starts a new line.\n- input(): Reads the next line the user typed on the room's terminal and gives it as text (a string), like Python's input(). It always gives text, even when the user typed digits; int() or float() makes a number of it. Each input() reads the next line; reading more lines than the user typed is an error.\n- {type: int/float/str}({value: variant}): Python's int(), float() and str(). int() makes a whole number from text like \"12\" (not \"12.5\") or drops a decimal number's fraction; float() makes a decimal number, so float(\"3\") is 3.0; str() makes text, the way print() writes the value.\n- declare {name: variable} as {value: variant}: A shorthand block that declares a new variable and assigns it a value immediately.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - price\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Price: {price}\"",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - price\n        - block: ConvertBlock\n          kind: value\n          text: \"{} ( {} )\"\n          parameters:\n            - float\n            - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Price: {price}\"",
+    "last_run": "Did not solve the level; the reason is in the output log. The blocks are unchanged since that run.",
+    "last_run_program": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - price\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Price: {price}\"",
+    "output_log": "Room 1 of 2 —\nOUTPUT: Price: 15\nLEVEL FAILED: Room 1 of 2 — Line 1 of the terminal should say 'Price: 15.0', but it says 'Price: 15'.",
+    "robot": "N/A",
+    "rooms": "",
+    "robot_path": "",
+    "lists": "Room 1: terminal: the user types ['15']; printed so far ['Price: 15']; it should show ['Price: 15.0']\nRoom 2: terminal: the user types ['7.5']; printed so far []; it should show ['Price: 7.5']"
+  }
+}

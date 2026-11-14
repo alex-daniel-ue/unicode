@@ -106,6 +106,8 @@ func define_blocks() -> Array[Block]:
 		for item: Variant in spec.get("body", []):
 			var item_data := LevelBlockPreset.data_for(item)
 			if item_data != null:
+				if spec.get("locked", false):
+					LevelBlockPreset.pin_slot_blocks(item_data)
 				define.mouth.add_child(Block.construct(item_data))
 		for block in define.get_all_blocks(true) + _body(define):
 			block.data = block.data if block == define else block.data.deep_copy()

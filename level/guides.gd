@@ -86,6 +86,8 @@ const BLOCK_PICTURES := {
 ##                 by the first. Unset, it is the smallest target, if small.
 ##   focus         A side panel tab to open first (a path, like TOOLBOX).
 ##   advance       What moves the page on (Advance). NEXT unless given.
+##   click         On a page that waits for a click: the button the cursor clicks
+##                 (a path, as in targets). Unset, it is what the arrow points at.
 ##   only          For BLOCK_PLACED and BLOCK_TRASHED: that block's data name.
 ##                 For TAB_SHOWN: the tab's node name ("PuzzleToolbox").
 ##   button        The button's text. A page that waits for an action shows no
@@ -124,7 +126,7 @@ const SETS := {
 		{title = "The menu", text = "**Click this button** to open the menu. You can also press the Esc key.",
 			targets = [RIGHT_BUTTONS + "MenuButton"], advance = Advance.MENU_OPENED},
 		{title = "The menu", text = "**Click Resume** to close the menu. In the menu, you can go back to the levels, or see a tutorial again.",
-			dim = false, card = "top", advance = Advance.MENU_CLOSED},
+			dim = false, card = "top", click = "PauseMenu/VBoxContainer/ResumeButton", advance = Advance.MENU_CLOSED},
 		{title = "Run it", text = "**Click Play** to run your blocks. Click the X to stop them.",
 			targets = [RIGHT_BUTTONS + "PlayButton", RIGHT_BUTTONS + "StopButton"], arrow = RIGHT_BUTTONS + "PlayButton",
 			advance = Advance.RUN_STARTED},
@@ -201,6 +203,10 @@ const SETS := {
 		{title = "A parameter", text = "A function can take a value. side ( n ) has a parameter called n. The call side ( 4 ) runs the steps of side with n as 4.",
 			button = "Got it"},
 	],
+	&"two_parameters": [
+		{title = "Two parameters", text = "stripe ( mark, n ) has two parameters. The call stripe ( \"=\", 5 ) runs its steps with mark as \"=\" and n as 5.",
+			button = "Got it"},
+	],
 	&"dictionary": [
 		{title = "A dictionary", text = "This is a dictionary called prices. Each row has a key and its value. The key pen holds the value 15.",
 			targets = [ROOM, "level:Visuals/Dicts/Room1/prices"], arrow = "level:Visuals/Dicts/Room1/prices"},
@@ -235,6 +241,7 @@ const LEVELS := {
 	"op_9": [&"decimals"],
 	"fn_1": [&"functions", &"blocks"],
 	"fn_3": [&"parameters"],
+	"fn_4": [&"two_parameters"],
 	"dict_1": [&"dictionary", &"blocks"],
 	"files_1": [&"text_file", &"blocks"],
 }

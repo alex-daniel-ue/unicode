@@ -1,0 +1,18 @@
+{
+  "id": "VAR-3_no_f",
+  "level_id": "var_3",
+  "mistake": "Leaves the f off the f-string, so {name} is printed as it is.",
+  "context": {
+    "instructions": "Make a sentence\nYOUR MISSION\nThe user types a name. Greet them: when the user types Ana, show Hello, Ana!\nRoom 1\nThe user types Ana.\nRoom 2\nThe user types Ben.\nIn Python, an f-string fills in a variable:  f\"Hello, {name}!\" \n★★★\n2 blocks or fewer",
+    "blocks": "- print {message: variant}: Shows a value on the room's terminal as a new line, like Python's print(): text appears without its quotes, and \\n inside text starts a new line.\n- input(): Reads the next line the user typed on the room's terminal and gives it as text (a string), like Python's input(). It always gives text, even when the user typed digits; int() or float() makes a number of it. Each input() reads the next line; reading more lines than the user typed is an error.\n- declare {name: variable} as {value: variant}: A shorthand block that declares a new variable and assigns it a value immediately.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - name\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, {name}!\"",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - name\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, {name}!\"",
+    "last_run": "Did not solve the level; the reason is in the output log. The blocks are unchanged since that run.",
+    "last_run_program": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: DeclareAsBlock\n      kind: statement\n      text: \"declare {} as {}\"\n      parameters:\n        - name\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, {name}!\"",
+    "output_log": "Room 1 of 2 —\nOUTPUT: Hello, {name}!\nLEVEL FAILED: Room 1 of 2 — Line 1 of the terminal should say 'Hello, Ana!', but it says 'Hello, {name}!'.",
+    "robot": "N/A",
+    "rooms": "",
+    "robot_path": "",
+    "lists": "Room 1: terminal: the user types ['Ana']; printed so far ['Hello, {name}!']; it should show ['Hello, Ana!']\nRoom 2: terminal: the user types ['Ben']; printed so far []; it should show ['Hello, Ben!']"
+  }
+}

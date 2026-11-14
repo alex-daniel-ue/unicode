@@ -1,0 +1,18 @@
+{
+  "id": "IO-1_no_quotes",
+  "level_id": "io_1",
+  "mistake": "Hello, World typed without quotes, so the terminal shows None.",
+  "context": {
+    "instructions": "Hello, World!\nYOUR MISSION\nMake the terminal show Hello, World! The faded line on the terminal shows what it should say.\nIn Python:  print(\"Hello, World!\") \n★★★\n1 block or fewer",
+    "blocks": "- print {message: variant}: Shows a value on the room's terminal as a new line, like Python's print(): text appears without its quotes, and \\n inside text starts a new line.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, World\"  # not a readable value",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, World!\"",
+    "last_run": "Did not solve the level; the reason is in the output log. The blocks are unchanged since that run.",
+    "last_run_program": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"Hello, World\"  # not a readable value",
+    "output_log": "OUTPUT: None\nLEVEL FAILED: Line 1 of the terminal should say 'Hello, World!', but it says 'None'.",
+    "robot": "N/A",
+    "rooms": "",
+    "robot_path": "",
+    "lists": "terminal: the user types []; printed so far ['None']; it should show ['Hello, World!']"
+  }
+}

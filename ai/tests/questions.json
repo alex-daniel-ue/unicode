@@ -21,6 +21,20 @@
     "AR-T2_counting_from_1": "What does index 3 is out of range mean? The third value should be index 3.",
     "AR-4_until_length_minus_1": "Why does the robot stop before it reaches the flag?",
     "AR-7_numbered_from_0": "Why are my lockers 0, 1, 2 instead of 1, 2, 3?",
-    "AR-8_greater_not_equal": "Why is 75 missing from my passed list?"
+    "AR-8_greater_not_equal": "Why is 75 missing from my passed list?",
+    "IO-1_no_quotes": "Why does the terminal say None? I typed Hello, World.",
+    "IO-6_three_inputs": "What does input() has nothing left to read mean?",
+    "VAR-3_no_f": "Why does it print {name} instead of Ana?",
+    "VAR-7_no_convert": "Why does it show 15 and not 15.0?",
+    "OP-7_times_not_power": "Why do I get 6 when it should be 9?",
+    "OP-8_set_not_add": "Why is my total 6 and not 15?",
+    "SEL-1_no_int": "Why can't it compare my number with 100?",
+    "SEL-5_ifs_not_elifs": "Why does it print three grades instead of one?",
+    "FN-5_printed_not_returned": "My function prints 4, so why does the robot get None?",
+    "FN-6_a_minus_b_only": "Why does it say the robot can't step forward -4 times?",
+    "DICT-5_no_check": "Why does it say cake isn't a key?",
+    "DICT-6_set_to_1": "Why is red only 1 when it was typed twice?",
+    "FILES-6_no_int": "Why can't it add the lines to the total?",
+    "FILES-9_counting_from_0": "Why does my numbering start at 0?"
   }
 }

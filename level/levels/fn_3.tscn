@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4]
+[gd_scene load_steps=18 format=4]
 
 [ext_resource type="PackedScene" uid="uid://kyh2mtywp5j8" path="res://level/level.tscn" id="1_level"]
 [ext_resource type="TileSet" uid="uid://dwdeg5l2ik0ee" path="res://world/tilesets/school_chairs.tres" id="2_school_chair"]
@@ -16,8 +16,6 @@
 [ext_resource type="Script" uid="uid://b7gqcxxy3e2bv" path="res://level/components/resettable_component.gd" id="14_resettable_c"]
 [ext_resource type="SpriteFrames" uid="uid://bbra16dnqb2nc" path="res://level/objects/entities/robot/sprite_frames.tres" id="15_sprite_frame"]
 [ext_resource type="Script" path="res://level/function_definitions.gd" id="16_function_def"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/move_n.tres" id="17_move_n"]
-[ext_resource type="Resource" path="res://level/objects/entities/robot/blocks/turn.tres" id="18_turn"]
 
 [sub_resource type="CircleShape2D" id="Circle_1"]
 radius = 12.0
@@ -58,11 +56,13 @@ functions:  # define blocks: their blocks run when a call to them runs
         - block: MoveTilesBlock
           kind: statement
           text: \"step forward {} times\"
+          locked: true
           parameters:
             - n
         - block: TurnBlock
           kind: statement
           text: \"turn {}\"
+          locked: true
           parameters:
             - left"
 room_goals = [NodePath("RoomGoals/GoalManager")]
@@ -78,7 +78,7 @@ block_data = Array[ExtResource("4_block_data")]([])
 
 [node name="Functions" type="Node" parent="."]
 script = ExtResource("16_function_def")
-functions = "[{\"name\": \"side\", \"params\": [\"n\"]}]"
+functions = "[{\"name\": \"side\", \"params\": [\"n\"], \"body\": [[\"moven\", \"n\"], [\"turn\", \"left\"]], \"locked\": true}]"
 
 [node name="GoalManager" parent="RoomGoals" index="0" node_paths=PackedStringArray("focus_markers")]
 bounds = Rect2(32.0, 64.0, 160.0, 96.0)
@@ -187,7 +187,7 @@ facing_direction = Vector2(1, 0)
 animation = &"idle_right"
 
 [node name="BlockProvider" parent="Visuals/YSorted/RobotCharacter" index="2"]
-block_data = Array[ExtResource("4_block_data")]([ExtResource("17_move_n"), ExtResource("18_turn")])
+block_data = Array[ExtResource("4_block_data")]([])
 
 [node name="ResettableComponent" type="Node" parent="Visuals/YSorted/RobotCharacter" index="4" node_paths=PackedStringArray("base")]
 script = ExtResource("14_resettable_c")

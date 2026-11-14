@@ -1,0 +1,18 @@
+{
+  "id": "IO-6_three_inputs",
+  "level_id": "io_6",
+  "mistake": "Reads input three times, but the user types only two lines.",
+  "context": {
+    "instructions": "Two answers\nYOUR MISSION\nThe user types two words. Show the first word, then the word and, then the second word, each on its own line.\nRoom 1\nThe user types cats and dogs.\nRoom 2\nThe user types red and blue.\nTHE TWIST\nEach Input block reads the next line that the user typed.\nIn Python, each  input()  reads one line.\n★★★\n3 blocks or fewer",
+    "blocks": "- print {message: variant}: Shows a value on the room's terminal as a new line, like Python's print(): text appears without its quotes, and \\n inside text starts a new line.\n- input(): Reads the next line the user typed on the room's terminal and gives it as text (a string), like Python's input(). It always gives text, even when the user typed digits; int() or float() makes a number of it. Each input() reads the next line; reading more lines than the user typed is an error.",
+    "workspace": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value",
+    "intended_solution": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"and\"\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value",
+    "last_run": "Did not solve the level; the reason is in the output log. The blocks are unchanged since that run.",
+    "last_run_program": "# locked: true marks blocks the level placed; the student can't delete them\nblock: BeginBlock\n  kind: nested\n  text: \"begin code\"\n  locked: true\n  children:\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value\n    - block: PrintBlock\n      kind: statement\n      text: \"print {}\"\n      parameters:\n        - \"input ( )\"  # not a readable value",
+    "output_log": "Room 1 of 2 —\nOUTPUT: cats\nOUTPUT: dogs\n[ERROR]: input() has nothing left to read. In this room the user typed 2 lines, and the program already read them all., from \"input ( )\"\n\t\tStack trace: begin code > print input ( )\n\t\tStack variables: {  }",
+    "robot": "N/A",
+    "rooms": "",
+    "robot_path": "",
+    "lists": "Room 1: terminal: the user types ['cats', 'dogs']; printed so far ['cats', 'dogs']; it should show ['cats', 'and', 'dogs']\nRoom 2: terminal: the user types ['red', 'blue']; printed so far []; it should show ['red', 'and', 'blue']"
+  }
+}

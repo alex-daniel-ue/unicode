@@ -14,11 +14,19 @@ extends Control
 ## What a page points at is lit, and the card sits next to it with an arrow
 ## (GuidePointer) running from the card to it, rather than in a fixed spot: the
 ## dim alone is easy to miss on a small screen. Back goes over earlier pages
-## again; a page seen before waits for nothing.
+## again; a page seen before waits for nothing. A page that waits for a click
+## shows a cursor clicking the button, and no Back: that click is the one thing
+## to do on it.
 
 signal finished
 
 const A := Guides.Advance
+## Pages that move on when the student clicks a button.
+const CLICKS := [
+	Guides.Advance.VIEW_FRAMED, Guides.Advance.PANEL_CLOSED, Guides.Advance.PANEL_OPENED,
+	Guides.Advance.TAB_SHOWN, Guides.Advance.MENU_OPENED, Guides.Advance.MENU_CLOSED,
+	Guides.Advance.RUN_STARTED,
+]
 ## Gap between the card and the window edge.
 const CARD_MARGIN := 24.0
 ## Room between the card and what its arrow points at, for the arrow.
@@ -207,6 +215,12 @@ func _reviewing() -> bool:
 	return _index < _furthest
 
 
+## Whether the page is waiting for the student to click a button. Looked at
+## again, it isn't: Next moves on.
+func _wants_click(page: Dictionary) -> bool:
+	return not _reviewing() and page.get("advance", A.NEXT) in CLICKS
+
+
 func _finish() -> void:
 	if _closing:
 		return
@@ -230,7 +244,7 @@ func _go_to(index: int) -> void:
 	# assistant's page offers Skip, since its reply may never come. Looked at
 	# again, every page has Next.
 	var waits: bool = not _reviewing() and page.get("advance", A.NEXT) != A.NEXT and not page.has("button")
-	card.show_page(page, _index, pages.size(), waits, _index > 0)
+	card.show_page(page, _index, pages.size(), waits, _index > 0 and not _wants_click(page))
 	mask.dimmed = page.get("dim", true)
 	mask.block_all = page.get("block_input", false)
 	_spot = ""
@@ -270,7 +284,22 @@ func _update(delta: float) -> void:
 	# one click it asks for. Drop the dim instead: the card still says what to do.
 	var lost := not targets.is_empty() and rects.is_empty()
 	mask.visible = (page.get("dim", true) or page.get("block_input", false)) and not lost
-	_place_card(page, rects, _arrow_targets(page, by_path), delta)
+	var arrows := _arrow_targets(page, by_path)
+	_place_card(page, rects, arrows, delta)
+	pointer.click_target = _click_target(page, arrows, to_local)
+	# Set once a frame: turning it on fades it in from nothing.
+	pointer.shown = not pointer.arrows.is_empty() or pointer.click_target.has_area()
+
+
+## Where the cursor clicks on a page that waits for a click: its "click" target,
+## else the first thing its arrow points at. An empty rect for none.
+func _click_target(page: Dictionary, arrows: Array[Rect2], to_local: Transform2D) -> Rect2:
+	if not _wants_click(page):
+		return Rect2()
+	if page.has("click"):
+		var rect := _rect_of(page.click)
+		return Rect2(to_local * rect.position, rect.size) if rect.has_area() else Rect2()
+	return arrows[0] if not arrows.is_empty() else Rect2()
 
 
 ## Where a target is on screen, or an empty rect while it isn't showing.
@@ -382,7 +411,6 @@ func _place_card(page: Dictionary, rects: Array[Rect2], arrows_to: Array[Rect2],
 				_edge_toward(target.grow(mask.padding + 4.0), card_rect.get_center()),
 			]))
 	pointer.arrows = pairs
-	pointer.shown = not pairs.is_empty()
 
 
 ## The spot beside `target` that leaves the page's targets clearest, a gap away

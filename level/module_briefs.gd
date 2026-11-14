@@ -320,8 +320,7 @@ const BRIEFS := {
 	},
 	"fn_4": {
 		"title": "Stripes",
-		"mission": "The user types a width. Draw a flag of three stripes that wide: = signs, then - signs, then = signs again.",
-		"rooms": ["The user types 5.", "The user types 3."],
+		"mission": "Draw a flag of three stripes, 5 wide: = signs, then - signs, then = signs again.",
 		"tip": "In Python, `\"=\" * 3` is \"===\".",
 	},
 	"fn_5": {
