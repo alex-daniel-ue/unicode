@@ -12,7 +12,7 @@ Dictionaries, Text Files.
 Their levels don't count for progress (counts_for_progress = false): the
 progress code holds 20 levels, and Iteration and Arrays use all 20. Stars are
 kept on this computer, as the Tutorial's are. Scoring them needs a new code
-format (see the README's Known pitfalls).
+format (see Known pitfalls in DEVELOPERS.md).
 """
 import json, os, re, sys
 
