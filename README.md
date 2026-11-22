@@ -107,11 +107,11 @@ requirements for the degree of Bachelor of Science in Computer Science, 2026.
 
 **The team**
 
-- Barcelon, John Hendrix
-- Daniel, Alex Jr.
-- Cabeza, Edgar Jr.
-- Ebrahim, Musaiden
-- Salivio, Johnas Earl
+- Barcelon, John Hendrix C.
+- Daniel, Alex Jr. R.
+- Cabeza, Edgar Jr. P. 
+- Ebrahim, Musaiden M.
+- Salivio, Johnas Earl C.
 
 ## Credits
 
