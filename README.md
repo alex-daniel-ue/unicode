@@ -95,19 +95,6 @@ writes out the whole program.
 Phones and tablets aren't supported yet. On a Mac, play in the browser; the
 game can look small on high-resolution Mac screens.
 
-## Run it from the source code
-
-1. Install [Godot 4.5.1](https://godotengine.org/download/archive/4.5.1-stable/)
-   (the standard build).
-2. Clone this repository and open `project.godot` in Godot. The first open
-   imports every asset, which takes a minute.
-3. Press **F5**. The game starts on the main menu.
-
-The AI assistant talks to a small relay server. To run your own, see
-[`ai/README.md`](ai/README.md).
-
-How the project is built, from the code's layout to making a level and
-building for Windows and the web, is in [`DEVELOPERS.md`](DEVELOPERS.md).
 
 ## The research
 
